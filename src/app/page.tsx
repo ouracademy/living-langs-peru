@@ -44,13 +44,19 @@ export default function Home() {
         </div>
       </header>
       <main className="flex flex-1 flex-col">
-        <section className="bg-primary px-6 py-16 text-center text-primary-foreground">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Lenguas originarias de Peru
-          </h1>
-          <p className="mt-4 text-lg text-primary-foreground/90">
-            Conoce la diversidad lingüística del país
-          </p>
+        <section className="bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center"
+          style={{ backgroundImage: "url('/ashaninka-c.webp')" }}
+        >
+          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+          <div className="relative z-10">
+            <h1 className="text-4xl font-bold tracking-tight">
+              Lenguas originarias de Peru
+            </h1>
+            <p className="mt-4 text-lg text-primary-foreground/90">
+              Conoce la diversidad lingüística del país
+            </p>
+          </div>
+
         </section>
 
         <section className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12">
