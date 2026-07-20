@@ -44,8 +44,8 @@ export default function Home() {
         </div>
       </header>
       <main className="flex flex-1 flex-col">
-        <section className="bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center"
-          style={{ backgroundImage: "url('/ashaninka-c.webp')" }}
+        <section className="bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center min-h-[400px]"
+          style={{ backgroundImage: "url('/ash.jpg')" }}
         >
           <div className="absolute inset-0 bg-black/40 pointer-events-none" />
           <div className="relative z-10">
