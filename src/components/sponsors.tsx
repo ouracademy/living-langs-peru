@@ -2,8 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 
 const sponsors = [
-  { name: "UNMSM", logo: "./UNMSM.svg", url: "https://www.unmsm.edu.pe/" },
-  { name: "Gobierno", logo: "", url:"" }
+  { name: "UNMSM", logo: "/unmsm.png", url: "https://www.unmsm.edu.pe/" },
+  { name: "Ministerio de cultura", logo: "/ministerio-cultura.png", url:"https://www.gob.pe/cultura" }
 ]
 
 export function SponsorsSection() {
@@ -25,7 +25,7 @@ export function SponsorsSection() {
                 alt={`Logo de ${sponsor.name}`}
                 width={140}
                 height={60}
-                className="group flex items-center justify-center transition-transform duration-200 hover:scale-105"
+                className="h-10 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:h-12"
               />
             </Link>
 
