@@ -3,6 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { languages } from "@/lib/languages";
 import { cn } from "@/lib/utils";
 import { HeaderPlataform } from "@/components/header";
+import { SponsorsSection } from "@/components/sponsors";
 
 export default function Home() {
   return (
@@ -37,6 +38,7 @@ export default function Home() {
             ))}
           </nav>
         </section>
+        <SponsorsSection/>
       </main>
     </div>
 
