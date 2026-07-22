@@ -4,10 +4,10 @@ import { Button } from "./ui/button";
 import { User } from "lucide-react";
 
 const menuItems = [
-  { label: "Languages & Resources", href: "/languages-resources" },
-  { label: "Events", href: "/events" },
-  { label: "Stories", href: "/stories" },
-  { label: "GetInvolved", href: "/get-involved" },
+  { label: "Lenguas & Recursos", href: "/languages-resources" },
+  { label: "Eventos", href: "/events" },
+  { label: "Historias", href: "/stories" },
+  { label: "Involucrate", href: "/get-involved" },
 ]
 
 export function HeaderPlataform() {
@@ -17,13 +17,13 @@ export function HeaderPlataform() {
         <Link href="/" className="flex items-center gap-2 font-bold text-lg">
           <Image
             src="/logo.webp"
-            alt="lingua plataform"
+            alt="Lenguas Peruanas"
             width={100}
             height={100}
             style={{ height: "auto" }}
             className="object-contain"
           />
-          <span>Lingua Plataform</span>
+          <span>Lenguas Peruanas</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
