@@ -29,7 +29,7 @@ const options = [
     title: "Donar",
     description: "",
     buttonText: "Donar",
-    href: "",
+    href: "/donar",
     icon: Heart,
   },
 ];
@@ -38,24 +38,24 @@ export function Support() {
   return (
     <section className="bg-background px-6 py-20">
       <div className="mx-auto max-w-6xl text-center">
-        <h2>¿Quieres apoyarnos?</h2>
-        <p>abcd</p>
+        <h2 className="text-3xl tracking-tight text-foreground">¿Quieres apoyarnos?</h2>
+        <p className="mt-3 text-muted-foreground text-lg">abcd</p>
 
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 text-left">
           {options.map((item) => {
             const Icon = item.icon;
             return (
-              <Card key={item.title} className="flex flex-col justify-between">
+              <Card key={item.title} className="flex flex-col justify-between transition-shadow hover:shadow-lg">
                 <CardHeader>
-                  <div>
-                    <Icon />
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center bg-primary/10 rounded-lg">
+                    <Icon className="h-6 w-6"/>
                   </div>
-                  <CardTitle>{item.title}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
+                  <CardTitle className="text-xl">{item.title}</CardTitle>
+                  <CardDescription className="pt-2">{item.description}</CardDescription>
                 </CardHeader>
                 <CardFooter className="pt-4">
-                  <Button>
-                    <Link href={item.href} />
+                  <Button className="w-full">
+                    <Link href={item.href}>{item.buttonText}</Link>
                   </Button>
                 </CardFooter>
               </Card>
