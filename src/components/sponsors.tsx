@@ -10,8 +10,8 @@ export function SponsorsSection() {
   return (
     <section className="border-t bg-muted/30 px-6 py-16 text-center">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">Sponsors</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Organizaciones que colaboran en la difusión y preservación de nuestras lenguas nativas</p>
+        <h2 className="text-xl tracking-tight text-foreground sm:text-3xl">Sponsors</h2>
+        <p className="mt-2 sm:text-lg text-muted-foreground">Organizaciones que colaboran en la difusión y preservación de nuestras lenguas nativas</p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-16">
           {sponsors.map((sponsor) => (
             <Link 
