@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { HeaderPlataform } from "@/components/header";
 import { SponsorsSection } from "@/components/sponsors";
 import { Support } from "@/components/support";
+import { HelpEducation } from "@/components/help-education";
 
 export default function Home() {
   return (
@@ -39,6 +40,7 @@ export default function Home() {
             ))}
           </nav>
         </section>
+        <HelpEducation/>
         <Support/>
         <SponsorsSection/>
       </main>
