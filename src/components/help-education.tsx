@@ -29,7 +29,6 @@ const educationI = [
 
 ]
 
-
 export function HelpEducation () {
     return (
       <section className="bg-muted/30 px-6 py-20 border-t">

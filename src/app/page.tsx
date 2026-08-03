@@ -6,6 +6,7 @@ import { HeaderPlataform } from "@/components/header";
 import { SponsorsSection } from "@/components/sponsors";
 import { Support } from "@/components/support";
 import { HelpEducation } from "@/components/help-education";
+import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
@@ -43,6 +44,7 @@ export default function Home() {
         <HelpEducation/>
         <Support/>
         <SponsorsSection/>
+        <Footer />
       </main>
     </div>
 
