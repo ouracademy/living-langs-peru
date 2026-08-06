@@ -2,12 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
+// import { Facebook } from "lucide-react";
 
 const navigation = {
   support: [
     { name: "Registrarse como editor", href: "/registro-editor" },
     { name: "Voluntarios", href: "/voluntarios" },
     { name: "Donar", href: "/donar" },
+
+
+  ],
+  social: [
+    { name: "Facebook", href: "#", icon: "Facebook" },
+    // { name: "Instagram", href: "#", icon: },
+    // { name: "X", href: "#", icon: }
+
   ]
 }
 
@@ -42,6 +51,25 @@ export function Footer() {
               ))}
             </ul>
           </div>
+        </div>
+        {/* Separador */}
+        <div className="mt-12 pt-8 border-t flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-sm text-mute-foreground text-center sm:text-left">&copy; Todos los derechos reservados </p>
+          <div className="flex items-center gap-4 text-muted-foreground">
+            {navigation.social.map((item)=> {
+              const Icon = item.icon;
+              return(
+                <a 
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  aria-label={item.name}
+                >
+                  <Icon />
+                </a>
+              )
+            })}   
+          </div>   
         </div>
 
 
