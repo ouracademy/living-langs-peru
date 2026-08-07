@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { siFacebook } from "simple-icons";
 // import { Facebook } from "lucide-react";
 
 const navigation = {
@@ -13,7 +14,7 @@ const navigation = {
 
   ],
   social: [
-    { name: "Facebook", href: "#", icon: "Facebook" },
+    { name: "Facebook", href: "#", icon: siFacebook },
     // { name: "Instagram", href: "#", icon: },
     // { name: "X", href: "#", icon: }
 
@@ -57,7 +58,7 @@ export function Footer() {
           <p className="text-sm text-mute-foreground text-center sm:text-left">&copy; Todos los derechos reservados </p>
           <div className="flex items-center gap-4 text-muted-foreground">
             {navigation.social.map((item)=> {
-              const Icon = item.icon;
+              const socialIcon = item.icon;
               return(
                 <a 
                   key={item.name}
@@ -65,7 +66,9 @@ export function Footer() {
                   target="_blank"
                   aria-label={item.name}
                 >
-                  <Icon />
+                  <svg role="img" viewBox="0 0 24 24" className="h-5 w-5">
+                    <path d={socialIcon.path}/>
+                  </svg>
                 </a>
               )
             })}   
