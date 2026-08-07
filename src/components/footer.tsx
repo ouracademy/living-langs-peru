@@ -23,7 +23,7 @@ const navigation = {
 export function Footer() {
   return (
     <footer className="border-t bg-background text-foreground">
-      <div className="mx-auto mx-w-6xl px-6 py-12 md:py-16">
+      <div className="mx-auto mx-w-6xl px-6 py-8 md:py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 justify-between">
           <div>
             <Link href="/" className="gap-2 text-xl">
@@ -35,7 +35,7 @@ export function Footer() {
                 style={{ height: "auto" }}
                 className="object-contain"
               />
-              <span>Lengua Plataforma</span>
+              <span>Lenguas Peruanas</span>
             </Link>
             <p className="text-sm max-w-sm text-muted-foreground leading-relaxed">Iniciativa dedicada a la preservación, difusión y aprendizaje de lenguas nativas</p>
           </div>
@@ -53,7 +53,7 @@ export function Footer() {
           </div>
         </div>
         {/* Separador */}
-        <div className="mt-12 pt-8 border-t flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="mt-7 pt-7 border-t flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-mute-foreground text-center sm:text-left">&copy; Todos los derechos reservados </p>
           <div className="flex items-center gap-4 text-muted-foreground">
             {navigation.social.map((item)=> {
