@@ -12,7 +12,7 @@ export function SponsorsSection() {
       <div className="mx-auto max-w-6xl">
         <h2 className="text-xl tracking-tight text-foreground sm:text-3xl">Sponsors</h2>
         <p className="mt-2 sm:text-lg text-muted-foreground">Organizaciones que colaboran en la difusión y preservación de nuestras lenguas nativas</p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-16">
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12 md:gap-16">
           {sponsors.map((sponsor) => (
             <Link 
               key={sponsor.name}
@@ -28,7 +28,6 @@ export function SponsorsSection() {
                 className="h-10 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:h-12"
               />
             </Link>
-
           ))}
         </div>
       </div>

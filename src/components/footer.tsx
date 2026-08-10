@@ -9,8 +9,6 @@ const navigation = {
     { name: "Registrarse como editor", href: "/registro-editor" },
     { name: "Voluntarios", href: "/voluntarios" },
     { name: "Donar", href: "/donar" },
-
-
   ],
   social: [
     { name: "Facebook", href: "#", icon: siFacebook },
@@ -55,27 +53,24 @@ export function Footer() {
         <div className="mt-7 pt-7 border-t flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-mute-foreground text-center sm:text-left">&copy; Todos los derechos reservados </p>
           <div className="flex items-center gap-4 text-muted-foreground">
-            {navigation.social.map((item)=> {
+            {navigation.social.map((item) => {
               const socialIcon = item.icon;
-              return(
-                <a 
+              return (
+                <a
                   key={item.name}
                   href={item.href}
                   target="_blank"
                   aria-label={item.name}
                 >
                   <svg role="img" viewBox="0 0 24 24" className="h-5 w-5">
-                    <path d={socialIcon.path}/>
+                    <path d={socialIcon.path} />
                   </svg>
                 </a>
               )
-            })}   
-          </div>   
+            })}
+          </div>
         </div>
-
-
       </div>
     </footer>
-
   )
 }

@@ -11,7 +11,7 @@ import { Footer } from "@/components/footer";
 export default function Home() {
   return (
     <div>
-      <HeaderPlataform/>
+      <HeaderPlataform />
       <main className="flex flex-1 flex-col">
         <section className="bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center min-h-[400px]"
           style={{ backgroundImage: "url('/ash.jpg')" }}
@@ -25,9 +25,7 @@ export default function Home() {
               Conoce la diversidad lingüística del país
             </p>
           </div>
-
         </section>
-
         <section className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12">
           <nav className="flex flex-wrap items-center justify-center gap-4">
             {languages.map((language) => (
@@ -41,13 +39,11 @@ export default function Home() {
             ))}
           </nav>
         </section>
-        <HelpEducation/>
-        <Support/>
-        <SponsorsSection/>
+        <HelpEducation />
+        <Support />
+        <SponsorsSection />
         <Footer />
       </main>
     </div>
-
-
   );
 }
