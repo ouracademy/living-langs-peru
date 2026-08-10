@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { siFacebook } from "simple-icons";
-// import { Facebook } from "lucide-react";
+import { siFacebook, siInstagram, siX } from "simple-icons";
 
 const navigation = {
   support: [
@@ -15,9 +14,8 @@ const navigation = {
   ],
   social: [
     { name: "Facebook", href: "#", icon: siFacebook },
-    // { name: "Instagram", href: "#", icon: },
-    // { name: "X", href: "#", icon: }
-
+    { name: "Instagram", href: "#", icon: siInstagram },
+    { name: "X", href: "#", icon: siX },
   ]
 }
 
