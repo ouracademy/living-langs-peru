@@ -23,14 +23,13 @@ export function Footer() {
       <div className="mx-auto mx-w-6xl px-6 py-8 md:py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 justify-between">
           <div>
-            <Link href="/" className="gap-2 text-xl">
+            <Link href="/" className="flex-items-center gap-2 text-xl">
               <Image
                 src="/logo.webp"
                 alt="Lengua plataforma"
                 width={100}
-                height={100}
-                style={{ height: "auto" }}
-                className="object-contain"
+                height={100}                
+                className="object-contain h-auto w-24"
               />
               <span>Lenguas Peruanas</span>
             </Link>

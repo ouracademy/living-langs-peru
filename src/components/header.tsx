@@ -14,14 +14,13 @@ export function HeaderPlataform() {
   return (
     <header className="flex sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+        <Link href="/" className="flex items-center font-bold text-lg">
           <Image
             src="/logo.webp"
             alt="Lenguas Peruanas"
             width={100}
-            height={100}
-            style={{ height: "auto" }}
-            className="object-contain"
+            height={100}            
+            className="object-contain h-auto w-24"
           />
           <span>Lenguas Peruanas</span>
         </Link>
