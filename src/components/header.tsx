@@ -2,10 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Menu, User } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 const menuItems = [
   { label: "Lenguas & Recursos", href: "/languages-resources" },
@@ -15,7 +22,7 @@ const menuItems = [
 ];
 
 export function HeaderPlataform() {
-  const [ isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <header className="flex sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -55,13 +62,16 @@ export function HeaderPlataform() {
           {/* Menu sandwich*/}
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-5 w-5"/>
-                  <span className="sr-only">Abrir menú</span>
-                </Button>
+              <SheetTrigger
+                
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "icon" }),
+                )}
+              >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Abrir menú</span>
               </SheetTrigger>
-              <SheetContent side="left"  className="">
+              <SheetContent side="left">
                 <SheetHeader>
                   <SheetTitle className="text-left text-lg">
                     Lenguas Peruanas
