@@ -63,7 +63,6 @@ export function HeaderPlataform() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger
-                
                 className={cn(
                   buttonVariants({ variant: "outline", size: "icon" }),
                 )}
@@ -77,6 +76,17 @@ export function HeaderPlataform() {
                     Lenguas Peruanas
                   </SheetTitle>
                 </SheetHeader>
+                <nav className="mt-6 pl-5 flex flex-col gap-4">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
               </SheetContent>
             </Sheet>
           </div>
