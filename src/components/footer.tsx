@@ -26,7 +26,7 @@ export function Footer() {
             <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2.5">
               Lenguas Peruanas
             </h3>
-            <p className="text-[#C9BFA8] text-sm max-w-[34ch]">
+            <p className="text-[#C9BFA8] text-sm max-w-[34ch] font-['Mulish',sans-serif]">
               Iniciativa dedicada a la preservación, difusión y aprendizaje de
               lenguas nativas.
             </p>

@@ -15,7 +15,7 @@ export function SponsorsSection() {
     <section className="bg-[#FBEFD2] py-20">
       <div className="max-w-[1180px] mx-auto px-8">
         <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+          <span className="font-['Mulish',sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
             Sponsors
           </span>
           <h2 className="font-['Baloo_2',sans-serif] font-bold text-3xl">
