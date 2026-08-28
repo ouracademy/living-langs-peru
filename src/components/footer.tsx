@@ -35,7 +35,7 @@ export function Footer() {
             <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2.5">
               Participa
             </h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+            <ul className="font-['Mulish',sans-serif] mt-4 space-y-2.5 text-sm text-muted-foreground">
               {navigation.support.map((item) => (
                 <li key={item.name} className="text-[#FFF7E8] hover:text-[#F2B705]">
                   <Link href={item.href}>{item.name}</Link>
