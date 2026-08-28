@@ -28,7 +28,7 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12">
+        {/* <section className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12">
           <nav className="flex flex-wrap items-center justify-center gap-4">
             {languages.map((language) => (
               <Link
@@ -42,7 +42,7 @@ export default function Home() {
               </Link>
             ))}
           </nav>
-        </section>
+        </section> */}
         <section className="relative pt-16 pb-10 overflow-hidden">
           <div className="absolute rounded-full opacity-85 blur-[2px] w-[220px] h-[220px] bg-[#F2B705] -top-16 right-32 z-[1]" />
           <div className="absolute rounded-full opacity-50 blur-[2px] w-[160px] h-[160px] bg-[#1B98A0] -bottom-10 -left-10 z-[1]" />
