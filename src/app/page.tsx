@@ -8,6 +8,7 @@ import { Support } from "@/components/support";
 import { HelpEducation } from "@/components/help-education";
 import { Footer } from "@/components/footer";
 import Stories from "@/components/stories";
+import Language from "@/components/language";
 
 export default function Home() {
   return (
@@ -101,6 +102,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <Language />
         <HelpEducation />
         <Stories />
         <Support />

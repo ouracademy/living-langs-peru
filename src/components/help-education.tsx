@@ -1,12 +1,12 @@
-import Link from "next/link";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+// import Link from "next/link";
+// import { Button } from "./ui/button";
+// import {
+//   Card,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "./ui/card";
 import { BookOpen, FolderOpen, Gamepad2 } from "lucide-react";
 
 const educationI = [
