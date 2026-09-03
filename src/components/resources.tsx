@@ -1,4 +1,4 @@
-import { BookMarked, Languages, Info, Paperclip } from "lucide-react" 
+import { BookMarked, Languages, Info, Paperclip } from "lucide-react";
 
 const resources = [
   {
@@ -36,7 +36,7 @@ export default function Resources() {
     <section className="py-20">
       <div className="max-w-[1180px] mx-auto px-8">
         <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="font-['Mulish' ,sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+          <span className="font-['Mulish',sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
             Recursos
           </span>
           <h2 className="font-['Baloo_2',sans-serif] font-bold text-3xl">
@@ -50,23 +50,29 @@ export default function Resources() {
             return (
               <div
                 key={resource.title}
-                className="bg-white rounded-[22px] p-6 shadow-[0_3px_0_rgba(36,29,20,0.06)]"
+                className="flex flex-col justify-between bg-white rounded-[22px] p-6 shadow-[0_3px_0_rgba(36,29,20,0.06)] border border-gray-300"
               >
-                <div className={`flex h-12 w-12 items-center justify-center ${resource.color} rounded-2xl `}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>              
-                <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-1.5">
-                  {resource.title}
-                </h3>
-                <p className="font-['Mulish',sans-serif] text-sm text-[#4A4130] mb-3.5">
-                  {resource.text}
-                </p>
-                <a
-                  href="#"
-                  className="font-['Mulish',sans-serif] font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
-                >
-                  {resource.cta}
-                </a>
+                <div>
+                  <div
+                    className={`flex h-12 w-12 mb-3.5 justify-center items-center ${resource.color} rounded-2xl `}
+                  >
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-1.5">
+                    {resource.title}
+                  </h3>
+                  <p className="font-['Mulish',sans-serif] text-sm text-[#4A4130] mb-3.5">
+                    {resource.text}
+                  </p>
+                </div>
+                <div>
+                  <a
+                    href="#"
+                    className="font-['Mulish',sans-serif] font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
+                  >
+                    {resource.cta}
+                  </a>
+                </div>
               </div>
             );
           })}
