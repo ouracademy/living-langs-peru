@@ -7,31 +7,28 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Heart, HeartHandshake, PenTool } from "lucide-react";
+import { Heart, HeartHandshake, NotebookPen } from "lucide-react";
 
 const options = [
   {
     title: "Registrarse como editor",
-    description:
-      "Ayúdanos a traducir y validar la información.",
+    description: "Ayúdanos a traducir y validar la información.",
     buttonText: "Crear cuenta",
     href: "/registro-editor",
-    icon: PenTool,
+    icon: NotebookPen,
     color: "bg-[#E4572E]",
   },
   {
     title: "Voluntarios",
-    description:
-      "Sumate a nuestro equipo del proyecto.",
+    description: "Sumate a nuestro equipo del proyecto.",
     buttonText: "Unirme",
     href: "/voluntarios",
     icon: HeartHandshake,
-    color:"bg-[#1B98A0]",
+    color: "bg-[#1B98A0]",
   },
   {
     title: "Donar",
-    description:
-      "Ayúdanos a mantener la plataforma viva.",
+    description: "Ayúdanos a mantener la plataforma viva.",
     buttonText: "Donar",
     href: "/donar",
     icon: Heart,
@@ -52,7 +49,7 @@ export function Support() {
               Súmate de la forma que prefieras
             </h2>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 text-left">
+          <div className="mt-12 grid grid-cols-1 gap-5.5 md:grid-cols-3 text-left">
             {options.map((item) => {
               const Icon = item.icon;
               return (
@@ -61,15 +58,22 @@ export function Support() {
                   className="flex flex-col justify-between transition-shadow hover:shadow-lg"
                 >
                   <CardHeader>
-                    <div className={`flex h-12 w-12 items-center justify-center ${item.color} rounded-2xl mx-auto`}>                        
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center ${item.color} rounded-2xl `}
+                    >
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <CardTitle style={{ fontFamily: "'Baloo 2', sans-serif" }} className="font-bold text-lg mb-2 text-center">{item.title}</CardTitle>
-                    <CardDescription className="pt-2 text-center font-['Mulish',sans-serif]">
+                    <CardTitle
+                      style={{ fontFamily: "'Baloo 2', sans-serif" }}
+                      className="font-bold text-lg mb-2 "
+                    >
+                      {item.title}
+                    </CardTitle>
+                    <CardDescription className="pt-2  font-['Mulish',sans-serif]">
                       {item.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardFooter className="pt-4 justify-center font-bold">
+                  <CardFooter className="pt-4 bg-transparent border-none font-bold">
                     <Button className="font-['Baloo_2',sans-serif]">
                       <Link href={item.href}>{item.buttonText}</Link>
                     </Button>
@@ -126,7 +130,7 @@ export function Support() {
           </div> */}
         </div>
       </section>
-      
+
       {/* <section className="bg-background px-6 py-20">
         <div className="mx-auto max-w-6xl text-center">
           <h2 className="text-3xl tracking-tight text-foreground">
