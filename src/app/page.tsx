@@ -6,13 +6,14 @@ import { Footer } from "@/components/footer";
 import Stories from "@/components/stories";
 import Language from "@/components/language";
 import Resources from "@/components/resources";
+// import Hero from "@/components/hero";
 
 export default function Home() {
   return (
     <div>
       <HeaderPlataform />
       <main className="flex flex-1 flex-col">
-        <section
+        {/* <section
           className="relative bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center min-h-[400px]"
           style={{ backgroundImage: "url('/ash.jpg')" }}
         >
@@ -25,7 +26,8 @@ export default function Home() {
               Conoce la diversidad lingüística del país
             </p>
           </div>
-        </section>        
+        </section> */}
+        {/* <Hero /> */}
         <Language />
         <Resources />
         <HelpEducation />
