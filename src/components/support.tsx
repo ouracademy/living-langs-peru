@@ -42,10 +42,10 @@ export function Support() {
       <section id="apoyanos" className="py-20">
         <div className="max-w-[1180px] mx-auto px-8">
           <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="font-['Baloo_2',sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
               ¿Quieres apoyarnos?
             </span>
-            <h2 className="font-['Baloo_2',sans-serif] font-bold text-3xl">
+            <h2 className="font-bold text-3xl">
               Súmate de la forma que prefieras
             </h2>
           </div>
@@ -69,12 +69,12 @@ export function Support() {
                     >
                       {item.title}
                     </CardTitle>
-                    <CardDescription className="pt-2  font-['Mulish',sans-serif]">
+                    <CardDescription className="pt-2  ">
                       {item.description}
                     </CardDescription>
                   </CardHeader>
                   <CardFooter className="pt-4 bg-transparent border-none font-bold">
-                    <Button className="font-['Baloo_2',sans-serif]">
+                    <Button className="">
                       <Link href={item.href}>{item.buttonText}</Link>
                     </Button>
                   </CardFooter>
@@ -115,13 +115,13 @@ export function Support() {
                 >
                   {item.icon}
                 </div>
-                <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2">
+                <h3 className="font-bold text-lg mb-2">
                   {item.title}
                 </h3>
                 <p className="text-sm text-[#4A4130] mb-4">{item.text}</p>
                 <a
                   href="#"
-                  className="inline-block bg-[#241D14] text-white font-bold px-5 py-2.5 rounded-full no-underline font-['Baloo_2',sans-serif] text-sm"
+                  className="inline-block bg-[#241D14] text-white font-bold px-5 py-2.5 rounded-full no-underline text-sm"
                 >
                   {item.cta}
                 </a>

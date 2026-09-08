@@ -36,10 +36,10 @@ export default function Resources() {
     <section className="py-20">
       <div className="max-w-[1180px] mx-auto px-8">
         <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="font-['Mulish',sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
             Recursos
           </span>
-          <h2 className="font-['Baloo_2',sans-serif] font-bold text-3xl">
+          <h2 className="font-bold text-3xl">
             Todo lo que necesitas para aprender
           </h2>
         </div>
@@ -58,17 +58,17 @@ export default function Resources() {
                   >
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-1.5">
+                  <h3 className="font-bold text-lg mb-1.5">
                     {resource.title}
                   </h3>
-                  <p className="font-['Mulish',sans-serif] text-sm text-[#4A4130] mb-3.5">
+                  <p className="text-sm text-[#4A4130] mb-3.5">
                     {resource.text}
                   </p>
                 </div>
                 <div>
                   <a
                     href="#"
-                    className="font-['Mulish',sans-serif] font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
+                    className="font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
                   >
                     {resource.cta}
                   </a>

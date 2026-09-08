@@ -23,19 +23,19 @@ export function Footer() {
       <div className="max-w-[1180px] mx-auto px-8">
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 mb-9">
           <div>
-            <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2.5">
+            <h3 className="font-bold text-lg mb-2.5">
               Lenguas Peruanas
             </h3>
-            <p className="text-[#C9BFA8] text-sm max-w-[34ch] font-['Mulish',sans-serif]">
+            <p className="text-[#C9BFA8] text-sm max-w-[34ch] ">
               Iniciativa dedicada a la preservación, difusión y aprendizaje de
               lenguas nativas.
             </p>
           </div>
           <div>
-            <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2.5">
+            <h3 className="font-bold text-lg mb-2.5">
               Participa
             </h3>
-            <ul className="font-['Mulish',sans-serif] mt-4 space-y-2.5 text-sm text-muted-foreground">
+            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
               {navigation.support.map((item) => (
                 <li key={item.name} className="text-[#FFF7E8] hover:text-[#F2B705]">
                   <Link href={item.href}>{item.name}</Link>
@@ -70,7 +70,7 @@ export function Footer() {
             </ul> */}
           </div>
           {/* <div>
-            <h3 className="font-['Baloo_2',sans-serif] font-bold text-lg mb-2.5">
+            <h3 className="font-bold text-lg mb-2.5">
               Explora
             </h3>
             <ul className="list-none">

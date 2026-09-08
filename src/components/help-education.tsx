@@ -42,10 +42,10 @@ export function HelpEducation() {
       <section className="bg-[#FBEFD2] py-20">
         <div className="max-w-[1180px] mx-auto px-8">
           <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="font-['Mulish',sans-serif] inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
               Centro de educación y ayuda
             </span>
-            <h2 className="font-['Baloo_2',sans-serif] font-bold text-3xl">
+            <h2 className="font-bold text-3xl">
               Aprende de la forma que más te guste
             </h2>
           </div>
@@ -56,17 +56,17 @@ export function HelpEducation() {
                 key={item.title}
                 className={`rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between ${item.bgColor}`} 
               >
-                <h3 className="text-2xl font-['Baloo_2',sans-serif] font-bold">
+                <h3 className="text-2xl font-bold">
                   {item.title}
                 </h3>
-                <a href="#" className="font-['Mulish',sans-serif] text-white font-bold underline text-sm">
+                <a href="#" className="text-white font-bold underline text-sm">
                   {item.linkText} 
                 </a>
               </div>
             ))}
 
             {/* <div className="rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between bg-[#E4572E]">
-              <h3 className="text-2xl font-['Baloo_2',sans-serif] font-bold">
+              <h3 className="text-2xl font-bold">
                 Games
               </h3>
               <a href="#" className="text-white font-bold underline text-sm">
@@ -74,7 +74,7 @@ export function HelpEducation() {
               </a>
             </div>
             <div className="rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between bg-[#1B98A0]">
-              <h3 className="text-2xl font-['Baloo_2',sans-serif] font-bold">
+              <h3 className="text-2xl font-bold">
                 Materiales y video
               </h3>
               <a href="#" className="text-white font-bold underline text-sm">

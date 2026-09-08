@@ -39,7 +39,7 @@ export function HeaderPlataform() {
                 fill="none"
               />
             </svg>
-            <span className="font-['Baloo_2',sans-serif] font-bold text-xl">
+            <span className="font-bold text-xl">
               Lenguas Peruanas
             </span>
           </div>
@@ -49,7 +49,7 @@ export function HeaderPlataform() {
                 href={item.href}
                 key={item.label}
                 style={{ color: "#241D14" }}
-                className="font-['Mulish',sans-serif] text-sm font-semibold rounded-full px-4 py-2.5 text-muted-foreground  hover:bg-[#F2B705]"
+                className="text-sm font-semibold rounded-full px-4 py-2.5 text-muted-foreground  hover:bg-[#F2B705]"
               >
                 {item.label}
               </Link>
@@ -57,7 +57,7 @@ export function HeaderPlataform() {
             {/* <li>
               <a
                 href="#recursos"
-                className="font-['Mulish',sans-serif] text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className="text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
               >
                 Recursos
               </a>
@@ -65,7 +65,7 @@ export function HeaderPlataform() {
             <li>
               <a
                 href="#educacion"
-                className="font-['Mulish',sans-serif] text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className="text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
               >
                 Aprende
               </a>
@@ -73,7 +73,7 @@ export function HeaderPlataform() {
             <li>
               <a
                 href="#historias"
-                className=" font-['Mulish',sans-serif] text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className=" text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
               >
                 Historias
               </a>
@@ -81,7 +81,7 @@ export function HeaderPlataform() {
           </nav>
           <a
             href="#lenguas"
-            className=" font-['Baloo_2',sans-serif] font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
+            className=" font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
           >
             Elegir lengua
           </a>
