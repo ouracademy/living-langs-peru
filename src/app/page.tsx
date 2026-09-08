@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import Stories from "@/components/stories";
 import Language from "@/components/language";
 import Resources from "@/components/resources";
-// import Hero from "@/components/hero";
+import Hero from "@/components/hero";
 
 export default function Home() {
   return (
@@ -27,7 +27,7 @@ export default function Home() {
             </p>
           </div>
         </section> */}
-        {/* <Hero /> */}
+        <Hero />
         <Language />
         <Resources />
         <HelpEducation />

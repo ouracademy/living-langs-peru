@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -26,18 +27,18 @@ export default function Hero() {
           Asháninka y Uro de forma divertida.
         </p>
         <div className="flex gap-3.5 flex-wrap mt-6">
-          <a
+          <Link
             href="#lenguas"
             className="font-['Baloo_2',sans-serif] font-bold text-sm px-6.5 py-3.5 rounded-full inline-block bg-[#E4572E] text-white hover:bg-[#C7431C]"
           >
             Elegir una lengua
-          </a>
-          <a
+          </Link>
+          <Link
             href="#educacion"
             className="font-['Baloo_2',sans-serif] font-bold text-sm px-6.5 py-3.5 rounded-full inline-block border-2 border-white text-white hover:bg-white hover:text-[#241D14]"
           >
             Aprende jugando
-          </a>
+          </Link>          
         </div>
       </div>
     </section>
