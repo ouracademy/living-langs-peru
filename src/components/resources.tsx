@@ -1,4 +1,5 @@
 import { BookMarked, Languages, Info, Paperclip } from "lucide-react";
+import Link from "next/link";
 
 const resources = [
   {
@@ -58,20 +59,18 @@ export default function Resources() {
                   >
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg mb-1.5">
-                    {resource.title}
-                  </h3>
+                  <h3 className="font-bold text-lg mb-1.5">{resource.title}</h3>
                   <p className="text-sm text-[#4A4130] mb-3.5">
                     {resource.text}
                   </p>
                 </div>
                 <div>
-                  <a
+                  <Link
                     href="#"
                     className="font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
                   >
                     {resource.cta}
-                  </a>
+                  </Link>
                 </div>
               </div>
             );

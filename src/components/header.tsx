@@ -39,12 +39,10 @@ export function HeaderPlataform() {
                 fill="none"
               />
             </svg>
-            <span className="font-bold text-xl">
-              Lenguas Peruanas
-            </span>
+            <span className="font-bold text-xl">Lenguas Peruanas</span>
           </div>
           <nav className="hidden md:flex gap-2.5 list-none">
-            {menuItems.map((item)=> (
+            {menuItems.map((item) => (
               <Link
                 href={item.href}
                 key={item.label}
@@ -79,16 +77,16 @@ export function HeaderPlataform() {
               </a>
             </li> */}
           </nav>
-          <a
+          <Link
             href="#lenguas"
-            className=" font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
+            className="hidden md:inline-block font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
           >
             Elegir lengua
-          </a>
+          </Link>
         </div>
       </header>
       {/* <header className="flex sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur"> */}
-        {/* <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      {/* <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center font-bold text-lg">
             <Image
               src="/logo.webp"
@@ -111,10 +109,10 @@ export function HeaderPlataform() {
               </Link>
             ))}
           </nav> */}
-          {/* Usuario y Menu sandwich */}
-          {/* <div className="flex items-center gap-2"> */}
-            {/*User button */}
-            {/* <Button
+      {/* Usuario y Menu sandwich */}
+      {/* <div className="flex items-center gap-2"> */}
+      {/*User button */}
+      {/* <Button
               variant="ghost"
               size="icon"
               className="rounded-full border h-9 w-9"
@@ -122,8 +120,8 @@ export function HeaderPlataform() {
               <User className="h-4.5 w-4.5 text-muted-foreground" />
               <span className="sr-only font-normal">Usuario</span>
             </Button> */}
-            {/* Menu sandwich*/}
-            {/* <div className="md:hidden">
+      {/* Menu sandwich*/}
+      {/* <div className="md:hidden">
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger
                   className={cn(
@@ -153,8 +151,8 @@ export function HeaderPlataform() {
                 </SheetContent>
               </Sheet>
             </div> */}
-          {/* </div> */}
-        {/* </div> */}
+      {/* </div> */}
+      {/* </div> */}
       {/* </header> */}
     </>
   );

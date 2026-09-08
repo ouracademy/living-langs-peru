@@ -8,6 +8,7 @@
 //   CardTitle,
 // } from "./ui/card";
 import { BookOpen, FolderOpen, Gamepad2 } from "lucide-react";
+import Link from "next/link";
 
 const educationI = [
   {
@@ -59,9 +60,9 @@ export function HelpEducation() {
                 <h3 className="text-2xl font-bold">
                   {item.title}
                 </h3>
-                <a href="#" className="text-white font-bold underline text-sm">
+                <Link href="#" className="text-white font-bold underline text-sm">
                   {item.linkText} 
-                </a>
+                </Link>                
               </div>
             ))}
 
