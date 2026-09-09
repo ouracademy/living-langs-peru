@@ -18,19 +18,19 @@ const navigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-[#241D14] text-[#FFF7E8] pt-14 pb-7">
-      <div className="max-w-[1180px] mx-auto px-8">
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 mb-9">
+    <footer className="bg-[#241D14] pt-14 pb-7 text-[#FFF7E8]">
+      <div className="mx-auto max-w-[1180px] px-8">
+        <div className="mb-9 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <h3 className="font-bold text-lg mb-2.5">Lenguas Peruanas</h3>
-            <p className="text-[#C9BFA8] text-sm max-w-[34ch] ">
+            <h3 className="mb-2.5 text-lg font-bold">Lenguas Peruanas</h3>
+            <p className="max-w-[34ch] text-sm text-[#C9BFA8]">
               Iniciativa dedicada a la preservación, difusión y aprendizaje de
               lenguas nativas.
             </p>
           </div>
           <div>
-            <h3 className="font-bold text-lg mb-2.5">Participa</h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+            <h3 className="mb-2.5 text-lg font-bold">Participa</h3>
+            <ul className="text-muted-foreground mt-4 space-y-2.5 text-sm">
               {navigation.support.map((item) => (
                 <li
                   key={item.name}
@@ -39,14 +39,14 @@ export function Footer() {
                   <Link href={item.href}>{item.name}</Link>
                 </li>
               ))}
-            </ul>            
-          </div>          
+            </ul>
+          </div>
         </div>
-        <div className="border-t border-[#3F362A] pt-5 flex justify-between flex-wrap gap-2.5 text-sm text-[#9C9179]">
-          <p className="text-sm text-mute-foreground text-center sm:text-left">
+        <div className="flex flex-wrap justify-between gap-2.5 border-t border-[#3F362A] pt-5 text-sm text-[#9C9179]">
+          <p className="text-mute-foreground text-center text-sm sm:text-left">
             &copy; Todos los derechos reservados{" "}
           </p>
-          <div className="flex items-center gap-4 text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-4">
             {navigation.social.map((item) => {
               const socialIcon = item.icon;
               return (
