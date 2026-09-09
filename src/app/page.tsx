@@ -11,8 +11,15 @@ import Hero from "@/components/hero";
 export default function Home() {
   return (
     <div>
+      <div
+        className="h-3 w-full"
+        style={{
+          background:
+            "repeating-linear-gradient(90deg, #E4572E 0 60px, #F2B705 60px 110px, #1B98A0 110px 190px, #6A3E8C 190px 230px)",            
+        }}
+      />
       <HeaderPlataform />
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col">        
         {/* <section
           className="relative bg-primary px-6 py-16 text-center text-primary-foreground bg-cover bg-no-repeat bg-center min-h-[400px]"
           style={{ backgroundImage: "url('/ash.jpg')" }}
