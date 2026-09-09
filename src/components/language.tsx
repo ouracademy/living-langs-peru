@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 const nativeLanguages = [
   {
     InCommunity: "Asháninka",
@@ -31,7 +30,6 @@ export default function Language() {
             Cada lengua tiene su propio mundo de recursos, juegos e historias.
           </p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {nativeLanguages.map((language) => (
             <div
