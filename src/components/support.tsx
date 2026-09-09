@@ -39,16 +39,16 @@ const options = [
 export function Support() {
   return (
     <section id="apoyanos" className="py-20">
-      <div className="max-w-[1180px] mx-auto px-8">
-        <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+      <div className="mx-auto max-w-[1180px] px-8">
+        <div className="mx-auto mb-11 max-w-[56ch] text-center">
+          <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
             ¿Quieres apoyarnos?
           </span>
-          <h2 className="font-bold text-3xl">
+          <h2 className="text-3xl font-bold">
             Súmate de la forma que prefieras
           </h2>
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-5.5 md:grid-cols-3 text-left">
+        <div className="mt-12 grid grid-cols-1 gap-5.5 text-left md:grid-cols-3">
           {options.map((item) => {
             const Icon = item.icon;
             return (
@@ -58,22 +58,22 @@ export function Support() {
               >
                 <CardHeader>
                   <div
-                    className={`flex h-12 w-12 items-center justify-center ${item.color} rounded-2xl `}
+                    className={`flex h-12 w-12 items-center justify-center ${item.color} rounded-2xl`}
                   >
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                   <CardTitle
                     style={{ fontFamily: "'Baloo 2', sans-serif" }}
-                    className="font-bold text-lg mb-2 "
+                    className="mb-2 text-lg font-bold"
                   >
                     {item.title}
                   </CardTitle>
-                  <CardDescription className="pt-2  ">
+                  <CardDescription className="pt-2">
                     {item.description}
                   </CardDescription>
                 </CardHeader>
-                <CardFooter className="pt-4 bg-transparent border-none font-bold">
-                  <Button className="rounded-full px-5 py-2.5 ">
+                <CardFooter className="border-none bg-transparent pt-4 font-bold">
+                  <Button className="rounded-full px-5 py-2.5">
                     <Link href={item.href}>{item.buttonText}</Link>
                   </Button>
                 </CardFooter>

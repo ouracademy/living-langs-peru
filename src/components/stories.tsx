@@ -18,24 +18,29 @@ const testimonials = [
 export default function Stories() {
   return (
     <section id="historias" className="bg-[#FBEFD2] py-20">
-      <div className="max-w-[1180px] mx-auto px-8">
-        <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+      <div className="mx-auto max-w-[1180px] px-8">
+        <div className="mx-auto mb-11 max-w-[56ch] text-center">
+          <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
             Historias
           </span>
-          <h2 className="font-bold text-3xl">
+          <h2 className="text-3xl font-bold">
             Contado en sus propias palabras
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5.5">
+        <div className="grid grid-cols-1 gap-5.5 md:grid-cols-3">
           {testimonials.map((indexT) => (
-            <div key={indexT.community} className="bg-white rounded-[22px] p-6.5">
-              <div className="w-11 h-11 rounded-full mb-3.5 bg-gradient-to-br from-[#E4572E] to-[#6A3E8C]" />
-              <q className="block font-semibold text-base mb-3">
+            <div
+              key={indexT.community}
+              className="rounded-[22px] bg-white p-6.5"
+            >
+              <div className="mb-3.5 h-11 w-11 rounded-full bg-gradient-to-br from-[#E4572E] to-[#6A3E8C]" />
+              <q className="mb-3 block text-base font-semibold">
                 {indexT.testimony}
               </q>
-              <span className="text-xs font-bold text-[#6B6152]">{indexT.community}</span>
+              <span className="text-xs font-bold text-[#6B6152]">
+                {indexT.community}
+              </span>
             </div>
           ))}
         </div>
