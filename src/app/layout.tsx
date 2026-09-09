@@ -13,16 +13,16 @@ import "./globals.css";
 // });
 
 const mulish = Mulish({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-mulish'
-})
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-mulish",
+});
 
 const baloo2 = Baloo_2({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'], // Añade los pesos que uses
-  variable: '--font-baloo', // Creamos una variable CSS para Tailwind
-})
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"], // Añade los pesos que uses
+  variable: "--font-baloo", // Creamos una variable CSS para Tailwind
+});
 
 export const metadata: Metadata = {
   title: {
@@ -43,7 +43,9 @@ export default function RootLayout({
       className={`${baloo2.variable} ${mulish.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

@@ -31,28 +31,28 @@ const educationI = [
 export function HelpEducation() {
   return (
     <section className="bg-[#FBEFD2] py-20">
-      <div className="max-w-[1180px] mx-auto px-8">
-        <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+      <div className="mx-auto max-w-[1180px] px-8">
+        <div className="mx-auto mb-11 max-w-[56ch] text-center">
+          <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
             Centro de educación y ayuda
           </span>
-          <h2 className="font-bold text-3xl">
+          <h2 className="text-3xl font-bold">
             Aprende de la forma que más te guste
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5.5">
+        <div className="grid grid-cols-1 gap-5.5 md:grid-cols-3">
           {educationI.map((item) => (
             <div
               key={item.title}
-              className={`rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between ${item.bgColor}`}
+              className={`flex min-h-[170px] flex-col justify-between rounded-3xl p-8 text-white ${item.bgColor}`}
             >
               <h3 className="text-2xl font-bold">{item.title}</h3>
-              <Link href="#" className="text-white font-bold underline text-sm">
+              <Link href="#" className="text-sm font-bold text-white underline">
                 {item.linkText}
               </Link>
             </div>
-          ))}          
+          ))}
         </div>
       </div>
     </section>

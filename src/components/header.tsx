@@ -25,8 +25,8 @@ export function HeaderPlataform() {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <>
-      <header className="bg-[#FFF7E8] sticky top-0 z-50">
-        <div className="max-w-[1180px] mx-auto px-8 flex items-center justify-between py-5">
+      <header className="sticky top-0 z-50 bg-[#FFF7E8]">
+        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-8 py-5">
           <div className="flex items-center gap-2.5">
             <svg width="30" height="30" viewBox="0 0 30 30">
               <circle cx="15" cy="15" r="8" fill="#E4572E" />
@@ -39,15 +39,15 @@ export function HeaderPlataform() {
                 fill="none"
               />
             </svg>
-            <span className="font-bold text-xl">Lenguas Peruanas</span>
+            <span className="text-xl font-bold">Lenguas Peruanas</span>
           </div>
-          <nav className="hidden md:flex gap-2.5 list-none">
+          <nav className="hidden list-none gap-2.5 md:flex">
             {menuItems.map((item) => (
               <Link
                 href={item.href}
                 key={item.label}
                 style={{ color: "#241D14" }}
-                className="text-sm font-semibold rounded-full px-4 py-2.5 text-muted-foreground  hover:bg-[#F2B705]"
+                className="text-muted-foreground rounded-full px-4 py-2.5 text-sm font-semibold hover:bg-[#F2B705]"
               >
                 {item.label}
               </Link>
@@ -79,7 +79,7 @@ export function HeaderPlataform() {
           </nav>
           <Link
             href="#lenguas"
-            className="hidden md:inline-block font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
+            className="hidden rounded-full bg-[#E4572E] px-5.5 py-2.5 text-sm font-bold text-white no-underline hover:bg-[#C7431C] md:inline-block"
           >
             Elegir lengua
           </Link>
