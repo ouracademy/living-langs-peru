@@ -1,0 +1,9 @@
+# commitlint needs Node >= 22 (see .nvmrc). Fail with a readable message
+# instead of a stack trace when the wrong version is active.
+major="$(node -v | sed 's/^v//' | cut -d. -f1)"
+if [ "$major" -lt 22 ]; then
+  echo "commit-msg hook: Node >= 22 required, got $(node -v). Run 'nvm use' (see .nvmrc)."
+  exit 1
+fi
+
+pnpm exec commitlint --edit "$1"

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PropDesign() {
   return (
-    <div className="bg-[#FFF7E8] text-[#241D14] leading-relaxed">
+    <div className="bg-[#FFF7E8] leading-relaxed text-[#241D14]">
       {/* Stripe */}
       <div
         className="h-3 w-full"
@@ -13,8 +13,8 @@ export default function PropDesign() {
       />
 
       {/* Header */}
-      <header className="bg-[#FFF7E8] sticky top-0 z-50">
-        <div className="max-w-[1180px] mx-auto px-8 flex items-center justify-between py-5">
+      <header className="sticky top-0 z-50 bg-[#FFF7E8]">
+        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-8 py-5">
           <div className="flex items-center gap-2.5">
             <svg width="30" height="30" viewBox="0 0 30 30">
               <circle cx="15" cy="15" r="8" fill="#E4572E" />
@@ -27,15 +27,13 @@ export default function PropDesign() {
                 fill="none"
               />
             </svg>
-            <span className="font-bold text-xl">
-              Lenguas Peruanas
-            </span>
+            <span className="text-xl font-bold">Lenguas Peruanas</span>
           </div>
-          <ul className="hidden md:flex gap-2.5 list-none">
+          <ul className="hidden list-none gap-2.5 md:flex">
             <li>
               <a
                 href="#recursos"
-                className="text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#241D14] no-underline hover:bg-[#F2B705]"
               >
                 Recursos
               </a>
@@ -43,7 +41,7 @@ export default function PropDesign() {
             <li>
               <a
                 href="#educacion"
-                className="text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#241D14] no-underline hover:bg-[#F2B705]"
               >
                 Aprende
               </a>
@@ -51,7 +49,7 @@ export default function PropDesign() {
             <li>
               <a
                 href="#historias"
-                className="text-[#241D14] no-underline font-semibold text-sm px-4 py-2.5 rounded-full hover:bg-[#F2B705]"
+                className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#241D14] no-underline hover:bg-[#F2B705]"
               >
                 Historias
               </a>
@@ -59,7 +57,7 @@ export default function PropDesign() {
           </ul>
           <a
             href="#lenguas"
-            className="font-bold text-sm bg-[#E4572E] text-white px-5.5 py-2.5 rounded-full no-underline hover:bg-[#C7431C]"
+            className="rounded-full bg-[#E4572E] px-5.5 py-2.5 text-sm font-bold text-white no-underline hover:bg-[#C7431C]"
           >
             Elegir lengua
           </a>
@@ -67,34 +65,34 @@ export default function PropDesign() {
       </header>
 
       {/* Hero */}
-      <section className="relative pt-16 pb-10 overflow-hidden">
-        <div className="absolute rounded-full opacity-85 blur-[2px] w-[220px] h-[220px] bg-[#F2B705] -top-16 right-32 z-[1]" />
-        <div className="absolute rounded-full opacity-50 blur-[2px] w-[160px] h-[160px] bg-[#1B98A0] -bottom-10 -left-10 z-[1]" />
+      <section className="relative overflow-hidden pt-16 pb-10">
+        <div className="absolute -top-16 right-32 z-[1] h-[220px] w-[220px] rounded-full bg-[#F2B705] opacity-85 blur-[2px]" />
+        <div className="absolute -bottom-10 -left-10 z-[1] h-[160px] w-[160px] rounded-full bg-[#1B98A0] opacity-50 blur-[2px]" />
 
-        <div className="max-w-[1180px] mx-auto px-8 grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-10 items-center relative z-[2]">
+        <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-8 md:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <span className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full font-bold text-sm shadow-[0_2px_0_rgba(36,29,20,0.08)]">
-              <span className="w-2 h-2 rounded-full bg-[#E4572E]" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold shadow-[0_2px_0_rgba(36,29,20,0.08)]">
+              <span className="h-2 w-2 rounded-full bg-[#E4572E]" />
               Asháninka · Uro
             </span>
-            <h1 className="font-bold text-4xl md:text-5xl leading-tight my-4">
+            <h1 className="my-4 text-4xl leading-tight font-bold md:text-5xl">
               Aprende, juega y <span className="text-[#E4572E]">celebra</span>{" "}
               las lenguas del <span className="text-[#1B98A0]">Perú</span>
             </h1>
-            <p className="text-lg text-[#4A4130] max-w-[38ch] mb-6">
+            <p className="mb-6 max-w-[38ch] text-lg text-[#4A4130]">
               Diccionario, traductor, chatbot, juegos y videos para aprender
               Asháninka y Uro de forma divertida.
             </p>
-            <div className="flex gap-3.5 flex-wrap mt-6">
+            <div className="mt-6 flex flex-wrap gap-3.5">
               <a
                 href="#lenguas"
-                className="font-bold text-sm px-6.5 py-3.5 rounded-full inline-block bg-[#E4572E] text-white hover:bg-[#C7431C]"
+                className="inline-block rounded-full bg-[#E4572E] px-6.5 py-3.5 text-sm font-bold text-white hover:bg-[#C7431C]"
               >
                 Elegir una lengua
               </a>
               <a
                 href="#educacion"
-                className="font-bold text-sm px-6.5 py-3.5 rounded-full inline-block border-2 border-[#241D14] text-[#241D14] hover:bg-[#241D14] hover:text-[#FFF7E8]"
+                className="inline-block rounded-full border-2 border-[#241D14] px-6.5 py-3.5 text-sm font-bold text-[#241D14] hover:bg-[#241D14] hover:text-[#FFF7E8]"
               >
                 Aprende jugando
               </a>
@@ -105,7 +103,7 @@ export default function PropDesign() {
             <svg
               viewBox="0 0 420 380"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-full h-auto"
+              className="h-auto w-full"
             >
               <circle cx="210" cy="190" r="150" fill="#F2B705" opacity=".9" />
               <path
@@ -128,47 +126,43 @@ export default function PropDesign() {
 
       {/* Lenguas */}
       <section id="lenguas" className="bg-[#FBEFD2] py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               Empieza aquí
             </span>
-            <h2 className="font-bold text-3xl">
+            <h2 className="text-3xl font-bold">
               Elige una lengua para comenzar
             </h2>
-            <p className="text-[#4A4130] mt-2.5">
+            <p className="mt-2.5 text-[#4A4130]">
               Cada lengua tiene su propio mundo de recursos, juegos e historias.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-[28px] p-9 text-white relative overflow-hidden min-h-[260px] flex flex-col justify-end bg-[#E4572E]">
-              <div className="absolute -top-7 -right-7 w-[140px] h-[140px] rounded-full bg-white/[.18]" />
-              <h3 className="text-3xl font-bold mb-2">
-                Asháninka
-              </h3>
-              <p className="opacity-95 max-w-[34ch] mb-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-[28px] bg-[#E4572E] p-9 text-white">
+              <div className="absolute -top-7 -right-7 h-[140px] w-[140px] rounded-full bg-white/[.18]" />
+              <h3 className="mb-2 text-3xl font-bold">Asháninka</h3>
+              <p className="mb-4 max-w-[34ch] opacity-95">
                 El pueblo indígena más numeroso de la Amazonía peruana.
               </p>
               <a
                 href="#"
-                className="self-start bg-white text-[#241D14] font-bold px-5.5 py-2.5 rounded-full no-underline "
+                className="self-start rounded-full bg-white px-5.5 py-2.5 font-bold text-[#241D14] no-underline"
               >
                 Explorar Asháninka
               </a>
             </div>
 
-            <div className="rounded-[28px] p-9 text-white relative overflow-hidden min-h-[260px] flex flex-col justify-end bg-[#1B98A0]">
-              <div className="absolute -top-7 -right-7 w-[140px] h-[140px] rounded-full bg-white/[.18]" />
-              <h3 className="text-3xl font-bold mb-2">
-                Uro
-              </h3>
-              <p className="opacity-95 max-w-[34ch] mb-4">
+            <div className="relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-[28px] bg-[#1B98A0] p-9 text-white">
+              <div className="absolute -top-7 -right-7 h-[140px] w-[140px] rounded-full bg-white/[.18]" />
+              <h3 className="mb-2 text-3xl font-bold">Uro</h3>
+              <p className="mb-4 max-w-[34ch] opacity-95">
                 Herederos de las islas flotantes de totora del lago Titicaca.
               </p>
               <a
                 href="#"
-                className="self-start bg-white text-[#241D14] font-bold px-5.5 py-2.5 rounded-full no-underline "
+                className="self-start rounded-full bg-white px-5.5 py-2.5 font-bold text-[#241D14] no-underline"
               >
                 Explorar Uro
               </a>
@@ -179,17 +173,17 @@ export default function PropDesign() {
 
       {/* Recursos */}
       <section id="recursos" className="py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               Recursos
             </span>
-            <h2 className="font-bold text-3xl">
+            <h2 className="text-3xl font-bold">
               Todo lo que necesitas para aprender
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4.5">
+          <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2 md:grid-cols-5">
             {[
               {
                 icon: "📖",
@@ -229,20 +223,18 @@ export default function PropDesign() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-[22px] p-6 shadow-[0_3px_0_rgba(36,29,20,0.06)]"
+                className="rounded-[22px] bg-white p-6 shadow-[0_3px_0_rgba(36,29,20,0.06)]"
               >
                 <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-3.5 text-white ${item.color}`}
+                  className={`mb-3.5 flex h-12 w-12 items-center justify-center rounded-2xl text-xl text-white ${item.color}`}
                 >
                   {item.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-1.5">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-[#4A4130] mb-3.5">{item.text}</p>
+                <h3 className="mb-1.5 text-lg font-bold">{item.title}</h3>
+                <p className="mb-3.5 text-sm text-[#4A4130]">{item.text}</p>
                 <a
                   href="#"
-                  className="font-bold text-sm text-[#241D14] no-underline border-b-2 border-[#F2B705]"
+                  className="border-b-2 border-[#F2B705] text-sm font-bold text-[#241D14] no-underline"
                 >
                   {item.cta}
                 </a>
@@ -254,38 +246,32 @@ export default function PropDesign() {
 
       {/* Educación */}
       <section id="educacion" className="bg-[#FBEFD2] py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               Centro de educación y ayuda
             </span>
-            <h2 className="font-bold text-3xl">
+            <h2 className="text-3xl font-bold">
               Aprende de la forma que más te guste
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5.5">
-            <div className="rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between bg-[#6A3E8C]">
-              <h3 className="text-2xl font-bold">
-                Tutoriales
-              </h3>
-              <a href="#" className="text-white font-bold underline text-sm">
+          <div className="grid grid-cols-1 gap-5.5 md:grid-cols-3">
+            <div className="flex min-h-[170px] flex-col justify-between rounded-3xl bg-[#6A3E8C] p-8 text-white">
+              <h3 className="text-2xl font-bold">Tutoriales</h3>
+              <a href="#" className="text-sm font-bold text-white underline">
                 Ver tutoriales →
               </a>
             </div>
-            <div className="rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between bg-[#E4572E]">
-              <h3 className="text-2xl font-bold">
-                Games
-              </h3>
-              <a href="#" className="text-white font-bold underline text-sm">
+            <div className="flex min-h-[170px] flex-col justify-between rounded-3xl bg-[#E4572E] p-8 text-white">
+              <h3 className="text-2xl font-bold">Games</h3>
+              <a href="#" className="text-sm font-bold text-white underline">
                 Aprende jugando →
               </a>
             </div>
-            <div className="rounded-3xl p-8 text-white min-h-[170px] flex flex-col justify-between bg-[#1B98A0]">
-              <h3 className="text-2xl font-bold">
-                Materiales y video
-              </h3>
-              <a href="#" className="text-white font-bold underline text-sm">
+            <div className="flex min-h-[170px] flex-col justify-between rounded-3xl bg-[#1B98A0] p-8 text-white">
+              <h3 className="text-2xl font-bold">Materiales y video</h3>
+              <a href="#" className="text-sm font-bold text-white underline">
                 Explorar recursos →
               </a>
             </div>
@@ -295,17 +281,17 @@ export default function PropDesign() {
 
       {/* Historias */}
       <section id="historias" className="bg-[#FBEFD2] py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               Historias
             </span>
-            <h2 className="font-bold text-3xl">
+            <h2 className="text-3xl font-bold">
               Contado en sus propias palabras
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5.5">
+          <div className="grid grid-cols-1 gap-5.5 md:grid-cols-3">
             {[
               {
                 quote:
@@ -323,11 +309,9 @@ export default function PropDesign() {
                 who: "Editor voluntario",
               },
             ].map((s) => (
-              <div key={s.who} className="bg-white rounded-[22px] p-6.5">
-                <div className="w-11 h-11 rounded-full mb-3.5 bg-gradient-to-br from-[#E4572E] to-[#6A3E8C]" />
-                <q className="block font-semibold text-base mb-3">
-                  {s.quote}
-                </q>
+              <div key={s.who} className="rounded-[22px] bg-white p-6.5">
+                <div className="mb-3.5 h-11 w-11 rounded-full bg-gradient-to-br from-[#E4572E] to-[#6A3E8C]" />
+                <q className="mb-3 block text-base font-semibold">{s.quote}</q>
                 <span className="text-xs font-bold text-[#6B6152]">
                   {s.who}
                 </span>
@@ -339,17 +323,17 @@ export default function PropDesign() {
 
       {/* Apóyanos */}
       <section id="apoyanos" className="py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               ¿Quieres apoyarnos?
             </span>
-            <h2 className="font-bold text-3xl">
+            <h2 className="text-3xl font-bold">
               Súmate de la forma que prefieras
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5.5">
+          <div className="grid grid-cols-1 gap-5.5 md:grid-cols-3">
             {[
               {
                 icon: "✎",
@@ -375,20 +359,18 @@ export default function PropDesign() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-[22px] p-7 text-center"
+                className="rounded-[22px] bg-white p-7 text-center"
               >
                 <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-3.5 mx-auto text-white ${item.color}`}
+                  className={`mx-auto mb-3.5 flex h-12 w-12 items-center justify-center rounded-2xl text-xl text-white ${item.color}`}
                 >
                   {item.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-[#4A4130] mb-4">{item.text}</p>
+                <h3 className="mb-2 text-lg font-bold">{item.title}</h3>
+                <p className="mb-4 text-sm text-[#4A4130]">{item.text}</p>
                 <a
                   href="#"
-                  className="inline-block bg-[#241D14] text-white font-bold px-5 py-2.5 rounded-full no-underline text-sm"
+                  className="inline-block rounded-full bg-[#241D14] px-5 py-2.5 text-sm font-bold text-white no-underline"
                 >
                   {item.cta}
                 </a>
@@ -400,20 +382,18 @@ export default function PropDesign() {
 
       {/* Sponsors */}
       <section className="bg-[#FBEFD2] py-20">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="max-w-[56ch] mx-auto mb-11 text-center">
-            <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mx-auto mb-11 max-w-[56ch] text-center">
+            <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
               Sponsors
             </span>
-            <h2 className="font-bold text-3xl">
-              Organizaciones aliadas
-            </h2>
+            <h2 className="text-3xl font-bold">Organizaciones aliadas</h2>
           </div>
-          <div className="flex justify-center gap-5 flex-wrap">
-            <div className="bg-white px-6.5 py-4 rounded-2xl font-bold text-sm">
+          <div className="flex flex-wrap justify-center gap-5">
+            <div className="rounded-2xl bg-white px-6.5 py-4 text-sm font-bold">
               UNMSM
             </div>
-            <div className="bg-white px-6.5 py-4 rounded-2xl font-bold text-sm">
+            <div className="rounded-2xl bg-white px-6.5 py-4 text-sm font-bold">
               PERÚ — Ministerio de Cultura
             </div>
           </div>
@@ -421,27 +401,23 @@ export default function PropDesign() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#241D14] text-[#FFF7E8] pt-14 pb-7">
-        <div className="max-w-[1180px] mx-auto px-8">
-          <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 mb-9">
+      <footer className="bg-[#241D14] pt-14 pb-7 text-[#FFF7E8]">
+        <div className="mx-auto max-w-[1180px] px-8">
+          <div className="mb-9 grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
             <div>
-              <h3 className="font-bold text-lg mb-2.5">
-                Lenguas Peruanas
-              </h3>
-              <p className="text-[#C9BFA8] text-sm max-w-[34ch]">
+              <h3 className="mb-2.5 text-lg font-bold">Lenguas Peruanas</h3>
+              <p className="max-w-[34ch] text-sm text-[#C9BFA8]">
                 Iniciativa dedicada a la preservación, difusión y aprendizaje de
                 lenguas nativas.
               </p>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-2.5">
-                Participa
-              </h3>
+              <h3 className="mb-2.5 text-lg font-bold">Participa</h3>
               <ul className="list-none">
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Registrarse como editor
                   </a>
@@ -449,7 +425,7 @@ export default function PropDesign() {
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Voluntarios
                   </a>
@@ -457,7 +433,7 @@ export default function PropDesign() {
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Donar
                   </a>
@@ -465,14 +441,12 @@ export default function PropDesign() {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-2.5">
-                Explora
-              </h3>
+              <h3 className="mb-2.5 text-lg font-bold">Explora</h3>
               <ul className="list-none">
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Diccionario
                   </a>
@@ -480,7 +454,7 @@ export default function PropDesign() {
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Games
                   </a>
@@ -488,7 +462,7 @@ export default function PropDesign() {
                 <li className="mb-2">
                   <a
                     href="#"
-                    className="text-[#FFF7E8] no-underline text-sm hover:text-[#F2B705]"
+                    className="text-sm text-[#FFF7E8] no-underline hover:text-[#F2B705]"
                   >
                     Historias
                   </a>
@@ -496,7 +470,7 @@ export default function PropDesign() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-[#3F362A] pt-5 flex justify-between flex-wrap gap-2.5 text-sm text-[#9C9179]">
+          <div className="flex flex-wrap justify-between gap-2.5 border-t border-[#3F362A] pt-5 text-sm text-[#9C9179]">
             <span>© 2026 Lenguas Peruanas</span>
             <span>Facebook · Instagram · X</span>
           </div>
