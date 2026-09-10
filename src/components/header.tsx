@@ -77,12 +77,12 @@ export function HeaderPlataform() {
               </a>
             </li> */}
           </nav>
-          <Link
+          <a
             href="#lenguas"
             className="hidden rounded-full bg-[#E4572E] px-5.5 py-2.5 text-sm font-bold text-white no-underline hover:bg-[#C7431C] md:inline-block"
           >
             Elegir lengua
-          </Link>
+          </a>
         </div>
       </header>
       {/* <header className="flex sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur"> */}
