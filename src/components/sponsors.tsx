@@ -13,20 +13,20 @@ const sponsors = [
 export function SponsorsSection() {
   return (
     <section className="bg-[#FBEFD2] py-20">
-      <div className="max-w-[1180px] mx-auto px-8">
-        <div className="max-w-[56ch] mx-auto mb-11 text-center">
-          <span className="inline-block bg-[#6A3E8C] text-white font-bold text-sm px-4 py-1.5 rounded-full mb-3.5">
+      <div className="mx-auto max-w-[1180px] px-8">
+        <div className="mx-auto mb-11 max-w-[56ch] text-center">
+          <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
             Sponsors
           </span>
-          <h2 className="font-bold text-3xl">Organizaciones aliadas</h2>
+          <h2 className="text-3xl font-bold">Organizaciones aliadas</h2>
         </div>
-        <div className="flex justify-center gap-5 flex-wrap">
+        <div className="flex flex-wrap justify-center gap-5">
           {sponsors.map((sponsor) => (
             <Link
               key={sponsor.name}
               href={sponsor.url}
               target="_blank"
-              className="group flex items-center justify-center "
+              className="group flex items-center justify-center"
             >
               <Image
                 src={sponsor.logo}
@@ -36,7 +36,7 @@ export function SponsorsSection() {
                 className="h-10 w-auto object-contain sm:h-12"
               />
             </Link>
-          ))}          
+          ))}
         </div>
       </div>
     </section>
