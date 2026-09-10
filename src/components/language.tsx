@@ -6,12 +6,14 @@ const nativeLanguages = [
     overview: "El pueblo indígena más numeroso de la Amazonía peruana.",
     explore: "Explorar Asháninka",
     bgColor: "bg-[#E4572E]",
+    href: "/ashaninka",
   },
   {
     InCommunity: "Uro",
     overview: "Herederos de las islas flotantes de totora del lago Titicaca.",
     explore: "Explorar Uro",
     bgColor: "bg-[#1B98A0]",
+    href: "/uro",
   },
 ];
 
@@ -43,7 +45,7 @@ export default function Language() {
               <p className=" opacity-95 max-w-[34ch] mb-4">
                 {language.overview}
               </p>
-              <Link href="#" className="self-start bg-white text-[#241D14] font-bold px-5.5 py-2.5 rounded-full no-underline">
+              <Link href={language.href} className="self-start bg-white text-[#241D14] font-bold px-5.5 py-2.5 rounded-full no-underline">
                 {language.explore}
               </Link>              
             </div>
