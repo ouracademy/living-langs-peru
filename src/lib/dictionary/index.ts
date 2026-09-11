@@ -1,7 +1,8 @@
 import { type LanguageSlug, languages } from "@/lib/languages";
 
 import { dictionaries } from "./registry";
-import type { Dictionary } from "./types";
+import { normalize } from "./text";
+import type { Dictionary, Entry } from "./types";
 
 export type { Dictionary, Entry, Example, PartOfSpeech } from "./types";
 
@@ -47,4 +48,28 @@ export function getLanguagesWithDictionary(): {
         ]
       : [];
   });
+}
+
+/**
+ * Finds the entry a ?palabra value refers to. Tries the exact id first, then
+ * the word and its variants folded for case and diacritics, so a hand-typed
+ * link works as well as a generated one.
+ */
+export function resolveWord(
+  entries: Entry[],
+  value: string,
+): Entry | undefined {
+  const wanted = normalize(value);
+
+  if (!wanted) return undefined;
+
+  const byId = entries.find((entry) => entry.id === value.trim());
+
+  if (byId) return byId;
+
+  return entries.find(
+    (entry) =>
+      normalize(entry.word) === wanted ||
+      entry.variants?.some((variant) => normalize(variant) === wanted),
+  );
 }
