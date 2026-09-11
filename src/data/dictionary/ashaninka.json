@@ -1,0 +1,50 @@
+{
+  "language": "ashaninka",
+  "entries": [
+    {
+      "id": "placeholder-a",
+      "word": "Placeholder A",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Oración de ejemplo pendiente de fuente citada.",
+          "translation": "Se reemplaza con contenido real en T7.5, tras aprobar licencias.",
+          "sourceId": "placeholder"
+        }
+      ],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "placeholder-b",
+      "word": "Placeholder B",
+      "translations": ["contenido provisional", "segunda acepción de prueba"],
+      "partOfSpeech": "verb",
+      "examples": [],
+      "notes": "Entrada de andamiaje sin ejemplos, para verificar el mensaje de «sin ejemplos» (AC-M3-6).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "placeholder-c",
+      "word": "Placeholder C",
+      "variants": ["Placeholder Ç"],
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "phrase",
+      "examples": [
+        {
+          "sentence": "Primera oración de ejemplo pendiente.",
+          "translation": "Se reemplaza con contenido real en T7.5.",
+          "sourceId": "placeholder"
+        },
+        {
+          "sentence": "Segunda oración de ejemplo pendiente.",
+          "translation": "Verifica que se rendericen varios ejemplos.",
+          "sourceId": "placeholder"
+        }
+      ],
+      "notes": "Entrada de andamiaje con variante y dos ejemplos.",
+      "sourceId": "placeholder"
+    }
+  ]
+}
