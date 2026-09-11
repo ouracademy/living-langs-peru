@@ -62,9 +62,9 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F4 — Buscador
 
-- [ ] **T4.1** `searchEntries()`: 5 niveles de ranking, bidireccional es→lengua. Tests primero, con fixture que distinga los 5 niveles `[AC-M1-4..7]`
-- [ ] **T4.2** `ui/input.tsx` vía shadcn + `search-box.tsx`: debounce ~150 ms, botón limpiar, `<label>`, contador en `aria-live="polite"`, estado local (no en URL) `[AC-M3-3]`
-- [ ] **T4.3** E2E: filtrar · contador · limpiar · buscar en español encuentra por traducción `[AC-M3-3, AC-M1-6]`
+- [x] **T4.1** `searchEntries()`: 5 niveles de ranking, bidireccional es→lengua. Tests primero, con fixture que distinga los 5 niveles `[AC-M1-4..7]`
+- [x] **T4.2** `ui/input.tsx` vía shadcn + `search-box.tsx`: debounce ~150 ms, botón limpiar, `<label>`, contador en `aria-live="polite"`, estado local (no en URL) `[AC-M3-3]`
+- [x] **T4.3** E2E: filtrar · contador · limpiar · buscar en español encuentra por traducción `[AC-M3-3, AC-M1-6]`
 
 > **⛔ Checkpoint 3** — la página es usable de verdad. Buen momento para enseñársela a alguien de fuera.
 

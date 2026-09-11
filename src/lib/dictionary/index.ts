@@ -135,3 +135,47 @@ export function groupByLetter(entries: Entry[]): LetterGroup[] {
       entries: group.sort((a, b) => compareWords(a.word, b.word)),
     }));
 }
+
+/**
+ * Ranking levels, best first. Search is deliberately bidirectional: typing
+ * "casa" must find the entry whose translation is «casa», not just entries
+ * whose headword starts with those letters.
+ */
+const NO_MATCH = Number.MAX_SAFE_INTEGER;
+
+function rank(entry: Entry, query: string): number {
+  const forms = [entry.word, ...(entry.variants ?? [])].map(normalize);
+
+  if (forms.some((form) => form === query)) return 1;
+  if (forms.some((form) => form.startsWith(query))) return 2;
+  if (forms.some((form) => form.includes(query))) return 3;
+
+  const translations = entry.translations.map(normalize);
+
+  if (translations.some((text) => text.startsWith(query))) return 4;
+  if (translations.some((text) => text.includes(query))) return 5;
+
+  return NO_MATCH;
+}
+
+/**
+ * Filters and orders entries for a query. An empty query returns everything,
+ * alphabetically. Ties within a ranking level break alphabetically too, so
+ * the order is stable and predictable.
+ */
+export function searchEntries(entries: Entry[], query: string): Entry[] {
+  const wanted = normalize(query);
+
+  if (!wanted) {
+    return [...entries].sort((a, b) => compareWords(a.word, b.word));
+  }
+
+  return entries
+    .map((entry) => ({ entry, rank: rank(entry, wanted) }))
+    .filter((scored) => scored.rank !== NO_MATCH)
+    .sort(
+      (a, b) =>
+        a.rank - b.rank || compareWords(a.entry.word, b.entry.word),
+    )
+    .map((scored) => scored.entry);
+}

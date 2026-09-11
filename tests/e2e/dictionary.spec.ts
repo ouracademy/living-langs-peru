@@ -29,7 +29,9 @@ test.describe("dictionary page", () => {
   test("warns that the content is still provisional", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
 
-    await expect(page.getByRole("status")).toContainText(/provisional/i);
+    await expect(
+      page.getByText(/estas entradas son de andamiaje/i),
+    ).toBeVisible();
   });
 
   // AC-M3-7 (404 half) and AC-M1-9
@@ -204,5 +206,65 @@ test.describe("alphabetical grouping", () => {
     await expect(
       index.getByRole("link", { name: "Ir a la letra Q" }),
     ).toHaveCount(0);
+  });
+});
+
+test.describe("search", () => {
+  // AC-M3-3
+  test("filters the list and updates the result count", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    const status = page.getByRole("status", { name: /resultados/i });
+    await expect(status).toContainText("13 palabras");
+
+    await page.getByLabel(/buscar/i).fill("placeholder-0");
+
+    await expect(status).toContainText("9 palabras");
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(9);
+  });
+
+  test("announces when nothing matches", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("zzzznomatch");
+
+    await expect(
+      page.getByRole("status", { name: /resultados/i }),
+    ).toContainText("Sin resultados");
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(0);
+  });
+
+  test("clearing the search restores the full list", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("placeholder-0");
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(9);
+
+    await page.getByRole("button", { name: /limpiar/i }).click();
+
+    await expect(page.getByLabel(/buscar/i)).toHaveValue("");
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(13);
+  });
+
+  // AC-M1-6 exercised through the UI: Spanish in, indigenous word out.
+  test("finds a word by its Spanish translation", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("provisional");
+
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(13);
+  });
+
+  test("searching does not put anything in the url", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("placeholder-0");
+
+    await expect(page).toHaveURL("/diccionario/ashaninka");
   });
 });
