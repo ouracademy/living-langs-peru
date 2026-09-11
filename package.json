@@ -12,7 +12,8 @@
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "dictionary:check": "node --experimental-strip-types scripts/validate-dictionary.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

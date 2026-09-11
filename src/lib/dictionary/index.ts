@@ -1,16 +1,12 @@
 import { type LanguageSlug, languages } from "@/lib/languages";
 
+import { PLACEHOLDER_SOURCE_ID } from "./constants";
 import { dictionaries } from "./registry";
 import { compareWords, normalize } from "./text";
 import type { Dictionary, Entry } from "./types";
 
 export type { Dictionary, Entry, Example, PartOfSpeech } from "./types";
-
-/**
- * Marks scaffolding content that is not real language data. Entries carrying
- * it must never reach production: `dictionary:check` rejects them.
- */
-export const PLACEHOLDER_SOURCE_ID = "placeholder";
+export { PLACEHOLDER_SOURCE_ID } from "./constants";
 
 /**
  * A language may exist in `languages.ts` without having a dictionary yet, so
@@ -173,9 +169,6 @@ export function searchEntries(entries: Entry[], query: string): Entry[] {
   return entries
     .map((entry) => ({ entry, rank: rank(entry, wanted) }))
     .filter((scored) => scored.rank !== NO_MATCH)
-    .sort(
-      (a, b) =>
-        a.rank - b.rank || compareWords(a.entry.word, b.entry.word),
-    )
+    .sort((a, b) => a.rank - b.rank || compareWords(a.entry.word, b.entry.word))
     .map((scored) => scored.entry);
 }

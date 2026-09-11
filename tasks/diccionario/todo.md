@@ -81,7 +81,7 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F6 — Validador y API
 
-- [ ] **T6.1** `scripts/validate-dictionary.ts` + script `dictionary:check`. Sale con código ≠ 0 y lista errores `[AC-M1-10]`
+- [x] **T6.1** `scripts/validate-dictionary.ts` + script `dictionary:check`. Sale con código ≠ 0 y lista errores `[AC-M1-10]`
 - [ ] **T6.2** `GET /api/diccionario` con `dynamic = "force-static"` `[AC-M2-1]`
 - [ ] **T6.3** `GET /api/diccionario/[lengua]` con `q` / `limit` (máx 500) / `offset`; `400 invalid_parameter` `[AC-M2-2..5]`
 - [ ] **T6.4** `GET /api/diccionario/[lengua]/[id]` → entrada o `404 entry_not_found` `[AC-M2-6]`
