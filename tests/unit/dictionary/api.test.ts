@@ -48,12 +48,12 @@ describe("GET /api/diccionario/[lengua]", () => {
   // AC-M2-3
   it("filters with q and reports total matches, not page size", async () => {
     const response = await getLanguageEntries(
-      request("/api/diccionario/ashaninka?q=placeholder-0&limit=2"),
+      request("/api/diccionario/ashaninka?q=sankena&limit=2"),
       params({ lengua: "ashaninka" }),
     );
     const body = await response.json();
 
-    expect(body.total).toBe(9);
+    expect(body.total).toBe(5);
     expect(body.entries).toHaveLength(2);
     expect(body.limit).toBe(2);
     expect(body.offset).toBe(0);
@@ -109,13 +109,13 @@ describe("GET /api/diccionario/[lengua]", () => {
 describe("GET /api/diccionario/[lengua]/[id]", () => {
   it("returns a single entry", async () => {
     const response = await getEntry(
-      request("/api/diccionario/ashaninka/placeholder-a"),
-      params({ lengua: "ashaninka", id: "placeholder-a" }),
+      request("/api/diccionario/ashaninka/abakerone"),
+      params({ lengua: "ashaninka", id: "abakerone" }),
     );
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body.entry.word).toBe("Placeholder A");
+    expect(body.entry.word).toBe("abakerone");
   });
 
   // AC-M2-6

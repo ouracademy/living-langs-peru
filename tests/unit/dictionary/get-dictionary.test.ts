@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { getDictionary, isProvisional } from "@/lib/dictionary";
+import {
+  getDictionary,
+  getSource,
+  groupByLetter,
+  isProvisional,
+  resolveWord,
+} from "@/lib/dictionary";
 
 describe("getDictionary", () => {
   it("returns the Asháninka dictionary", () => {
@@ -54,11 +60,11 @@ describe("getDictionary", () => {
 });
 
 describe("isProvisional", () => {
-  it("flags the seed dictionary while it still carries placeholder content", () => {
+  it("no longer flags the shipped dictionary: every entry cites a source", () => {
     const dictionary = getDictionary("ashaninka");
 
     expect(dictionary).not.toBeNull();
-    expect(isProvisional(dictionary!)).toBe(true);
+    expect(isProvisional(dictionary!)).toBe(false);
   });
 
   it("clears once every entry cites a real source", () => {
@@ -76,5 +82,46 @@ describe("isProvisional", () => {
     } as const;
 
     expect(isProvisional(dictionary)).toBe(false);
+  });
+});
+
+describe("shipped Asháninka data", () => {
+  const entries = getDictionary("ashaninka")?.entries ?? [];
+
+  it("cites a resolvable source on every entry", () => {
+    expect(entries.length).toBeGreaterThan(100);
+    for (const entry of entries) {
+      expect(getSource(entry.sourceId)).toBeDefined();
+    }
+  });
+
+  it("cites a source on every usage example", () => {
+    for (const entry of entries) {
+      for (const example of entry.examples) {
+        expect(getSource(example.sourceId)).toBeDefined();
+      }
+    }
+  });
+
+  it("gives an ascii id to a word spelled with ñ, so links stay ascii", () => {
+    const withEnye = entries.find((entry) => entry.word.includes("ñ"));
+
+    expect(withEnye).toBeDefined();
+    expect(withEnye!.id).not.toContain("ñ");
+    // The ascii id and the raw word both resolve to the same entry.
+    expect(resolveWord(entries, withEnye!.id)?.word).toBe(withEnye!.word);
+    expect(resolveWord(entries, withEnye!.word)?.id).toBe(withEnye!.id);
+  });
+
+  it("has entries under the digraph letters of the official alphabet", () => {
+    const letters = groupByLetter(entries, "ashaninka").map((g) => g.letter);
+
+    expect(letters).toContain("Sh");
+    expect(letters).toContain("Ts");
+    expect(letters).toContain("Ty");
+    // No letter that does not exist in Asháninka.
+    for (const absent of ["C", "D", "F", "G", "L", "Q", "U", "V", "Z"]) {
+      expect(letters).not.toContain(absent);
+    }
   });
 });

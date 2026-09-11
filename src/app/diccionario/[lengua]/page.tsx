@@ -7,6 +7,7 @@ import {
   getDictionary,
   getLanguageCode,
   getLanguagesWithDictionary,
+  getSources,
   isProvisional,
 } from "@/lib/dictionary";
 import { getLanguage } from "@/lib/languages";
@@ -77,8 +78,29 @@ export default async function DictionaryPage({ params }: DictionaryPageProps) {
           availableLanguages={getLanguagesWithDictionary().map(
             (item) => item.slug,
           )}
+          sources={getSources()}
         />
       </Suspense>
+
+      <footer className="mt-12 border-t border-gray-200 pt-6 text-sm text-[#4A4130]">
+        <h2 className="font-bold">Fuentes</h2>
+        <ul className="mt-2 flex flex-col gap-1.5">
+          {getSources().map((source) => (
+            <li key={source.id}>
+              <a
+                href={source.url}
+                className="underline"
+                rel="noreferrer noopener"
+              >
+                {source.title}
+              </a>
+              {source.authors && `, ${source.authors.join("; ")}`}.{" "}
+              {source.publisher}, {source.year}.
+              {source.note && <span className="block">{source.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </footer>
     </main>
   );
 }

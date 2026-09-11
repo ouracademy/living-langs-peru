@@ -23,15 +23,7 @@ test.describe("dictionary page", () => {
     ).toBeVisible();
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(13);
-  });
-
-  test("warns that the content is still provisional", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka");
-
-    await expect(
-      page.getByText(/estas entradas son de andamiaje/i),
-    ).toBeVisible();
+    ).toHaveCount(169);
   });
 
   // AC-M3-7 (404 half) and AC-M1-9
@@ -58,47 +50,41 @@ test.describe("word selection and deep links", () => {
     page,
   }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByRole("button", { name: "Placeholder A" }).click();
+    await page.getByRole("button", { name: "abakerone" }).click();
 
-    await expect(page).toHaveURL(
-      "/diccionario/ashaninka?palabra=placeholder-a",
-    );
-    const detail = page.getByRole("region", { name: /placeholder a/i });
+    await expect(page).toHaveURL("/diccionario/ashaninka?palabra=abakerone");
+    const detail = page.getByRole("region", { name: /abakerone/i });
     await expect(detail).toBeVisible();
-    await expect(detail).toContainText("contenido provisional");
-    await expect(detail).toContainText(
-      "Oración de ejemplo pendiente de fuente citada.",
-    );
+    await expect(detail).toContainText("destinatario");
+    await expect(detail).toContainText("Pisankenatero ibajiro abakerone");
   });
 
   // AC-M3-5 — the case most likely to break, and the one explicitly asked for.
   test("opening ?palabra directly shows that entry already open", async ({
     page,
   }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-c");
+    await page.goto("/diccionario/ashaninka?palabra=anamentotsipana");
 
-    const detail = page.getByRole("region", { name: /placeholder c/i });
+    const detail = page.getByRole("region", { name: /añamentotsipana/i });
     await expect(detail).toBeVisible();
     // Both examples render.
-    await expect(detail).toContainText("Primera oración de ejemplo pendiente.");
-    await expect(detail).toContainText("Segunda oración de ejemplo pendiente.");
+    await expect(detail).toContainText("currículum");
+    await expect(detail).toContainText("hoja de vida");
   });
 
   test("resolves a deep link written with the raw word", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=Placeholder%20B");
+    await page.goto("/diccionario/ashaninka?palabra=pani");
 
-    await expect(
-      page.getByRole("region", { name: /placeholder b/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("region", { name: /pani/i })).toBeVisible();
   });
 
   // AC-M3-6
   test("says so when an entry has no usage examples", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-b");
+    await page.goto("/diccionario/ashaninka?palabra=pani");
 
-    await expect(
-      page.getByRole("region", { name: /placeholder b/i }),
-    ).toContainText(/no tenemos ejemplos/i);
+    await expect(page.getByRole("region", { name: /pani/i })).toContainText(
+      /no tenemos ejemplos/i,
+    );
   });
 
   // AC-M3-7 — a shared link that misses must not land on an error page.
@@ -113,7 +99,7 @@ test.describe("word selection and deep links", () => {
     );
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(13);
+    ).toHaveCount(169);
   });
 
   // AC-M3-8
@@ -121,21 +107,21 @@ test.describe("word selection and deep links", () => {
     page,
   }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByRole("button", { name: "Placeholder A" }).click();
-    await expect(page).toHaveURL(/palabra=placeholder-a/);
+    await page.getByRole("button", { name: "abakerone" }).click();
+    await expect(page).toHaveURL(/palabra=abakerone/);
 
-    await page.getByRole("button", { name: "Placeholder C" }).click();
-    await expect(page).toHaveURL(/palabra=placeholder-c/);
+    await page.getByRole("button", { name: "añamentotsipana" }).click();
+    await expect(page).toHaveURL(/palabra=anamentotsipana/);
 
     await page.goBack();
-    await expect(page).toHaveURL(/palabra=placeholder-a/);
+    await expect(page).toHaveURL(/palabra=abakerone/);
     await expect(
-      page.getByRole("region", { name: /placeholder a/i }),
+      page.getByRole("region", { name: /abakerone/i }),
     ).toBeVisible();
   });
 
   test("closing the detail drops ?palabra from the url", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
     await page.getByRole("button", { name: /cerrar/i }).click();
 
     await expect(page).toHaveURL("/diccionario/ashaninka");
@@ -151,17 +137,24 @@ test.describe("alphabetical grouping", () => {
       .getByRole("region", { name: "Palabras" })
       .getByRole("heading", { level: 2 });
 
+    // Real data on the official alphabet: Sh, Ts and Ty are letters of
+    // their own, and there is no C, D or Z in Asháninka at all.
     await expect(headings).toHaveText([
       "A",
       "B",
-      "C",
-      "D",
+      "I",
+      "K",
+      "M",
       "N",
       "Ñ",
       "O",
       "P",
-      "Z",
-      "#",
+      "S",
+      "Sh",
+      "T",
+      "Ts",
+      "Ty",
+      "Y",
     ]);
   });
 
@@ -170,39 +163,39 @@ test.describe("alphabetical grouping", () => {
   }) => {
     await page.goto("/diccionario/ashaninka");
 
-    // A-placeholder-01 and Á-placeholder-02 share the "A" section.
     const sectionA = page.getByRole("group", { name: "A" });
-    await expect(sectionA.getByRole("listitem")).toHaveCount(2);
+    await expect(sectionA.getByRole("listitem")).toHaveCount(23);
   });
 
   test("lists words alphabetically inside a section", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
 
+    // Plain s before sh: Spanish collation would interleave them.
     const words = await page
-      .getByRole("group", { name: "P" })
+      .getByRole("group", { name: "Sh" })
       .getByRole("button")
       .allInnerTexts();
 
-    expect(words.map((text) => text.split(" —")[0])).toEqual([
-      "Placeholder A",
-      "Placeholder B",
-      "Placeholder C",
+    expect(words.slice(0, 3).map((text) => text.split(" —")[0])).toEqual([
+      "sharakamashi",
+      "sharakasati",
+      "sheki",
     ]);
   });
 
   test("the A-Z index jumps to a section", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByRole("link", { name: "Ir a la letra Ñ" }).click();
+    await page.getByRole("link", { name: "Ir a la letra Ts" }).click();
 
     await expect(page).toHaveURL(/#letra-/);
-    await expect(page.getByRole("group", { name: "Ñ" })).toBeInViewport();
+    await expect(page.getByRole("group", { name: "Ts" })).toBeInViewport();
   });
 
   test("the index omits letters with no entries", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
 
     const index = page.getByRole("navigation", { name: /índice/i });
-    await expect(index.getByRole("link")).toHaveCount(10);
+    await expect(index.getByRole("link")).toHaveCount(15);
     await expect(
       index.getByRole("link", { name: "Ir a la letra Q" }),
     ).toHaveCount(0);
@@ -214,14 +207,14 @@ test.describe("search", () => {
   test("filters the list and updates the result count", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
     const status = page.getByRole("status", { name: /resultados/i });
-    await expect(status).toContainText("13 palabras");
+    await expect(status).toContainText("169 palabras");
 
-    await page.getByLabel(/buscar/i).fill("placeholder-0");
+    await page.getByLabel(/buscar/i).fill("sankena");
 
-    await expect(status).toContainText("9 palabras");
+    await expect(status).toContainText("5 palabras");
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(9);
+    ).toHaveCount(5);
   });
 
   test("announces when nothing matches", async ({ page }) => {
@@ -238,32 +231,32 @@ test.describe("search", () => {
 
   test("clearing the search restores the full list", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByLabel(/buscar/i).fill("placeholder-0");
+    await page.getByLabel(/buscar/i).fill("sankena");
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(9);
+    ).toHaveCount(5);
 
     await page.getByRole("button", { name: /limpiar/i }).click();
 
     await expect(page.getByLabel(/buscar/i)).toHaveValue("");
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(13);
+    ).toHaveCount(169);
   });
 
   // AC-M1-6 exercised through the UI: Spanish in, indigenous word out.
   test("finds a word by its Spanish translation", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByLabel(/buscar/i).fill("provisional");
+    await page.getByLabel(/buscar/i).fill("cuaderno");
 
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(13);
+    ).toHaveCount(2);
   });
 
   test("searching does not put anything in the url", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByLabel(/buscar/i).fill("placeholder-0");
+    await page.getByLabel(/buscar/i).fill("sankena");
 
     await expect(page).toHaveURL("/diccionario/ashaninka");
   });
@@ -276,7 +269,7 @@ test.describe("language picker", () => {
 
     await expect(
       page.getByRole("button", { name: /lengua: Asháninka/i }),
-    ).toContainText("13");
+    ).toContainText("169");
   });
 
   // AC-M4-2
@@ -306,7 +299,7 @@ test.describe("language picker", () => {
 
   // AC-M4-3 — an entry id means nothing in another language.
   test("changing language drops ?palabra", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
     await page.getByRole("button", { name: /lengua: Asháninka/i }).click();
     await page.getByRole("menuitem", { name: /Asháninka/ }).click();
 
@@ -315,8 +308,8 @@ test.describe("language picker", () => {
 
   test("changing language clears the search box", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByLabel(/buscar/i).fill("placeholder-0");
-    await expect(page.getByLabel(/buscar/i)).toHaveValue("placeholder-0");
+    await page.getByLabel(/buscar/i).fill("sankena");
+    await expect(page.getByLabel(/buscar/i)).toHaveValue("sankena");
 
     await page.getByRole("button", { name: /lengua: Asháninka/i }).click();
     await page.getByRole("menuitem", { name: /Asháninka/ }).click();
@@ -343,7 +336,7 @@ test.describe("dictionary api", () => {
 
     expect(response.status()).toBe(200);
     expect(await response.json()).toEqual({
-      languages: [{ slug: "ashaninka", name: "Asháninka", total: 13 }],
+      languages: [{ slug: "ashaninka", name: "Asháninka", total: 169 }],
     });
   });
 });
@@ -364,23 +357,23 @@ test.describe("keyboard only", () => {
     // Then the search box, which accepts typing.
     await page.keyboard.press("Tab");
     await expect(page.getByLabel(/buscar/i)).toBeFocused();
-    await page.keyboard.type("placeholder-0");
+    await page.keyboard.type("sankena");
     await expect(
       page.getByRole("status", { name: /resultados/i }),
-    ).toContainText("9 palabras");
+    ).toContainText("5 palabras");
 
     // Reach the first word and open it with Enter.
-    await page.getByRole("button", { name: /^A-placeholder-01/ }).focus();
+    await page.getByRole("button", { name: /^sankenapatotantsi/ }).focus();
     await page.keyboard.press("Enter");
 
-    await expect(page).toHaveURL(/palabra=a-placeholder-01/);
+    await expect(page).toHaveURL(/palabra=sankenapatotantsi/);
     await expect(
-      page.getByRole("region", { name: /a-placeholder-01/i }),
+      page.getByRole("region", { name: /sankenapatotantsi/i }),
     ).toBeVisible();
   });
 
   test("closes the detail with Enter on the close button", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
     await page.getByRole("button", { name: /cerrar/i }).focus();
     await page.keyboard.press("Enter");
 
@@ -388,16 +381,16 @@ test.describe("keyboard only", () => {
   });
 
   test("marks the selected word for assistive tech", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
 
     await expect(
-      page.getByRole("button", { name: /^Placeholder A/ }),
+      page.getByRole("button", { name: /^abakerone/ }),
     ).toHaveAttribute("aria-current", "true");
   });
 
   test("tags entries and examples with the language code", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
-    const detail = page.getByRole("region", { name: /placeholder a/i });
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
+    const detail = page.getByRole("region", { name: /abakerone/i });
 
     await expect(detail.getByRole("heading", { level: 2 })).toHaveAttribute(
       "lang",
@@ -420,23 +413,23 @@ test.describe("narrow screens", () => {
 
   test("keeps the detail on screen when a word is picked", async ({ page }) => {
     await page.goto("/diccionario/ashaninka");
-    await page.getByRole("button", { name: /^Placeholder A/ }).click();
+    await page.getByRole("button", { name: /^abakerone/ }).click();
 
-    const detail = page.getByRole("region", { name: /placeholder a/i });
+    const detail = page.getByRole("region", { name: /abakerone/i });
     await expect(detail).toBeVisible();
     await expect(detail).toBeInViewport();
   });
 
   test("the list stays reachable behind the panel", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.goto("/diccionario/ashaninka?palabra=abakerone");
 
     await expect(
       page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(13);
+    ).toHaveCount(169);
   });
 
   test("the page does not scroll sideways", async ({ page }) => {
-    await page.goto("/diccionario/ashaninka?palabra=placeholder-c");
+    await page.goto("/diccionario/ashaninka?palabra=anamentotsipana");
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth,

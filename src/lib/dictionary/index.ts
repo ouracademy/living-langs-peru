@@ -1,12 +1,12 @@
 import { type LanguageSlug, languages } from "@/lib/languages";
 
 import { PLACEHOLDER_SOURCE_ID } from "./constants";
-import { dictionaries } from "./registry";
+import { dictionaries, sources } from "./registry";
 import { getComparator, getInitial } from "./collation";
 import { normalize } from "./text";
-import type { Dictionary, Entry } from "./types";
+import type { Dictionary, Entry, Source } from "./types";
 
-export type { Dictionary, Entry, Example, PartOfSpeech } from "./types";
+export type { Dictionary, Entry, Example, PartOfSpeech, Source } from "./types";
 export { PLACEHOLDER_SOURCE_ID } from "./constants";
 
 /**
@@ -178,4 +178,15 @@ export function searchEntries(
     .filter((scored) => scored.rank !== NO_MATCH)
     .sort((a, b) => a.rank - b.rank || compare(a.entry.word, b.entry.word))
     .map((scored) => scored.entry);
+}
+
+/** Every cited work, for the attribution shown on the page. */
+export function getSources(): Source[] {
+  return sources;
+}
+
+export function getSource(sourceId: string | undefined): Source | undefined {
+  return sourceId
+    ? sources.find((source) => source.id === sourceId)
+    : undefined;
 }

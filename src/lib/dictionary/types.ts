@@ -36,3 +36,13 @@ export type Dictionary = {
   language: LanguageSlug;
   entries: Entry[];
 };
+
+export type Source = {
+  id: string;
+  title: string;
+  publisher: string;
+  year: number;
+  authors?: string[];
+  url: string;
+  note?: string;
+};

@@ -1,7 +1,8 @@
 import ashaninka from "@/data/dictionary/ashaninka.json";
+import sourcesData from "@/data/dictionary/sources.json";
 import type { LanguageSlug } from "@/lib/languages";
 
-import type { Dictionary } from "./types";
+import type { Dictionary, Source } from "./types";
 
 /**
  * Static imports rather than `fs`, so the same code path works in Server
@@ -14,3 +15,6 @@ import type { Dictionary } from "./types";
 export const dictionaries: Partial<Record<LanguageSlug, Dictionary>> = {
   ashaninka: ashaninka as Dictionary,
 };
+
+/** Cited works the entries come from. Keyed by the `sourceId` on each entry. */
+export const sources: Source[] = sourcesData.sources as Source[];
