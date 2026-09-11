@@ -1,27 +1,20 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 
 import { Input } from "@/components/ui/input";
 
-const DEBOUNCE_MS = 150;
-
 type SearchBoxProps = {
+  value: string;
   /** Number of entries currently shown, announced to screen readers. */
   resultCount: number;
-  onQueryChange: (query: string) => void;
+  onChange: (value: string) => void;
 };
 
-export function SearchBox({ resultCount, onQueryChange }: SearchBoxProps) {
+/** Controlled on purpose: Dictionary owns the query so nothing can drift. */
+export function SearchBox({ value, resultCount, onChange }: SearchBoxProps) {
   const inputId = useId();
-  const [value, setValue] = useState("");
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => onQueryChange(value), DEBOUNCE_MS);
-
-    return () => window.clearTimeout(timer);
-  }, [value, onQueryChange]);
 
   return (
     <div>
@@ -33,14 +26,14 @@ export function SearchBox({ resultCount, onQueryChange }: SearchBoxProps) {
           id={inputId}
           type="search"
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           placeholder="En la lengua o en español"
           autoComplete="off"
         />
         {value && (
           <button
             type="button"
-            onClick={() => setValue("")}
+            onClick={() => onChange("")}
             className="rounded-full p-2 hover:bg-[#FBEFD2]"
           >
             <X className="h-4 w-4" />

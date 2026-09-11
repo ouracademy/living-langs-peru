@@ -68,8 +68,15 @@ export default async function DictionaryPage({ params }: DictionaryPageProps) {
           part that reads ?palabra via useSearchParams renders on the client. */}
       <Suspense fallback={null}>
         <Dictionary
+          // Remounts on a language change, so no client state leaks across.
+          key={language}
           entries={dictionary.entries}
+          language={language}
+          languageName={name}
           languageCode={getLanguageCode(language) ?? ""}
+          availableLanguages={getLanguagesWithDictionary().map(
+            (item) => item.slug,
+          )}
         />
       </Suspense>
     </main>
