@@ -116,3 +116,14 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 - [x] **H1** Confirmar orden alfabético asháninka con hablante o lingüista → cierra F3
 - [ ] **H2** Formalizar el permiso de MINEDU (en trámite por la vía institucional con el Estado). El contenido ya está importado y atribuido; esto cierra el trámite, no bloquea la interfaz.
 - [x] **H3** Revisar el esquema `Entry` en el checkpoint 1 → desbloquea F7
+
+---
+
+## Seguimiento (pedido tras la primera entrega)
+
+- [x] **T9.1** Cabecera y pie del sitio en el diccionario, vía `src/app/diccionario/layout.tsx` `[AC-M3-12]`
+- [x] **T9.2** Encabezados de letra desplazados para no quedar bajo la cabecera pegajosa `[AC-M3-12]`
+- [x] **T9.3** `/diccionario/uro` deja de dar 404: página real que explica y enlaza `[AC-M3-7]`
+- [ ] **T9.4** Consolidar cabecera y pie en el layout raíz, quitándolos de `page.tsx` del home. Daría
+      la misma identidad a `/ashaninka` y `/lenguas/[slug]`, que hoy no tienen ninguna. Toca el home.
+- [ ] **T9.5** Conseguir una fuente uro con licencia para poder llenar su diccionario.
