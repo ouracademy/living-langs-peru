@@ -1,6 +1,6 @@
 # Diccionario de lenguas originarias
 
-> Estado: **implementado salvo el contenido** (M1-M4 listos; M5 pendiente del hito H2)
+> Estado: **implementado** (M1-M5). Contenido real citado, 169 entradas.
 > Fecha: 2026-09-11 · Rama base: `main` · Rama de trabajo: `feat/diccionario`
 > Plan: [tasks/diccionario/](../tasks/diccionario/) · Índice: [specs/README.md](./README.md)
 
@@ -152,8 +152,11 @@ queda tipado. `resolveJsonModule` ya está activo en `tsconfig.json`.
 **`ñ` se preserva como letra propia**: en Asháninka `ñ` no es una `n` acentuada. Implementación:
 proteger `ñ` antes del `NFD` y restaurarla después.
 
-**Orden alfabético** — `Intl.Collator("es", { sensitivity: "base" })`. Ver
-[Preguntas abiertas](#14-preguntas-abiertas): el orden alfabético asháninka puede no ser el español.
+**Orden alfabético** — por el **alfabeto oficial de la lengua**, no el español. El asháninka tiene 19
+letras (RD 0606-2008-ED, RM 303-2015-MINEDU): `a b ch e i j k m n ñ o p r s sh t ts ty y`. `ch`, `sh`,
+`ts` y `ty` son letras propias, así que ordenan y agrupan como unidades; no existen `c`, `d`, `f`, `g`,
+`l`, `q`, `u`, `v`, `w`, `x` ni `z`. La tabla vive en `src/lib/dictionary/collation.ts`, es por lengua,
+y cae a `Intl.Collator("es")` para lenguas sin tabla propia.
 
 **Agrupado por letra** — una sección por letra inicial de la forma normalizada, en mayúscula. Las
 entradas que empiezan por dígito o símbolo van a un grupo final `#`. No se crean secciones vacías.
@@ -631,16 +634,15 @@ el navegador de verdad · sin regresiones en las páginas existentes.
 
 ## 14. Preguntas abiertas
 
-Queda una. Las otras cuatro se cerraron como decisiones #8, #9, #10 y como «fuera de alcance» (audio).
+Ninguna. Las cinco se cerraron:
 
-1. **Orden alfabético asháninka.** Se asume el orden del español (`Intl.Collator("es")`). Pero varias
-   lenguas amazónicas ordenan los dígrafos (`ch`, `sh`, `ts`, `ky`) como letras propias. Si es el caso
-   del asháninka, `compareWords` necesita una tabla de collation por lengua. _Recomendación:_ empezar
-   con el collator del español, dejar la función aislada para poder sustituirla, y confirmarlo con un
-   hablante o lingüista antes de dar el diccionario por bueno. **No bloquea escribir el código; sí
-   bloquea darlo por correcto.**
-
----
+| #   | Pregunta                   | Resolución                                                                                                                 |
+| --- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Orden alfabético asháninka | **Cerrada.** Confirmado que los dígrafos sí son letras propias. Implementado en `collation.ts` contra el alfabeto oficial. |
+| 2   | Metadatos por palabra      | Decisión #8: título por lengua, estático.                                                                                  |
+| 3   | Escala                     | Decisión #9. Medido en producción: 14 KB comprimidos frente al umbral de ~150 KB de §6.7.                                  |
+| 4   | Audio                      | Fuera de alcance.                                                                                                          |
+| 5   | Enlace desde el home       | Decisión #10, implementado.                                                                                                |
 
 ## 15. Aprobación
 
@@ -649,3 +651,5 @@ Queda una. Las otras cuatro se cerraron como decisiones #8, #9, #10 y como «fue
 - [x] Contrato de URL y de API (§5.1, §6.1)
 - [x] Código en inglés y sus excepciones (§11.1)
 - [x] Límites (§13)
+- [x] Alfabeto oficial y colación (§4.4)
+- [x] Contenido real con atribución (§8)

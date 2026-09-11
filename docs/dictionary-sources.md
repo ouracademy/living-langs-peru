@@ -1,7 +1,8 @@
 # Fuentes del diccionario — investigación y licencias
 
 > Tarea T7.1 · Fecha: 2026-09-11 · Spec: [specs/diccionario.md](../specs/diccionario.md) §8
-> Estado: **investigación hecha, decisiones pendientes** (hito H2).
+> Estado: **decidido e importado.** La fuente 2 (MINEDU) está en uso; el permiso formal está en
+> trámite por la vía institucional del proyecto con el Estado.
 
 **Esto no es asesoría legal.** Es un registro de lo que dicen las fuentes y de lo que no se pudo
 comprobar. Las decisiones de §4 las toma una persona.
@@ -81,7 +82,16 @@ Ninguna la puede cerrar la IA.
 5. **Plantear el consentimiento comunitario** a organizaciones asháninka (CARE, ARPI-SC u
    organizaciones locales), sobre todo para las oraciones de ejemplo.
 
-## 5. Camino recomendado
+## 4b. Lo que se decidió
+
+Se importó la **fuente 2** (MINEDU 2021), por la vía institucional del proyecto con el Estado:
+169 entradas, 162 con ejemplo de uso, todas con `sourceId` y atribución visible. Se excluyó su
+Parte IV. Copia local y motivos en [sources/README.md](./sources/README.md).
+
+De esa obra salió además el **alfabeto oficial** que rige el orden del diccionario, así que fue
+decisiva por dos razones, no solo por el vocabulario.
+
+## 5. Camino recomendado para ampliar
 
 Ordenado por relación entre esfuerzo y riesgo:
 
