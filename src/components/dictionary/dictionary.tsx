@@ -1,11 +1,13 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 
-import { type Entry, resolveWord } from "@/lib/dictionary";
+import { type Entry, resolveWord, searchEntries } from "@/lib/dictionary";
 
 import { EntryDetail } from "./entry-detail";
 import { EntryList } from "./entry-list";
+import { SearchBox } from "./search-box";
 
 /** The query param is Spanish because it is part of the public, shareable URL. */
 const WORD_PARAM = "palabra";
@@ -18,6 +20,14 @@ type DictionaryProps = {
 export function Dictionary({ entries, languageCode }: DictionaryProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // The query lives in local state, not the URL: only ?palabra is shareable.
+  const [query, setQuery] = useState("");
+  const onQueryChange = useCallback((next: string) => setQuery(next), []);
+  const visible = useMemo(
+    () => searchEntries(entries, query),
+    [entries, query],
+  );
 
   const requested = searchParams.get(WORD_PARAM);
   const selected = requested ? resolveWord(entries, requested) : undefined;
@@ -40,18 +50,21 @@ export function Dictionary({ entries, languageCode }: DictionaryProps) {
   return (
     <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div>
+        <SearchBox resultCount={visible.length} onQueryChange={onQueryChange} />
+
         {missing && (
           <p
             role="alert"
-            className="mb-4 rounded-2xl border border-[#E4572E] bg-white px-4 py-3 text-sm"
+            className="mt-4 rounded-2xl border border-[#E4572E] bg-white px-4 py-3 text-sm"
           >
             No encontramos esa palabra en el diccionario. Puede que el enlace
             esté mal escrito o que aún no hayamos añadido la palabra.
           </p>
         )}
 
+        <div className="mt-4" />
         <EntryList
-          entries={entries}
+          entries={visible}
           selectedId={selected?.id}
           languageCode={languageCode}
           onSelect={select}

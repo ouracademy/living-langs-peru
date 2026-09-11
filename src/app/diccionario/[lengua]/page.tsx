@@ -53,7 +53,9 @@ export default async function DictionaryPage({ params }: DictionaryPageProps) {
 
       {isProvisional(dictionary) && (
         <p
-          role="status"
+          // Static informational copy, so not a live region: role="status"
+          // would make screen readers announce it as a change, and it would
+          // collide with the search result counter.
           className="mt-4 rounded-2xl border border-[#E4572E] bg-[#FFF7E8] px-4 py-3 text-sm text-[#241D14]"
         >
           <strong className="font-bold">Contenido provisional.</strong> Estas
