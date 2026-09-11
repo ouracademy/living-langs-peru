@@ -2,18 +2,31 @@
   "name": "living-langs-peru",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint --max-warnings=13",
+    "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "dictionary:check": "node --experimental-strip-types scripts/validate-dictionary.ts"
+    "dictionary:check": "node --experimental-strip-types scripts/validate-dictionary.ts",
+    "check:floor": "node --experimental-strip-types scripts/check-floor.ts",
+    "check:language": "node --experimental-strip-types scripts/check-language-policy.ts",
+    "check:coverage": "node --experimental-strip-types scripts/check-changed-coverage.ts --min 80 --warn",
+    "check:secrets": "scripts/check-secrets.sh",
+    "check:deps": "scripts/check-deps.sh",
+    "check:fast": "pnpm typecheck && pnpm lint && pnpm check:floor && pnpm check:language",
+    "check:task": "pnpm check:fast && pnpm dictionary:check && pnpm test:coverage && pnpm check:coverage",
+    "check:full": "pnpm check:task && pnpm format:check && pnpm check:secrets && pnpm check:deps && pnpm test:e2e"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -40,6 +53,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "eslint-config-prettier": "^10.1.8",

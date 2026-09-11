@@ -1,13 +1,27 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+# Next.js: ALWAYS read docs before coding
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
 <!-- END:nextjs-agent-rules -->
+
+# Quality bar
+
+Read [CONSTRAINTS.md](./CONSTRAINTS.md) before writing code. **Never weaken it to make a change pass** — no new suppression comments, no skipped or deleted tests, no lowered thresholds. If a rule genuinely blocks you, add an exception row with an owner and an expiry date and say so.
+
+Run `pnpm check:fast` after editing and `pnpm check:task` when you think a task is done. Node >= 22 is required (`nvm use`).
 
 # Coding conventions
 
-Any code should be in english: file names, types, fields, functions, variables, JSON keys, error codes,
+**Code in English, people in Spanish.** Variables, functions, types, file names (kebab-case), JSON keys in `src/data/**`, API error codes and code comments are English. Spanish is for what a human reads: UI copy, user-facing error messages, URL segments (`/diccionario/[lengua]`), and the prose in `specs/` and `docs/`.
+
+The boundary is the handler — a Spanish URL segment gets renamed on the way in:
+
+```ts
+const { lengua: language } = await params;
+```
+
+`pnpm check:language` enforces this on the diff. See [CONSTRAINTS.md](./CONSTRAINTS.md) for the full table.
 
 # Commit messages
 
@@ -16,6 +30,8 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `<type>: <subj
 Allowed types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`.
 
 A `commit-msg` hook (husky + commitlint) rejects anything else, so malformed messages block the commit. The hook needs Node >= 22 — run `nvm use` first (see `.nvmrc`).
+
+A `pre-push` hook runs `pnpm check:fast` (~5s). `git push --no-verify` skips it; CI does not.
 
 # Specs and plans
 
