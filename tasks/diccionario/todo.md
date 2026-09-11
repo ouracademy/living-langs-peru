@@ -126,4 +126,8 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 - [x] **T9.3** `/diccionario/uro` deja de dar 404: página real que explica y enlaza `[AC-M3-7]`
 - [x] **T9.4** Cabecera y pie consolidados en el layout raíz. `/ashaninka` y `/lenguas/[slug]` ya
       heredan la identidad del sitio, que antes no tenían.
-- [ ] **T9.5** Conseguir una fuente uro con licencia para poder llenar su diccionario.
+- [x] **T9.5** Investigadas las fuentes uro: **no hay fuente viable hoy** (sin hablantes desde 1920,
+      sin alfabeto oficial, léxico documentado en cientos de palabras y ortografías inconsistentes).
+      Ver [docs/uro-language-sources.md](../../docs/uro-language-sources.md).
+- [ ] **T9.6** Preguntar a DIGEIBIRA por el estado del encargo de 2018 de normalizar el alfabeto uro.
+- [ ] **T9.7** Decidir cómo presentar el uro en el home: hoy se ofrece como aprendible y no lo es.
