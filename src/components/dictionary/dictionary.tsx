@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { type Entry, resolveWord } from "@/lib/dictionary";
 
 import { EntryDetail } from "./entry-detail";
+import { EntryList } from "./entry-list";
 
 /** The query param is Spanish because it is part of the public, shareable URL. */
 const WORD_PARAM = "palabra";
@@ -49,32 +50,12 @@ export function Dictionary({ entries, languageCode }: DictionaryProps) {
           </p>
         )}
 
-        <ul aria-label="Palabras" className="flex flex-col">
-          {entries.map((entry) => {
-            const isSelected = entry.id === selected?.id;
-
-            return (
-              <li key={entry.id}>
-                <button
-                  type="button"
-                  onClick={() => select(entry)}
-                  aria-current={isSelected ? "true" : undefined}
-                  className={`w-full border-b border-gray-200 px-3 py-2 text-left hover:bg-[#FBEFD2] ${
-                    isSelected ? "bg-[#FBEFD2]" : ""
-                  }`}
-                >
-                  <span className="font-bold" lang={languageCode}>
-                    {entry.word}
-                  </span>
-                  <span className="text-[#4A4130]">
-                    {" — "}
-                    {entry.translations.join("; ")}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <EntryList
+          entries={entries}
+          selectedId={selected?.id}
+          languageCode={languageCode}
+          onSelect={select}
+        />
       </div>
 
       {selected && (

@@ -22,8 +22,8 @@ test.describe("dictionary page", () => {
       page.getByRole("heading", { level: 1, name: /diccionario asháninka/i }),
     ).toBeVisible();
     await expect(
-      page.getByRole("list", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(3);
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(13);
   });
 
   test("warns that the content is still provisional", async ({ page }) => {
@@ -110,8 +110,8 @@ test.describe("word selection and deep links", () => {
       /no encontramos esa palabra/i,
     );
     await expect(
-      page.getByRole("list", { name: "Palabras" }).getByRole("listitem"),
-    ).toHaveCount(3);
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(13);
   });
 
   // AC-M3-8
@@ -137,5 +137,72 @@ test.describe("word selection and deep links", () => {
     await page.getByRole("button", { name: /cerrar/i }).click();
 
     await expect(page).toHaveURL("/diccionario/ashaninka");
+  });
+});
+
+test.describe("alphabetical grouping", () => {
+  // AC-M3-2
+  test("shows one section per initial letter, in order", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    const headings = page
+      .getByRole("region", { name: "Palabras" })
+      .getByRole("heading", { level: 2 });
+
+    await expect(headings).toHaveText([
+      "A",
+      "B",
+      "C",
+      "D",
+      "N",
+      "Ñ",
+      "O",
+      "P",
+      "Z",
+      "#",
+    ]);
+  });
+
+  test("folds an accented initial into its base letter section", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    // A-placeholder-01 and Á-placeholder-02 share the "A" section.
+    const sectionA = page.getByRole("group", { name: "A" });
+    await expect(sectionA.getByRole("listitem")).toHaveCount(2);
+  });
+
+  test("lists words alphabetically inside a section", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    const words = await page
+      .getByRole("group", { name: "P" })
+      .getByRole("button")
+      .allInnerTexts();
+
+    expect(words.map((text) => text.split(" —")[0])).toEqual([
+      "Placeholder A",
+      "Placeholder B",
+      "Placeholder C",
+    ]);
+  });
+
+  test("the A-Z index jumps to a section", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("link", { name: "Ir a la letra Ñ" }).click();
+
+    await expect(page).toHaveURL(/#letra-/);
+    await expect(page.getByRole("group", { name: "Ñ" })).toBeInViewport();
+  });
+
+  test("the index omits letters with no entries", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    const index = page.getByRole("navigation", { name: /índice/i });
+    await expect(index.getByRole("link")).toHaveCount(10);
+    await expect(
+      index.getByRole("link", { name: "Ir a la letra Q" }),
+    ).toHaveCount(0);
   });
 });

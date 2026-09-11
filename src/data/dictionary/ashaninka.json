@@ -45,6 +45,96 @@
       ],
       "notes": "Entrada de andamiaje con variante y dos ejemplos.",
       "sourceId": "placeholder"
+    },
+    {
+      "id": "a-placeholder-01",
+      "word": "A-placeholder-01",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "a-placeholder-02",
+      "word": "Á-placeholder-02",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "b-placeholder-03",
+      "word": "B-placeholder-03",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "c-placeholder-04",
+      "word": "C-placeholder-04",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "d-placeholder-05",
+      "word": "D-placeholder-05",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "n-placeholder-06",
+      "word": "N-placeholder-06",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "n-placeholder-07",
+      "word": "Ñ-placeholder-07",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "o-placeholder-08",
+      "word": "O-placeholder-08",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "z-placeholder-09",
+      "word": "Z-placeholder-09",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
+    },
+    {
+      "id": "1-placeholder-10",
+      "word": "1-placeholder-10",
+      "translations": ["contenido provisional"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "notes": "Entrada de andamiaje. NO es asháninka: existe solo para ejercitar la interfaz mientras se aprueban las fuentes (hito H2).",
+      "sourceId": "placeholder"
     }
   ]
 }
