@@ -27,12 +27,12 @@ export default function Hero() {
           Asháninka y Uro de forma divertida.
         </p>
         <div className="mt-6 flex flex-wrap gap-3.5">
-          <Link
+          <a
             href="#lenguas"
             className="inline-block rounded-full bg-[#E4572E] px-6.5 py-3.5 text-sm font-bold text-white hover:bg-[#C7431C]"
           >
             Elegir una lengua
-          </Link>
+          </a>
           <Link
             href="#educacion"
             className="inline-block rounded-full border-2 border-white px-6.5 py-3.5 text-sm font-bold text-white hover:bg-white hover:text-[#241D14]"
