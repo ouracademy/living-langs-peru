@@ -2,7 +2,8 @@ import { type LanguageSlug, languages } from "@/lib/languages";
 
 import { PLACEHOLDER_SOURCE_ID } from "./constants";
 import { dictionaries } from "./registry";
-import { compareWords, normalize } from "./text";
+import { getComparator, getInitial } from "./collation";
+import { normalize } from "./text";
 import type { Dictionary, Entry } from "./types";
 
 export type { Dictionary, Entry, Example, PartOfSpeech } from "./types";
@@ -95,21 +96,22 @@ export type LetterGroup = {
 };
 
 /**
- * Splits entries into one section per initial letter, alphabetically. Accented
- * initials fold into their base letter (Á with A) while ñ keeps its own
- * section, and anything not starting with a letter lands in a trailing "#".
+ * Splits entries into one section per initial letter of the language's own
+ * alphabet, so an Asháninka digraph gets its own section ("Ch", not "C").
+ * Accented initials fold into their base letter, and anything not starting
+ * with a letter lands in a trailing "#".
  *
  * Only sections that actually have entries are returned.
  */
-export function groupByLetter(entries: Entry[]): LetterGroup[] {
+export function groupByLetter(
+  entries: Entry[],
+  language?: string,
+): LetterGroup[] {
+  const compare = getComparator(language);
   const byLetter = new Map<string, Entry[]>();
 
   for (const item of entries) {
-    const initial = normalize(item.word).charAt(0);
-    const letter = /\p{Letter}/u.test(initial)
-      ? initial.toUpperCase()
-      : OTHER_LETTER;
-
+    const letter = getInitial(item.word, language) ?? OTHER_LETTER;
     const group = byLetter.get(letter);
 
     if (group) {
@@ -124,11 +126,11 @@ export function groupByLetter(entries: Entry[]): LetterGroup[] {
       if (a === OTHER_LETTER) return 1;
       if (b === OTHER_LETTER) return -1;
 
-      return compareWords(a, b);
+      return compare(a, b);
     })
     .map(([letter, group]) => ({
       letter,
-      entries: group.sort((a, b) => compareWords(a.word, b.word)),
+      entries: group.sort((a, b) => compare(a.word, b.word)),
     }));
 }
 
@@ -159,16 +161,21 @@ function rank(entry: Entry, query: string): number {
  * alphabetically. Ties within a ranking level break alphabetically too, so
  * the order is stable and predictable.
  */
-export function searchEntries(entries: Entry[], query: string): Entry[] {
+export function searchEntries(
+  entries: Entry[],
+  query: string,
+  language?: string,
+): Entry[] {
+  const compare = getComparator(language);
   const wanted = normalize(query);
 
   if (!wanted) {
-    return [...entries].sort((a, b) => compareWords(a.word, b.word));
+    return [...entries].sort((a, b) => compare(a.word, b.word));
   }
 
   return entries
     .map((entry) => ({ entry, rank: rank(entry, wanted) }))
     .filter((scored) => scored.rank !== NO_MATCH)
-    .sort((a, b) => a.rank - b.rank || compareWords(a.entry.word, b.entry.word))
+    .sort((a, b) => a.rank - b.rank || compare(a.entry.word, b.entry.word))
     .map((scored) => scored.entry);
 }

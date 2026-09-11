@@ -112,3 +112,17 @@ describe("searchEntries", () => {
     expect(ids("zzzznomatch")).toEqual([]);
   });
 });
+
+describe("searchEntries for Asháninka", () => {
+  it("ranks ties by the official alphabet, not Spanish order", () => {
+    const entries = [
+      entry({ id: "sh", word: "shaa", translations: ["x"] }),
+      entry({ id: "s", word: "saa", translations: ["x"] }),
+    ];
+
+    // Plain s before sh, which Spanish collation would reverse.
+    expect(
+      searchEntries(entries, "", "ashaninka").map((item) => item.id),
+    ).toEqual(["s", "sh"]);
+  });
+});
