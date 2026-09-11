@@ -91,6 +91,12 @@ Parte IV. Copia local y motivos en [sources/README.md](./sources/README.md).
 De esa obra salió además el **alfabeto oficial** que rige el orden del diccionario, así que fue
 decisiva por dos razones, no solo por el vocabulario.
 
+## 4c. Uro
+
+Investigado por separado y con veredicto negativo: no hay fuente con la que construir un diccionario
+uro normalizado hoy. La lengua no tiene hablantes desde los años 1920 y no tiene alfabeto oficial.
+Detalle y qué lo desbloquearía en [uro-language-sources.md](./uro-language-sources.md).
+
 ## 5. Camino recomendado para ampliar
 
 Ordenado por relación entre esfuerzo y riesgo:
