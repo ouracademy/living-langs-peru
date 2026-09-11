@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+
+import { Footer } from "@/components/footer";
+import { HeaderPlataform } from "@/components/header";
 import { Baloo_2, Mulish } from "next/font/google";
 import "./globals.css";
 
@@ -44,7 +47,17 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        <div
+          data-site-stripe
+          className="h-3 w-full"
+          style={{
+            background:
+              "repeating-linear-gradient(90deg, #E4572E 0 60px, #F2B705 60px 110px, #1B98A0 110px 190px, #6A3E8C 190px 230px)",
+          }}
+        />
+        <HeaderPlataform />
         {children}
+        <Footer />
       </body>
     </html>
   );

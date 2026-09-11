@@ -183,15 +183,16 @@ test.describe("alphabetical grouping", () => {
     await page.goto("/diccionario/ashaninka");
 
     // Plain s before sh: Spanish collation would interleave them.
-    const words = await page
+    // toHaveText auto-retries; allInnerTexts() reads once and was flaky.
+    const words = page
       .getByRole("group", { name: "Sh" })
       .getByRole("button")
-      .allInnerTexts();
+      .filter({ hasText: /^shara|^sheki/ });
 
-    expect(words.slice(0, 3).map((text) => text.split(" —")[0])).toEqual([
-      "sharakamashi",
-      "sharakasati",
-      "sheki",
+    await expect(words).toHaveText([
+      /^sharakamashi —/,
+      /^sharakasati —/,
+      /^sheki —/,
     ]);
   });
 
