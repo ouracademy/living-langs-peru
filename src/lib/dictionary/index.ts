@@ -1,3 +1,5 @@
+import { type LanguageSlug, languages } from "@/lib/languages";
+
 import { dictionaries } from "./registry";
 import type { Dictionary } from "./types";
 
@@ -24,4 +26,25 @@ export function isProvisional(dictionary: Dictionary): boolean {
   return dictionary.entries.some(
     (entry) => entry.sourceId === PLACEHOLDER_SOURCE_ID,
   );
+}
+
+/** The languages that actually have a dictionary, with their entry counts. */
+export function getLanguagesWithDictionary(): {
+  slug: LanguageSlug;
+  name: string;
+  total: number;
+}[] {
+  return languages.flatMap((language) => {
+    const dictionary = getDictionary(language.slug);
+
+    return dictionary
+      ? [
+          {
+            slug: language.slug,
+            name: language.name,
+            total: dictionary.entries.length,
+          },
+        ]
+      : [];
+  });
 }

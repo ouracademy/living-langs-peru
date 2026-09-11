@@ -25,10 +25,10 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 ## F1 — Tres palabras en pantalla
 
 - [x] **T1.1** `lib/dictionary/types.ts`, `registry.ts` (imports estáticos), `getDictionary()`, semilla `data/dictionary/ashaninka.json` con **3 entradas** (una con ejemplo) `[AC-M1-9 parcial]`
-- [ ] **T1.2** `app/diccionario/[lengua]/page.tsx`: Server Component, `generateStaticParams`, `generateMetadata` → «Diccionario Asháninka», `notFound()`. Lista plana. Redirect `/diccionario` en `next.config.ts`. Desestructurar `lengua` → `language` `[AC-M3-1, AC-M3-10]`
-- [ ] **T1.3** `components/resources.tsx`: `href` de la tarjeta «Diccionario» → `/diccionario/ashaninka`. Solo ese atributo `[AC-M3-11]`
-- [ ] **T1.4** E2E: redirect · 3 palabras visibles · `klingon` 404 · `uro` 404 · `<title>` correcto · el home lleva al diccionario `[AC-M1-9, AC-M3-1, AC-M3-10, AC-M3-11]`
-- [ ] **T1.5** Confirmar en `pnpm build` que `/diccionario/[lengua]` sale **estática**, no `ƒ`
+- [x] **T1.2** `app/diccionario/[lengua]/page.tsx`: Server Component, `generateStaticParams`, `generateMetadata` → «Diccionario Asháninka», `notFound()`. Lista plana. Redirect `/diccionario` en `next.config.ts`. Desestructurar `lengua` → `language` `[AC-M3-1, AC-M3-10]`
+- [x] **T1.3** `components/resources.tsx`: `href` de la tarjeta «Diccionario» → `/diccionario/ashaninka`. Solo ese atributo `[AC-M3-11]`
+- [x] **T1.4** E2E: redirect · 3 palabras visibles · `klingon` 404 · `uro` 404 · `<title>` correcto · el home lleva al diccionario `[AC-M1-9, AC-M3-1, AC-M3-10, AC-M3-11]`
+- [x] **T1.5** Confirmar en `pnpm build` que `/diccionario/[lengua]` sale **estática**, no `ƒ`
 
 > **⛔ Checkpoint 1 · hito H3** — revisar `Entry` con ojo humano antes de escribir contenido en volumen.
 > ¿Falta algún campo que el asháninka necesite (tono, prefijos, forma poseída)?
