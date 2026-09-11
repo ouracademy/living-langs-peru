@@ -13,9 +13,9 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F0 — Andamiaje de pruebas
 
-- [x] **T0.1** Vitest: deps, `vitest.config.mts` (`@vitejs/plugin-react`, `vite-tsconfig-paths`, `jsdom`), scripts `test` / `test:watch`
+- [x] **T0.1** Vitest: deps, `vitest.config.mts` (`@vitejs/plugin-react`, `resolve.tsconfigPaths` nativo, `jsdom`), scripts `test` / `test:watch`
       → _verifica:_ `pnpm test` pasa y el alias `@/` resuelve en un test
-- [ ] **T0.2** Playwright: `@playwright/test`, `playwright.config.ts` con `webServer` = build+start, script `test:e2e`, smoke test de `/`
+- [x] **T0.2** Playwright: `@playwright/test`, `playwright.config.ts` con `webServer` = build+start, script `test:e2e`, smoke test de `/`
       → _verifica:_ `pnpm test:e2e` pasa contra la home actual
 
 > **⛔ Checkpoint 0** — ambas suites en verde sobre el código existente, sin producto nuevo.

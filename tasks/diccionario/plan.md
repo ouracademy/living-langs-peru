@@ -47,7 +47,7 @@ Las decisiones de producto están en el spec §2. Aquí solo lo que es puramente
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | D1  | **La página `async` no se testea con Vitest.** La guía de Next lo dice explícitamente: Vitest no soporta Server Components asíncronos. La página y todo lo que la envuelve se verifican con Playwright. Vitest cubre solo `src/lib/` y las funciones `GET` de los handlers. |
 | D2  | **Playwright corre contra `next build && next start`**, no contra `next dev`. AC-M3-5 (deep-link con la página prerenderizada + `useSearchParams` en cliente) depende de comportamiento de prerender que en `dev` no es idéntico. Se configura vía `webServer`.             |
-| D3  | **`vite-tsconfig-paths` en la config de Vitest** para que el alias `@/` funcione en los tests sin duplicar rutas.                                                                                                                                                           |
+| D3  | **`resolve.tsconfigPaths: true`** (nativo de Vite) para el alias `@/` en los tests. Vite reporta `vite-tsconfig-paths` como redundante, así que no se usa el plugin.                                                                                                        |
 | D4  | **Orden de renombrado: no hay renombrado.** Todo nace en inglés desde T1.1 (spec §11.1). No se escribe nada en español para traducirlo después.                                                                                                                             |
 
 ---
