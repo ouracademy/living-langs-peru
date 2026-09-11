@@ -104,9 +104,9 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F8 — Accesibilidad y cierre
 
-- [ ] **T8.1** E2E de recorrido completo solo con teclado: buscar → lista → detalle → copiar → cambiar lengua `[AC-M3-9]`
-- [ ] **T8.2** Auditar contraste; corregir `#F2B705` sobre claro donde se use en texto pequeño `[AC-M3-9]`
-- [ ] **T8.3** Responsive: hoja inferior en móvil, dos columnas en escritorio. Verificar a 375 px y 1280 px
+- [x] **T8.1** E2E de recorrido completo solo con teclado: buscar → lista → detalle → copiar → cambiar lengua `[AC-M3-9]`
+- [x] **T8.2** Auditar contraste; corregir `#F2B705` sobre claro donde se use en texto pequeño `[AC-M3-9]`
+- [x] **T8.3** Responsive: hoja inferior en móvil, dos columnas en escritorio. Verificar a 375 px y 1280 px
 - [ ] **T8.4** Spec a `implementado`; anotar si la pregunta abierta #1 sigue abierta
 
 ---

@@ -347,3 +347,100 @@ test.describe("dictionary api", () => {
     });
   });
 });
+
+test.describe("keyboard only", () => {
+  // AC-M3-9 — the whole page has to be operable without a mouse.
+  test("walks from the picker through search to a word detail", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    // Tab lands on the language picker first.
+    await page.keyboard.press("Tab");
+    await expect(
+      page.getByRole("button", { name: /lengua: Asháninka/i }),
+    ).toBeFocused();
+
+    // Then the search box, which accepts typing.
+    await page.keyboard.press("Tab");
+    await expect(page.getByLabel(/buscar/i)).toBeFocused();
+    await page.keyboard.type("placeholder-0");
+    await expect(
+      page.getByRole("status", { name: /resultados/i }),
+    ).toContainText("9 palabras");
+
+    // Reach the first word and open it with Enter.
+    await page.getByRole("button", { name: /^A-placeholder-01/ }).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page).toHaveURL(/palabra=a-placeholder-01/);
+    await expect(
+      page.getByRole("region", { name: /a-placeholder-01/i }),
+    ).toBeVisible();
+  });
+
+  test("closes the detail with Enter on the close button", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.getByRole("button", { name: /cerrar/i }).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page).toHaveURL("/diccionario/ashaninka");
+  });
+
+  test("marks the selected word for assistive tech", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+
+    await expect(
+      page.getByRole("button", { name: /^Placeholder A/ }),
+    ).toHaveAttribute("aria-current", "true");
+  });
+
+  test("tags entries and examples with the language code", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    const detail = page.getByRole("region", { name: /placeholder a/i });
+
+    await expect(detail.getByRole("heading", { level: 2 })).toHaveAttribute(
+      "lang",
+      "cni",
+    );
+  });
+
+  test("the clear button is reachable and labelled", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("x");
+
+    await expect(
+      page.getByRole("button", { name: "Limpiar búsqueda" }),
+    ).toBeVisible();
+  });
+});
+
+test.describe("narrow screens", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("keeps the detail on screen when a word is picked", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("button", { name: /^Placeholder A/ }).click();
+
+    const detail = page.getByRole("region", { name: /placeholder a/i });
+    await expect(detail).toBeVisible();
+    await expect(detail).toBeInViewport();
+  });
+
+  test("the list stays reachable behind the panel", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+
+    await expect(
+      page.getByRole("region", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(13);
+  });
+
+  test("the page does not scroll sideways", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-c");
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+});
