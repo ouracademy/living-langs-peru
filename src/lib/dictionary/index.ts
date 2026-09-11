@@ -73,3 +73,19 @@ export function resolveWord(
       entry.variants?.some((variant) => normalize(variant) === wanted),
   );
 }
+
+/**
+ * ISO 639-3 codes, used for the `lang` attribute so screen readers do not
+ * read entries and example sentences as Spanish. Partial on purpose: a
+ * language whose code we have not confirmed gets no lang attribute rather
+ * than a guessed one.
+ */
+const LANGUAGE_CODES: Partial<Record<LanguageSlug, string>> = {
+  ashaninka: "cni",
+};
+
+export function getLanguageCode(language: string): string | undefined {
+  const byLanguage: Record<string, string | undefined> = LANGUAGE_CODES;
+
+  return byLanguage[language];
+}
