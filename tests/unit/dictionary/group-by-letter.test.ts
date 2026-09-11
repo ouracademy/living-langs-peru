@@ -61,3 +61,50 @@ describe("groupByLetter", () => {
     expect(flattened).toHaveLength(words.length);
   });
 });
+
+describe("groupByLetter for Asháninka", () => {
+  const letters = (words: string[]) =>
+    groupByLetter(
+      words.map((word) => entry({ word })),
+      "ashaninka",
+    ).map((group) => group.letter);
+
+  it("gives each digraph its own section", () => {
+    expect(letters(["chakopi", "sheri", "tsaparipaye", "tyapa"])).toEqual([
+      "Ch",
+      "Sh",
+      "Ts",
+      "Ty",
+    ]);
+  });
+
+  it("keeps a digraph section apart from its initial letter", () => {
+    expect(letters(["seri", "sheri", "tapa", "tsapa", "tyapa"])).toEqual([
+      "S",
+      "Sh",
+      "T",
+      "Ts",
+      "Ty",
+    ]);
+  });
+
+  it("orders sections by the official alphabet", () => {
+    expect(letters(["ya", "chakopi", "aa", "ñaa", "noa"])).toEqual([
+      "A",
+      "Ch",
+      "N",
+      "Ñ",
+      "Y",
+    ]);
+  });
+
+  it("puts a plain s word in S and an sh word in Sh", () => {
+    const groups = groupByLetter(
+      [entry({ word: "seri" }), entry({ word: "sheri" })],
+      "ashaninka",
+    );
+
+    expect(groups[0].entries.map((item) => item.word)).toEqual(["seri"]);
+    expect(groups[1].entries.map((item) => item.word)).toEqual(["sheri"]);
+  });
+});
