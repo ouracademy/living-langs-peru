@@ -1,0 +1,2334 @@
+{
+  "language": "ashaninka",
+  "entries": [
+    {
+      "id": "abakerone",
+      "word": "abakerone",
+      "translations": ["destinatario"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero ibajiro abakerone",
+          "translation": "Escribe el nombre del destinario",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "abetsikakotakeri",
+      "word": "abetsikakotakeri",
+      "translations": ["conclusión"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero abetsikakotakeri okantakota abisatsine ariorika otobayetya inchatope timatsir antamiki",
+          "translation": "Lee la conclusión que hicmos respecto a las consecuencias de la tala de árboles de nuestro bosque",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "abishimotantsi",
+      "word": "abishimotantsi",
+      "translations": ["anécdota"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "¿Timatsi abishimotantsi?",
+          "translation": "una anécdota",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "anakaro",
+      "word": "anakaro",
+      "translations": ["rectángulo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Tsame amenero shiyakantsi paita oshiyayetari anakaro jero monkararo, aisati ayotero okarati otsantsayeti antaro jero orijaniki",
+          "translation": "Observa las imágenes y compara si es rectángulo, además mira si es largo o pequeño",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "anakarojaniki",
+      "word": "anakarojaniki",
+      "translations": ["rectangulito"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimpotsotantyaro kiteriri aparoni anakarojaniki",
+          "translation": "Pinta de color amarillo un rectangulito",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "antamishi",
+      "word": "antamishi",
+      "translations": ["selva"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Bashiretaka atiripe saikajeitatsiri ara antamishi okantakantiro ishiyayetaka piratsipe",
+          "translation": "Las personas que viven en la selva están tristes por la escases de los animales",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "antantsi",
+      "word": "antantsi",
+      "translations": ["verbo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ashaninkaki yantantaro osheki antantsi",
+          "translation": "La lengua ashaninka emplea muchos verbos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "antarotsapa",
+      "word": "antarotsapa",
+      "translations": ["letra mayúscula"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Asankenatantyaro kametsa antarotsapa",
+          "translation": "Escribamos correctamente con la letra mayúscula",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "antasheki",
+      "word": "antasheki",
+      "translations": ["mayor que"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero kametsa antasheki ñakarontsipeki",
+          "translation": "Escribe correctamente el signo “mayor que” entre los números",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "antayetantsi",
+      "word": "antayetantsi",
+      "translations": ["acción"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ora antayetantsi, te oijaterojiro kametsa okantakoyetiri abisatsiri",
+          "translation": "La acción, no siempre sigue un orden cronológico",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "anakarontsitakotero",
+      "word": "añakarontsitakotero",
+      "translations": ["enumerar"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Añakarontsitakotero aparope piratsi jeri tsimeri shiyakantakotainchari paperiki",
+          "translation": "Enumerar uno por uno cada mamífero y ave dibujados en el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "anamentotsipana",
+      "word": "añamentotsipana",
+      "translations": ["currículum", "hoja de vida"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Maroni aijayeteri añamentotsipana airo antayetakeri maroni aparopeni",
+          "translation": "Todos los modelos de currículum recogen ciertos elementos comunes a todos ellos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "anatsiri",
+      "word": "añatsiri",
+      "translations": ["ser vivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Nosankenatakotero okarati yañantayetari yamitakotabaka añatsiri aisati kari añatsine okantiri iyotanenka birakocha",
+          "translation": "Escribo la vida de cómo se ayudan los seres vivos y no vivos, según la visión escolarizada del hispano",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apatyabakachane",
+      "word": "apatyabakachane",
+      "translations": ["asociativa"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamenaperotero ñakarontsipe shiyakabentirori apatyabakachane",
+          "translation": "Observa bien los números que representa la noción asociativa",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apiapitachari-nantsi",
+      "word": "apiapitachari ñantsi",
+      "translations": ["rima"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Maroni jananekipe isankenajeiti aparoni apiapitachari ñantsi",
+          "translation": "Todos los niños escriben una rima",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apiperotatsiri",
+      "word": "apiperotatsiri",
+      "translations": ["frecuencia"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakante shiyakantsipe apiperotatsiri oshitobakoti ñanarentsiki",
+          "translation": "Dibuja las imágenes que aparecen con frecuencia en el texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apitabakachari",
+      "word": "apitabakachari",
+      "translations": ["doble"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Poimisokiayetero apitabakachari",
+          "translation": "Resalta las palabras dobles",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apitetirori",
+      "word": "apitetirori",
+      "translations": ["segundo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Aretapaka apitetirori shiyachari",
+          "translation": "Ya llegó el segundo de los que están participando en la carrera",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apitetirori-yotaneri",
+      "word": "apitetirori yotaneri",
+      "translations": ["segundo grado"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Shitoajeitake jananekipe apitetirori yotaneri",
+          "translation": "Ya salieron los niños del segundo grado",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "apitsatantsi",
+      "word": "apitsatantsi",
+      "translations": ["sustracción"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pitsonkatero antabairentsika apototantsi, apitsatantsi",
+          "translation": "Resuelve los ejercicios de sustracción",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "asampitakoyete",
+      "word": "asampitakoyete",
+      "translations": ["investigar"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Asampitakoyete otsipapeki opoñanta",
+          "translation": "Investigar en diversas fuentes",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ashitakotachari",
+      "word": "ashitakotachari",
+      "translations": ["línea cerrada"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakante aparoni tsapari ashitakotachari",
+          "translation": "Dibuja una línea cerrada",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ayoteri",
+      "word": "ayoteri",
+      "translations": ["indicador"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero kametsa ayoteri meka kitaiterikika",
+          "translation": "Escribe el indicador que aprenderemos en este día",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "bairontsi",
+      "word": "bairontsi",
+      "translations": ["sustantivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Timatsi apairiayetiri ikantaitiro bairontsi",
+          "translation": "Tenemos muchas cosas que nombramos y se les llama sustantivo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "bairontsisanori",
+      "word": "bairontsisanori",
+      "translations": ["sustantivo propio"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatantyaro antarotsapa bairontsisanori kenkishiriantsiki",
+          "translation": "Escribe con letra mayúscula los sustantivos propios que aparece en la oración",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "bantentsitsa",
+      "word": "bantentsitsa",
+      "translations": ["vocal"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Picharinkero bantentsitsa",
+          "translation": "Marca la vocal",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "betsainkantsi",
+      "word": "betsainkantsi",
+      "translations": ["orden"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "b Pamenero shiyakantsi okanta aparoni betsainkantsi",
+          "translation": "Observa en la imagen cómo es el orden",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "betsikakotantsi",
+      "word": "betsikakotantsi",
+      "translations": ["texto instructivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanate aparoni betsikakotantsi’",
+          "translation": "Lee un texto instructivo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "betsikakotirori",
+      "word": "betsikakotirori",
+      "translations": ["estructura"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Oshitoriatiro ora betsikakotirori ashi ñantsi oijatantanakearori kametsa ashi ñantsijaniki",
+          "translation": "Estudia la estructura de la palabra que consta de una secuencia de morfemas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "betsikirori-yobarite",
+      "word": "betsikirori yobarite",
+      "translations": ["productor"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "b Inchashi irotake apaniro betsikirori obanaro añantyari. Irotake ikantantaitarori betsikirori yobarite",
+          "translation": "La planta es la que prepara su propio alimento para vivir, por eso la llamamos productor",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "bokaritsapa",
+      "word": "bokaritsapa",
+      "translations": ["consonante"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Picharinkero apite bokaritsapa",
+          "translation": "Marca dos consonantes",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "boteyanaki",
+      "word": "boteyanaki",
+      "translations": ["botella"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Yoijayero boteyanaki impoiji yobakoyetero obara potsoripe",
+          "translation": "Llena la botella y guárdala donde están los colores",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ibabakajeita",
+      "word": "ibabakajeita",
+      "translations": ["cadena alimenticia"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "i Tsonkapairori ibabakajeita irinti piratsi obayetariri kamayetatsiri",
+          "translation": "Los últimos de la cadena alimenticia son los animales que comen carroña",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ikempoyetiri",
+      "word": "ikempoyetiri",
+      "translations": ["reserva"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Anampiki Perú timatsi osheki kipatsi ikempoyetiri ari isaikayetiri maroni piratsipe jeri tsimeripe",
+          "translation": "En nuestro país, Perú, existe una reserva donde está protergida la fauna silvestre",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ikotirori",
+      "word": "ikotirori",
+      "translations": ["sexto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Yaretapaka iye ikotirori ishiyajeitantakari yoimoshirenkiro oitaiterite nonampi",
+          "translation": "Mi hermano llegó en el sexto lugar en la competencia de carrera realizada por el aniversario de mi comunidad",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "inashiyetaro",
+      "word": "inashiyetaro",
+      "translations": ["clasifica"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Apa osheki inashiyetaro pankirentsipe ariorika ipankitanake irobaneki",
+          "translation": "Mi papá siempre clasifica los cultivos que va a sembrar en su chacra",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "inchashinari",
+      "word": "inchashinari",
+      "translations": ["herbívoro"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Maniro irite inchashinari",
+          "translation": "El venado es un animal herbívoro",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "intarori",
+      "word": "intarori",
+      "translations": ["primero"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "ipairiayetiro",
+      "word": "ipairiayetiro",
+      "translations": ["nombra", "identifica"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Jananekipe kiatsiri inishiariki ipairiayetiro chochokipe pankitachari inampiki jero chochopike shiyokatsiri anatamiki",
+          "translation": "Los niños y niñas del nivel inicial nombran las frutas que se siembran en su comunidad y las que crecen en el bosque",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "isabajenkata",
+      "word": "isabajenkata",
+      "translations": ["templado"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Osaikinta isha kametsa okanta kitaiteri osheki osabajenkata irotake nojatapinitantari",
+          "translation": "El día es muy templado en el lugar donde vive mi abuelita, por eso me gusta visitarla",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kamantakotantsi",
+      "word": "kamantakotantsi",
+      "translations": ["texto expositivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ora kamantakotantsi onijantakotiro aparoni kantakoperotiro okantakoyetiri aparoniki oñanatakoteri",
+          "translation": "Los textos expositivos presentan una explicación objetiva acerca de un tema",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kamantantsi",
+      "word": "kamantantsi",
+      "translations": ["noticia"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "k Piñabentakotero kamantantsi piñanajeitakeri",
+          "translation": "Comenta sobre la noticia que leyeron",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kankipanaro",
+      "word": "kankipanaro",
+      "translations": ["cuadro"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimpotsotero kankipanaro tsika isaiki jananeki",
+          "translation": "Completa el cuadro donde está el niño",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kantakotantsi",
+      "word": "kantakotantsi",
+      "translations": ["texto descriptivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Añanate, asankenate kametsa kantakotantsi",
+          "translation": "Leemos y escribimos un texto descriptivo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kantakoyetantsi",
+      "word": "kantakoyetantsi",
+      "translations": ["adjetivo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Tsame amenakotero kantakoyetantsi",
+          "translation": "Vamos a aprender sobre el adjetivo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "karamina",
+      "word": "karamina",
+      "translations": ["calamina"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "k Kametsa abetsikantyaro karamina abanko",
+          "translation": "Es bueno techar nuestra casa con calamina",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kari-anatsine",
+      "word": "kari añatsine",
+      "translations": ["seres no vivos"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ikenkishiraneki birakochape timatsi kipatsikika kari añatsine, kemperi nija, otishi jero pashinipe",
+          "translation": "En la concepción del hombre mestizo (colono) los seres no vivos son, por ejemplo, el río, el cerro, entre otros",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kasankapanaro",
+      "word": "kasankapanaro",
+      "translations": ["poesía"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero kasankapanaro pitsipatyari pitsipamintsare",
+          "translation": "Lee la poesía con tu compañero",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "katiachari",
+      "word": "katiachari",
+      "translations": ["vertical"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pintsirikero inchakipe katiachari okarati piñirika shiyakantsikika",
+          "translation": "Pinta las barritas que están en posición vertical",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "katiyapentsaki",
+      "word": "katiyapentsaki",
+      "translations": ["barra"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pipotsotero okarati okantari tsaripetaki ara katiyapentsakiro",
+          "translation": "Pinta la barra que está en el cuadro",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kenkishiriantsi",
+      "word": "kenkishiriantsi",
+      "translations": ["oración"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero kenkishiriantsi",
+          "translation": "Lee la oración",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kenkitsarentsi",
+      "word": "kenkitsarentsi",
+      "translations": ["texto narrativo", "relato", "cuento"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero kenkitsarentsi impoiji pakero sampitantsipe",
+          "translation": "Lee el relato y responde las preguntas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kenkitsatabakantsi",
+      "word": "kenkitsatabakantsi",
+      "translations": ["diálogo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanajeitero kenkitsatabakantsi sankenatachari ñanarentsiki",
+          "translation": "Lean el dialogo que está escrito en el texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kipatsipetoki",
+      "word": "kipatsipetoki",
+      "translations": ["adobe"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Itantotaro kipatsipetoki ibanko koki",
+          "translation": "La pared de la casa de mi suegro es de adobe",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kiribiro",
+      "word": "kiribiro",
+      "translations": ["libro"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamakena apite kiribiro",
+          "translation": "Dame dos libros",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "koakotantsipana",
+      "word": "koakotantsipana",
+      "translations": ["solicitud"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Notomi, pisankenate aparoni koakotantsipana",
+          "translation": "Hijo, escribe una solicitud",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "komitarentsi",
+      "word": "komitarentsi",
+      "translations": ["adivinanza"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pikemero komitarentsi oñanatiri obametantatsiri",
+          "translation": "Escucha la adivinanza que lee la profesora",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "konitirori",
+      "word": "konitirori",
+      "translations": ["quinto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimpotsotero pitotsi konitirori oisotakota",
+          "translation": "Pinta la canoa que está amarrada en el quinto lugar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "konompitsaparo",
+      "word": "konompitsaparo",
+      "translations": ["columna"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero ñakarontsi konompitsaparoki mabatatsiri",
+          "translation": "Escribe los números en la tercera columna",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "kororishi",
+      "word": "kororishi",
+      "translations": ["color"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamanantena maba kororishi nopotsotantyari",
+          "translation": "Comprame color para pintar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "mabatabakachari",
+      "word": "mabatabakachari",
+      "translations": ["triple"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Picharinkero mabatabakachari ñakarontsi koni",
+          "translation": "Marca con “X” el triple de 5",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "mabatirori",
+      "word": "mabatirori",
+      "translations": ["tercero"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Nirentika iri mabatirori",
+          "translation": "Este, mi hermano, es el tercero",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "monkarapontso",
+      "word": "monkarapontso",
+      "translations": ["regleta"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakantero aisati pimpotsotero pantantyaro monkarapontso",
+          "translation": "Dibuja y pinta usando la regleta",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "monkarapontsoripekipe",
+      "word": "monkarapontsoripekipe",
+      "translations": ["regletas iguales"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pobayetajero monkarapontsoripekipe ayetakeri antabetantyari",
+          "translation": "Guarda las regletas iguales que utilizamos para trabajar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "monkararo",
+      "word": "monkararo",
+      "translations": ["cuadrado"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimpotsotero monkararo",
+          "translation": "Pinta el cuadrado",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "monkararojaniki",
+      "word": "monkararojaniki",
+      "translations": ["cuadradito"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pintsipariayetero monkararijaniki añatyayetantyari",
+          "translation": "Selecciona los cuadadritos para jugar con ellos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "monkaratantsi",
+      "word": "monkaratantsi",
+      "translations": ["deber"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Iñanatakero aparope monkaratantsi pinkatsaribentirori nonampi amonkaratantyaori",
+          "translation": "El jefe de mi comunidad leyó cada deber que tenemos que cumplir",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "namenakotiro",
+      "word": "namenakotiro",
+      "translations": ["comparo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "n Ipakena obametanari apite shiyakantsi iro nantiri meka namenakotiro",
+          "translation": "Mi profesor me dio dos ilustraciones, entonces ahora estoy comparándolas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "namenakoyetajero",
+      "word": "namenakoyetajero",
+      "translations": ["analizo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Shaiteji okantakena choki namenakoyetajero paita okantakotiri ñanarentsi opakenari noñanateri",
+          "translation": "El día de ayer mi hermana me recomendó volver a leer el texto y luego analizarlo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "namenaperotero",
+      "word": "namenaperotero",
+      "translations": ["observo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Meka namenaperotero antaberentsipe ojokanakenari obametanari",
+          "translation": "Hoy observo los trabajos que me dejó mi profesora",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nijantakotirori",
+      "word": "nijantakotirori",
+      "translations": ["introducción"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "n Ora nijantakotirori akajeitiro karatatsiriotsi sampitantsi koasanotachari",
+          "translation": "En la introducción responderemos a cuatro interrogantes fundamentales",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "niyankishetaki",
+      "word": "niyankishetaki",
+      "translations": ["simetría"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "n Pamenero niyankishetakipe",
+          "translation": "Observa las simetrías",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nochakopiatero",
+      "word": "nochakopiatero",
+      "translations": ["relaciono con flecha"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamene nochakopiatero shiyakantsi jero obajiro",
+          "translation": "Observa como relaciono con flecha la imagen y su nombre",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "noinijantero",
+      "word": "noinijantero",
+      "translations": ["dramatizo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Osaitekera noinijantero ikantakota obayeri ashaninka irosatini ibayeritabakajeitani",
+          "translation": "Mañana me toca dramatizar sobre el guerrero ashaninka, cuando peleaba con otros grupos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nonkobakoyetantero",
+      "word": "nonkobakoyetantero",
+      "translations": ["investigo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Osaitekera nojate noñeri sheripiyari ari nonkobakoyetantero iyoyetiri",
+          "translation": "Mañana iré a visitar al curandero, allí investigaré sobre sus conocimientos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nontsapatakotero",
+      "word": "nontsapatakotero",
+      "translations": ["hacer un croquis"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Ikoakotakena jibabentirori nonampi nontsapatakotero oipatsite nonampi isaikajeitira noshaninkaite",
+          "translation": "El jefe de mi comunidad me pidió hacer un croquis del terreno comunal donde viven mis familiares",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nonabentakoperotero",
+      "word": "noñabentakoperotero",
+      "translations": ["expongo"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Osheki notsaroi ariorika noñabentakoperotero mantsiyarentsi aretainchari anampiki obamantaintsiri osheki atiri",
+          "translation": "Me da mucho temor cuando expongo sobre la enfermedad que llegó a la comunidad, la misma que ha matado a muchas personas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "notsapatero",
+      "word": "notsapatero",
+      "translations": ["diseño"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Osheki nonebetaro notsapatero ikantanari nirentsi ñanatatsiri pashiniki nampitsi",
+          "translation": "Me gusta diseñar y siempre le ayudo a mi hermano que estudia en otro lugar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "noyoteri",
+      "word": "noyoteri",
+      "translations": ["mi aprendizaje"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka namene kiribiropeki okantakenari obametanari paita noyoteri",
+          "translation": "Hoy revisaré mis libros para aprender el tema que me dejo la profesora",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nakarontsi",
+      "word": "ñakarontsi",
+      "translations": ["número"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero ñakarontsi 5",
+          "translation": "Escribe el número 5",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        },
+        {
+          "sentence": "Pisankenatero ñakarontsi oshabikini okaratsi piñiri saikayetatsirika intsompoikika monkarokika",
+          "translation": "Escribe el número debajo de la cantidad de los dibujos que observas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nakarontsiro",
+      "word": "ñakarontsiro",
+      "translations": ["numerador"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nanarentsi",
+      "word": "ñanarentsi",
+      "translations": ["texto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamenero ñanarentsi",
+          "translation": "Observa el texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nantsipata",
+      "word": "ñantsipata",
+      "translations": ["tarjeta silábica"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pobetsike ñantsipata amitakotemine",
+          "translation": "Elabora una tarjeta silábica para que te ayude",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "nantsipataki",
+      "word": "ñantsipataki",
+      "translations": ["tarjeta léxica"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanajeitero ñantsipaye sankenatainchari ñantsipataki",
+          "translation": "Lee las palabras que están escritas en la tarjeta léxica",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "natsaberontsi",
+      "word": "ñatsaberontsi",
+      "translations": ["juguete"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "ñ Akenkitsatakayeri jananeki okantakota ñatsaberontsi timatsiri yotantsipankoki",
+          "translation": "Conversemos con los niños sobre los juguetes que hay en nuestra escuela",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "natsamentotsi",
+      "word": "ñatsamentotsi",
+      "translations": ["material"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pobajero maroni ñatsamentotsi pajeitakeri",
+          "translation": "Guarda todo el material que cogiste",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "natsarontsi",
+      "word": "ñatsarontsi",
+      "translations": ["material base 10"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Poinijayenaro ñatsarontsi pamanatajeitakeri",
+          "translation": "Muestrame el material base 10 que compraron",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "natsatantsi",
+      "word": "ñatsatantsi",
+      "translations": ["juego"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Tsame añatsacharo ñatsatantsi paitachari chontereko",
+          "translation": "Vamos a jugar el juego llamado chontereko",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "obabironantsi",
+      "word": "obabiroñantsi",
+      "translations": ["conector"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ero pipeakotaro pisankenatero kametsa obabiroñantsi",
+          "translation": "No te olvides escribir bien el conector",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oberakota",
+      "word": "oberakota",
+      "translations": ["superficie"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oborotaki",
+      "word": "oborotaki",
+      "translations": ["cara"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimpotsote aparoni oborotaki ora jitachari pirishima",
+          "translation": "Colorea una de las caras del prisma",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oijatantsi",
+      "word": "oijatantsi",
+      "translations": ["secuencia"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka abirori pobetsike oijatantsi okemetaka betsikainchari jenoki",
+          "translation": "Ahora haz una secuencia como está en el ejemplo de arriba",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oipitsokirori",
+      "word": "oipitsokirori",
+      "translations": ["conmutativa"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamenaperotero ñakarontsipe impoiji pobetsikakotero kametsa oinijantyarori okantakota oipitsokirori",
+          "translation": "Obserba detenidamente los números, luego ordena para representar la idea conmutativa",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oitsokatsiri",
+      "word": "oitsokatsiri",
+      "translations": ["ovíparo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "o Opempe irinti oitsokatsiri",
+          "translation": "El tucán es un ovíparo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "okantakotiri",
+      "word": "okantakotiri",
+      "translations": ["leyenda"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Te nokomityaro namenakotero okantakotiri shiyakantsi",
+          "translation": "No tengo dificultades para leer la leyenda que se presenta en la imagen",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "okarakipana",
+      "word": "okarakipana",
+      "translations": ["párrafo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pitsiparero okarakipana ñanarentsi",
+          "translation": "Separa en párrafos el texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "okatsinkaiti",
+      "word": "okatsinkaiti",
+      "translations": ["zona fría"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Nokoi nojate okatsinkaiti noyotantyari jaoka okantari ariorika nametapakia",
+          "translation": "Quiero ir en la zona fría para comprobar cómo es y si me puedo acostumbrar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "okatsirinkati",
+      "word": "okatsirinkati",
+      "translations": ["zona cálida", "zona tropical"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Okarati jamasabite oria jareta tsankipaite osaiki okatsirinkati oria",
+          "translation": "En una zona cálida, el calor es fuerte",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oparichebo",
+      "word": "oparichebo",
+      "translations": ["vértice"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimonkarayetajero osantsati maroni onampina oparichebo",
+          "translation": "Mide el largo de esa línea a partir del vértice",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "orijanitakore",
+      "word": "orijanitakore",
+      "translations": ["resumen"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenate orijanitakore ñanarentsi",
+          "translation": "Escribe el resumen del texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "orijanitsapa",
+      "word": "orijanitsapa",
+      "translations": ["letra minúscula"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Irori ñantsipaye “antami”, “kotsiraniki”, “obantsi”, irointi bairontsi isankenaitantaro orijanitsapa",
+          "translation": "Las palabras “bosque”, “cuchillo”, “chacra” son nombres y se escribe con letra minúscula",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "orikapi",
+      "word": "orikapi",
+      "translations": ["menor que"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenate aparoni ñakarontsi orikapi 5",
+          "translation": "Escribe un número menor que 5",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "osankenaitoki",
+      "word": "osankenaitoki",
+      "translations": ["título"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero osankenaitoki ñanarentsi",
+          "translation": "Lee el título del texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "oshekiakotirori",
+      "word": "oshekiakotirori",
+      "translations": ["plural"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero oshekiakotirori ñantsipe",
+          "translation": "Escribe el plural de las palabras",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "otsapakire-sampitantsi",
+      "word": "otsapakire sampitantsi",
+      "translations": ["signos de interrogación"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Poyero otsapakire sampitantsi otsonkapakara kenkishiriantsi",
+          "translation": "Coloca el signo de interrogación al final de la oración",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "otsipatirori",
+      "word": "otsipatirori",
+      "translations": ["cuarto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Aretapaja iye otsipatirori",
+          "translation": "Mi cuarto hermano ya llegó",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pakakairo",
+      "word": "pakakairo",
+      "translations": ["resolver"],
+      "partOfSpeech": "verb",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pani",
+      "word": "pani",
+      "translations": ["unidad"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pankenatantsi",
+      "word": "pankenatantsi",
+      "translations": ["problema"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka abirori poimishitobero ora pankenatantsi jenokiniri",
+          "translation": "Ahora, tú resuelve el problema de arriba",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "paperi",
+      "word": "paperi",
+      "translations": ["papel"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Icheriakero jananeki paperi",
+          "translation": "El niño rompió el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pashitakoteri",
+      "word": "pashitakoteri",
+      "translations": ["encierra"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pashitakoteri tsimeripe shiyakantakotachari paperiki",
+          "translation": "Encierra las aves dibujadas en el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "patsayetakantatsiri",
+      "word": "patsayetakantatsiri",
+      "translations": ["descomponedor"],
+      "partOfSpeech": "noun",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "perota",
+      "word": "perota",
+      "translations": ["pelota"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakantero jaoka opariyapake perota",
+          "translation": "Dibuja donde cayó la pelota",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pibetsainkero",
+      "word": "pibetsainkero",
+      "translations": ["ordénalo"],
+      "partOfSpeech": "verb",
+      "examples": [],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pichakopiatero",
+      "word": "pichakopiatero",
+      "translations": ["relaciona"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pichakopiatero isaikayeti aparope piratsi",
+          "translation": "Relaciona donde está cada animal",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "picharinkeri",
+      "word": "picharinkeri",
+      "translations": ["marca"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Picharinkeri shimaperori shiyakantakotainchari",
+          "translation": "Marca el boquichico que está en el dibujo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pijikoyeteri",
+      "word": "pijikoyeteri",
+      "translations": ["indica"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pijikoyeteri atiripe shiyakantakotainchari",
+          "translation": "Indica las personas que están en el dibujo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pintsereakotero",
+      "word": "pintsereakotero",
+      "translations": ["corta"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pintsereakotero oitsare piniro",
+          "translation": "Corta la ropa de tu madre",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pinabentakotero",
+      "word": "piñabentakotero",
+      "translations": ["comenta"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Piñabentakotero kenkitsarentsi pikemakeri",
+          "translation": "Comenta el realto que escuchaste",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pipotsotero",
+      "word": "pipotsotero",
+      "translations": ["pinta"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pipotsotero shonkaro okaratira tsapari aparopeki ñantsi",
+          "translation": "Pinta con un círculo la cantidad de letras en las palabras",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pishiakanteri",
+      "word": "pishiakanteri",
+      "translations": ["dibuja"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pishiyakanteri aparoni piratsi pibiratari",
+          "translation": "Dibuja un animal que crias",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitesankenari",
+      "word": "pitesankenari",
+      "translations": ["dígrafo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pashitakotero ñantsipe timatsiri pitesankenari",
+          "translation": "Encierra con un círculo las palabras que tienen dígrafos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitetsitok",
+      "word": "pitetsitok",
+      "translations": ["dos puntos"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Eiro pipiakotaro poyero pitetsitok",
+          "translation": "No te olvides colocar los dos puntos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitotakotero",
+      "word": "pitotakotero",
+      "translations": ["recorta"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pitotakotero shiyakantsi saikatsiri paperiki",
+          "translation": "Recorta la imagen dibujada en el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitsirekariayetero",
+      "word": "pitsirekariayetero",
+      "translations": ["despega"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pitsirekariayetero ibentaki shima pitsirekakeri paperiki",
+          "translation": "Despega las escamas del pescado que pegaste en el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitsirekero",
+      "word": "pitsirekero",
+      "translations": ["pega"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pitsirekero shiyakantsi ashitakoroki pibanko",
+          "translation": "Pega el bibujo en la puerta de tu casa",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pitsonkajero",
+      "word": "pitsonkajero",
+      "translations": ["termina"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pitsonkajero pantabere kitaiterikika",
+          "translation": "Termina tu trabajo en este dia",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "pobametsatero",
+      "word": "pobametsatero",
+      "translations": ["ordena"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "Pobametsatero tsitsipe",
+          "translation": "Ordena las leñas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "poematsapari",
+      "word": "poematsapari",
+      "translations": ["sílaba"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Tsame ayotero poematsapari ñantsipeki",
+          "translation": "Ahora vamos a conocer las sílabas en las palabras",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "poimatsatantsi",
+      "word": "poimatsatantsi",
+      "translations": ["onomatopeya"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Yora ashaninka osheki imapokayetiro poimatsatantsi irotake okametsatantari iyenkitsane",
+          "translation": "El asháninka tiene muchas onomatopeyas, por eso sus relatos son sorprendentes",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "poyatantsi",
+      "word": "poyatantsi",
+      "translations": ["pronombre"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Jananekipe, eiro pipiakotarotsi aririka akantakotero poyatantsi",
+          "translation": "Niños, no se olviden en decir el pronombre",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sankenapatotantsi",
+      "word": "sankenapatotantsi",
+      "translations": ["alfabeto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "s Asankenatantyaro tsaparipaye timatsiri sankenapatotantsiki",
+          "translation": "Escribamos con las letras de nuestro alfabeto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sankenarentsipana",
+      "word": "sankenarentsipana",
+      "translations": ["cuaderno"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pamanante maba sankenarentsipana irashi pitomi",
+          "translation": "Compra tres cuadernos para tu hijo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sankenarentsipanaro",
+      "word": "sankenarentsipanaro",
+      "translations": ["cuaderno de trabajo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Asankenatantyarori sankenarentsipanaro osheki akarabentakero",
+          "translation": "Para la elaboración de este cuaderno de trabajo fue necesario trabajarlo entre varios elaboradores",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sokiyatsiri",
+      "word": "sokiyatsiri",
+      "translations": ["respuesta"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pikantenaro ñakarontsi sokiyatsiri pankenatantsiki nosankenatakotakeri",
+          "translation": "Escribe el número que corresponde a la respuesta del problema que les escribí para resolver",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sotitirori",
+      "word": "sotitirori",
+      "translations": ["octavo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pintobero inchato sotitirori",
+          "translation": "Corta el octavo árbol",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sharakamashi",
+      "word": "sharakamashi",
+      "translations": ["sierra"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "sh Aririka aanakeri kemari jeri shintori sharakamashiki, ¿ari imatakea isabike?, ¿paitakea?",
+          "translation": "Si llevamos una sachava y un sajino a la sierra, ¿podrán vivir?, ¿por qué?",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sharakasati",
+      "word": "sharakasati",
+      "translations": ["persona andina"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakantero ibanko sharakasati",
+          "translation": "Dibuja la casa de una persona andina",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sheki",
+      "word": "sheki",
+      "translations": ["centena"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "sh Ichekake apa okarati maba sheki saboro itantotantyarori ibanko",
+          "translation": "Mi papá cortó tres centenas de cañabravas para el cerco de su casa",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shekiantsi",
+      "word": "shekiantsi",
+      "translations": ["multiplicación"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero pankenatantsi sankenatainchari impoiji pantero shekiantsi",
+          "translation": "Lee el problema que esta escrito y resuelve la multiplicación",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shekimonkararo",
+      "word": "shekimonkararo",
+      "translations": ["poligonal"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka tsame ayotakotero ikantetiri shekimonkararo eirokea akomitantarotsi",
+          "translation": "Hoy aprenderemos sobre el poligonal para tener claro de qué se trata",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "sheronkapentakiro",
+      "word": "sheronkapentakiro",
+      "translations": ["bloque lógico"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pikanteti pishaninka iramitakotempi ibetsike sheronkapentakiro pantabetantyari yotantsipankoki",
+          "translation": "Pide a tu familia que te ayude a elaborar el bloque lógico, para que puedas trabajar en la escuela",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shetariantsi",
+      "word": "shetariantsi",
+      "translations": ["fracción"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero pankenatantsi poimisokijityaro okantakotiri shetariantsi",
+          "translation": "Lee el problema y resuelve la fracción",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shintsitsaro",
+      "word": "shintsitsaro",
+      "translations": ["signo de admiración"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Ayotakotero aisati sampitarontsi < ¿?> aisati shintsitsaro <¡!>",
+          "translation": "Conozcamos los signos de interrogación y los signos de admiración",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shiyakabentarontsi",
+      "word": "shiyakabentarontsi",
+      "translations": ["signo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka tsame añabentakotero ikantetiri shiyakabentarontsi eirokea akomitantarotsi",
+          "translation": "Hoy aprenderemos sobre el signo a fin de no confundirnos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shonkainaro",
+      "word": "shonkainaro",
+      "translations": ["embolillado"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pibetsikeri shonkainaro ikoñatakotantyari kametsa ishinkoitiri batsatsi impoiji pitsirikeri paperiki",
+          "translation": "Haz los embolillados y pégalos en la figura de la carne asada",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "shonkaro",
+      "word": "shonkaro",
+      "translations": ["círculo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pashitakotantyaro shonkaro kantiripe",
+          "translation": "Encierra con un círculo las canastas",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tampatikatsantsa",
+      "word": "tampatikatsantsa",
+      "translations": ["línea recta"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "t Meka pipotsote aparoni tampatikatsantsa pibaperiteki",
+          "translation": "Ahora, dibuja una línea recta en tu hoja de papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "timajanitatsiri",
+      "word": "timajanitatsiri",
+      "translations": ["vivíparo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "t Pisankenate ibajirope piratsi timajanitatsiri",
+          "translation": "Escribe los nombres de los animales vivíparos",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "timarantapaintsiri",
+      "word": "timarantapaintsiri",
+      "translations": ["residuo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "¿Jaoka ojitari ñakarontsi timarantapaintsiri?",
+          "translation": "¿Cuál es el número que quedó como residuo?",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tinik",
+      "word": "tinik",
+      "translations": ["coma"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Iyotiro isankenatiro tinik sankenarentsiki",
+          "translation": "Sabe escribir la coma en su texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tintirori",
+      "word": "tintirori",
+      "translations": ["noveno"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Poyero inchapanki oberakara tintirori",
+          "translation": "Guarda el palo en el noveno lugar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tipitsaro",
+      "word": "tipitsaro",
+      "translations": ["línea abierta"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakante kipatsiki aparoni tipitsaro antaro impoiji pashini tipitsaro orijaniki",
+          "translation": "Dibuja en el suelo una línea abierta grande, luego otra línea abierta pequeña",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsapari",
+      "word": "tsapari",
+      "translations": ["letra"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pipotsotero shonkaro okaratira tsapari aparopeki ñantsi",
+          "translation": "Pinta con un círculo la cantidad de letras en las palabras",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsaparichebo",
+      "word": "tsaparichebo",
+      "translations": ["ángulo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pimonkaratero aparope tsaparichebo shiyakantakotainchari paperiki",
+          "translation": "Mide cada ángulo dibujado en el papel",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsaparipetaki",
+      "word": "tsaparipetaki",
+      "translations": ["pupiletras"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pashitakotero tsaparipetaki ñantsipe piyotakeri",
+          "translation": "Encierra en el pupiletras las palabras que aprendiste",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsapaye",
+      "word": "tsapaye",
+      "translations": ["decena"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishintsaitri shimape inkarate aparoni tsapaye pipimantantyariri",
+          "translation": "Ensarta los peces por decena, para que te facilite la venta",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsaripentsaki",
+      "word": "tsaripentsaki",
+      "translations": ["tablero posicional"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakante aparoni tsaripentsaki pibaperiteki nopakemiri aparope",
+          "translation": "Dibuja un tablero posicional en la hoja de papel que les entregué a cada uno",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsaripetaki",
+      "word": "tsaripetaki",
+      "translations": ["tabla"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pishiyakante aparoni tsaripetaki pisankenatantyari ñakarontsipe",
+          "translation": "Dibuja una tabla y escribe los números",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsatirori",
+      "word": "tsatirori",
+      "translations": ["décimo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Tsatijakotake pitotsi saikabeitachaniri ara tsatirori",
+          "translation": "Se rompió la soga de la canoa que estaba amarrada en el décimo lugar",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsipariantiro",
+      "word": "tsipariantiro",
+      "translations": ["denominador"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Eiro pipeakoyetarotsi pisankenatapinitero tsipariantiro pantantyarori kametsa pomeretsitantsi",
+          "translation": "No te olvides de escribir el número denominador para que puedas resolver el problema matemático",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsipariayeteri",
+      "word": "tsipariayeteri",
+      "translations": ["dividendo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Piñanatero ñakarontsi shiyakabentirori tsipariayeteri",
+          "translation": "Lee el número del dividendo",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsiparirori",
+      "word": "tsiparirori",
+      "translations": ["divisor"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Pisankenatero kametsa ñakarontsi jitachari tsiparirori",
+          "translation": "Escribe bien el número divisor",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsitok",
+      "word": "tsitok",
+      "translations": ["punto"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Poyero tsitok <.> arika otsonkatakia kenkishiriantsi",
+          "translation": "Coloca el punto <.> cuando termina una oración",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsitok-tinik",
+      "word": "tsitok tinik",
+      "translations": ["punto y coma"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Iyotiro isankenatiro tsitok tinik sankenarentsiki",
+          "translation": "Sabe escribir el punto y coma en el texto",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tsontirori",
+      "word": "tsontirori",
+      "translations": ["séptimo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Obakera itobakero apa inchato tsontirori saikatsiri ibesaoreki",
+          "translation": "Mi papá recién tumbó el séptimo árbol de su roze",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "tyobirimento",
+      "word": "tyobirimento",
+      "translations": ["motosierra"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "ty Yamanantake apa aparoni tyobirimento",
+          "translation": "Mi papá compró una motosierra",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "yotakotirori-anane",
+      "word": "yotakotirori añane",
+      "translations": ["área de Comunicación"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Meka antero yotakotirori añane",
+          "translation": "Ahora vamos a hacer el área de Comunicación",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    },
+    {
+      "id": "yotantsi",
+      "word": "yotantsi",
+      "translations": ["conocimiento"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "y Noyotakero obakerari yotantsi",
+          "translation": "Hoy aprendí un nuevo conocimiento",
+          "sourceId": "minedu-2021-vocabulario-pedagogico"
+        }
+      ],
+      "sourceId": "minedu-2021-vocabulario-pedagogico"
+    }
+  ]
+}
