@@ -8,6 +8,7 @@ const resources = [
     title: "Diccionario",
     text: "Palabras y significados en cada lengua.",
     cta: "Buscar",
+    href: "/diccionario/ashaninka",
   },
   {
     icon: Languages,
@@ -15,6 +16,7 @@ const resources = [
     title: "Traductor",
     text: "Traduce frases entre español y cada lengua.",
     cta: "Traducir",
+    href: "#",
   },
   {
     icon: Info,
@@ -22,6 +24,7 @@ const resources = [
     title: "Info general",
     text: "Historia y territorio de cada lengua.",
     cta: "Leer más",
+    href: "#",
   },
   {
     icon: Paperclip,
@@ -29,6 +32,7 @@ const resources = [
     title: "Otros sitios",
     text: "Enlaces a aliados y archivos.",
     cta: "Ver enlaces",
+    href: "#",
   },
 ];
 
@@ -66,7 +70,7 @@ export default function Resources() {
                 </div>
                 <div>
                   <Link
-                    href="#"
+                    href={resource.href}
                     className="border-b-2 border-[#F2B705] text-sm font-bold text-[#241D14] no-underline"
                   >
                     {resource.cta}
