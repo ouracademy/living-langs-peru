@@ -324,3 +324,26 @@ test.describe("language picker", () => {
     await expect(page.getByLabel(/buscar/i)).toHaveValue("");
   });
 });
+
+test.describe("dictionary api", () => {
+  // AC-M2-7 — Next returns this for unhandled verbs; locked in so a future
+  // handler cannot start accepting writes unnoticed.
+  test("rejects verbs other than GET", async ({ request }) => {
+    for (const send of [
+      request.post("/api/diccionario/ashaninka"),
+      request.put("/api/diccionario/ashaninka"),
+      request.delete("/api/diccionario/ashaninka"),
+    ]) {
+      expect((await send).status()).toBe(405);
+    }
+  });
+
+  test("serves the language list", async ({ request }) => {
+    const response = await request.get("/api/diccionario");
+
+    expect(response.status()).toBe(200);
+    expect(await response.json()).toEqual({
+      languages: [{ slug: "ashaninka", name: "Asháninka", total: 13 }],
+    });
+  });
+});
