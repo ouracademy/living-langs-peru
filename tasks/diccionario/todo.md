@@ -114,5 +114,5 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 ## Hitos humanos (no los cierra ni la IA ni los tests)
 
 - [x] **H1** Confirmar orden alfabético asháninka con hablante o lingüista → cierra F3
-- [ ] **H2** Aprobar licencias de fuentes y conseguir permisos → desbloquea T7.3
+- [ ] **H2** Formalizar el permiso de MINEDU (en trámite por la vía institucional con el Estado). El contenido ya está importado y atribuido; esto cierra el trámite, no bloquea la interfaz.
 - [x] **H3** Revisar el esquema `Entry` en el checkpoint 1 → desbloquea F7
