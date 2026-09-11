@@ -40,9 +40,9 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 - [x] **T2.1** `lib/dictionary/text.ts`: `normalize` (preserva `ñ`), `slugify`, `compareWords`. **Tests primero, en rojo** `[AC-M1-1, AC-M1-2]`
 - [x] **T2.2** `resolveWord()`: por `id`, luego por `word`/variante normalizada. Tests primero `[AC-M1-8]`
-- [ ] **T2.3** `components/dictionary/dictionary.tsx` (Client, en `<Suspense>`) + `entry-detail.tsx`: `useSearchParams`, `push`/`replace` con `{scroll:false}`, ejemplos con `lang="cni"`, mensaje si no hay ejemplos, aviso si `?palabra` no resuelve, botón copiar enlace `[AC-M3-4, AC-M3-6, AC-M3-7]`
-- [ ] **T2.4** E2E: clic cambia URL · deep-link directo abre la entrada · `?palabra=basura` avisa sin 404 · «atrás» funciona `[AC-M3-5, AC-M3-8]`
-- [ ] **T2.5** Reconfirmar que la ruta sigue estática tras meter `useSearchParams`
+- [x] **T2.3** `components/dictionary/dictionary.tsx` (Client, en `<Suspense>`) + `entry-detail.tsx`: `useSearchParams`, `push`/`replace` con `{scroll:false}`, ejemplos con `lang="cni"`, mensaje si no hay ejemplos, aviso si `?palabra` no resuelve, botón copiar enlace `[AC-M3-4, AC-M3-6, AC-M3-7]`
+- [x] **T2.4** E2E: clic cambia URL · deep-link directo abre la entrada · `?palabra=basura` avisa sin 404 · «atrás» funciona `[AC-M3-5, AC-M3-8]`
+- [x] **T2.5** Reconfirmar que la ruta sigue estática tras meter `useSearchParams`
 
 > **⛔ Checkpoint 2** — copiar la URL de una palabra, abrirla en otro navegador, ver la palabra con su
 > ejemplo de uso. Es el pedido central; lo demás es comodidad.

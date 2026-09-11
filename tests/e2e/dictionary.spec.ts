@@ -21,7 +21,9 @@ test.describe("dictionary page", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /diccionario asháninka/i }),
     ).toBeVisible();
-    await expect(page.getByRole("listitem")).toHaveCount(3);
+    await expect(
+      page.getByRole("list", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(3);
   });
 
   test("warns that the content is still provisional", async ({ page }) => {
@@ -46,4 +48,94 @@ test("the home page links to the dictionary", async ({ page }) => {
   await page.getByRole("link", { name: "Buscar" }).click();
 
   await expect(page).toHaveURL("/diccionario/ashaninka");
+});
+
+test.describe("word selection and deep links", () => {
+  // AC-M3-4
+  test("clicking a word shows its detail and puts it in the url", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("button", { name: "Placeholder A" }).click();
+
+    await expect(page).toHaveURL(
+      "/diccionario/ashaninka?palabra=placeholder-a",
+    );
+    const detail = page.getByRole("region", { name: /placeholder a/i });
+    await expect(detail).toBeVisible();
+    await expect(detail).toContainText("contenido provisional");
+    await expect(detail).toContainText(
+      "Oración de ejemplo pendiente de fuente citada.",
+    );
+  });
+
+  // AC-M3-5 — the case most likely to break, and the one explicitly asked for.
+  test("opening ?palabra directly shows that entry already open", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-c");
+
+    const detail = page.getByRole("region", { name: /placeholder c/i });
+    await expect(detail).toBeVisible();
+    // Both examples render.
+    await expect(detail).toContainText("Primera oración de ejemplo pendiente.");
+    await expect(detail).toContainText("Segunda oración de ejemplo pendiente.");
+  });
+
+  test("resolves a deep link written with the raw word", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=Placeholder%20B");
+
+    await expect(
+      page.getByRole("region", { name: /placeholder b/i }),
+    ).toBeVisible();
+  });
+
+  // AC-M3-6
+  test("says so when an entry has no usage examples", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-b");
+
+    await expect(
+      page.getByRole("region", { name: /placeholder b/i }),
+    ).toContainText(/no tenemos ejemplos/i);
+  });
+
+  // AC-M3-7 — a shared link that misses must not land on an error page.
+  test("warns without 404ing when ?palabra matches nothing", async ({
+    page,
+  }) => {
+    const response = await page.goto("/diccionario/ashaninka?palabra=basura");
+
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("main").getByRole("alert")).toContainText(
+      /no encontramos esa palabra/i,
+    );
+    await expect(
+      page.getByRole("list", { name: "Palabras" }).getByRole("listitem"),
+    ).toHaveCount(3);
+  });
+
+  // AC-M3-8
+  test("the back button returns to the previously selected word", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("button", { name: "Placeholder A" }).click();
+    await expect(page).toHaveURL(/palabra=placeholder-a/);
+
+    await page.getByRole("button", { name: "Placeholder C" }).click();
+    await expect(page).toHaveURL(/palabra=placeholder-c/);
+
+    await page.goBack();
+    await expect(page).toHaveURL(/palabra=placeholder-a/);
+    await expect(
+      page.getByRole("region", { name: /placeholder a/i }),
+    ).toBeVisible();
+  });
+
+  test("closing the detail drops ?palabra from the url", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.getByRole("button", { name: /cerrar/i }).click();
+
+    await expect(page).toHaveURL("/diccionario/ashaninka");
+  });
 });

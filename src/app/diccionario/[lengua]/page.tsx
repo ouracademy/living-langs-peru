@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
+import { Dictionary } from "@/components/dictionary/dictionary";
 import {
   getDictionary,
+  getLanguageCode,
   getLanguagesWithDictionary,
   isProvisional,
 } from "@/lib/dictionary";
@@ -59,17 +62,14 @@ export default async function DictionaryPage({ params }: DictionaryPageProps) {
         </p>
       )}
 
-      <ul className="mt-8 flex flex-col gap-2">
-        {dictionary.entries.map((entry) => (
-          <li key={entry.id} className="border-b border-gray-200 pb-2">
-            <span className="font-bold">{entry.word}</span>
-            <span className="text-[#4A4130]">
-              {" — "}
-              {entry.translations.join("; ")}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {/* Suspense lets everything above stay in the prerendered HTML while the
+          part that reads ?palabra via useSearchParams renders on the client. */}
+      <Suspense fallback={null}>
+        <Dictionary
+          entries={dictionary.entries}
+          languageCode={getLanguageCode(language) ?? ""}
+        />
+      </Suspense>
     </main>
   );
 }
