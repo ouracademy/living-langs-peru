@@ -3,7 +3,12 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import { type Entry, resolveWord, searchEntries } from "@/lib/dictionary";
+import {
+  type Entry,
+  type Source,
+  resolveWord,
+  searchEntries,
+} from "@/lib/dictionary";
 
 import { EntryDetail } from "./entry-detail";
 import { EntryList } from "./entry-list";
@@ -20,6 +25,7 @@ type DictionaryProps = {
   languageName: string;
   languageCode: string;
   availableLanguages: string[];
+  sources: Source[];
 };
 
 export function Dictionary({
@@ -28,6 +34,7 @@ export function Dictionary({
   languageName,
   languageCode,
   availableLanguages,
+  sources,
 }: DictionaryProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -38,8 +45,8 @@ export function Dictionary({
   const [input, setInput] = useState("");
   const query = useDebounced(input, 150);
   const visible = useMemo(
-    () => searchEntries(entries, query),
-    [entries, query],
+    () => searchEntries(entries, query, language),
+    [entries, query, language],
   );
 
   const requested = searchParams.get(WORD_PARAM);
@@ -105,6 +112,7 @@ export function Dictionary({
         <div className="mt-4" />
         <EntryList
           entries={visible}
+          language={language}
           selectedId={selected?.id}
           languageCode={languageCode}
           onSelect={select}
@@ -114,6 +122,7 @@ export function Dictionary({
       {selected && (
         <EntryDetail
           entry={selected}
+          source={sources.find((item) => item.id === selected.sourceId)}
           languageCode={languageCode}
           onClose={clear}
         />

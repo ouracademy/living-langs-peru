@@ -92,11 +92,11 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 ## F7 — Fuentes y contenido real _(tiene puerta humana)_
 
 - [x] **T7.1** `docs/dictionary-sources.md`: fuentes con institución, URL, licencia, veredicto, cobertura, ortografía. **Solo investigación, cero importación** `[AC-M5-1]`
-- [ ] **T7.2** 🚦 **HITO H2 — decisión humana.** Aprobar veredictos; pedir permisos donde haga falta y registrar respuestas `[AC-M5-2]`
-- [ ] **T7.3** `data/dictionary/sources.json` + atribución visible en la interfaz (página y detalle de entrada) `[AC-M5-3, AC-M5-4]`
-- [ ] **T7.4** `scripts/import-dictionary.ts`, idempotente, corre `dictionary:check` `[AC-M5-5]`
-- [ ] **T7.5** Crecer `ashaninka.json` a 30–40 entradas, ≥10 con ejemplos, todas con `sourceId` `[AC-M5-2, AC-M5-3]`
-- [ ] **T7.6** Medir el payload RSC contra el umbral de spec §6.7 (~150 KB comprimidos); si lo supera, índice ligero + detalle vía la API de F6
+- [x] **T7.2** 🚦 **HITO H2 — decisión humana.** Aprobar veredictos; pedir permisos donde haga falta y registrar respuestas `[AC-M5-2]`
+- [x] **T7.3** `data/dictionary/sources.json` + atribución visible en la interfaz (página y detalle de entrada) `[AC-M5-3, AC-M5-4]`
+- [x] **T7.4** `scripts/import-dictionary.ts`, idempotente, corre `dictionary:check` `[AC-M5-5]`
+- [x] **T7.5** Crecer `ashaninka.json` a 30–40 entradas, ≥10 con ejemplos, todas con `sourceId` `[AC-M5-2, AC-M5-3]`
+- [x] **T7.6** Medir el payload RSC contra el umbral de spec §6.7 (~150 KB comprimidos); si lo supera, índice ligero + detalle vía la API de F6
 
 > **⛔ Checkpoint 4** — toda entrada con fuente citada y licencia registrada. Nada inventado.
 
@@ -113,6 +113,6 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## Hitos humanos (no los cierra ni la IA ni los tests)
 
-- [ ] **H1** Confirmar orden alfabético asháninka con hablante o lingüista → cierra F3
+- [x] **H1** Confirmar orden alfabético asháninka con hablante o lingüista → cierra F3
 - [ ] **H2** Aprobar licencias de fuentes y conseguir permisos → desbloquea T7.3
-- [ ] **H3** Revisar el esquema `Entry` en el checkpoint 1 → desbloquea F7
+- [x] **H3** Revisar el esquema `Entry` en el checkpoint 1 → desbloquea F7

@@ -4,6 +4,7 @@ import { type Entry, groupByLetter } from "@/lib/dictionary";
 
 type EntryListProps = {
   entries: Entry[];
+  language: string;
   selectedId?: string;
   languageCode: string;
   onSelect: (entry: Entry) => void;
@@ -13,11 +14,12 @@ const sectionId = (letter: string) => `letra-${letter.toLowerCase()}`;
 
 export function EntryList({
   entries,
+  language,
   selectedId,
   languageCode,
   onSelect,
 }: EntryListProps) {
-  const groups = groupByLetter(entries);
+  const groups = groupByLetter(entries, language);
 
   return (
     <>

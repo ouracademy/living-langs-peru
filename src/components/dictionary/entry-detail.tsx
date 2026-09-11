@@ -3,7 +3,7 @@
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
 
-import type { Entry } from "@/lib/dictionary";
+import type { Entry, Source } from "@/lib/dictionary";
 
 const PART_OF_SPEECH_LABELS: Record<string, string> = {
   noun: "sustantivo",
@@ -17,6 +17,8 @@ const PART_OF_SPEECH_LABELS: Record<string, string> = {
 
 type EntryDetailProps = {
   entry: Entry;
+  /** The work this entry was taken from, shown as attribution. */
+  source?: Source;
   /** ISO 639-3 code, so screen readers do not read examples as Spanish. */
   languageCode: string;
   onClose: () => void;
@@ -24,6 +26,7 @@ type EntryDetailProps = {
 
 export function EntryDetail({
   entry,
+  source,
   languageCode,
   onClose,
 }: EntryDetailProps) {
@@ -99,6 +102,16 @@ export function EntryDetail({
       ) : (
         <p className="mt-2 text-sm text-[#4A4130]">
           Aún no tenemos ejemplos de uso para esta palabra.
+        </p>
+      )}
+
+      {source && (
+        <p className="mt-6 border-t border-gray-200 pt-3 text-xs text-[#4A4130]">
+          Fuente:{" "}
+          <a href={source.url} className="underline" rel="noreferrer noopener">
+            {source.title}
+          </a>
+          , {source.publisher}, {source.year}.
         </p>
       )}
 
