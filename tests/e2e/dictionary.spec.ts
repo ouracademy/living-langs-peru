@@ -189,11 +189,11 @@ test.describe("alphabetical grouping", () => {
       .getByRole("button")
       .filter({ hasText: /^shara|^sheki/ });
 
-    await expect(words).toHaveText([
-      /^sharakamashi —/,
-      /^sharakasati —/,
-      /^sheki —/,
-    ]);
+    // By position, not as an exhaustive list: importing more «sheki…» words
+    // must not break an assertion about the order of the first three.
+    await expect(words.nth(0)).toHaveText(/^sharakamashi —/);
+    await expect(words.nth(1)).toHaveText(/^sharakasati —/);
+    await expect(words.nth(2)).toHaveText(/^sheki —/);
   });
 
   test("the A-Z index jumps to a section", async ({ page }) => {

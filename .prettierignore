@@ -1,4 +1,9 @@
+# Machine-local settings that the tooling rewrites. Git ignores this file
+# globally, so Prettier failing on it would only ever fail on a laptop.
+.claude/settings.local.json
+
 .next
+coverage
 node_modules
 pnpm-lock.yaml
 public

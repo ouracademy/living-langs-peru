@@ -7,6 +7,7 @@ import {
   isProvisional,
   resolveWord,
 } from "@/lib/dictionary";
+import type { Dictionary } from "@/lib/dictionary/types";
 
 describe("getDictionary", () => {
   it("returns the Asháninka dictionary", () => {
@@ -79,7 +80,7 @@ describe("isProvisional", () => {
           sourceId: "some-real-source",
         },
       ],
-    } as const;
+    } satisfies Dictionary;
 
     expect(isProvisional(dictionary)).toBe(false);
   });
