@@ -46,9 +46,11 @@ export function EntryList({
             // role=group so each section is addressable by its letter.
             role="group"
             aria-label={group.letter}
-            className="scroll-mt-4"
+            className="scroll-mt-24"
           >
-            <h2 className="sticky top-0 bg-[#FFF7E8] px-3 py-1 text-sm font-bold text-[#6A3E8C]">
+            <h2 // Offset below the site header, which is sticky at top-0 with z-50.
+              className="sticky top-[70px] z-10 bg-[#FFF7E8] px-3 py-1 text-sm font-bold text-[#6A3E8C]"
+            >
               {group.letter}
             </h2>
             <ul className="flex flex-col">

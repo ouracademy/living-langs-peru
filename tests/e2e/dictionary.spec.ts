@@ -26,12 +26,24 @@ test.describe("dictionary page", () => {
     ).toHaveCount(169);
   });
 
-  // AC-M3-7 (404 half) and AC-M1-9
-  test("404s for a language with no dictionary", async ({ page }) => {
-    const uro = await page.goto("/diccionario/uro");
-    expect(uro?.status()).toBe(404);
+  // AC-M3-7: a known language without data explains itself; an unknown one 404s.
+  test("explains itself for a known language with no dictionary", async ({
+    page,
+  }) => {
+    const response = await page.goto("/diccionario/uro");
 
+    expect(response?.status()).toBe(200);
+    await expect(
+      page.getByRole("heading", { level: 1, name: /diccionario uro/i }),
+    ).toBeVisible();
+    await expect(page.getByText(/aún no tenemos/i)).toBeVisible();
+    // And offers a way out, to a language that does have one.
+    await expect(page.getByRole("link", { name: /Asháninka/ })).toBeVisible();
+  });
+
+  test("404s for a language that does not exist", async ({ page }) => {
     const unknown = await page.goto("/diccionario/klingon");
+
     expect(unknown?.status()).toBe(404);
   });
 });
@@ -348,13 +360,11 @@ test.describe("keyboard only", () => {
   }) => {
     await page.goto("/diccionario/ashaninka");
 
-    // Tab lands on the language picker first.
-    await page.keyboard.press("Tab");
-    await expect(
-      page.getByRole("button", { name: /lengua: Asháninka/i }),
-    ).toBeFocused();
+    // Start at the picker. It is not the first tab stop any more: the site
+    // header comes first, which is what we want.
+    await page.getByRole("button", { name: /lengua: Asháninka/i }).focus();
 
-    // Then the search box, which accepts typing.
+    // Tab moves from there to the search box, which accepts typing.
     await page.keyboard.press("Tab");
     await expect(page.getByLabel(/buscar/i)).toBeFocused();
     await page.keyboard.type("sankena");
@@ -435,5 +445,50 @@ test.describe("narrow screens", () => {
       () => document.documentElement.scrollWidth - window.innerWidth,
     );
     expect(overflow).toBeLessThanOrEqual(0);
+  });
+});
+
+test.describe("site chrome", () => {
+  test("the dictionary carries the site header and footer", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    await expect(page.getByRole("banner")).toBeVisible();
+    await expect(
+      page.getByRole("banner").getByText("Lenguas Peruanas"),
+    ).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
+  });
+
+  test("the header links back out of the dictionary", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page
+      .getByRole("banner")
+      .getByRole("link", { name: "Historias" })
+      .click();
+
+    await expect(page).not.toHaveURL(/diccionario/);
+  });
+
+  test("a letter heading stays clear of the sticky site header", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("link", { name: "Ir a la letra Ts" }).click();
+
+    const heading = page
+      .getByRole("group", { name: "Ts" })
+      .getByRole("heading");
+    const header = page.getByRole("banner");
+    const headingBox = await heading.boundingBox();
+    const headerBox = await header.boundingBox();
+
+    expect(headingBox).not.toBeNull();
+    expect(headerBox).not.toBeNull();
+    // The heading must start below where the site header ends.
+    expect(headingBox!.y).toBeGreaterThanOrEqual(
+      headerBox!.y + headerBox!.height - 1,
+    );
   });
 });

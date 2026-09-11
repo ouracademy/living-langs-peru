@@ -115,9 +115,9 @@ export type Dictionary = {
 ### 4.2 Archivos de datos
 
 - `src/data/dictionary/ashaninka.json` — semilla de **30–40 entradas**, al menos 10 con ejemplos.
-- `src/data/dictionary/uro.json` — **no se crea en este trabajo.** `uro` existe en
-  `src/lib/languages.ts` pero no tendrá diccionario; el sistema debe manejar ese caso con gracia
-  (ver AC-M3-7).
+- `src/data/dictionary/uro.json` — **no se crea en este trabajo**, por falta de una fuente uro con
+  licencia. `uro` existe en `src/lib/languages.ts`, así que `/diccionario/uro` renderiza un estado
+  «aún no disponible» que lo explica y enlaza a los diccionarios existentes (ver AC-M3-7).
 
 Regla: **una lengua puede existir sin diccionario.** La disponibilidad se deriva de la existencia del
 archivo, no de una bandera en `languages.ts`.
@@ -261,13 +261,14 @@ Códigos de `error`: `language_not_found` (404), `entry_not_found` (404), `inval
 
 ### 6.1 Contrato de URL
 
-| URL                                       | Comportamiento                                                                                                                 |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `/diccionario`                            | Redirige a `/diccionario/ashaninka` (redirect en `next.config.ts`, `permanent: false` — la lengua por defecto podría cambiar). |
-| `/diccionario/ashaninka`                  | Lista completa, ninguna palabra seleccionada.                                                                                  |
-| `/diccionario/ashaninka?palabra=<id>`     | Igual, con esa entrada abierta y visible al cargar.                                                                            |
-| `/diccionario/ashaninka?palabra=<basura>` | La página **carga normal** y muestra un aviso «no encontramos esa palabra». **No** es un 404.                                  |
-| `/diccionario/klingon`                    | `notFound()` → 404.                                                                                                            |
+| URL                                       | Comportamiento                                                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/diccionario`                            | Redirige a `/diccionario/ashaninka` (redirect en `next.config.ts`, `permanent: false` — la lengua por defecto podría cambiar).                                |
+| `/diccionario/ashaninka`                  | Lista completa, ninguna palabra seleccionada.                                                                                                                 |
+| `/diccionario/ashaninka?palabra=<id>`     | Igual, con esa entrada abierta y visible al cargar.                                                                                                           |
+| `/diccionario/ashaninka?palabra=<basura>` | La página **carga normal** y muestra un aviso «no encontramos esa palabra». **No** es un 404.                                                                 |
+| `/diccionario/uro`                        | Lengua conocida sin datos: página real (200) que lo explica y enlaza a los diccionarios que sí existen. **No** es un 404: un enlace compartido no debe morir. |
+| `/diccionario/klingon`                    | Lengua desconocida: `notFound()` → 404.                                                                                                                       |
 
 Las URLs quedan en español (§11.1): el sitio es `lang="es"` y las rutas existentes ya son
 `/lenguas/[slug]`.
@@ -275,6 +276,7 @@ Las URLs quedan en español (§11.1): el sitio es `lang="es"` y las rutas existe
 ### 6.2 Estructura y renderizado
 
 ```
+src/app/diccionario/layout.tsx               cabecera + pie del sitio
 src/app/diccionario/[lengua]/page.tsx        Server Component
   └─ <Suspense>
        └─ <Dictionary entries={...} languages={...} />   Client Component
@@ -360,11 +362,14 @@ Se mide con contenido real (tarea T7.6), no antes.
 - **AC-M3-5** Abrir directamente `/diccionario/ashaninka?palabra=<id>` en una pestaña nueva muestra
   esa entrada ya abierta, sin interacción previa.
 - **AC-M3-6** Una entrada sin ejemplos muestra el mensaje explícito de «sin ejemplos».
-- **AC-M3-7** `/diccionario/klingon` da 404; `?palabra=basura` **no** da 404 y muestra el aviso.
+- **AC-M3-7** `/diccionario/klingon` da 404. `/diccionario/uro` da 200 y explica que aún no hay datos.
+  `?palabra=basura` **no** da 404 y muestra el aviso.
 - **AC-M3-8** El botón «atrás» del navegador vuelve a la palabra anterior.
 - **AC-M3-9** Toda la página es operable solo con teclado, de principio a fin.
 - **AC-M3-10** El `<title>` de `/diccionario/ashaninka` contiene «Diccionario Asháninka».
 - **AC-M3-11** Desde el home, la tarjeta «Diccionario» lleva a `/diccionario/ashaninka`.
+- **AC-M3-12** La página lleva la cabecera y el pie del sitio, y los encabezados de letra quedan por
+  debajo de la cabecera pegajosa.
 
 ---
 
@@ -613,7 +618,8 @@ el navegador de verdad · sin regresiones en las páginas existentes.
 
 **Preguntar primero**
 
-- Tocar `header.tsx`, `layout.tsx`, `language.tsx` o `languages.ts` — fuera de alcance (decisión #4).
+- Modificar `header.tsx`, `layout.tsx` o `languages.ts` — fuera de alcance (decisión #4). El
+  diccionario los **usa** vía `src/app/diccionario/layout.tsx`, sin editarlos.
 - Tocar `resources.tsx` para algo que no sea el `href` de la tarjeta «Diccionario» (§6.5).
 - Añadir cualquier dependencia que no sean las de test listadas en §10.
 - Cambiar el nombre del parámetro `palabra` o la forma de la ruta.
