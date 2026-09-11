@@ -72,10 +72,10 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F5 — Selector de lengua
 
-- [ ] **T5.1** `getLanguagesWithDictionary()`. Tests: incluye `ashaninka`, excluye `uro` `[AC-M1-9]`
-- [ ] **T5.2** `language-picker.tsx` con `dropdown-menu`: lenguas sin diccionario deshabilitadas con «pronto», cambiar descarta `?palabra` y la búsqueda, muestra lengua activa y total `[AC-M4-1..3]`
-- [ ] **T5.3** E2E: lengua activa · Uro deshabilitado · cambio descarta `?palabra` · teclado `[AC-M4-1..4]`
-- [ ] **T5.4** Verificar que el diff no toca `header.tsx`, `layout.tsx` ni `language.tsx` `[AC-M4-5]`
+- [x] **T5.1** `getLanguagesWithDictionary()`. Tests: incluye `ashaninka`, excluye `uro` `[AC-M1-9]`
+- [x] **T5.2** `language-picker.tsx` con `dropdown-menu`: lenguas sin diccionario deshabilitadas con «pronto», cambiar descarta `?palabra` y la búsqueda, muestra lengua activa y total `[AC-M4-1..3]`
+- [x] **T5.3** E2E: lengua activa · Uro deshabilitado · cambio descarta `?palabra` · teclado `[AC-M4-1..4]`
+- [x] **T5.4** Verificar que el diff no toca `header.tsx`, `layout.tsx` ni `language.tsx` `[AC-M4-5]`
 
 ---
 

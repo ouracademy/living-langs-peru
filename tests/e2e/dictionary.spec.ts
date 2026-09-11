@@ -268,3 +268,59 @@ test.describe("search", () => {
     await expect(page).toHaveURL("/diccionario/ashaninka");
   });
 });
+
+test.describe("language picker", () => {
+  // AC-M4-1
+  test("shows the active language and its entry count", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+
+    await expect(
+      page.getByRole("button", { name: /lengua: Asháninka/i }),
+    ).toContainText("13");
+  });
+
+  // AC-M4-2
+  test("offers a language without a dictionary as disabled", async ({
+    page,
+  }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("button", { name: /lengua: Asháninka/i }).click();
+
+    const uro = page.getByRole("menuitem", { name: /Uro/ });
+    await expect(uro).toBeVisible();
+    await expect(uro).toContainText(/pronto/i);
+    await expect(uro).toBeDisabled();
+  });
+
+  // AC-M4-4
+  test("opens and closes with the keyboard", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByRole("button", { name: /lengua: Asháninka/i }).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page.getByRole("menu")).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("menu")).toBeHidden();
+  });
+
+  // AC-M4-3 — an entry id means nothing in another language.
+  test("changing language drops ?palabra", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka?palabra=placeholder-a");
+    await page.getByRole("button", { name: /lengua: Asháninka/i }).click();
+    await page.getByRole("menuitem", { name: /Asháninka/ }).click();
+
+    await expect(page).toHaveURL("/diccionario/ashaninka");
+  });
+
+  test("changing language clears the search box", async ({ page }) => {
+    await page.goto("/diccionario/ashaninka");
+    await page.getByLabel(/buscar/i).fill("placeholder-0");
+    await expect(page.getByLabel(/buscar/i)).toHaveValue("placeholder-0");
+
+    await page.getByRole("button", { name: /lengua: Asháninka/i }).click();
+    await page.getByRole("menuitem", { name: /Asháninka/ }).click();
+
+    await expect(page.getByLabel(/buscar/i)).toHaveValue("");
+  });
+});

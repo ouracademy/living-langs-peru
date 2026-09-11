@@ -1,29 +1,42 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import { type Entry, resolveWord, searchEntries } from "@/lib/dictionary";
 
 import { EntryDetail } from "./entry-detail";
 import { EntryList } from "./entry-list";
+import { LanguagePicker } from "./language-picker";
 import { SearchBox } from "./search-box";
+import { useDebounced } from "./use-debounced";
 
 /** The query param is Spanish because it is part of the public, shareable URL. */
 const WORD_PARAM = "palabra";
 
 type DictionaryProps = {
   entries: Entry[];
+  language: string;
+  languageName: string;
   languageCode: string;
+  availableLanguages: string[];
 };
 
-export function Dictionary({ entries, languageCode }: DictionaryProps) {
+export function Dictionary({
+  entries,
+  language,
+  languageName,
+  languageCode,
+  availableLanguages,
+}: DictionaryProps) {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // The query lives in local state, not the URL: only ?palabra is shareable.
-  const [query, setQuery] = useState("");
-  const onQueryChange = useCallback((next: string) => setQuery(next), []);
+  // Dictionary owns it so the input and the filter cannot drift apart.
+  const [input, setInput] = useState("");
+  const query = useDebounced(input, 150);
   const visible = useMemo(
     () => searchEntries(entries, query),
     [entries, query],
@@ -47,10 +60,37 @@ export function Dictionary({ entries, languageCode }: DictionaryProps) {
     window.history.replaceState(null, "", pathname);
   }
 
+  function changeLanguage(slug: string) {
+    // An entry id means nothing in another language, so ?palabra is dropped
+    // and the search box resets.
+    setInput("");
+
+    if (slug === language) {
+      window.history.replaceState(null, "", pathname);
+      return;
+    }
+
+    router.push(`/diccionario/${slug}`);
+  }
+
   return (
     <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div>
-        <SearchBox resultCount={visible.length} onQueryChange={onQueryChange} />
+        <div className="mb-4">
+          <LanguagePicker
+            current={language}
+            currentName={languageName}
+            currentTotal={entries.length}
+            available={availableLanguages}
+            onLanguageChange={changeLanguage}
+          />
+        </div>
+
+        <SearchBox
+          value={input}
+          resultCount={visible.length}
+          onChange={setInput}
+        />
 
         {missing && (
           <p
