@@ -51,9 +51,9 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F3 — Orden alfabético y agrupado A-Z
 
-- [ ] **T3.1** `groupByLetter()` → `{ letter, entries }[]`: sin grupos vacíos, `Á` con `A`, grupo `#` final. Tests primero `[AC-M1-3]`
-- [ ] **T3.2** `entry-list.tsx`: secciones con encabezado sticky + índice A-Z clicable. Semilla a ~12 entradas `[AC-M3-2]`
-- [ ] **T3.3** E2E: lista ordenada y agrupada · el índice A-Z salta a la sección `[AC-M3-2]`
+- [x] **T3.1** `groupByLetter()` → `{ letter, entries }[]`: sin grupos vacíos, `Á` con `A`, grupo `#` final. Tests primero `[AC-M1-3]`
+- [x] **T3.2** `entry-list.tsx`: secciones con encabezado sticky + índice A-Z clicable. Semilla a ~12 entradas `[AC-M3-2]`
+- [x] **T3.3** E2E: lista ordenada y agrupada · el índice A-Z salta a la sección `[AC-M3-2]`
 
 > ⚠️ **Hito H1 pendiente:** el orden usa `Intl.Collator("es")`. Si el asháninka trata `ch`/`sh`/`ts`/`ky`
 > como letras propias, esto está mal. No cerrar F3 como correcta sin confirmación de un hablante.

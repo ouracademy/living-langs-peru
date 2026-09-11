@@ -1,7 +1,7 @@
 import { type LanguageSlug, languages } from "@/lib/languages";
 
 import { dictionaries } from "./registry";
-import { normalize } from "./text";
+import { compareWords, normalize } from "./text";
 import type { Dictionary, Entry } from "./types";
 
 export type { Dictionary, Entry, Example, PartOfSpeech } from "./types";
@@ -88,4 +88,50 @@ export function getLanguageCode(language: string): string | undefined {
   const byLanguage: Record<string, string | undefined> = LANGUAGE_CODES;
 
   return byLanguage[language];
+}
+
+/** Group that collects entries starting with a digit or a symbol. */
+const OTHER_LETTER = "#";
+
+export type LetterGroup = {
+  letter: string;
+  entries: Entry[];
+};
+
+/**
+ * Splits entries into one section per initial letter, alphabetically. Accented
+ * initials fold into their base letter (Á with A) while ñ keeps its own
+ * section, and anything not starting with a letter lands in a trailing "#".
+ *
+ * Only sections that actually have entries are returned.
+ */
+export function groupByLetter(entries: Entry[]): LetterGroup[] {
+  const byLetter = new Map<string, Entry[]>();
+
+  for (const item of entries) {
+    const initial = normalize(item.word).charAt(0);
+    const letter = /\p{Letter}/u.test(initial)
+      ? initial.toUpperCase()
+      : OTHER_LETTER;
+
+    const group = byLetter.get(letter);
+
+    if (group) {
+      group.push(item);
+    } else {
+      byLetter.set(letter, [item]);
+    }
+  }
+
+  return [...byLetter.entries()]
+    .sort(([a], [b]) => {
+      if (a === OTHER_LETTER) return 1;
+      if (b === OTHER_LETTER) return -1;
+
+      return compareWords(a, b);
+    })
+    .map(([letter, group]) => ({
+      letter,
+      entries: group.sort((a, b) => compareWords(a.word, b.word)),
+    }));
 }
