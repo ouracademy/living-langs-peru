@@ -276,7 +276,7 @@ Las URLs quedan en español (§11.1): el sitio es `lang="es"` y las rutas existe
 ### 6.2 Estructura y renderizado
 
 ```
-src/app/diccionario/layout.tsx               cabecera + pie del sitio
+src/app/layout.tsx                           cabecera + pie del sitio (todas las rutas)
 src/app/diccionario/[lengua]/page.tsx        Server Component
   └─ <Suspense>
        └─ <Dictionary entries={...} languages={...} />   Client Component
@@ -618,8 +618,8 @@ el navegador de verdad · sin regresiones en las páginas existentes.
 
 **Preguntar primero**
 
-- Modificar `header.tsx`, `layout.tsx` o `languages.ts` — fuera de alcance (decisión #4). El
-  diccionario los **usa** vía `src/app/diccionario/layout.tsx`, sin editarlos.
+- Modificar `header.tsx` o `languages.ts` — fuera de alcance (decisión #4). `layout.tsx` sí se tocó,
+  por petición explícita, para que la cabecera y el pie los herede todo el sitio.
 - Tocar `resources.tsx` para algo que no sea el `href` de la tarjeta «Diccionario» (§6.5).
 - Añadir cualquier dependencia que no sean las de test listadas en §10.
 - Cambiar el nombre del parámetro `palabra` o la forma de la ruta.

@@ -124,6 +124,6 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 - [x] **T9.1** Cabecera y pie del sitio en el diccionario, vía `src/app/diccionario/layout.tsx` `[AC-M3-12]`
 - [x] **T9.2** Encabezados de letra desplazados para no quedar bajo la cabecera pegajosa `[AC-M3-12]`
 - [x] **T9.3** `/diccionario/uro` deja de dar 404: página real que explica y enlaza `[AC-M3-7]`
-- [ ] **T9.4** Consolidar cabecera y pie en el layout raíz, quitándolos de `page.tsx` del home. Daría
-      la misma identidad a `/ashaninka` y `/lenguas/[slug]`, que hoy no tienen ninguna. Toca el home.
+- [x] **T9.4** Cabecera y pie consolidados en el layout raíz. `/ashaninka` y `/lenguas/[slug]` ya
+      heredan la identidad del sitio, que antes no tenían.
 - [ ] **T9.5** Conseguir una fuente uro con licencia para poder llenar su diccionario.
