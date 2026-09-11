@@ -91,7 +91,7 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F7 — Fuentes y contenido real _(tiene puerta humana)_
 
-- [ ] **T7.1** `docs/dictionary-sources.md`: fuentes con institución, URL, licencia, veredicto, cobertura, ortografía. **Solo investigación, cero importación** `[AC-M5-1]`
+- [x] **T7.1** `docs/dictionary-sources.md`: fuentes con institución, URL, licencia, veredicto, cobertura, ortografía. **Solo investigación, cero importación** `[AC-M5-1]`
 - [ ] **T7.2** 🚦 **HITO H2 — decisión humana.** Aprobar veredictos; pedir permisos donde haga falta y registrar respuestas `[AC-M5-2]`
 - [ ] **T7.3** `data/dictionary/sources.json` + atribución visible en la interfaz (página y detalle de entrada) `[AC-M5-3, AC-M5-4]`
 - [ ] **T7.4** `scripts/import-dictionary.ts`, idempotente, corre `dictionary:check` `[AC-M5-5]`
@@ -107,7 +107,7 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 - [x] **T8.1** E2E de recorrido completo solo con teclado: buscar → lista → detalle → copiar → cambiar lengua `[AC-M3-9]`
 - [x] **T8.2** Auditar contraste; corregir `#F2B705` sobre claro donde se use en texto pequeño `[AC-M3-9]`
 - [x] **T8.3** Responsive: hoja inferior en móvil, dos columnas en escritorio. Verificar a 375 px y 1280 px
-- [ ] **T8.4** Spec a `implementado`; anotar si la pregunta abierta #1 sigue abierta
+- [x] **T8.4** Spec a `implementado`; anotar si la pregunta abierta #1 sigue abierta
 
 ---
 

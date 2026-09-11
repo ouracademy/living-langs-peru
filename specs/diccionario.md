@@ -1,8 +1,8 @@
 # Diccionario de lenguas originarias
 
-> Estado: **aprobado** · Fecha: 2026-09-11 · Rama base: `main`
+> Estado: **implementado salvo el contenido** (M1-M4 listos; M5 pendiente del hito H2)
+> Fecha: 2026-09-11 · Rama base: `main` · Rama de trabajo: `feat/diccionario`
 > Plan: [tasks/diccionario/](../tasks/diccionario/) · Índice: [specs/README.md](./README.md)
-> Ningún código de esta especificación se ha escrito todavía.
 
 ---
 
@@ -390,15 +390,30 @@ Se mide con contenido real (tarea T7.6), no antes.
 **Investigación de contenido**, no código de producto. Se entrega aparte para que la decisión
 editorial no bloquee la interfaz.
 
-### 8.1 Advertencia legal (leer antes de copiar nada)
+### 8.1 Licencias: qué aplica y qué no
 
-Los diccionarios asháninka existentes están en su mayoría **bajo derechos de autor**: los materiales
-del ILV/SIL, los del Ministerio de Cultura del Perú y los diccionarios académicos no son de dominio
-público por estar publicados en la web. Copiar entradas en bloque sin permiso o sin licencia
-compatible es una infracción, y además es un problema ético cuando se trata de conocimiento de una
-comunidad indígena.
+El proyecto es **público, gratuito y sin fines comerciales**, con la UNMSM y el Ministerio de Cultura
+como aliados. Eso resuelve algunas restricciones y no resuelve otras:
 
-Por tanto, para cada fuente candidata hay que registrar y decidir **antes** de importar.
+- **NC (no comercial): cumplida de fábrica.** Una fuente CC BY-NC o CC BY-NC-SA es usable con
+  atribución.
+- **BY (atribución): cumplida.** Cada entrada cita su fuente vía `sourceId`.
+- **ND (sin derivadas): bloqueo real.** Extraer entradas a una base de datos buscable es una obra
+  derivada, y el ND lo prohíbe aunque el uso sea gratuito y citado. Citar no cura el ND.
+- **Sin licencia declarada: bloqueo.** Por defecto son todos los derechos reservados. Ser sin ánimo
+  de lucro no crea una licencia inexistente; hay que pedirla.
+
+**La distinción que hace viable el proyecto:** el copyright de un diccionario no cubre el hecho de
+que una palabra signifique lo que significa, sino la selección, el orden y la redacción de sus
+definiciones y ejemplos. Por tanto:
+
+- Compilar **pares palabra→traducción** de varias fuentes, en nuestro orden y citando cada una:
+  terreno firme.
+- **Oraciones de ejemplo**: expresión creativa. Solo con permiso explícito o recogidas con hablantes.
+- **Copiar la lista completa de una sola obra**: infringe el copyright de compilación. No se hace.
+
+Y una capa que no es legal: es conocimiento de un pueblo indígena, así que el permiso de una
+editorial no equivale al consentimiento de la comunidad. Ver [docs/dictionary-sources.md](../docs/dictionary-sources.md).
 
 ### 8.2 Entregables
 
