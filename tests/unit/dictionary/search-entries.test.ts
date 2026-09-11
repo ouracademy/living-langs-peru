@@ -88,7 +88,12 @@ describe("searchEntries", () => {
   it("ranks an exact variant match as highly as an exact word match", () => {
     const entries = [
       entry({ id: "prefix", word: "kiyana", translations: ["x"] }),
-      entry({ id: "exact", word: "kija", variants: ["kiya"], translations: ["x"] }),
+      entry({
+        id: "exact",
+        word: "kija",
+        variants: ["kiya"],
+        translations: ["x"],
+      }),
     ];
 
     expect(ids("kiya", entries)).toEqual(["exact", "prefix"]);
