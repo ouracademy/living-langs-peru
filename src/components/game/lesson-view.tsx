@@ -27,7 +27,12 @@ export function LessonView({
         Completa la oración
       </h2>
 
-      <p className="mt-2 text-lg text-[#241D14]">«{item.prompt}»</p>
+      {/* The prompt is already on screen for the player; the test id only
+          saves the e2e from a brittle selector. The answer is deliberately
+          NOT in the DOM until it is revealed. */}
+      <p data-testid="prompt" className="mt-2 text-lg text-[#241D14]">
+        «{item.prompt}»
+      </p>
 
       <BlankedSentence
         tokens={item.tokens}

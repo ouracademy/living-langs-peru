@@ -38,7 +38,7 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T2.1** `lib/game/lesson.ts` mínimo: estado + responder → correcto/incorrecto → avanzar. **Tests primero.** Sin vidas ni reencolado todavía `[AC-G2-1]`
 - [x] **T2.2** `feedback-panel.tsx`: acierto/error **con icono y texto, nunca solo color** · oración completa de la fuente · glosa de la palabra · **fuente citada** vía `getSource()` · botón «Continuar» `[AC-G4-5, AC-G5-2]`
 - [x] **T2.3** Foco al «Continuar» tras responder · `role="status"` en el panel · atajos `1`/`2`/`3` con `aria-keyshortcuts` `[AC-G4-11, AC-G4-12]`
-- [ ] **T2.4** E2E: acertar muestra oración completa + fuente · fallar muestra la correcta · «Continuar» avanza · el foco queda donde debe `[AC-G4-5, AC-G4-11]`
+- [x] **T2.4** E2E: acertar muestra oración completa + fuente · fallar muestra la correcta · «Continuar» avanza · el foco queda donde debe `[AC-G4-5, AC-G4-11]`
 
 ---
 
@@ -50,7 +50,7 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T3.4** `lesson-progress.tsx` (`role="progressbar"` con `aria-valuenow/min/max`) y `hearts.tsx` (texto «Vidas: 2 de 3» para lector, iconos `aria-hidden`) `[AC-G4-6]`
 - [x] **T3.5** `lesson-start.tsx`: pantalla de inicio **en el HTML estático**; la lección se compone al pulsar «Empezar», ya en el cliente (spec §6.4) `[AC-G4-3]`
 - [x] **T3.6** `lesson-summary.tsx`: aciertos/total · vidas restantes · palabras falladas con oración y traducción · «Otra lección» · enlace a `/diccionario/ashaninka?palabra=<id>` `[AC-G4-7, AC-G4-8, AC-G4-17]`
-- [ ] **T3.7** E2E: lección completa acertando · perdida por 3 errores · el ítem fallado reaparece · el enlace al diccionario abre la palabra. **Sin `waitForTimeout`** `[AC-G4-6, AC-G4-7, AC-G4-8, AC-G4-17]`
+- [x] **T3.7** E2E: lección completa acertando · perdida por 3 errores · el ítem fallado reaparece · el enlace al diccionario abre la palabra. **Sin `waitForTimeout`** `[AC-G4-6, AC-G4-7, AC-G4-8, AC-G4-17]`
 - [x] **T3.8** `prefers-reduced-motion`: sin animaciones de acierto ni error
 
 > **⛔ Checkpoint 2 · hito H2 — jugarlo.** `pnpm dev` y jugar varias lecciones enteras.
@@ -81,16 +81,16 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T5.2** `use-progress.ts`: lee **después del montaje**, nunca durante el render. Escribe una vez, al cerrar la lección `[AC-G3-7]`
 - [x] **T5.3** Conectar: contador «N lecciones completadas» en la pantalla de inicio · `mastered` real hacia `buildLesson` · un id que ya no existe en el pool se ignora sin romper `[AC-G3-9, AC-G4-9]`
 - [x] **T5.4** Aviso discreto de «tu progreso no se va a guardar» si el almacenamiento no está disponible. Una vez, sin insistir `[AC-G4-10]`
-- [ ] **T5.5** E2E: el progreso sobrevive a una recarga · **el juego se juega entero con `localStorage` bloqueado** `[AC-G4-9, AC-G4-10]`
+- [x] **T5.5** E2E: el progreso sobrevive a una recarga · **el juego se juega entero con `localStorage` bloqueado** `[AC-G4-9, AC-G4-10]`
 
 ---
 
 ## F6 — Uro, entrada desde el home, y cierre
 
-- [ ] **T6.1** `unavailable-game.tsx` + rama de uro (spec §8.5): dice que está por venir **y por qué**, enlaza `docs/uro-language-sources.md` y el juego asháninka. **Sin prometer fecha.** Disponibilidad derivada de los datos, no de una bandera `[AC-G4-14]` · hito H3
-- [ ] **T6.2** `components/resources.tsx`: tarjeta «Juegos» → `/juegos/completar-palabras/ashaninka` y grilla a `md:grid-cols-3 lg:grid-cols-5`. **Solo eso** `[AC-G4-16]`
-- [ ] **T6.3** Auditoría de accesibilidad del recorrido completo: teclado de punta a punta, contraste, `aria-live`, etiquetas, foco `[AC-G4-11..13]`
-- [ ] **T6.4** Medir el payload de la ruta en `pnpm build` contra los **50 KB comprimidos** (spec §5.6). Si se pasa, se recortan campos — **no** se sube el umbral
+- [x] **T6.1** `unavailable-game.tsx` + rama de uro (spec §8.5): dice que está por venir **y por qué**, enlaza `docs/uro-language-sources.md` y el juego asháninka. **Sin prometer fecha.** Disponibilidad derivada de los datos, no de una bandera `[AC-G4-14]` · hito H3
+- [x] **T6.2** `components/resources.tsx`: tarjeta «Juegos» → `/juegos/completar-palabras/ashaninka` y grilla a `md:grid-cols-3 lg:grid-cols-5`. **Solo eso** `[AC-G4-16]`
+- [x] **T6.3** Auditoría de accesibilidad del recorrido completo: teclado de punta a punta, contraste, `aria-live`, etiquetas, foco `[AC-G4-11..13]`
+- [x] **T6.4** Medir el payload de la ruta en `pnpm build` contra los **50 KB comprimidos** (spec §5.6). Si se pasa, se recortan campos — **no** se sube el umbral
 - [ ] **T6.5** `pnpm check:full` en verde · spec a `implementado` · fila de `specs/README.md` actualizada · preguntas abiertas cerradas que corresponda
 
 ---

@@ -2,6 +2,8 @@
 
 import { LESSON_SIZE } from "@/lib/game/constants";
 
+import { useHydrated } from "./use-hydrated";
+
 type LessonStartProps = {
   /** Items the lesson will ask for: the pool, capped at a lesson. */
   lessonLength: number;
@@ -17,6 +19,8 @@ export function LessonStart({
   storageAvailable,
   onStart,
 }: LessonStartProps) {
+  const hydrated = useHydrated();
+
   return (
     <section>
       <p className="mt-4 max-w-[60ch] text-[#4A4130]">
@@ -35,6 +39,9 @@ export function LessonStart({
 
       <button
         type="button"
+        // Says the handler is attached. The button is in the static HTML, so
+        // it can be clicked a moment before React wires it up.
+        data-hydrated={hydrated ? "true" : undefined}
         onClick={onStart}
         className="mt-6 rounded-2xl bg-[#E4572E] px-6 py-3 text-lg font-bold text-white"
       >

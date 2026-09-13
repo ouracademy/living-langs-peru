@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { UnavailableGame } from "@/components/game/unavailable-game";
 import { WordGame } from "@/components/game/word-game";
-import { getDictionary, getLanguageCode, getSources } from "@/lib/dictionary";
+import {
+  getDictionary,
+  getLanguageCode,
+  getLanguagesWithDictionary,
+  getSources,
+} from "@/lib/dictionary";
 import { buildItems } from "@/lib/game/items";
 import { getLanguage, languages } from "@/lib/languages";
 
@@ -33,6 +39,20 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Languages that actually yield a pool. Derived from the data, so there is no
+ * flag to keep in sync with reality.
+ */
+function playableLanguages() {
+  return getLanguagesWithDictionary()
+    .filter((language) => {
+      const dictionary = getDictionary(language.slug);
+
+      return dictionary !== null && buildItems(dictionary.entries).length > 0;
+    })
+    .map(({ slug, name }) => ({ slug, name }));
+}
+
 export default async function WordGamePage({ params }: WordGamePageProps) {
   const { lengua: language } = await params;
   const name = getLanguage(language)?.name;
@@ -55,10 +75,11 @@ export default async function WordGamePage({ params }: WordGamePageProps) {
       </h1>
 
       {items.length === 0 ? (
-        <p className="mt-4 max-w-[60ch] text-[#4A4130]">
-          Todavía no podemos armar el juego en {name}: necesita oraciones de
-          ejemplo con fuente, y aún no tenemos ninguna.
-        </p>
+        <UnavailableGame
+          language={language}
+          name={name}
+          playable={playableLanguages()}
+        />
       ) : (
         <WordGame
           items={items}

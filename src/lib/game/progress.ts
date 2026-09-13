@@ -74,6 +74,30 @@ export function defaultStorage(): Storage | null {
   }
 }
 
+/**
+ * Whether the browser will actually keep what we write.
+ *
+ * A store can exist and still refuse every write — that is what blocked site
+ * data looks like — so the only way to know is to try. One probe key, removed
+ * straight away; the caller is expected to ask once and remember.
+ */
+export function canPersist(
+  storage: Storage | null = defaultStorage(),
+): boolean {
+  if (!storage) return false;
+
+  const probe = `${STORAGE_KEY}:probe`;
+
+  try {
+    storage.setItem(probe, "1");
+    storage.removeItem(probe);
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function readProgress(
   storage: Storage | null = defaultStorage(),
 ): Progress {
