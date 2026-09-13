@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import { Menu, User } from "lucide-react";
+import { buttonVariants } from "./ui/button";
+import { Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -65,7 +64,7 @@ export function HeaderPlataform() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger
-                style={{ cursor:"pointer"}}
+                style={{ cursor: "pointer" }}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "icon" }),
                 )}
@@ -73,13 +72,16 @@ export function HeaderPlataform() {
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Abrir menú</span>
               </SheetTrigger>
-              <SheetContent side="left" className="bg-[#fff7e8] [&>button]:cursor-pointer">
+              <SheetContent
+                side="left"
+                className="bg-[#fff7e8] [&>button]:cursor-pointer"
+              >
                 <SheetHeader>
                   <SheetTitle className="text-left text-xl font-bold">
                     Lenguas Peruanas
                   </SheetTitle>
                 </SheetHeader>
-                <nav className="mt-6 pl-5 flex flex-col gap-4">
+                <nav className="mt-6 flex flex-col gap-4 pl-5">
                   {menuItems.map((item) => (
                     <Link
                       key={item.label}
