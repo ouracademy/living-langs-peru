@@ -35,7 +35,7 @@ accesibilidad en la propia tarea, no al final.
 
 ## F2 — Feedback inmediato
 
-- [ ] **T2.1** `lib/game/lesson.ts` mínimo: estado + responder → correcto/incorrecto → avanzar. **Tests primero.** Sin vidas ni reencolado todavía `[AC-G2-1]`
+- [x] **T2.1** `lib/game/lesson.ts` mínimo: estado + responder → correcto/incorrecto → avanzar. **Tests primero.** Sin vidas ni reencolado todavía `[AC-G2-1]`
 - [ ] **T2.2** `feedback-panel.tsx`: acierto/error **con icono y texto, nunca solo color** · oración completa de la fuente · glosa de la palabra · **fuente citada** vía `getSource()` · botón «Continuar» `[AC-G4-5, AC-G5-2]`
 - [ ] **T2.3** Foco al «Continuar» tras responder · `role="status"` en el panel · atajos `1`/`2`/`3` con `aria-keyshortcuts` `[AC-G4-11, AC-G4-12]`
 - [ ] **T2.4** E2E: acertar muestra oración completa + fuente · fallar muestra la correcta · «Continuar» avanza · el foco queda donde debe `[AC-G4-5, AC-G4-11]`
@@ -44,9 +44,9 @@ accesibilidad en la propia tarea, no al final.
 
 ## F3 — Lección completa y jugable
 
-- [ ] **T3.1** `lib/game/random.ts`: `mulberry32` + mezcla determinista. Tests: misma semilla, mismo resultado `[AC-G2-9]`
-- [ ] **T3.2** `buildLesson(pool, mastered, seed)` (spec §6.3): no dominados primero, mezcla sembrada, pool corto → lección corta. `mastered` vacío hasta F5. **Tests primero** `[AC-G2-7, AC-G2-8, AC-G2-9]`
-- [ ] **T3.3** El reducer completo (spec §6.2): cola, vidas, reencolado al final, barra que no retrocede, `completed`/`failed`, transición inválida ignorada. **Tests primero**, incluida la cota de no colgarse `[AC-G2-2..6, AC-G2-10, AC-G2-11]`
+- [x] **T3.1** `lib/game/random.ts`: `mulberry32` + mezcla determinista. Tests: misma semilla, mismo resultado `[AC-G2-9]`
+- [x] **T3.2** `buildLesson(pool, mastered, seed)` (spec §6.3): no dominados primero, mezcla sembrada, pool corto → lección corta. `mastered` vacío hasta F5. **Tests primero** `[AC-G2-7, AC-G2-8, AC-G2-9]`
+- [x] **T3.3** El reducer completo (spec §6.2): cola, vidas, reencolado al final, barra que no retrocede, `completed`/`failed`, transición inválida ignorada. **Tests primero**, incluida la cota de no colgarse `[AC-G2-2..6, AC-G2-10, AC-G2-11]`
 - [ ] **T3.4** `lesson-progress.tsx` (`role="progressbar"` con `aria-valuenow/min/max`) y `hearts.tsx` (texto «Vidas: 2 de 3» para lector, iconos `aria-hidden`) `[AC-G4-6]`
 - [ ] **T3.5** `lesson-start.tsx`: pantalla de inicio **en el HTML estático**; la lección se compone al pulsar «Empezar», ya en el cliente (spec §6.4) `[AC-G4-3]`
 - [ ] **T3.6** `lesson-summary.tsx`: aciertos/total · vidas restantes · palabras falladas con oración y traducción · «Otra lección» · enlace a `/diccionario/ashaninka?palabra=<id>` `[AC-G4-7, AC-G4-8, AC-G4-17]`
