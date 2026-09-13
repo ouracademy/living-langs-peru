@@ -7,7 +7,7 @@ diseño completo se lea de una sola vez.
 | Spec                                             | Estado   | Plan                                                      | Alcance                                                                    |
 | ------------------------------------------------ | -------- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
 | [diccionario.md](./diccionario.md)               | Aprobado | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                   |
-| [completar-palabras.md](./completar-palabras.md) | Borrador | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local. |
+| [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local. |
 
 ## Dónde va cada cosa
 

@@ -251,8 +251,16 @@ describe("buildItems distractors", () => {
         translations: ["yuca"],
         examples: [example("Nokoi kaniri kipatsiki")],
       }),
-      entry({ word: "kenkitsatakantsi", partOfSpeech: "verb", translations: ["contar"] }),
-      entry({ word: "ashitakotantsi", partOfSpeech: "verb", translations: ["cerrar"] }),
+      entry({
+        word: "kenkitsatakantsi",
+        partOfSpeech: "verb",
+        translations: ["contar"],
+      }),
+      entry({
+        word: "ashitakotantsi",
+        partOfSpeech: "verb",
+        translations: ["cerrar"],
+      }),
       entry({ word: "shima", partOfSpeech: "noun", translations: ["pez"] }),
       entry({ word: "inchato", partOfSpeech: "noun", translations: ["árbol"] }),
     ]);
@@ -268,8 +276,16 @@ describe("buildItems distractors", () => {
         translations: ["palabra repetida"],
         examples: [example("Isankenajeiti apiapitachari ñantsi maroni")],
       }),
-      entry({ word: "apitetirori yotaneri", partOfSpeech: "noun", translations: ["segundo saber"] }),
-      entry({ word: "kari añatsine", partOfSpeech: "noun", translations: ["lo no visible"] }),
+      entry({
+        word: "apitetirori yotaneri",
+        partOfSpeech: "noun",
+        translations: ["segundo saber"],
+      }),
+      entry({
+        word: "kari añatsine",
+        partOfSpeech: "noun",
+        translations: ["lo no visible"],
+      }),
       entry({ word: "shima", partOfSpeech: "noun", translations: ["pez"] }),
       entry({ word: "inchato", partOfSpeech: "noun", translations: ["árbol"] }),
     ]);
@@ -289,8 +305,16 @@ describe("buildItems distractors", () => {
         examples: [example("Nokoi kaniri kipatsiki")],
       }),
       // Nothing shares its part of speech, so the rule has to give way.
-      entry({ word: "kenkitsatakantsi", partOfSpeech: "verb", translations: ["contar"] }),
-      entry({ word: "ashitakotantsi", partOfSpeech: "verb", translations: ["cerrar"] }),
+      entry({
+        word: "kenkitsatakantsi",
+        partOfSpeech: "verb",
+        translations: ["contar"],
+      }),
+      entry({
+        word: "ashitakotantsi",
+        partOfSpeech: "verb",
+        translations: ["cerrar"],
+      }),
     ]);
 
     expect([...item.distractors].sort()).toEqual([
@@ -309,8 +333,16 @@ describe("buildItems distractors", () => {
           translations: ["yuca"],
           examples: [example("Nokoi kaniri kipatsiki")],
         }),
-        entry({ word: "kaniripaye", partOfSpeech: "noun", translations: ["yuca"] }),
-        entry({ word: "kaniriite", partOfSpeech: "noun", translations: ["yuca"] }),
+        entry({
+          word: "kaniripaye",
+          partOfSpeech: "noun",
+          translations: ["yuca"],
+        }),
+        entry({
+          word: "kaniriite",
+          partOfSpeech: "noun",
+          translations: ["yuca"],
+        }),
       ]),
     ).toEqual([]);
   });

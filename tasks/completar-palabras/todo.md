@@ -1,7 +1,9 @@
 # TODO — Juego de completar palabras
 
 > Plan y razonamiento: [plan.md](./plan.md) · Spec: [specs/completar-palabras.md](../../specs/completar-palabras.md)
-> Estado: **en curso.** F1 cerrada.
+> Estado: **terminado.** F1-F6 cerradas, 227 tests unitarios y 18 e2e en verde.
+> Queda **una** cosa, y no es código: el checkpoint 3, la revisión del pool por un hablante o
+> docente asháninka (`pnpm game:check --dump`). Bloquea la difusión, no el merge.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:task` · `pnpm test:e2e` · `pnpm build` con la ruta estática · verificado en navegador ·
@@ -91,7 +93,7 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T6.2** `components/resources.tsx`: tarjeta «Juegos» → `/juegos/completar-palabras/ashaninka` y grilla a `md:grid-cols-3 lg:grid-cols-5`. **Solo eso** `[AC-G4-16]`
 - [x] **T6.3** Auditoría de accesibilidad del recorrido completo: teclado de punta a punta, contraste, `aria-live`, etiquetas, foco `[AC-G4-11..13]`
 - [x] **T6.4** Medir el payload de la ruta en `pnpm build` contra los **50 KB comprimidos** (spec §5.6). Si se pasa, se recortan campos — **no** se sube el umbral
-- [ ] **T6.5** `pnpm check:full` en verde · spec a `implementado` · fila de `specs/README.md` actualizada · preguntas abiertas cerradas que corresponda
+- [x] **T6.5** `pnpm check:full` en verde · spec a `implementado` · fila de `specs/README.md` actualizada · preguntas abiertas cerradas que corresponda
 
 ---
 
