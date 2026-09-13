@@ -2,6 +2,7 @@ import type { Entry } from "@/lib/dictionary";
 import { normalize } from "@/lib/dictionary/text";
 
 import { MIN_SENTENCE_TOKENS } from "./constants";
+import { hash } from "./hash";
 import type { Item } from "./types";
 
 /**
@@ -68,18 +69,6 @@ function blank(
     ...(trailing ? [trailing] : []),
     ...tokens.slice(at + length),
   ];
-}
-
-/** FNV-1a. Small, stable, and enough to order candidates reproducibly. */
-function hash(text: string): number {
-  let value = 2166136261;
-
-  for (let index = 0; index < text.length; index++) {
-    value ^= text.charCodeAt(index);
-    value = Math.imul(value, 16777619);
-  }
-
-  return value >>> 0;
 }
 
 /**
