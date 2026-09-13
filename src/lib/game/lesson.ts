@@ -26,6 +26,11 @@ export type LessonState = {
   options: string[];
   /** Correct answers. The numerator of the progress bar. */
   answered: number;
+  /**
+   * Ids of the items answered correctly. This, and not `answered`, is what
+   * gets saved: progress has to know *which* words the player got right.
+   */
+  answeredIds: string[];
   /** Items the lesson asks for. The denominator of the progress bar. */
   total: number;
   hearts: number;
@@ -45,6 +50,7 @@ export function createLesson(items: Item[], seed: number): LessonState {
     current: current ?? null,
     options: current ? orderOptions(current, seed) : [],
     answered: 0,
+    answeredIds: [],
     total: items.length,
     hearts: HEARTS,
     missed: [],
@@ -65,11 +71,10 @@ export function answer(state: LessonState, word: string): LessonState {
   const answerState: AnswerState = { selected: word, correct };
 
   if (correct) {
-    const answered = state.answered + 1;
-
     return {
       ...state,
-      answered,
+      answered: state.answered + 1,
+      answeredIds: [...state.answeredIds, item.id],
       answerState,
       status: state.queue.length === 0 ? "completed" : "playing",
     };

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { BLANK_LABEL, toSentenceParts } from "@/lib/game/sentence";
+import {
+  BLANK_LABEL,
+  toSentenceParts,
+  toSentenceText,
+} from "@/lib/game/sentence";
 
 /** What the reader sees, blank included. */
 function flatten(tokens: (string | null)[]): string {
@@ -54,5 +58,19 @@ describe("toSentenceParts", () => {
   it("names the blank for screen readers", () => {
     // A long dash is not announced, so the gap needs a word.
     expect(BLANK_LABEL).toMatch(/espacio en blanco/i);
+  });
+});
+
+describe("toSentenceText", () => {
+  it("puts the answer in the gap", () => {
+    expect(
+      toSentenceText(["Nokoi", null, "kipatsiki"], "kaniri"),
+    ).toBe("Nokoi kaniri kipatsiki");
+  });
+
+  it("keeps the punctuation where the source had it", () => {
+    expect(toSentenceText(["¿Jaoka", "ojitari", null, "?"], "kaniri")).toBe(
+      "¿Jaoka ojitari kaniri?",
+    );
   });
 });

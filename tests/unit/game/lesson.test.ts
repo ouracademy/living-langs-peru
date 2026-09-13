@@ -117,6 +117,16 @@ describe("answering", () => {
     expect(next(state)).toBe(state);
   });
 
+  it("lists which items were answered correctly, for saving", () => {
+    let state = createLesson(three, 1);
+    state = solve(state);
+    state = fail(state);
+    state = solve(state);
+
+    // b:0 was missed, so it is not mastered yet; a:0 and c:0 are.
+    expect(state.answeredIds).toEqual(["a:0", "c:0"]);
+  });
+
   // AC-G2-5
   it("records a missed item once, even when later answered right", () => {
     let state = fail(createLesson([item("a:0"), item("b:0")], 1));

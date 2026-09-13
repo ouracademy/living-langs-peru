@@ -36,3 +36,17 @@ export function toSentenceParts(tokens: (string | null)[]): SentencePart[] {
     };
   });
 }
+
+/**
+ * The sentence as one string, with `filledWith` in the gap. Used by the
+ * feedback panel, which shows the sentence whole so the learner reads the
+ * source's own words rather than a fragment.
+ */
+export function toSentenceText(
+  tokens: (string | null)[],
+  filledWith: string,
+): string {
+  return toSentenceParts(tokens)
+    .map((part) => (part.spaceBefore ? " " : "") + (part.token ?? filledWith))
+    .join("");
+}

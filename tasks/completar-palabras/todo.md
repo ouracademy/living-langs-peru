@@ -36,8 +36,8 @@ accesibilidad en la propia tarea, no al final.
 ## F2 — Feedback inmediato
 
 - [x] **T2.1** `lib/game/lesson.ts` mínimo: estado + responder → correcto/incorrecto → avanzar. **Tests primero.** Sin vidas ni reencolado todavía `[AC-G2-1]`
-- [ ] **T2.2** `feedback-panel.tsx`: acierto/error **con icono y texto, nunca solo color** · oración completa de la fuente · glosa de la palabra · **fuente citada** vía `getSource()` · botón «Continuar» `[AC-G4-5, AC-G5-2]`
-- [ ] **T2.3** Foco al «Continuar» tras responder · `role="status"` en el panel · atajos `1`/`2`/`3` con `aria-keyshortcuts` `[AC-G4-11, AC-G4-12]`
+- [x] **T2.2** `feedback-panel.tsx`: acierto/error **con icono y texto, nunca solo color** · oración completa de la fuente · glosa de la palabra · **fuente citada** vía `getSource()` · botón «Continuar» `[AC-G4-5, AC-G5-2]`
+- [x] **T2.3** Foco al «Continuar» tras responder · `role="status"` en el panel · atajos `1`/`2`/`3` con `aria-keyshortcuts` `[AC-G4-11, AC-G4-12]`
 - [ ] **T2.4** E2E: acertar muestra oración completa + fuente · fallar muestra la correcta · «Continuar» avanza · el foco queda donde debe `[AC-G4-5, AC-G4-11]`
 
 ---
@@ -47,11 +47,11 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T3.1** `lib/game/random.ts`: `mulberry32` + mezcla determinista. Tests: misma semilla, mismo resultado `[AC-G2-9]`
 - [x] **T3.2** `buildLesson(pool, mastered, seed)` (spec §6.3): no dominados primero, mezcla sembrada, pool corto → lección corta. `mastered` vacío hasta F5. **Tests primero** `[AC-G2-7, AC-G2-8, AC-G2-9]`
 - [x] **T3.3** El reducer completo (spec §6.2): cola, vidas, reencolado al final, barra que no retrocede, `completed`/`failed`, transición inválida ignorada. **Tests primero**, incluida la cota de no colgarse `[AC-G2-2..6, AC-G2-10, AC-G2-11]`
-- [ ] **T3.4** `lesson-progress.tsx` (`role="progressbar"` con `aria-valuenow/min/max`) y `hearts.tsx` (texto «Vidas: 2 de 3» para lector, iconos `aria-hidden`) `[AC-G4-6]`
-- [ ] **T3.5** `lesson-start.tsx`: pantalla de inicio **en el HTML estático**; la lección se compone al pulsar «Empezar», ya en el cliente (spec §6.4) `[AC-G4-3]`
-- [ ] **T3.6** `lesson-summary.tsx`: aciertos/total · vidas restantes · palabras falladas con oración y traducción · «Otra lección» · enlace a `/diccionario/ashaninka?palabra=<id>` `[AC-G4-7, AC-G4-8, AC-G4-17]`
+- [x] **T3.4** `lesson-progress.tsx` (`role="progressbar"` con `aria-valuenow/min/max`) y `hearts.tsx` (texto «Vidas: 2 de 3» para lector, iconos `aria-hidden`) `[AC-G4-6]`
+- [x] **T3.5** `lesson-start.tsx`: pantalla de inicio **en el HTML estático**; la lección se compone al pulsar «Empezar», ya en el cliente (spec §6.4) `[AC-G4-3]`
+- [x] **T3.6** `lesson-summary.tsx`: aciertos/total · vidas restantes · palabras falladas con oración y traducción · «Otra lección» · enlace a `/diccionario/ashaninka?palabra=<id>` `[AC-G4-7, AC-G4-8, AC-G4-17]`
 - [ ] **T3.7** E2E: lección completa acertando · perdida por 3 errores · el ítem fallado reaparece · el enlace al diccionario abre la palabra. **Sin `waitForTimeout`** `[AC-G4-6, AC-G4-7, AC-G4-8, AC-G4-17]`
-- [ ] **T3.8** `prefers-reduced-motion`: sin animaciones de acierto ni error
+- [x] **T3.8** `prefers-reduced-motion`: sin animaciones de acierto ni error
 
 > **⛔ Checkpoint 2 · hito H2 — jugarlo.** `pnpm dev` y jugar varias lecciones enteras.
 > ¿`LESSON_SIZE = 10` o 7? ¿`HEARTS = 3` castiga de más a quien recién empieza?
@@ -77,10 +77,10 @@ accesibilidad en la propia tarea, no al final.
 
 ## F5 — Persistencia en el cliente
 
-- [ ] **T5.1** `lib/game/progress.ts`: clave versionada `living-langs:word-game:v1` · validación de forma · descarte de lo corrupto · valor neutro explícito si `localStorage` lanza. **Ningún `catch` vacío.** **Tests primero**, sustituyendo el store `[AC-G3-1..6, AC-G3-8]`
-- [ ] **T5.2** `use-progress.ts`: lee **después del montaje**, nunca durante el render. Escribe una vez, al cerrar la lección `[AC-G3-7]`
-- [ ] **T5.3** Conectar: contador «N lecciones completadas» en la pantalla de inicio · `mastered` real hacia `buildLesson` · un id que ya no existe en el pool se ignora sin romper `[AC-G3-9, AC-G4-9]`
-- [ ] **T5.4** Aviso discreto de «tu progreso no se va a guardar» si el almacenamiento no está disponible. Una vez, sin insistir `[AC-G4-10]`
+- [x] **T5.1** `lib/game/progress.ts`: clave versionada `living-langs:word-game:v1` · validación de forma · descarte de lo corrupto · valor neutro explícito si `localStorage` lanza. **Ningún `catch` vacío.** **Tests primero**, sustituyendo el store `[AC-G3-1..6, AC-G3-8]`
+- [x] **T5.2** `use-progress.ts`: lee **después del montaje**, nunca durante el render. Escribe una vez, al cerrar la lección `[AC-G3-7]`
+- [x] **T5.3** Conectar: contador «N lecciones completadas» en la pantalla de inicio · `mastered` real hacia `buildLesson` · un id que ya no existe en el pool se ignora sin romper `[AC-G3-9, AC-G4-9]`
+- [x] **T5.4** Aviso discreto de «tu progreso no se va a guardar» si el almacenamiento no está disponible. Una vez, sin insistir `[AC-G4-10]`
 - [ ] **T5.5** E2E: el progreso sobrevive a una recarga · **el juego se juega entero con `localStorage` bloqueado** `[AC-G4-9, AC-G4-10]`
 
 ---
