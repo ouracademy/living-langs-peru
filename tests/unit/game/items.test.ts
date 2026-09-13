@@ -242,6 +242,79 @@ describe("buildItems distractors", () => {
     ).toEqual([]);
   });
 
+  // AC-G1-4 — preferences, in the order the spec relaxes them.
+  it("prefers candidates of the same part of speech", () => {
+    const item = only([
+      entry({
+        word: "kaniri",
+        partOfSpeech: "noun",
+        translations: ["yuca"],
+        examples: [example("Nokoi kaniri kipatsiki")],
+      }),
+      entry({ word: "kenkitsatakantsi", partOfSpeech: "verb", translations: ["contar"] }),
+      entry({ word: "ashitakotantsi", partOfSpeech: "verb", translations: ["cerrar"] }),
+      entry({ word: "shima", partOfSpeech: "noun", translations: ["pez"] }),
+      entry({ word: "inchato", partOfSpeech: "noun", translations: ["árbol"] }),
+    ]);
+
+    expect([...item.distractors].sort()).toEqual(["inchato", "shima"]);
+  });
+
+  it("prefers candidates with as many words as the answer", () => {
+    const item = only([
+      entry({
+        word: "apiapitachari ñantsi",
+        partOfSpeech: "noun",
+        translations: ["palabra repetida"],
+        examples: [example("Isankenajeiti apiapitachari ñantsi maroni")],
+      }),
+      entry({ word: "apitetirori yotaneri", partOfSpeech: "noun", translations: ["segundo saber"] }),
+      entry({ word: "kari añatsine", partOfSpeech: "noun", translations: ["lo no visible"] }),
+      entry({ word: "shima", partOfSpeech: "noun", translations: ["pez"] }),
+      entry({ word: "inchato", partOfSpeech: "noun", translations: ["árbol"] }),
+    ]);
+
+    expect([...item.distractors].sort()).toEqual([
+      "apitetirori yotaneri",
+      "kari añatsine",
+    ]);
+  });
+
+  it("relaxes the preferences rather than dropping the item", () => {
+    const item = only([
+      entry({
+        word: "kaniri",
+        partOfSpeech: "noun",
+        translations: ["yuca"],
+        examples: [example("Nokoi kaniri kipatsiki")],
+      }),
+      // Nothing shares its part of speech, so the rule has to give way.
+      entry({ word: "kenkitsatakantsi", partOfSpeech: "verb", translations: ["contar"] }),
+      entry({ word: "ashitakotantsi", partOfSpeech: "verb", translations: ["cerrar"] }),
+    ]);
+
+    expect([...item.distractors].sort()).toEqual([
+      "ashitakotantsi",
+      "kenkitsatakantsi",
+    ]);
+  });
+
+  it("never relaxes the gloss filter, even with nothing else left", () => {
+    // Both candidates mean the same as the answer: the item cannot be fair.
+    expect(
+      buildItems([
+        entry({
+          word: "kaniri",
+          partOfSpeech: "noun",
+          translations: ["yuca"],
+          examples: [example("Nokoi kaniri kipatsiki")],
+        }),
+        entry({ word: "kaniripaye", partOfSpeech: "noun", translations: ["yuca"] }),
+        entry({ word: "kaniriite", partOfSpeech: "noun", translations: ["yuca"] }),
+      ]),
+    ).toEqual([]);
+  });
+
   it("only ever offers real words from other entries", () => {
     const items = buildItems([
       target,

@@ -62,10 +62,10 @@ accesibilidad en la propia tarea, no al final.
 
 ## F4 — Distractores en serio y el guardián del pool
 
-- [ ] **T4.1** Preferencias de distractor (spec §5.4): misma `partOfSpeech` → misma cantidad de tokens → relajar, en ese orden. El filtro de glosa distinta **nunca** se relaja. Tests del orden de relajación `[AC-G1-4]`
-- [ ] **T4.2** `scripts/validate-game-items.ts` + `pnpm game:check`: piso de **100 ítems** · ítem sin hueco o con más de uno · distractor igual a la respuesta · `sourceId` ausente. Añadirlo a `check:task` `[AC-G1-11, AC-G5-3]`
-- [ ] **T4.3** `game:check --dump`: volcado legible del pool completo para la revisión humana
-- [ ] **T4.4** Test contra el diccionario real: el pool da **148** ítems y ≥ 100. Único test que toca los datos reales `[AC-G1-1]`
+- [x] **T4.1** Preferencias de distractor (spec §5.4): misma `partOfSpeech` → misma cantidad de tokens → relajar, en ese orden. El filtro de glosa distinta **nunca** se relaja. Tests del orden de relajación `[AC-G1-4]`
+- [x] **T4.2** `scripts/validate-game-items.ts` + `pnpm game:check`: piso de **100 ítems** · ítem sin hueco o con más de uno · distractor igual a la respuesta · `sourceId` ausente. Añadirlo a `check:task` `[AC-G1-11, AC-G5-3]`
+- [x] **T4.3** `game:check --dump`: volcado legible del pool completo para la revisión humana
+- [x] **T4.4** Test contra el diccionario real: el pool da **148** ítems y ≥ 100. Único test que toca los datos reales `[AC-G1-1]`
 
 > **⛔ Checkpoint 3 · hito H1 — puerta humana, la única que queda.**
 > `pnpm game:check --dump` y revisión por un hablante o docente asháninka: **¿hay ítems donde un

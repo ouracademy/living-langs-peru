@@ -17,3 +17,11 @@ export const OPTIONS_PER_ITEM = 3;
  * a single word as the only cue, which is trivial rather than instructive.
  */
 export const MIN_SENTENCE_TOKENS = 3;
+
+/**
+ * Fewest items a playable language may produce. The pool is 148 today; below
+ * this the lessons start repeating and the variety is noticeable.
+ *
+ * It is a ratchet against silent loss, not a target: it only goes up.
+ */
+export const MIN_POOL_SIZE = 100;

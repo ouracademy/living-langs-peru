@@ -1,7 +1,7 @@
-import { HEARTS, LESSON_SIZE } from "./constants";
-import { orderOptions } from "./options";
-import { mulberry32, shuffle } from "./random";
-import type { Item } from "./types";
+import { HEARTS, LESSON_SIZE } from "./constants.ts";
+import { orderOptions } from "./options.ts";
+import { mulberry32, shuffle } from "./random.ts";
+import type { Item } from "./types.ts";
 
 /**
  * The lesson, as a pure state machine.

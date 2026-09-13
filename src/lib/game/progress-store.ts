@@ -6,7 +6,7 @@ import {
   readProgress,
   recordLesson,
   writeProgress,
-} from "./progress";
+} from "./progress.ts";
 
 /**
  * `localStorage` as an external store, so React can read it with
