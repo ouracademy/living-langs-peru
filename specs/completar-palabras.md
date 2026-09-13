@@ -134,7 +134,10 @@ export type Item = {
   id: string;
   /** The sentence split into words, with the blank as `null`. */
   tokens: (string | null)[];
-  /** The word that fills the blank, exactly as the source writes it. */
+  /**
+   * The word that fills the blank, in the dictionary's canonical spelling
+   * (see 5.2, paso 7: NO la forma de superficie de la oración).
+   */
   answer: string;
   /** Two real words from other entries. Order is decided at lesson time. */
   distractors: [string, string];
@@ -151,9 +154,17 @@ export type Item = {
 componente no tenga que volver a tokenizar ni reconstruir nada. La puntuación viaja pegada al token
 que la lleva (`¿Timatsi` … `abishimotantsi?`), así la oración se vuelve a leer igual que en la fuente.
 
+**Excepción, alrededor del hueco:** la puntuación que quedaba pegada a la palabra tapada se emite
+como token propio (`¿Jaoka` · `ojitari` · `null` · `?`). Si viajara dentro del hueco, la oración
+volvería mal armada. Consecuencia para la vista: un token que es **solo** puntuación se pinta sin
+espacio delante.
+
 ### 5.2 Regla de generación
 
-`buildItems(entries: Entry[], language: string): Item[]`, pura y determinista.
+`buildItems(entries: Entry[]): Item[]`, pura y determinista.
+
+Sin parámetro `language`: no hay nada por lengua en la generación (`normalize` no lo necesita y la
+colación no se usa acá). Un parámetro que nadie lee es peso muerto, y el lint lo marca.
 
 Para cada entrada y cada uno de sus ejemplos:
 
@@ -169,6 +180,18 @@ Para cada entrada y cada uno de sus ejemplos:
 5. Tapar **una sola** ocurrencia, la primera. Si la palabra aparece dos veces, las demás quedan
    visibles a propósito: son una pista legítima y evitan un hueco imposible.
 6. Elegir dos distractores según §5.4. Si no se consiguen dos, descartar el ítem.
+7. **La respuesta es la forma canónica de la entrada (`entry.word`), no la de la oración.** Medido
+   sobre los datos reales: en **13 de los 148** ítems la palabra abre la oración, y una respuesta con
+   mayúscula inicial al lado de dos distractores en minúscula **delata cuál es**. Un aprendiz
+   acertaría sin saber la palabra, que es exactamente lo que el juego no puede permitirse.
+   La alternativa —descartar esos 13— costaba contenido sin necesidad; la otra —capitalizar los
+   distractores— sería alterar la ortografía de la fuente, prohibido por §5.3. El feedback muestra la
+   oración original **tal cual**, así que la forma de superficie no se pierde: solo no se usa como
+   ficha. Si la coincidencia fue por una `variants`, la ficha muestra igualmente la forma canónica,
+   que es la que enseña el diccionario.
+8. **Sin `sourceId` no hay ítem.** Se toma el del ejemplo y, si falta, el de la entrada; si no hay
+   ninguno, el ejemplo se descarta. Mostrar una oración que no se puede citar rompería la promesa que
+   el diccionario ya hace (§9, AC-G5-3).
 
 El orden de salida es estable (orden de entradas × orden de ejemplos), así dos builds producen la
 misma lista y `id` significa lo mismo la semana que viene.
