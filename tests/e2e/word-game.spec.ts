@@ -352,8 +352,13 @@ test.describe("languages", () => {
 test("the home page leads to the game", async ({ page }) => {
   await page.goto("/");
 
-  // AC-G4-16
-  await page.getByRole("link", { name: "Jugar" }).click();
+  // AC-G4-16: the «Juegos» card of the education section, which used to be
+  // labelled «Games» and whose link went nowhere. Scoped to the section
+  // because the hero has a button with the same words that jumps to it.
+  await page
+    .locator("#educacion")
+    .getByRole("link", { name: /aprende jugando/i })
+    .click();
 
   await expect(page).toHaveURL(GAME);
 });

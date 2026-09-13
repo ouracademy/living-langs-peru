@@ -90,7 +90,7 @@ accesibilidad en la propia tarea, no al final.
 ## F6 — Uro, entrada desde el home, y cierre
 
 - [x] **T6.1** `unavailable-game.tsx` + rama de uro (spec §8.5): dice que está por venir **y por qué**, enlaza `docs/uro-language-sources.md` y el juego asháninka. **Sin prometer fecha.** Disponibilidad derivada de los datos, no de una bandera `[AC-G4-14]` · hito H3
-- [x] **T6.2** `components/resources.tsx`: tarjeta «Juegos» → `/juegos/completar-palabras/ashaninka` y grilla a `md:grid-cols-3 lg:grid-cols-5`. **Solo eso** `[AC-G4-16]`
+- [x] **T6.2** `components/help-education.tsx`: la tarjeta «Games» pasa a «Juegos» y su `href` de `/juegos` (ruta inexistente) al juego. **Solo eso** `[AC-G4-16]`
 - [x] **T6.3** Auditoría de accesibilidad del recorrido completo: teclado de punta a punta, contraste, `aria-live`, etiquetas, foco `[AC-G4-11..13]`
 - [x] **T6.4** Medir el payload de la ruta en `pnpm build` contra los **50 KB comprimidos** (spec §5.6). Si se pasa, se recortan campos — **no** se sube el umbral
 - [x] **T6.5** `pnpm check:full` en verde · spec a `implementado` · fila de `specs/README.md` actualizada · preguntas abiertas cerradas que corresponda
