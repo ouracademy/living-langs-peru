@@ -47,20 +47,20 @@ Es el único ejercicio del juego: no hay otros tipos de ítem.
 Cerradas por el pedido y por la respuesta a las preguntas de arranque. El resto del documento las
 asume.
 
-| #   | Decisión                             | Elección                                                                                                                                                                     |
-| --- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Tipo de ejercicio**                | **Palabra faltante en una oración.** Se muestra la oración asháninka con un hueco + su traducción al español; 3 fichas de palabra, una correcta. Es el único tipo de ítem.   |
-| 2   | **Ruta**                             | `/juegos/completar-palabras/[lengua]`. `/juegos/completar-palabras` redirige a `ashaninka`. El plural `juegos` deja sitio a un segundo juego sin migrar URLs.                |
-| 3   | **Origen del contenido**             | **Solo los ejemplos del diccionario**, derivados en build de `src/data/dictionary/*.json` por una función pura. Cero contenido nuevo y ninguna fuente externa. Ver §9.       |
-| 4   | **Distractores**                     | Palabras **reales** de otras entradas del mismo diccionario, elegidas de forma determinista (§5.4). Nunca inventadas, nunca alteradas.                                       |
-| 5   | **Gamificación**                     | Tres mecánicas, y solo tres: **lección de N ítems con barra de progreso y resumen final**, **feedback inmediato con reintento**, y **vidas (corazones)**. Sin racha ni XP.   |
-| 6   | **Persistencia**                     | `localStorage`, no `sessionStorage`: el progreso debe sobrevivir al cierre de la pestaña. Esquema versionado (§7.2). Si el almacenamiento falla, el juego **sigue jugable**. |
-| 7   | **Sin sesión**                       | Sin login, sin cookies, sin identificadores. Nada que salga del navegador.                                                                                                   |
-| 8   | **Uro**                              | `/juegos/completar-palabras/uro` es una página real que dice que aún no está disponible y por qué, con enlace al juego asháninka. No es un 404 ni un ítem deshabilitado.     |
-| 9   | **Lengua del código**                | Inglés, con la excepción de los segmentos de ruta bajo `src/app/`, que **son** la URL. Ver §11.                                                                              |
-| 10  | **Entrada desde el home**            | Una tarjeta nueva («Juegos») en `src/components/resources.tsx`, que hoy tiene 4. La grilla pasa de `md:grid-cols-4` a `md:grid-cols-3 lg:grid-cols-5`.                       |
-| 11  | **La lección se arma en el cliente** | La página es estática y renderiza una pantalla de inicio. La lección se compone al pulsar «Empezar», ya en el cliente. Así no hay desajuste de hidratación (§6.4).           |
-| 12  | **Sin fuentes nuevas**               | El pool crece **solo cuando crece el diccionario**, y eso se decide en el spec del diccionario, no acá. El juego no importa contenido: lo consume. Ver §9 y §13.             |
+| #   | Decisión                             | Elección                                                                                                                                                                                       |
+| --- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Tipo de ejercicio**                | **Palabra faltante en una oración.** Se muestra la oración asháninka con un hueco + su traducción al español; 3 fichas de palabra, una correcta. Es el único tipo de ítem.                     |
+| 2   | **Ruta**                             | `/juegos/completar-palabras/[lengua]`. `/juegos/completar-palabras` redirige a `ashaninka`. El plural `juegos` deja sitio a un segundo juego sin migrar URLs.                                  |
+| 3   | **Origen del contenido**             | **Solo los ejemplos del diccionario**, derivados en build de `src/data/dictionary/*.json` por una función pura. Cero contenido nuevo y ninguna fuente externa. Ver §9.                         |
+| 4   | **Distractores**                     | Palabras **reales** de otras entradas del mismo diccionario, elegidas de forma determinista (§5.4). Nunca inventadas, nunca alteradas.                                                         |
+| 5   | **Gamificación**                     | Tres mecánicas, y solo tres: **lección de N ítems con barra de progreso y resumen final**, **feedback inmediato con reintento**, y **vidas (corazones)**. Sin racha ni XP.                     |
+| 6   | **Persistencia**                     | `localStorage`, no `sessionStorage`: el progreso debe sobrevivir al cierre de la pestaña. Esquema versionado (§7.2). Si el almacenamiento falla, el juego **sigue jugable**.                   |
+| 7   | **Sin sesión**                       | Sin login, sin cookies, sin identificadores. Nada que salga del navegador.                                                                                                                     |
+| 8   | **Uro**                              | `/juegos/completar-palabras/uro` es una página real que dice que aún no está disponible y por qué, con enlace al juego asháninka. No es un 404 ni un ítem deshabilitado.                       |
+| 9   | **Lengua del código**                | Inglés, con la excepción de los segmentos de ruta bajo `src/app/`, que **son** la URL. Ver §11.                                                                                                |
+| 10  | **Entrada desde el home**            | Se reusa la tarjeta que ya existía en `help-education.tsx`, rotulada «Games» y apuntando a `/juegos`, que no existía: pasa a «Juegos» y al juego. **No** se agrega tarjeta en `resources.tsx`. |
+| 11  | **La lección se arma en el cliente** | La página es estática y renderiza una pantalla de inicio. La lección se compone al pulsar «Empezar», ya en el cliente. Así no hay desajuste de hidratación (§6.4).                             |
+| 12  | **Sin fuentes nuevas**               | El pool crece **solo cuando crece el diccionario**, y eso se decide en el spec del diccionario, no acá. El juego no importa contenido: lo consume. Ver §9 y §13.                               |
 
 ---
 
@@ -519,8 +519,7 @@ bandera nueva en `languages.ts`. Misma regla que el diccionario.
 - **AC-G4-13** La oración asháninka tiene `lang="cni"`.
 - **AC-G4-14** `/juegos/completar-palabras/uro` responde 200 y explica por qué no está.
 - **AC-G4-15** `/juegos/completar-palabras/klingon` responde 404.
-- **AC-G4-16** La tarjeta «Juegos» del home lleva al juego, y las 5 tarjetas siguen bien en móvil,
-  tablet y escritorio.
+- **AC-G4-16** La tarjeta «Juegos» del home (la del centro de educación) lleva al juego.
 - **AC-G4-17** El resumen enlaza a la palabra fallada en el diccionario y esa palabra se abre.
 
 ---
@@ -591,7 +590,7 @@ docs/game-sources.md                       G5
 
 MODIFICADOS:
   next.config.ts                 redirect /juegos/completar-palabras -> .../ashaninka
-  src/components/resources.tsx   tarjeta «Juegos» + clase de grilla (decisión #10)
+  src/components/help-education.tsx  «Games» -> «Juegos» y su href   (decisión #10)
   package.json                   script game:check
   specs/README.md                fila en el índice
 ```
@@ -676,7 +675,8 @@ comportamiento verificado en un navegador de verdad · sin regresiones en el dic
   justifica un paquete.
 - Cambiar la ruta, o meter estado de la lección en la URL.
 - Tocar `src/lib/dictionary/**`, `src/data/dictionary/**`, `src/lib/languages.ts` o `header.tsx`.
-- Tocar `resources.tsx` más allá de la tarjeta nueva y la clase de grilla (decisión #10).
+- Tocar `help-education.tsx` más allá del rótulo y el `href` de su tarjeta (decisión #10).
+- Agregar una tarjeta en `resources.tsx`: se evaluó y se descartó, ya había una para juegos.
 - Agregar racha, XP, logros, tabla de posiciones, audio u otro tipo de ejercicio: quedó fuera de
   alcance por decisión, no por olvido (decisión #5).
 - Añadir cualquier cosa que mande datos fuera del navegador, analítica incluida.
