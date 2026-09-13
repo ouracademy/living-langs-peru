@@ -62,6 +62,7 @@ export default async function WordGamePage({ params }: WordGamePageProps) {
       ) : (
         <WordGame
           items={items}
+          language={language}
           languageCode={getLanguageCode(language) ?? ""}
           sources={getSources()}
         />
