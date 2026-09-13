@@ -1,5 +1,5 @@
-import { hash } from "./hash";
-import type { Item } from "./types";
+import { hash } from "./hash.ts";
+import type { Item } from "./types.ts";
 
 /**
  * The three tiles for an item, in the order they are shown.

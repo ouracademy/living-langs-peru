@@ -1,9 +1,9 @@
-import type { Entry } from "@/lib/dictionary";
-import { normalize } from "@/lib/dictionary/text";
+import type { Entry } from "../dictionary/types.ts";
+import { normalize } from "../dictionary/text.ts";
 
-import { MIN_SENTENCE_TOKENS } from "./constants";
-import { hash } from "./hash";
-import type { Item } from "./types";
+import { MIN_SENTENCE_TOKENS } from "./constants.ts";
+import { hash } from "./hash.ts";
+import type { Item } from "./types.ts";
 
 /**
  * Turns dictionary entries into game items. Pure and deterministic: the same
@@ -75,9 +75,14 @@ function blank(
  * Two real words from other entries, or null if there aren't two to be had.
  *
  * The gloss filter is the rule that cannot be relaxed: a distractor meaning
- * the same as the answer makes the item unsolvable. What this cannot do is
- * judge whether a distractor is grammatically impossible in the gap — that
- * needs a parser of Asháninka we do not have, or a speaker. See specs §5.4.
+ * the same as the answer makes the item unsolvable. The preferences below can
+ * give way, in order, rather than losing the item — a plausible distractor is
+ * better than none, and none means one fewer sentence to learn from.
+ *
+ * What this cannot do is judge whether a distractor is grammatically
+ * impossible in the gap. That needs a parser of Asháninka we do not have, or a
+ * speaker; it is why the plan has a human review of the generated pool. See
+ * specs §5.4.
  */
 function pickDistractors(
   itemId: string,
@@ -86,27 +91,46 @@ function pickDistractors(
 ): [string, string] | null {
   const answerGlosses = new Set(target.translations.map(normalize));
   const answer = normalize(target.word);
+  const answerTokens = tokenize(target.word).length;
 
-  const candidates = entries
-    .filter(
-      (candidate) =>
-        candidate.id !== target.id &&
-        normalize(candidate.word) !== answer &&
-        !candidate.translations.some((gloss) =>
-          answerGlosses.has(normalize(gloss)),
-        ),
-    )
-    // Ordered by a hash of the pair, so the choice is stable per item but not
-    // the same two words for every item.
-    .sort(
-      (a, b) =>
-        hash(`${itemId}:${a.id}`) - hash(`${itemId}:${b.id}`) ||
-        a.id.localeCompare(b.id),
-    );
+  const eligible = entries.filter(
+    (candidate) =>
+      candidate.id !== target.id &&
+      normalize(candidate.word) !== answer &&
+      // Never relaxed.
+      !candidate.translations.some((gloss) =>
+        answerGlosses.has(normalize(gloss)),
+      ),
+  );
 
-  if (candidates.length < 2) return null;
+  // Ordered by a hash of the pair, so the choice is stable per item without
+  // being the same two words for every item.
+  const byHash = (a: Entry, b: Entry) =>
+    hash(`${itemId}:${a.id}`) - hash(`${itemId}:${b.id}`) ||
+    a.id.localeCompare(b.id);
 
-  return [candidates[0].word, candidates[1].word];
+  const sameClass = (candidate: Entry) =>
+    candidate.partOfSpeech === target.partOfSpeech;
+  const sameLength = (candidate: Entry) =>
+    tokenize(candidate.word).length === answerTokens;
+
+  // Strictest first; each fallback drops one preference, never the filter.
+  const tiers = [
+    eligible.filter((c) => sameClass(c) && sameLength(c)),
+    eligible.filter(sameClass),
+    eligible.filter(sameLength),
+    eligible,
+  ];
+
+  for (const tier of tiers) {
+    if (tier.length >= 2) {
+      const [first, second] = [...tier].sort(byHash);
+
+      return [first.word, second.word];
+    }
+  }
+
+  return null;
 }
 
 export function buildItems(entries: Entry[]): Item[] {
