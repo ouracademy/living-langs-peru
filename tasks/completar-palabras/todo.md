@@ -1,7 +1,7 @@
 # TODO — Juego de completar palabras
 
 > Plan y razonamiento: [plan.md](./plan.md) · Spec: [specs/completar-palabras.md](../../specs/completar-palabras.md)
-> Estado: **en curso.** F1 arrancada: T1.1 y T1.2 cerradas.
+> Estado: **en curso.** F1 cerrada.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:task` · `pnpm test:e2e` · `pnpm build` con la ruta estática · verificado en navegador ·
@@ -21,9 +21,9 @@ accesibilidad en la propia tarea, no al final.
 - [x] **T1.1** `lib/game/types.ts` (`Item` según spec §5.1) y `constants.ts` (`LESSON_SIZE = 10`, `HEARTS = 3`, `OPTIONS_PER_ITEM = 3`)
 - [x] **T1.2** `lib/game/items.ts`: regla de generación de spec §5.2 (secuencia contigua de tokens, mínimo 3 tokens, solo la primera ocurrencia) + filtro **obligatorio** de distractores (glosa distinta) y hash determinista. **Tests primero, en rojo**, con fixtures propios `[AC-G1-2..10, AC-G1-12]`
       → _verifica:_ fixtures de lema de dos palabras, palabra aglutinada, oración de 2 tokens, palabra repetida, `ñ` vs `n`, y dos llamadas idénticas
-- [ ] **T1.3** `app/juegos/completar-palabras/[lengua]/page.tsx`: Server Component, `generateStaticParams` con **todas** las lenguas, `generateMetadata`, `notFound()` si la lengua no existe. Redirect en `next.config.ts` `[AC-G4-1, AC-G4-2, AC-G4-15]`
-- [ ] **T1.4** `components/game/`: `word-game.tsx` («use client»), `lesson-view.tsx`, `option-button.tsx`. Un ítem: enunciado en español, oración con hueco (con texto «espacio en blanco» para lectores), 3 fichas `<button>`, `lang="cni"` en la oración `[AC-G4-4, AC-G4-13]`
-- [ ] **T1.5** E2E `tests/e2e/word-game.spec.ts` (nombre en inglés a propósito, plan D5): redirect · enunciado + oración + 3 botones visibles · `klingon` 404. Y confirmar en `pnpm build` que la ruta sale **estática** `[AC-G4-1, AC-G4-2, AC-G4-4, AC-G4-15]`
+- [x] **T1.3** `app/juegos/completar-palabras/[lengua]/page.tsx`: Server Component, `generateStaticParams` con **todas** las lenguas, `generateMetadata`, `notFound()` si la lengua no existe. Redirect en `next.config.ts` `[AC-G4-1, AC-G4-2, AC-G4-15]`
+- [x] **T1.4** `components/game/`: `word-game.tsx` («use client»), `lesson-view.tsx`, `option-button.tsx`. Un ítem: enunciado en español, oración con hueco (con texto «espacio en blanco» para lectores), 3 fichas `<button>`, `lang="cni"` en la oración `[AC-G4-4, AC-G4-13]`
+- [x] **T1.5** E2E `tests/e2e/word-game.spec.ts` (nombre en inglés a propósito, plan D5): redirect · enunciado + oración + 3 botones visibles · `klingon` 404. Y confirmar en `pnpm build` que la ruta sale **estática** `[AC-G4-1, AC-G4-2, AC-G4-4, AC-G4-15]`
 
 > **⛔ Checkpoint 1** — validar `Item` contra los datos reales, antes de construir el motor encima.
 > ¿Una palabra de 22 caracteres cabe legible en una ficha en móvil? ¿3 opciones o 2?
