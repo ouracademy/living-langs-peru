@@ -1,6 +1,7 @@
 # Juego de completar palabras
 
-> Estado: **borrador** · Fecha: 2026-09-12
+> Estado: **implementado** (G1-G4) · Fecha: 2026-09-12 · Rama: `feat/completar-palabras`
+> Pendiente humano: revisión del pool por un hablante antes de difundir (§14, pregunta 1).
 > Rama base: `main` · Plan: [tasks/completar-palabras/](../tasks/completar-palabras/) · Índice:
 > [specs/README.md](./README.md)
 > Depende de: [specs/diccionario.md](./diccionario.md) (implementado) como **única** fuente de

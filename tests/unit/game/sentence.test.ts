@@ -63,9 +63,9 @@ describe("toSentenceParts", () => {
 
 describe("toSentenceText", () => {
   it("puts the answer in the gap", () => {
-    expect(
-      toSentenceText(["Nokoi", null, "kipatsiki"], "kaniri"),
-    ).toBe("Nokoi kaniri kipatsiki");
+    expect(toSentenceText(["Nokoi", null, "kipatsiki"], "kaniri")).toBe(
+      "Nokoi kaniri kipatsiki",
+    );
   });
 
   it("keeps the punctuation where the source had it", () => {
