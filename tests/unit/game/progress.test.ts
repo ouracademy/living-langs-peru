@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   STORAGE_KEY,
+  canPersist,
   emptyProgress,
   forLanguage,
   readProgress,
@@ -197,5 +198,27 @@ describe("forLanguage", () => {
       masteredItemIds: [],
       lastPlayedAt: "",
     });
+  });
+});
+
+describe("canPersist", () => {
+  it("is true for a store that accepts a write", () => {
+    expect(canPersist(fakeStorage())).toBe(true);
+  });
+
+  // The blocked-site-data case: the store exists and refuses everything.
+  it("is false for a store that throws on write", () => {
+    expect(canPersist(hostileStorage())).toBe(false);
+  });
+
+  it("is false when there is no store", () => {
+    expect(canPersist(null)).toBe(false);
+  });
+
+  it("leaves nothing behind", () => {
+    const storage = fakeStorage();
+    canPersist(storage);
+
+    expect(storage.length).toBe(0);
   });
 });

@@ -1,4 +1,4 @@
-import { BookMarked, Languages, Info, Paperclip } from "lucide-react";
+import { BookMarked, Gamepad2, Languages, Info, Paperclip } from "lucide-react";
 import Link from "next/link";
 
 const resources = [
@@ -9,6 +9,14 @@ const resources = [
     text: "Palabras y significados en cada lengua.",
     cta: "Buscar",
     href: "/diccionario/ashaninka",
+  },
+  {
+    icon: Gamepad2,
+    color: "bg-[#6A3E8C]",
+    title: "Juegos",
+    text: "Completa la palabra que falta en una oración.",
+    cta: "Jugar",
+    href: "/juegos/completar-palabras/ashaninka",
   },
   {
     icon: Languages,
@@ -49,7 +57,7 @@ export default function Resources() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {resources.map((resource) => {
             const Icon = resource.icon;
             return (

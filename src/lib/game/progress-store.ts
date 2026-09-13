@@ -1,6 +1,7 @@
 import {
   type Progress,
   STORAGE_KEY,
+  canPersist,
   defaultStorage,
   emptyProgress,
   readProgress,
@@ -40,6 +41,7 @@ const listeners = new Set<() => void>();
 let snapshot: ProgressSnapshot | null = null;
 let snapshotOf: string | null = null;
 let writable = true;
+let persists: boolean | null = null;
 
 function rawValue(): string | null {
   const storage = defaultStorage();
@@ -59,7 +61,11 @@ export function getServerSnapshot(): ProgressSnapshot {
 
 export function getSnapshot(): ProgressSnapshot {
   const raw = rawValue();
-  const available = writable && defaultStorage() !== null;
+  // Probed once: a store that exists can still refuse every write, and the
+  // player deserves to know that before they finish a lesson, not after.
+  if (persists === null) persists = canPersist();
+
+  const available = writable && persists;
 
   // Same stored text and same availability means the same snapshot object.
   if (
@@ -112,4 +118,5 @@ export function resetStore(): void {
   snapshot = null;
   snapshotOf = null;
   writable = true;
+  persists = null;
 }
