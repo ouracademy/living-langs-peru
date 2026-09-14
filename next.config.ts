@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
         destination: "/diccionario/ashaninka",
         permanent: false,
       },
+      {
+        source: "/juegos/completar-palabras",
+        // Same reasoning: Asháninka is the only playable language today, not
+        // a permanent default.
+        destination: "/juegos/completar-palabras/ashaninka",
+        permanent: false,
+      },
     ];
   },
 };
