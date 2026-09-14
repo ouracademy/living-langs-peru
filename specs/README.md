@@ -4,9 +4,10 @@ Un archivo por **feature**, no por módulo. Una feature que se compone de varias
 verificables por separado declara su mapa de capacidades dentro de su propio archivo, para que el
 diseño completo se lea de una sola vez.
 
-| Spec                               | Estado   | Plan                                        | Alcance                                                  |
-| ---------------------------------- | -------- | ------------------------------------------- | -------------------------------------------------------- |
-| [diccionario.md](./diccionario.md) | Aprobado | [tasks/diccionario/](../tasks/diccionario/) | Página de diccionario, API, selector de lengua, fuentes. |
+| Spec                               | Estado   | Plan                                        | Alcance                                                                    |
+| ---------------------------------- | -------- | ------------------------------------------- | -------------------------------------------------------------------------- |
+| [diccionario.md](./diccionario.md) | Aprobado | [tasks/diccionario/](../tasks/diccionario/) | Página de diccionario, API, selector de lengua, fuentes.                   |
+| [ashaninka.md](./ashaninka.md)     | Borrador | [tasks/ashaninka/](../tasks/ashaninka/)     | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes. |
 
 ## Dónde va cada cosa
 
