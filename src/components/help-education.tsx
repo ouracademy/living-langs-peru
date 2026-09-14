@@ -6,15 +6,17 @@ const educationI = [
     title: "Tutoriales",
     description: "",
     linkText: "Ver tutoriales →",
-    href: "/tutoriales",
+    // Placeholder: /tutoriales does not exist yet, and a dead link is better
+    // than a 404.
+    href: "#",
     bgColor: "bg-[#6A3E8C]",
     icon: BookOpen,
   },
   {
-    title: "Games",
+    title: "Juegos",
     description: "",
     linkText: "Aprende jugando →",
-    href: "/juegos",
+    href: "/juegos/completar-palabras/ashaninka",
     bgColor: "bg-[#E4572E]",
     icon: Gamepad2,
   },
@@ -22,7 +24,8 @@ const educationI = [
     title: "Materiales y videos",
     description: "",
     linkText: "Explorar recursos →",
-    href: "/materiales",
+    // Placeholder, like the one above.
+    href: "#",
     bgColor: "bg-[#1B98A0]",
     icon: FolderOpen,
   },
@@ -30,7 +33,8 @@ const educationI = [
 
 export function HelpEducation() {
   return (
-    <section className="bg-[#FBEFD2] py-20">
+    // The hero links here with #educacion, so the id has to exist.
+    <section id="educacion" className="bg-[#FBEFD2] py-20">
       <div className="mx-auto max-w-[1180px] px-8">
         <div className="mx-auto mb-11 max-w-[56ch] text-center">
           <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">
@@ -48,7 +52,10 @@ export function HelpEducation() {
               className={`flex min-h-[170px] flex-col justify-between rounded-3xl p-8 text-white ${item.bgColor}`}
             >
               <h3 className="text-2xl font-bold">{item.title}</h3>
-              <Link href="#" className="text-sm font-bold text-white underline">
+              <Link
+                href={item.href}
+                className="text-sm font-bold text-white underline"
+              >
                 {item.linkText}
               </Link>
             </div>

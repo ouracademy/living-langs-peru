@@ -77,7 +77,7 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 | Dimensión             | Regla                                        | Lo verifica                                        | Corre en         |
 | --------------------- | -------------------------------------------- | -------------------------------------------------- | ---------------- |
 | Tipos                 | Cero errores                                 | `pnpm typecheck`                                   | cada edición, CI |
-| Lint                  | Cero errores, máximo 13 warnings             | `pnpm lint`                                        | cada edición, CI |
+| Lint                  | Cero errores, cero warnings                  | `pnpm lint`                                        | cada edición, CI |
 | Formato               | Prettier limpio                              | `pnpm format:check` (+ hook `PostToolUse`)         | al editar, CI    |
 | Piso                  | Cero hallazgos                               | `pnpm check:floor`                                 | cada edición, CI |
 | Idioma                | Cero hallazgos                               | `pnpm check:language`                              | cada edición, CI |
@@ -91,9 +91,11 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 
 Las razones de cada número:
 
-- **Máximo 13 warnings de lint.** Son las que hay hoy, todas en `src/components/header.tsx`
-  (imports y estado sin usar). El número es un trinquete: solo baja. Poner 0 hoy sería un build
-  rojo permanente, y un build rojo permanente se aprende a ignorar.
+- **Cero warnings de lint.** Eran 13, todas en `src/components/header.tsx` (imports sin usar).
+  El número era un trinquete que solo bajaba, y el 2026-09-12 llegó a cero: se borraron los tres
+  imports muertos (`Image`, `Button`, `User`) y desapareció el resto. Ahora que está en cero, un
+  warning nuevo rompe el build, que es exactamente lo que se quería: el techo de 13 existía para
+  no normalizar un build rojo permanente, no para dejar sitio a más warnings.
 - **80 % de cobertura en líneas cambiadas.** Alto para obligar a escribir un test, bajo para dejar
   pasar una línea de configuración. Se mide sobre las líneas instrumentables del diff: comentarios y
   líneas en blanco no diluyen el número en ninguna dirección.
