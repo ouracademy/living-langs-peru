@@ -1,6 +1,6 @@
 # Página del pueblo Asháninka
 
-> Estado: **borrador** · Fecha: 2026-09-11 · Rama base: `main`
+> Estado: **aprobado** · Fecha: 2026-09-11 · Aprobado: 2026-09-14 · Rama base: `main`
 > Plan: [tasks/ashaninka/](../tasks/ashaninka/) · Índice: [specs/README.md](./README.md)
 > Spec relacionado: [diccionario.md](./diccionario.md) (comparte `src/lib/languages.ts` y la política de fuentes)
 
@@ -32,7 +32,10 @@ se pueda rastrear de dónde salió cada dato.
 - **No** toca `src/components/header.tsx`, `src/app/layout.tsx` ni las rutas del diccionario.
 - **No** hay CMS, base de datos, autenticación ni panel de edición: el contenido se versiona en git.
 - **No** incluye la página equivalente del pueblo Uro. La capa de datos queda lista para recibirla.
-- **No** incluye mapa interactivo. El territorio se describe en texto y lista. (Ver §12, pregunta 1.)
+- **No** incluye mapa interactivo ni librería de mapas. El territorio lleva un **SVG estático** de las
+  seis regiones (decisión #9): cero JavaScript, cero dependencias.
+- **No** incluye audio de pronunciación (decisión #10).
+- **No** usa CARE ni ninguna otra fuente fuera de las dos de §4.1 (decisión #11).
 
 ---
 
@@ -40,16 +43,19 @@ se pueda rastrear de dónde salió cada dato.
 
 Cerradas con el equipo antes de escribir el spec. El resto de la especificación las asume.
 
-| #   | Decisión            | Elección                                                                                                                                                                |
-| --- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Ruta                | **`/ashaninka`** se mantiene. El botón «Explorar Asháninka» de `language.tsx` ya apunta ahí y no se modifica.                                                           |
-| 2   | «Data dinámica»     | **JSON versionado con año del dato y fecha de consulta.** Sin fetch en runtime ni en build. La página es data-driven: cambia el JSON, cambia la página.                 |
-| 3   | Alcance             | Página + **capa de datos tipada** en `src/lib/peoples/`. **Sin API pública** (`/api/pueblos/*` queda fuera; se puede añadir después sin tocar la capa).                 |
-| 4   | Fotos               | Wikimedia Commons con licencia libre verificada, **más** documentar la procedencia de las 4 imágenes que ya viven en `public/`.                                         |
-| 5   | Renderizado         | Server Component estático. Sin `"use client"` salvo que §7.3 lo exija; hoy no lo exige.                                                                                 |
-| 6   | Idioma              | Código, nombres de archivo y **claves JSON en inglés**. Texto de la UI, `alt`, pies de foto, anclas de URL (`#historia`) y este spec, en español. Ver `CONSTRAINTS.md`. |
-| 7   | Notas al pie        | Numeración **derivada, no escrita a mano**: se calcula en orden de aparición. Escribir «³» en el contenido es un error que el tiempo rompe.                             |
-| 8   | Cifras de población | Se publican **las tres** del Censo 2017 por separado, con su etiqueta exacta. Ver §5.3: colapsarlas en «la población asháninka es X» sería un error factual.            |
+| #   | Decisión            | Elección                                                                                                                                                                      |
+| --- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Ruta                | **`/ashaninka`** se mantiene. El botón «Explorar Asháninka» de `language.tsx` ya apunta ahí y no se modifica.                                                                 |
+| 2   | «Data dinámica»     | **JSON versionado con año del dato y fecha de consulta.** Sin fetch en runtime ni en build. La página es data-driven: cambia el JSON, cambia la página.                       |
+| 3   | Alcance             | Página + **capa de datos tipada** en `src/lib/peoples/`. **Sin API pública** (`/api/pueblos/*` queda fuera; se puede añadir después sin tocar la capa).                       |
+| 4   | Fotos               | Wikimedia Commons con licencia libre verificada, **más** documentar la procedencia de las 4 imágenes que ya viven en `public/`.                                               |
+| 5   | Renderizado         | Server Component estático. **Cero `"use client"`** en toda la página (§6.7). Nada de lo que pide este spec lo necesita.                                                       |
+| 6   | Idioma              | Código, nombres de archivo y **claves JSON en inglés**. Texto de la UI, `alt`, pies de foto, anclas de URL (`#historia`) y este spec, en español. Ver `CONSTRAINTS.md`.       |
+| 7   | Notas al pie        | Numeración **derivada, no escrita a mano**: se calcula en orden de aparición. Escribir «³» en el contenido es un error que el tiempo rompe.                                   |
+| 8   | Cifras de población | Se publican **las tres** del Censo 2017 por separado, con su etiqueta exacta. Ver §5.3: colapsarlas en «la población asháninka es X» sería un error factual.                  |
+| 9   | Mapa del territorio | **SVG estático** del Perú con las seis regiones resaltadas, inline en el HTML. Sin librería de mapas, sin JS de cliente. Requiere cartografía con licencia libre (§4.3).      |
+| 10  | Audio               | **Descartado**, igual que en [diccionario.md](./diccionario.md): no hay grabaciones con permiso de hablantes. Publicar audio sin consentimiento sería peor que no publicarlo. |
+| 11  | Fuentes             | **Sólo BDPI (Ministerio de Cultura) y Ethnologue.** CARE queda fuera por decisión del equipo: las fuentes oficiales alcanzan. Ver §4.1.                                       |
 
 ---
 
@@ -82,35 +88,60 @@ Investigación editorial, no código de producto. Se entrega en `docs/ashaninka-
 el formato ya establecido en [`docs/dictionary-sources.md`](../docs/dictionary-sources.md) (veredictos
 `usable` / `solo-referencia` / `requiere-permiso` / `requiere-verificacion`).
 
-### 4.1 Fuentes provistas por el pedido
+### 4.1 Fuentes en uso
 
-| Fuente                                                                        | Rol en la página                                                                 | Estado comprobado hoy                                                                                        |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [BDPI — Ministerio de Cultura](https://bdpi.cultura.gob.pe/pueblos/ashaninka) | **Fuente primaria.** Historia, territorio, población, organización, economía.    | Accesible. Obra del Estado peruano; se cita y se enlaza. Se parafrasea, **no se copian párrafos literales**. |
-| [CARE — Central Asháninka del Río Ene](https://careashaninka.org.pe/)         | Voz de la organización indígena. Presente, territorio del Ene, _Kametsa Asaike_. | Accesible. Sin licencia declarada → se cita y enlaza, no se extrae texto.                                    |
-| [Ethnologue `cni`](https://www.ethnologue.com/language/cni/)                  | Corroboración de la ficha lingüística.                                           | **HTTP 403 a cualquier fetch de servidor**, y contenido con licencia restrictiva. Ver §9.2.                  |
+Dos, y sólo dos (decisión #11). Una tercera fuente provista al inicio del pedido —
+[CARE, Central Asháninka del Río Ene](https://careashaninka.org.pe/) — **se retiró por decisión del
+equipo**: las fuentes oficiales del Estado son suficientes para este contenido. La retirada se
+registra en `docs/ashaninka-sources.md` para que la decisión no se pierda y para que nadie la
+reintroduzca creyendo que fue un olvido.
+
+| Fuente                                                                        | Rol en la página                                                              | Estado comprobado hoy                                                                                        |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [BDPI — Ministerio de Cultura](https://bdpi.cultura.gob.pe/pueblos/ashaninka) | **Fuente primaria.** Historia, territorio, población, organización, economía. | Accesible. Obra del Estado peruano; se cita y se enlaza. Se parafrasea, **no se copian párrafos literales**. |
+| [Ethnologue `cni`](https://www.ethnologue.com/language/cni/)                  | Corroboración de la ficha lingüística.                                        | **HTTP 403 a cualquier fetch de servidor**, y contenido con licencia restrictiva. Ver §9.2.                  |
 
 ### 4.2 Reglas de redacción
 
 - **Parafrasear, no transcribir.** Un dato («118 277 personas en 675 localidades») es un hecho y se
   cita. Un párrafo de la BDPI es texto con autor y no se copia.
 - **Los términos asháninka se marcan con `lang`.** `pinkathari`, `sheripiari`, `kobintaantsi`,
-  `intómoe`, `káapa`, `Kametsa Asaike` van en `<i lang="cni">`, igual que las oraciones de ejemplo
+  `intómoe` y `káapa` van en `<i lang="cni">`, igual que las oraciones de ejemplo
   del diccionario (§6.4 de [diccionario.md](./diccionario.md)).
 - **El conflicto armado interno se nombra, no se estetiza.** La BDPI documenta ~10 000 desplazados,
   ~6 000 muertos y ~5 000 capturados por Sendero Luminoso entre 1980 y 2000. Es parte central de la
   historia reciente de este pueblo y se dice con la cifra y la fuente, sin adjetivos añadidos.
 - **La capa que no es legal.** Vale lo mismo que en `docs/dictionary-sources.md`: el permiso de una
-  institución no es el consentimiento de la comunidad. Queda registrado como pendiente del proyecto
-  plantear esta página a las organizaciones asháninka (CARE, CART, ARPI-SC).
+  institución no es el consentimiento de la comunidad sobre cómo se la representa. **No bloquea la
+  publicación**: se construye con las fuentes oficiales citadas, y lo que llegue de las organizaciones
+  asháninka se incorpora como corrección. Queda anotado en `docs/ashaninka-sources.md`.
 
-### 4.3 Criterios de aceptación
+### 4.3 Fuente cartográfica para el mapa
+
+El SVG de la decisión #9 necesita contornos de los departamentos del Perú con licencia libre. Se
+verifica antes de dibujar nada; si ninguna califica, el mapa no se hace y el territorio se queda en
+texto (el modelo de datos no cambia en ninguno de los dos casos).
+
+| Candidata                                                             | Licencia esperada          | A comprobar                                                   |
+| --------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------- |
+| Mapas SVG de divisiones administrativas del Perú en Wikimedia Commons | CC BY-SA / dominio público | Autor y licencia en la página del archivo, uno por uno.       |
+| [Natural Earth](https://www.naturalearthdata.com/) admin-1            | Dominio público            | Es la opción más limpia legalmente; requiere convertir a SVG. |
+| Shapefiles del INEI / plataforma de datos abiertos del Estado         | Datos abiertos del Estado  | Confirmar términos de uso; requiere conversión.               |
+
+El SVG entra al repo como archivo estático simplificado, **no** se añade una librería de mapas ni una
+dependencia de GeoJSON en runtime. La atribución del mapa va en las notas al pie como una fuente más.
+
+### 4.4 Criterios de aceptación
 
 - **AC-M4-1** Existe `docs/ashaninka-sources.md` con una fila por fuente: título, institución,
   licencia declarada, veredicto y si se comprobó o no.
 - **AC-M4-2** Cada fuente usada en `ashaninka.json` tiene su fila en ese documento.
 - **AC-M4-3** El documento registra explícitamente el 403 de Ethnologue y la decisión que se tomó.
-- **AC-M4-4** El documento registra el pendiente de consulta a las organizaciones asháninka.
+- **AC-M4-4** El documento registra el pendiente de consulta a las organizaciones asháninka y que **no**
+  bloquea la publicación.
+- **AC-M4-5** El documento registra la retirada de CARE como fuente, con la fecha y el motivo.
+- **AC-M4-6** La cartografía usada para el mapa tiene su fila con autor, licencia y URL, o el documento
+  explica por qué no se hizo el mapa.
 
 ---
 
@@ -137,8 +168,7 @@ export type Source = {
   note?: string;
 };
 
-export type FigureUnit =
-  "people" | "speakers" | "localities" | "communities" | "hectares";
+export type FigureUnit = "people" | "speakers" | "localities" | "communities";
 
 export type Figure = {
   id: string;
@@ -215,38 +245,65 @@ export type People = {
 
 ### 5.2 Archivos de datos
 
-- `src/data/peoples/ashaninka.json` — el único archivo de este trabajo.
-- `src/data/peoples/uro.json` — **no se crea.** La capa devuelve `null` y nadie se rompe.
+`src/data/peoples/ashaninka.json` es el **único** archivo de datos de este trabajo. No se crea ninguno
+más, y la capa no busca por slug: **Asháninka es el único pueblo que esta página conoce.**
 
-`src/lib/peoples/registry.ts` — mapa explícito `{ ashaninka: ashaninkaJson }` con imports estáticos,
-igual que `src/lib/dictionary/registry.ts`. **No se usa `fs` en runtime.**
+`src/lib/peoples/registry.ts` hace el import estático y la única aserción de tipo:
+
+```ts
+import ashaninkaJson from "@/data/peoples/ashaninka.json";
+import type { People } from "./types";
+
+// TypeScript ensancha los literales al importar JSON, así que la forma no se puede
+// comprobar estructuralmente acá. `peoples:check` es lo que mantiene el archivo honesto.
+export const ashaninka = ashaninkaJson as People;
+```
+
+**No se usa `fs` en runtime**, igual que `src/lib/dictionary/registry.ts`.
+
+### La diferencia con el diccionario, y por qué importa
+
+El diccionario expone `getDictionary(language: string): Dictionary | null`, y ahí está bien: su ruta es
+`/diccionario/[lengua]`, con **segmento dinámico**, así que el slug llega de la URL y puede ser
+cualquier cosa. `generateStaticParams` genera `uro`, que no tiene datos, y `/diccionario/klingon`
+necesita un `notFound()`. La rama `null` se ejecuta de verdad.
+
+Acá no. `/ashaninka` es una ruta **estática, sin segmento**: el slug nunca llega de afuera. Un
+`getPeople(slug: string): People | null` obligaría a la página a escribir un `if (!people) notFound()`
+que **ningún llamador puede alcanzar** — código muerto que además no se puede cubrir con tests y tira
+hacia abajo la cobertura del cambio (≥ 80 %, `CONSTRAINTS.md`).
+
+Cuando exista una página del pueblo Uro, esto vuelve a ser un registro con lookup. Hoy no, y copiar la
+forma del diccionario «por si acaso» es inventar un caso que no existe.
 
 ### 5.3 La regla de las tres cifras (decisión #8)
 
 El Censo 2017 produce tres números distintos sobre los asháninka y la BDPI los reporta por separado.
 Presentarlos como uno solo es un error factual, y es el error más fácil de cometer en esta página:
 
-| Figure `id`              | Etiqueta en la UI                       | Valor   | Qué mide                                                      |
-| ------------------------ | --------------------------------------- | ------- | ------------------------------------------------------------- |
-| `population-localities`  | Población en sus localidades            | 118 277 | Personas que viven en las 675 localidades asháninka.          |
-| `self-identified`        | Se autoidentifican como asháninka       | 55 493  | Autoidentificación a nivel nacional, censo de población.      |
-| `childhood-speakers`     | Aprendieron asháninka en la niñez       | 73 567  | Lengua materna declarada. Es la cifra que reporta Ethnologue. |
-| `localities`             | Localidades                             | 675     | Total de localidades del pueblo.                              |
-| `recognized-communities` | Comunidades nativas reconocidas         | 405     | De las 675, las que tienen reconocimiento oficial.            |
-| `care-communities`       | Comunidades agrupadas en CARE (río Ene) | 45      | Sólo la cuenca del Ene. **No** es el total nacional.          |
-| `care-hectares`          | Hectáreas monitoreadas por CARE         | 235 000 | Territorio bajo monitoreo geoespacial de CARE.                |
+| Figure `id`              | Etiqueta en la UI                 | Valor   | Qué mide                                                      |
+| ------------------------ | --------------------------------- | ------- | ------------------------------------------------------------- |
+| `population-localities`  | Población en sus localidades      | 118 277 | Personas que viven en las 675 localidades asháninka.          |
+| `self-identified`        | Se autoidentifican como asháninka | 55 493  | Autoidentificación a nivel nacional, censo de población.      |
+| `childhood-speakers`     | Aprendieron asháninka en la niñez | 73 567  | Lengua materna declarada. Es la cifra que reporta Ethnologue. |
+| `localities`             | Localidades                       | 675     | Total de localidades del pueblo.                              |
+| `recognized-communities` | Comunidades nativas reconocidas   | 405     | De las 675, las que tienen reconocimiento oficial.            |
 
-Las tres primeras llevan `note` **obligatoria** que explica qué mide cada una. `care-communities`
-lleva `note` que aclara que es una cuenca, no el país.
+Las tres primeras llevan `note` **obligatoria** que explica qué mide cada una. Las cinco salen de la
+misma fuente y del mismo censo, así que la página no mezcla años ni metodologías.
 
 ### 5.4 API pública de la capa
 
 `src/lib/peoples/index.ts`
 
 ```ts
-getPeople(slug: string): People | null;
+export { ashaninka } from "./registry"; // el pueblo, ya tipado
+
 getFigure(people: People, id: string): Figure | undefined;
 ```
+
+No hay `getPeople(slug)`. Un pueblo que no existe **no es un caso de runtime, es un error de
+compilación**: `import { uro }` simplemente no compila.
 
 `src/lib/peoples/format.ts` (funciones puras, el corazón de los tests)
 
@@ -254,6 +311,19 @@ getFigure(people: People, id: string): Figure | undefined;
 formatFigure(figure: Figure): string; // 118277 -> «118 277 personas»
 formatCount(value: number): string; // separador de miles es-PE
 ```
+
+`src/lib/peoples/territory.ts` (soporte del mapa, decisión #9)
+
+```ts
+/** Ids de los departamentos a resaltar, derivados de `territory.regions`. */
+highlightedRegionIds(territory: Territory): string[];
+```
+
+El SVG trae un `<path id="...">` por departamento del Perú. La función compara los nombres de
+`territory.regions` contra esos ids **normalizados** (minúsculas, sin tildes) y devuelve los que
+coinciden. Así el mapa se pinta desde el JSON: si mañana la BDPI añade una región, se edita el dato y
+el mapa cambia solo. Un nombre que no existe en el SVG es un error del dato y `peoples:check` lo
+reporta (§5.5); **no** se ignora en silencio.
 
 `src/lib/peoples/footnotes.ts` (la lógica no trivial, decisión #7)
 
@@ -288,13 +358,14 @@ Falla con código de salida ≠ 0 y lista todos los problemas, no sólo el prime
 - Toda `Photo` tiene `alt` no vacío y `credit` con `author`, `license` y `url`.
 - Todo `Figure.id` y `PeopleSection.id` es único.
 - Las tres cifras de §5.3 tienen `note` no vacía.
+- Toda región de `territory.regions` corresponde a un `id` del SVG del mapa (decisión #9).
 
 Se engancha a `check:task` junto a `dictionary:check`.
 
 ### 5.6 Criterios de aceptación
 
-- **AC-M1-1** `getPeople("ashaninka")` devuelve el pueblo; `getPeople("uro")` y `getPeople("klingon")`
-  devuelven `null`.
+- **AC-M1-1** `ashaninka` expone el pueblo completo: `summary`, `language`, las cinco `figures`, sus
+  `sections` y sus `sources`. **No se testea ningún lookup por slug**: no existe (§5.2).
 - **AC-M1-2** `formatCount(118277)` produce el número con separador de miles y **espacio duro**, no un
   espacio normal que pueda partir en dos líneas.
 - **AC-M1-3** `formatFigure` usa la unidad correcta y pluraliza en español sin dejar «1 personas».
@@ -306,6 +377,10 @@ Se engancha a `check:task` junto a `dictionary:check`.
 - **AC-M1-9** `peoples:check` falla ante un `sourceId` inexistente inyectado, ante un párrafo con
   `sourceIds: []`, y ante una foto sin `alt`.
 - **AC-M1-10** Las tres cifras de §5.3 existen con sus valores exactos y su `note` no vacía.
+- **AC-M1-11** `highlightedRegionIds` devuelve los seis ids resolviendo tildes y mayúsculas («Junín»
+  → `junin`), y no devuelve nada para una región que el SVG no tiene.
+- **AC-M1-12** `peoples:check` falla ante una región inexistente en el SVG.
+- **AC-M1-13** Ninguna cifra ni fuente del JSON proviene de CARE (decisión #11).
 
 ---
 
@@ -327,6 +402,7 @@ src/app/ashaninka/page.tsx                  Server Component, estático
   ├─ <FigureGrid figures={...} />           las cifras de §5.3, con nota al pie cada una
   ├─ <PeopleSection id="historia" />        historia (párrafos + <Timeline />)
   ├─ <PeopleSection id="territorio" />      territorio y geografía + listas de regiones y ríos
+  │    └─ <TerritoryMap territory={...} />  SVG estático, 6 regiones resaltadas
   ├─ <PeopleSection id="vida" />            organización social, economía, instituciones
   ├─ <PhotoGallery photos={...} />          M3
   ├─ <RelatedLinks />                       → /diccionario/ashaninka y fuentes externas
@@ -334,7 +410,8 @@ src/app/ashaninka/page.tsx                  Server Component, estático
 ```
 
 Componentes en `src/components/peoples/`, kebab-case: `people-hero.tsx`, `figure-grid.tsx`,
-`people-section.tsx`, `timeline.tsx`, `photo-gallery.tsx`, `footnotes.tsx`, `citation.tsx`.
+`people-section.tsx`, `timeline.tsx`, `territory-map.tsx`, `photo-gallery.tsx`, `footnotes.tsx`,
+`citation.tsx`.
 
 `generateMetadata()` devuelve `title: "Pueblo Asháninka"`; el `template` de `layout.tsx` lo completa a
 «Pueblo Asháninka | Lenguas originarias de Peru». La `description` sale de `people.summary`.
@@ -350,7 +427,20 @@ Componentes en `src/components/peoples/`, kebab-case: `people-hero.tsx`, `figure
   (decisión #2): el lector ve la antigüedad del dato.
 - Los números **no se escriben en el contenido**; salen de `buildFootnotes` (decisión #7).
 
-### 6.4 Accesibilidad (obligatorio, no opcional)
+### 6.4 El mapa del territorio (decisión #9)
+
+- SVG **inline** en el Server Component, no `<img>`: así las regiones se pueden pintar con las clases
+  de Tailwind y el mapa hereda el color de la página en vez de traer el suyo.
+- Las seis regiones (Junín, Ucayali, Pasco, Cusco, Huánuco, Ayacucho) van en `#E4572E`; el resto del
+  país, en un gris cálido de fondo. El contorno se mantiene visible en ambos.
+- **El mapa no es la única forma de leer el dato.** Debajo va la lista de regiones y ríos en texto. Un
+  mapa resaltado es inaccesible para quien no lo ve y para quien no distingue esos dos colores.
+- El `<svg>` lleva `role="img"` y un `<title>` que nombra las seis regiones; los `<path>` decorativos
+  van con `aria-hidden`.
+- Sin interacción: ni hover, ni tooltip, ni zoom. Eso obligaría a `"use client"` y rompería §6.6.
+- La atribución de la cartografía aparece como una nota al pie más.
+
+### 6.5 Accesibilidad (obligatorio, no opcional)
 
 Vale la misma barra que fijó §6.4 de [diccionario.md](./diccionario.md):
 
@@ -364,21 +454,21 @@ Vale la misma barra que fijó §6.4 de [diccionario.md](./diccionario.md):
 - El texto sobre la foto del hero necesita el overlay de gradiente que ya usa `hero.tsx`.
 - La página es operable y legible con el zoom del navegador al 200 %.
 
-### 6.5 Estilo visual
+### 6.6 Estilo visual
 
 Reusa la paleta y las formas existentes: fondo `#FFF7E8`/`#FBEFD2`, acentos `#E4572E` (Asháninka, el
 mismo de su tarjeta en el home), `#1B98A0`, `#F2B705`, `#6A3E8C`; texto `#241D14`, secundario
 `#4A4130`; contenedor `max-w-[1180px] px-8`; radios grandes (`rounded-[28px]`) como en `language.tsx`.
 Tipografía: Baloo 2 para títulos, Mulish para cuerpo (ya cargadas en `layout.tsx`).
 
-### 6.6 Rendimiento
+### 6.7 Rendimiento
 
 - Página estática. **Cero JavaScript de cliente añadido** salvo lo que Next ya envía.
 - La foto del hero usa `priority`; las de la galería, `loading="lazy"` (default de `next/image`) y
   `sizes` correcto. Los `width`/`height` vienen del JSON, así que no hay layout shift.
 - Guardarraíl: `/ashaninka` no debe superar el peso de JS de `/` (medible con `next build`).
 
-### 6.7 Criterios de aceptación
+### 6.8 Criterios de aceptación
 
 - **AC-M2-1** Desde el home, hacer clic en **«Explorar Asháninka»** carga `/ashaninka` con estado 200.
 - **AC-M2-2** La página muestra un `<h1>` con «Asháninka» y las secciones Historia, Territorio y
@@ -388,14 +478,17 @@ Tipografía: Baloo 2 para títulos, Mulish para cuerpo (ya cargadas en `layout.t
 - **AC-M2-4** Cada párrafo del contenido muestra al menos una marca de cita.
 - **AC-M2-5** Hacer clic en una marca de cita salta a la nota correspondiente al pie; la nota enlaza
   de vuelta al texto.
-- **AC-M2-6** La lista de notas enlaza a bdpi.cultura.gob.pe, careashaninka.org.pe y ethnologue.com, y
-  cada una muestra su fecha de consulta.
+- **AC-M2-6** La lista de notas enlaza a bdpi.cultura.gob.pe y a ethnologue.com, cada una con su fecha
+  de consulta. **No** enlaza a careashaninka.org.pe.
 - **AC-M2-7** La página muestra «Datos actualizados al \<fecha\>».
 - **AC-M2-8** El `<title>` contiene «Pueblo Asháninka».
 - **AC-M2-9** La página lleva la cabecera y el pie del sitio y enlaza a `/diccionario/ashaninka`.
 - **AC-M2-10** La página es recorrible sólo con teclado, incluidas las citas y los enlaces externos.
 - **AC-M2-11** `git diff` no toca `header.tsx`, `layout.tsx` ni `src/app/diccionario/**`.
 - **AC-M2-12** `next build` reporta `/ashaninka` como ruta estática (`○`), no dinámica.
+- **AC-M2-13** El mapa resalta las seis regiones y el `<svg>` expone un `<title>` que las nombra.
+- **AC-M2-14** La misma información del mapa está disponible como lista de texto.
+- **AC-M2-15** La página no contiene la directiva `"use client"` en ningún componente.
 
 ---
 
@@ -412,13 +505,13 @@ Dos grupos:
 **a) Wikimedia Commons.** Candidatas identificadas (la licencia de cada una **se verifica archivo por
 archivo en la tarea, no se asume**):
 
-| Archivo (Commons)                                                 | Por qué                                                  |
-| ----------------------------------------------------------------- | -------------------------------------------------------- |
-| `Asháninka Dance.jpg`                                             | Vida cultural contemporánea.                             |
-| `Mesa Directiva de la Central Asháninka del Río Ene (CARE).jpg`   | Organización política indígena; conecta con CARE.        |
-| `An Asháninka man, photographed by Charles Kroehle.jpg`           | Histórica (s. XIX). Probable dominio público.            |
-| `An Asháninka settlement along the Palcazu River, circa 1888.png` | Histórica, territorio.                                   |
-| `Alphabet in Ashaninca.jpg`                                       | Puente hacia el diccionario y el alfabeto de 19 grafías. |
+| Archivo (Commons)                                                    | Por qué                                                  |
+| -------------------------------------------------------------------- | -------------------------------------------------------- |
+| `Asháninka Dance.jpg`                                                | Vida cultural contemporánea.                             |
+| `Young Ashaninka girl in an Apiwtxa village, Acre state, Brazil.jpg` | El pueblo también vive en Brasil; amplía el territorio.  |
+| `An Asháninka man, photographed by Charles Kroehle.jpg`              | Histórica (s. XIX). Probable dominio público.            |
+| `An Asháninka settlement along the Palcazu River, circa 1888.png`    | Histórica, territorio.                                   |
+| `Alphabet in Ashaninca.jpg`                                          | Puente hacia el diccionario y el alfabeto de 19 grafías. |
 
 Regla de aceptación: **sólo entra un archivo cuya página en Commons declare CC BY, CC BY-SA, CC0 o
 dominio público, con autor identificable.** Si la licencia no se puede confirmar, la foto no entra —
@@ -485,12 +578,14 @@ y lo engancha dentro de `check:task`, al lado de `dictionary:check`.
 src/app/ashaninka/page.tsx              Server Component (hoy es un stub de 9 líneas)
 src/components/peoples/*.tsx            componentes de presentación, kebab-case
 src/lib/peoples/types.ts                tipos
-src/lib/peoples/registry.ts             imports estáticos del JSON
+src/lib/peoples/registry.ts             import estático del JSON + aserción de tipo
 src/lib/peoples/format.ts               formato de cifras (puro)
 src/lib/peoples/footnotes.ts            numeración de notas (puro)
+src/lib/peoples/territory.ts            regiones a resaltar en el mapa (puro)
 src/lib/peoples/index.ts                API de la capa
 src/data/peoples/ashaninka.json         el contenido
 public/peoples/ashaninka/*              las fotos
+src/components/peoples/territory-map.tsx  el SVG del mapa, inline
 scripts/validate-peoples.ts             validador
 docs/ashaninka-sources.md               fuentes, licencias y veredictos
 tests/unit/peoples/*.test.ts            Vitest
@@ -566,12 +661,12 @@ componente no sabe numerar notas** — recibe `citationFor`, que viene de la fun
 
 ## 10. Estrategia de verificación
 
-| Nivel     | Herramienta | Qué cubre                                                                   | Dónde vive                    |
-| --------- | ----------- | --------------------------------------------------------------------------- | ----------------------------- |
-| Unitario  | Vitest      | `format.ts`, `footnotes.ts`, `index.ts`. Es donde está toda la lógica real. | `tests/unit/peoples/`         |
-| Datos     | CLI         | `peoples:check` sobre el JSON real y sobre fixtures rotos a propósito.      | `scripts/`                    |
-| E2E       | Playwright  | Navegación desde el home, secciones, notas al pie, galería, teclado.        | `tests/e2e/ashaninka.spec.ts` |
-| Contenido | Humana      | Exactitud factual, licencias, tono. No se automatiza.                       | `docs/ashaninka-sources.md`   |
+| Nivel     | Herramienta | Qué cubre                                                                     | Dónde vive                    |
+| --------- | ----------- | ----------------------------------------------------------------------------- | ----------------------------- |
+| Unitario  | Vitest      | `format.ts`, `footnotes.ts`, `territory.ts`, `index.ts`. Toda la lógica real. | `tests/unit/peoples/`         |
+| Datos     | CLI         | `peoples:check` sobre el JSON real y sobre fixtures rotos a propósito.        | `scripts/`                    |
+| E2E       | Playwright  | Navegación desde el home, secciones, notas al pie, galería, teclado.          | `tests/e2e/ashaninka.spec.ts` |
+| Contenido | Humana      | Exactitud factual, licencias, tono. No se automatiza.                         | `docs/ashaninka-sources.md`   |
 
 - **Cobertura ≥ 80 % de las líneas instrumentables tocadas** (`check:coverage`). Se cumple concentrando
   la lógica en funciones puras; los componentes de presentación se cubren por E2E.
@@ -604,7 +699,9 @@ componente no sabe numerar notas** — recibe `citationFor`, que viene de la fun
 
 - Escribir un dato sin fuente, ni un número «aproximado» sin marcarlo como tal.
 - Hacer scraping de Ethnologue (decisión #2).
-- Copiar párrafos literales de la BDPI o de CARE.
+- Copiar párrafos literales de la BDPI.
+- Reintroducir CARE como fuente, o cualquier fuente fuera de §4.1, sin decidirlo antes (decisión #11).
+- Añadir una librería de mapas, o hacer el mapa interactivo (decisión #9).
 - Bajar un número de `CONSTRAINTS.md`, apagar un checker, o marcar un test `.skip` para pasar a verde.
 - Presentar las tres cifras del Censo 2017 como si fueran una sola.
 - Tocar `header.tsx`, `layout.tsx` o las rutas del diccionario.
@@ -616,12 +713,17 @@ componente no sabe numerar notas** — recibe `citationFor`, que viene de la fun
 
 ---
 
-## 12. Preguntas abiertas
+## 12. Preguntas cerradas
 
-1. **¿Mapa del territorio?** Hoy el territorio se describe en texto y listas. Un SVG estático de las
-   seis regiones sería mucho más legible, pero necesita una fuente cartográfica con licencia. Se puede
-   añadir después sin cambiar el modelo de datos.
-2. **¿Audio del nombre «Asháninka»?** Descartado en el diccionario por falta de grabaciones con
-   permiso. Aquí aplica lo mismo, pero conviene confirmarlo.
-3. **Consulta a las organizaciones asháninka.** Registrado como pendiente del proyecto (§4.2), no del
-   código. Alguien del equipo tiene que llevarlo.
+Las tres preguntas abiertas del borrador se respondieron el 2026-09-14 y pasaron a §2 como
+decisiones. Se dejan acá con su respuesta para que la decisión tenga historia:
+
+| #   | Pregunta                                   | Respuesta                                                                                | Dónde vive ahora         |
+| --- | ------------------------------------------ | ---------------------------------------------------------------------------------------- | ------------------------ |
+| 1   | ¿Mapa del territorio?                      | **Sí**, SVG estático de las seis regiones. Sin librería, sin interacción.                | Decisión #9, §4.3, §6.4  |
+| 2   | ¿Audio de pronunciación?                   | **No.** Sin grabaciones con permiso, igual que en el diccionario.                        | Decisión #10, §1         |
+| 3   | ¿La consulta a las organizaciones bloquea? | **No bloquea.** Y CARE se retira como fuente: las fuentes oficiales del Estado alcanzan. | Decisión #11, §4.1, §4.2 |
+
+## 13. Preguntas abiertas
+
+Ninguna. El spec está listo para pasar a plan.
