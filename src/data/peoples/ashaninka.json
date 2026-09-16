@@ -1,0 +1,109 @@
+{
+  "slug": "ashaninka",
+  "name": "Asháninka",
+  "summary": {
+    "text": "Los Asháninka son el pueblo indígena más numeroso de la Amazonía peruana. Viven en la selva central, en las cuencas de los ríos Pichis, Perené, Ene, Tambo y Ucayali, y su lengua pertenece a la familia lingüística arawak.",
+    "sourceIds": ["bdpi-ashaninka"]
+  },
+  "language": {
+    "family": "Arawak",
+    "isoCodes": ["cni", "prq"],
+    "letters": 19,
+    "sourceIds": ["bdpi-ashaninka"]
+  },
+  "figures": [
+    {
+      "id": "population-localities",
+      "label": "Población en sus localidades",
+      "value": 118277,
+      "unit": "people",
+      "year": 2017,
+      "sourceId": "bdpi-ashaninka",
+      "note": "Personas que viven en las 675 localidades del pueblo Asháninka, según los Censos Nacionales 2017."
+    },
+    {
+      "id": "self-identified",
+      "label": "Se autoidentifican como asháninka",
+      "value": 55493,
+      "unit": "people",
+      "year": 2017,
+      "sourceId": "bdpi-ashaninka",
+      "note": "Autoidentificación a nivel nacional. Mide algo distinto de la población de las localidades: una persona puede vivir fuera de ellas, o no declararse parte del pueblo."
+    },
+    {
+      "id": "childhood-speakers",
+      "label": "Aprendieron asháninka en la niñez",
+      "value": 73567,
+      "unit": "speakers",
+      "year": 2017,
+      "sourceId": "ethnologue-cni",
+      "note": "Lengua materna declarada. Es la misma cifra del Censo 2017 que reporta la BDPI, así que corrobora el dato; no es un conteo independiente."
+    },
+    {
+      "id": "localities",
+      "label": "Localidades",
+      "value": 675,
+      "unit": "localities",
+      "year": 2017,
+      "sourceId": "bdpi-ashaninka"
+    },
+    {
+      "id": "recognized-communities",
+      "label": "Comunidades nativas reconocidas",
+      "value": 405,
+      "unit": "communities",
+      "year": 2017,
+      "sourceId": "bdpi-ashaninka",
+      "note": "De las 675 localidades, las que cuentan con reconocimiento oficial como comunidad nativa."
+    }
+  ],
+  "sections": [
+    {
+      "id": "historia",
+      "title": "Historia",
+      "paragraphs": [
+        {
+          "text": "Los antepasados de los Asháninka pertenecían a la familia lingüística arawak y ocupaban el curso medio del río Amazonas desde hace más de tres mil años. Desde allí migraron hacia la selva central del Perú.",
+          "sourceIds": ["bdpi-ashaninka"]
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "territory": {
+    "regions": ["Junín", "Ucayali", "Pasco", "Cusco", "Huánuco", "Ayacucho"],
+    "rivers": ["Pichis", "Perené", "Ene", "Tambo", "Ucayali"],
+    "basins": [
+      "Anacayali",
+      "Apurímac",
+      "Ene",
+      "Pachitea",
+      "Perené",
+      "Pichis",
+      "Sheshea",
+      "Tambo",
+      "Urubamba"
+    ],
+    "sourceIds": ["bdpi-ashaninka"]
+  },
+  "photos": [],
+  "sources": [
+    {
+      "id": "bdpi-ashaninka",
+      "title": "Pueblo Ashaninka",
+      "publisher": "Base de Datos de Pueblos Indígenas u Originarios — Ministerio de Cultura del Perú",
+      "url": "https://bdpi.cultura.gob.pe/pueblos/ashaninka",
+      "retrievedAt": "2026-09-11",
+      "note": "Cifras de los Censos Nacionales 2017."
+    },
+    {
+      "id": "ethnologue-cni",
+      "title": "Asháninka (cni)",
+      "publisher": "Ethnologue — SIL International",
+      "url": "https://www.ethnologue.com/language/cni/",
+      "retrievedAt": "2026-09-11",
+      "note": "Consultado como referencia. El sitio bloquea el acceso automatizado, así que el dato se versiona en este repositorio con su fecha."
+    }
+  ],
+  "updatedAt": "2026-09-16"
+}

@@ -231,7 +231,7 @@ export type LanguageProfile = {
 export type People = {
   slug: PeopleSlug;
   name: string; // «Asháninka»
-  summary: string; // 2-3 oraciones, español
+  summary: Paragraph; // 2-3 oraciones, con sus fuentes como cualquier otro párrafo
   language: LanguageProfile;
   figures: Figure[];
   sections: PeopleSection[];
@@ -298,8 +298,6 @@ misma fuente y del mismo censo, así que la página no mezcla años ni metodolog
 
 ```ts
 export { ashaninka } from "./registry"; // el pueblo, ya tipado
-
-getFigure(people: People, id: string): Figure | undefined;
 ```
 
 No hay `getPeople(slug)`. Un pueblo que no existe **no es un caso de runtime, es un error de
@@ -366,6 +364,12 @@ Se engancha a `check:task` junto a `dictionary:check`.
 
 - **AC-M1-1** `ashaninka` expone el pueblo completo: `summary`, `language`, las cinco `figures`, sus
   `sections` y sus `sources`. **No se testea ningún lookup por slug**: no existe (§5.2).
+
+> **Corrección aplicada en T1.1.** El borrador tenía `summary: string` y un `getFigure(people, id)`.
+> Lo primero creaba el único párrafo de la página exento de citar su fuente, justo lo que §5.5
+> prohíbe: `summary` pasa a ser `Paragraph`. Lo segundo no lo usa nadie —la página recorre
+> `figures`— así que no se escribió. Misma razón que el `getPeople(slug)` de §5.2.
+
 - **AC-M1-2** `formatCount(118277)` produce el número con separador de miles y **espacio duro**, no un
   espacio normal que pueda partir en dos líneas.
 - **AC-M1-3** `formatFigure` usa la unidad correcta y pluraliza en español sin dejar «1 personas».
