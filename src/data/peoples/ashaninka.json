@@ -63,13 +63,57 @@
       "title": "Historia",
       "paragraphs": [
         {
-          "text": "Los antepasados de los Asháninka pertenecían a la familia lingüística arawak y ocupaban el curso medio del río Amazonas desde hace más de tres mil años. Desde allí migraron hacia la selva central del Perú.",
+          "text": "Los antepasados de los Asháninka pertenecían a la familia lingüística arawak y ocupaban el curso medio del río Amazonas desde hace más de tres mil años. Desde allí migraron hacia la selva central del Perú: primero los valles de Chanchamayo, Perené y el Bajo Apurímac, y después los ríos Ene, Tambo, Pachitea y Pichis, hasta el Gran Pajonal.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "El contacto con los españoles fue tardío. Los franciscanos iniciaron la evangelización en 1635 y los dominicos llegaron en 1646, pero el dominio colonial sobre el territorio asháninka nunca llegó a consolidarse.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "Durante los siglos XIX y XX, la llegada de colonos europeos y andinos desplazó a las comunidades de sus tierras. El auge del caucho y, más tarde, el conflicto armado interno marcaron los dos episodios más duros de su historia reciente.",
           "sourceIds": ["bdpi-ashaninka"]
         }
       ]
     }
   ],
-  "timeline": [],
+  "timeline": [
+    {
+      "id": "origen-arawak",
+      "period": "Hace más de 3 000 años",
+      "title": "Origen arawak",
+      "text": "Los antepasados de los Asháninka habitaban el curso medio del río Amazonas, desde donde migraron hacia la selva central del Perú.",
+      "sourceIds": ["bdpi-ashaninka"]
+    },
+    {
+      "id": "primeras-misiones",
+      "period": "1635–1646",
+      "title": "Las primeras misiones",
+      "text": "Los franciscanos iniciaron la evangelización en 1635. Los dominicos llegaron once años después.",
+      "sourceIds": ["bdpi-ashaninka"]
+    },
+    {
+      "id": "juan-santos-atahualpa",
+      "period": "1742–1755",
+      "title": "La rebelión de Juan Santos Atahualpa",
+      "text": "Juan Santos Atahualpa, un mestizo andino educado por los jesuitas del Cusco, encabezó una rebelión etnopolítica cuyo fin era restaurar la libertad del pueblo. Expulsó a misioneros y colonos de la selva central durante más de una década.",
+      "sourceIds": ["bdpi-ashaninka"]
+    },
+    {
+      "id": "auge-del-caucho",
+      "period": "Fines del siglo XIX e inicios del XX",
+      "title": "El auge del caucho",
+      "text": "La explotación del caucho sometió a trabajo forzado a población asháninka, capturada en incursiones violentas llamadas «correrías».",
+      "sourceIds": ["bdpi-ashaninka"]
+    },
+    {
+      "id": "conflicto-armado-interno",
+      "period": "1980–2000",
+      "title": "El conflicto armado interno",
+      "text": "Cerca de 10 000 asháninka fueron desplazados por la fuerza, unos 6 000 murieron y unos 5 000 fueron capturados por Sendero Luminoso.",
+      "sourceIds": ["bdpi-ashaninka"]
+    }
+  ],
   "territory": {
     "regions": ["Junín", "Ucayali", "Pasco", "Cusco", "Huánuco", "Ayacucho"],
     "rivers": ["Pichis", "Perené", "Ene", "Tambo", "Ucayali"],
@@ -105,5 +149,5 @@
       "note": "Consultado como referencia. El sitio bloquea el acceso automatizado, así que el dato se versiona en este repositorio con su fecha."
     }
   ],
-  "updatedAt": "2026-09-16"
+  "updatedAt": "2026-09-17"
 }
