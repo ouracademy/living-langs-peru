@@ -112,3 +112,67 @@ test.describe("footnotes", () => {
     );
   });
 });
+
+test.describe("history", () => {
+  test("the history section is visible and keeps a stable anchor", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka#historia");
+
+    const history = page.getByRole("region", { name: "Historia" });
+
+    await expect(history).toBeVisible();
+    await expect(history).toHaveAttribute("id", "historia");
+    await expect(
+      history.getByRole("heading", { level: 2, name: "Historia" }),
+    ).toBeVisible();
+    await expect(history.getByText(/familia lingüística arawak/)).toBeVisible();
+  });
+
+  test("every history paragraph carries a citation mark", async ({ page }) => {
+    await page.goto("/ashaninka");
+
+    const marks = page.locator("sup[id^='cita-parrafo-historia-'] a");
+
+    // One per paragraph in the section, none of them written by hand.
+    expect(await marks.count()).toBe(3);
+  });
+
+  // The sources give ranges and approximations rather than dates, so what the
+  // reader must see next to each event is its `period` verbatim. See AC-M2-2.
+  test("the timeline names each event and the period it covers", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const timeline = page.getByRole("region", { name: "Línea de tiempo" });
+
+    await expect(timeline).toBeVisible();
+
+    for (const [title, period] of [
+      ["Origen arawak", "Hace más de 3 000 años"],
+      ["Las primeras misiones", "1635–1646"],
+      ["La rebelión de Juan Santos Atahualpa", "1742–1755"],
+      ["El auge del caucho", "Fines del siglo XIX e inicios del XX"],
+      ["El conflicto armado interno", "1980–2000"],
+    ] as const) {
+      await expect(
+        timeline.getByRole("heading", { level: 3, name: title }),
+      ).toBeVisible();
+      await expect(timeline.getByText(period, { exact: false })).toBeVisible();
+    }
+  });
+
+  test("the armed conflict is reported with its figures", async ({ page }) => {
+    await page.goto("/ashaninka");
+
+    const timeline = page.getByRole("region", { name: "Línea de tiempo" });
+
+    await expect(
+      timeline.getByText(/10 000 asháninka fueron desplazados/),
+    ).toBeVisible();
+    await expect(
+      timeline.locator("sup#cita-suceso-conflicto-armado-interno a"),
+    ).toBeVisible();
+  });
+});
