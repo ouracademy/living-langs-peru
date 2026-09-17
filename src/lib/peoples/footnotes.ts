@@ -18,7 +18,7 @@ export function citationId(...parts: (string | number)[]): string {
 }
 
 /** One place on the page that cites something. */
-type Citation = {
+export type Citation = {
   anchor: string;
   sourceIds: SourceId[];
 };
@@ -31,7 +31,7 @@ type Citation = {
  * Photos are absent on purpose — their attribution is rendered next to the
  * image, not as a footnote.
  */
-function citedInRenderOrder(people: People): Citation[] {
+export function citationsInRenderOrder(people: People): Citation[] {
   return [
     { anchor: citationId("resumen"), sourceIds: people.summary.sourceIds },
     ...people.figures.map((figure) => ({
@@ -63,7 +63,7 @@ export function buildFootnotes(people: People): Footnote[] {
   const numbered = new Set<SourceId>();
   const footnotes: Footnote[] = [];
 
-  for (const citation of citedInRenderOrder(people)) {
+  for (const citation of citationsInRenderOrder(people)) {
     for (const id of citation.sourceIds) {
       if (numbered.has(id)) continue;
 
