@@ -1,7 +1,12 @@
 # TODO — Página del pueblo Asháninka
 
 > Plan y razonamiento: [tasks/ashaninka/plan.md](./plan.md) · Spec: [specs/ashaninka.md](../../specs/ashaninka.md)
-> Estado: **pendiente de arrancar.** Ninguna tarea empezada.
+> Estado: **F0–F3 terminadas** (2026-09-17). Siguiente: F4 — territorio y mapa, bloqueada por la
+> puerta humana H2 (cartografía con licencia libre).
+>
+> **Pendiente de F3:** los E2E de historia están escritos y verificados contra el HTML del build, pero
+> **no se han corrido en un navegador**. Falta Chromium en la máquina:
+> `sudo apt-get install -y libnspr4 libnss3 libasound2t64` y después `pnpm test:e2e`.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · `pnpm build` con `/ashaninka` estática · `pnpm test:e2e` · verificado en navegador.
@@ -15,8 +20,8 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F0 — Espina de fuentes
 
-- [ ] **T0.1** `docs/ashaninka-sources.md`: BDPI y Ethnologue con veredicto y licencia, el **403 de Ethnologue** y qué se decidió, el pendiente de consulta comunitaria (no bloqueante) `[AC-M4-1, AC-M4-3, AC-M4-4]`
-- [ ] **T0.2** En el mismo doc: la **retirada de CARE** con fecha 2026-09-14 y motivo `[AC-M4-5]`
+- [x] **T0.1** `docs/ashaninka-sources.md`: BDPI y Ethnologue con veredicto y licencia, el **403 de Ethnologue** y qué se decidió, el pendiente de consulta comunitaria (no bloqueante) `[AC-M4-1, AC-M4-3, AC-M4-4]`
+- [x] **T0.2** En el mismo doc: la **retirada de CARE** con fecha 2026-09-14 y motivo `[AC-M4-5]`
 
 > **⛔ Checkpoint 0** — una persona confirma que BDPI + Ethnologue cubren historia, territorio,
 > población y ficha lingüística sin huecos. Si falta una fuente, se decide **ahora**, no en F3.
@@ -25,11 +30,11 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F1 — La página existe con cifras citadas
 
-- [ ] **T1.1** `lib/peoples/types.ts` (spec §5.1), `registry.ts` que exporta `ashaninka: People` (**sin lookup por slug**, spec §5.2). `data/peoples/ashaninka.json` con `summary`, `language`, las **5 cifras** y **1 sección** `[AC-M1-1, AC-M1-10]`
-- [ ] **T1.2** `lib/peoples/format.ts`: `formatCount` (espacio duro) y `formatFigure` (sin «1 personas»). **Tests primero, en rojo** `[AC-M1-2, AC-M1-3]`
-- [ ] **T1.3** `app/ashaninka/page.tsx`: reemplaza el stub. `<PeopleHero>` + `<FigureGrid>`, `generateMetadata()` → «Pueblo Asháninka» `[AC-M2-2, AC-M2-8, AC-M2-15]`
-- [ ] **T1.4** E2E `tests/e2e/ashaninka.spec.ts`: home → «Explorar Asháninka» → 200 · `<h1>` · **las tres cifras del censo con etiquetas distintas** · `<title>` `[AC-M2-1, AC-M2-2, AC-M2-3]`
-- [ ] **T1.5** Confirmar en `pnpm build` que `/ashaninka` sale **estática** (`○`), no `ƒ` `[AC-M2-12]`
+- [x] **T1.1** `lib/peoples/types.ts` (spec §5.1), `registry.ts` que exporta `ashaninka: People` (**sin lookup por slug**, spec §5.2). `data/peoples/ashaninka.json` con `summary`, `language`, las **5 cifras** y **1 sección** `[AC-M1-1, AC-M1-10]`
+- [x] **T1.2** `lib/peoples/format.ts`: `formatCount` (espacio duro) y `formatFigure` (sin «1 personas»). **Tests primero, en rojo** `[AC-M1-2, AC-M1-3]`
+- [x] **T1.3** `app/ashaninka/page.tsx`: reemplaza el stub. `<PeopleHero>` + `<FigureGrid>`, `generateMetadata()` → «Pueblo Asháninka» `[AC-M2-2, AC-M2-8, AC-M2-15]`
+- [x] **T1.4** E2E `tests/e2e/ashaninka.spec.ts`: home → «Explorar Asháninka» → 200 · `<h1>` · **las tres cifras del censo con etiquetas distintas** · `<title>` `[AC-M2-1, AC-M2-2, AC-M2-3]`
+- [x] **T1.5** Confirmar en `pnpm build` que `/ashaninka` sale **estática** (`○`), no `ƒ` `[AC-M2-12]`
 
 > **⛔ Checkpoint 1 · hito H1** — revisar `People` con ojo humano antes de escribir contenido en volumen.
 > ¿`Paragraph { text, sourceIds }` alcanza o hacen falta subtítulos dentro de una sección?
@@ -39,11 +44,11 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F2 — Notas al pie y validador (el invariante)
 
-- [ ] **T2.1** `lib/peoples/footnotes.ts`: `buildFootnotes` (orden de render, una fuente = un número, ignora huérfanas) y `citationsFor`. **Tests primero**, fixture con fuente repetida, huérfana e ids duplicados `[AC-M1-4, AC-M1-5, AC-M1-6, AC-M1-7]`
-- [ ] **T2.2** `citation.tsx` + `footnotes.tsx`: `<sup>` con `#nota-<n>` y texto accesible; `<ol>` con `<li id="nota-<n>">`, institución, enlace `rel="noopener noreferrer"`, «Consultado el …», volver al texto `[AC-M2-4, AC-M2-5, AC-M2-6]`
-- [ ] **T2.3** «Datos actualizados al `<updatedAt>`» debajo de la lista `[AC-M2-7]`
-- [ ] **T2.4** `scripts/validate-peoples.ts` con las 7 reglas del spec §5.5 + script `peoples:check` + engancharlo a `check:task`. Reporta **todos** los problemas `[AC-M1-8, AC-M1-9, AC-M1-13]`
-- [ ] **T2.5** E2E: cada párrafo con marca de cita · clic salta a la nota · la nota vuelve · **no** enlaza a careashaninka.org.pe `[AC-M2-4, AC-M2-5, AC-M2-6]`
+- [x] **T2.1** `lib/peoples/footnotes.ts`: `buildFootnotes` (orden de render, una fuente = un número, ignora huérfanas) y `citationsFor`. **Tests primero**, fixture con fuente repetida, huérfana e ids duplicados `[AC-M1-4, AC-M1-5, AC-M1-6, AC-M1-7]`
+- [x] **T2.2** `citation.tsx` + `footnotes.tsx`: `<sup>` con `#nota-<n>` y texto accesible; `<ol>` con `<li id="nota-<n>">`, institución, enlace `rel="noopener noreferrer"`, «Consultado el …», volver al texto `[AC-M2-4, AC-M2-5, AC-M2-6]`
+- [x] **T2.3** «Datos actualizados al `<updatedAt>`» debajo de la lista `[AC-M2-7]`
+- [x] **T2.4** `scripts/validate-peoples.ts` con las 7 reglas del spec §5.5 + script `peoples:check` + engancharlo a `check:task`. Reporta **todos** los problemas `[AC-M1-8, AC-M1-9, AC-M1-13]`
+- [x] **T2.5** E2E: cada párrafo con marca de cita · clic salta a la nota · la nota vuelve · **no** enlaza a careashaninka.org.pe `[AC-M2-4, AC-M2-5, AC-M2-6]`
 
 > **⛔ Checkpoint 2** — abrir `/ashaninka`, ver «118 277», seguir su nota al pie, aterrizar en la BDPI.
 > Es el pedido central: datos con fuente visible. Lo demás es contenido.
@@ -52,10 +57,16 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F3 — Historia y línea de tiempo
 
-- [ ] **T3.1** Contenido de `historia` en el JSON: Arawak (+3 000 años), franciscanos 1635 y dominicos 1646, Juan Santos Atahualpa 1742-1755, caucho y «correrías», conflicto armado 1980-2000. **Parafraseado, nunca copiado** `[AC-M4-2]`
-- [ ] **T3.2** `people-section.tsx` + `timeline.tsx`: `<section aria-labelledby>`, `<h2>`, eventos `<h3>` con su `period`, ancla `#historia` `[AC-M2-2]`
-- [ ] **T3.3** Términos asháninka con `<i lang="cni">`: `pinkathari`, `sheripiari`, `kobintaantsi`, `intómoe`, `káapa` `[AC-M2-10]`
-- [ ] **T3.4** E2E: sección Historia visible · `#historia` ancla · la línea de tiempo muestra sus períodos `[AC-M2-2]`
+- [x] **T3.1** Contenido de `historia` en el JSON: Arawak (+3 000 años), franciscanos 1635 y dominicos 1646, Juan Santos Atahualpa 1742-1755, caucho y «correrías», conflicto armado 1980-2000. **Parafraseado, nunca copiado** `[AC-M4-2]`
+- [x] **T3.2** `people-section.tsx` + `timeline.tsx`: `<section aria-labelledby>`, `<h2>`, eventos `<h3>` con su `period`, ancla `#historia` `[AC-M2-2]`
+- [ ] **T3.3** → **movida a F6.** Términos asháninka con `<i lang="cni">`: `pinkathari`, `sheripiari`, `kobintaantsi`, `intómoe`, `káapa` `[AC-M2-10]`
+- [x] **T3.4** E2E: sección Historia visible · `#historia` ancla · la línea de tiempo muestra sus períodos `[AC-M2-2]`
+
+> **Por qué T3.3 se movió a F6** (2026-09-17). Los cinco términos que la tarea nombra no aparecen en
+> el contenido de `historia` que escribió T3.1: los cinco son de la sección `vida`, que es T6.1.
+> Construir acá el mecanismo de marcado sin una sola palabra que marcar sería la capa horizontal
+> especulativa que este plan evita a propósito (plan §1), y dejaría código sin uso ni cobertura.
+> El mecanismo se construye en F6, junto al contenido que lo estrena. AC-M2-10 lo cierra F7.
 
 > El conflicto armado se nombra con su cifra y su fuente (~10 000 desplazados, ~6 000 muertos,
 > ~5 000 capturados), sin adjetivos añadidos. Spec §4.2.
@@ -99,6 +110,7 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 ## F6 — Vida cotidiana, enlaces y contenido completo
 
 - [ ] **T6.1** Contenido de `vida`: `intómoe`/`káapa`, de parentelas de 30-50 a aldeas de 200-300, yuca y roza y quema, `kobintaantsi`, pesca con atarraya y barbasco, `pinkathari` y `sheripiari` `[AC-M4-2]`
+- [ ] **T6.1b** (era T3.3) Mecanismo de marcado y los términos asháninka en `<i lang="cni">`. `Paragraph.text` es texto plano hoy: el marcado sale de datos, no de buscar palabras en la prosa. **Tests primero**, que es donde aplica D2 `[AC-M2-10]`
 - [ ] **T6.2** `related-links.tsx`: enlace a `/diccionario/ashaninka` y a las fuentes externas `[AC-M2-9]`
 - [ ] **T6.3** **Puerta humana H4.** Verificación factual: cada cifra del JSON contra la BDPI, una por una `[AC-M4-2]`
 - [ ] **T6.4** `pnpm peoples:check` en verde sobre el JSON completo y **en rojo** ante los cuatro fixtures rotos a propósito `[AC-M1-8, AC-M1-9]`
