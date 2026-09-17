@@ -1,10 +1,14 @@
+import { Citation } from "@/components/peoples/citation";
+import { citationId, citationsFor } from "@/lib/peoples/footnotes";
+import type { Footnote } from "@/lib/peoples/footnotes";
 import type { People } from "@/lib/peoples";
 
 type PeopleHeroProps = {
   people: People;
+  footnotes: Footnote[];
 };
 
-export function PeopleHero({ people }: PeopleHeroProps) {
+export function PeopleHero({ people, footnotes }: PeopleHeroProps) {
   const { language } = people;
 
   return (
@@ -18,6 +22,10 @@ export function PeopleHero({ people }: PeopleHeroProps) {
         </h1>
         <p className="mt-5 max-w-[60ch] text-lg text-[#4A4130]">
           {people.summary.text}
+          <Citation
+            anchor={citationId("resumen")}
+            numbers={citationsFor(footnotes, people.summary.sourceIds)}
+          />
         </p>
         <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
           <div>
@@ -40,6 +48,10 @@ export function PeopleHero({ people }: PeopleHeroProps) {
             </dt>
             <dd className="text-lg font-bold text-[#241D14]">
               {language.letters}
+              <Citation
+                anchor={citationId("lengua")}
+                numbers={citationsFor(footnotes, language.sourceIds)}
+              />
             </dd>
           </div>
         </dl>

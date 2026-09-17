@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildFootnotes, citationsFor } from "@/lib/peoples/footnotes";
+import {
+  buildFootnotes,
+  citationId,
+  citationsFor,
+} from "@/lib/peoples/footnotes";
 
 import { peopleFixture } from "./fixtures";
 
@@ -31,6 +35,19 @@ describe("buildFootnotes", () => {
     expect(footnotes.some((footnote) => footnote.source.id === "orphan")).toBe(
       false,
     );
+  });
+
+  it("points back at the first place that cites it, not the last", () => {
+    const footnotes = buildFootnotes(peopleFixture());
+    const anchorOf = (id: string) =>
+      footnotes.find((footnote) => footnote.source.id === id)?.backTo;
+
+    // `b` is first cited in the summary, `a` in the first figure, `c` in the
+    // first paragraph of «historia», `d` in the timeline.
+    expect(anchorOf("b")).toBe(citationId("resumen"));
+    expect(anchorOf("a")).toBe(citationId("cifra", "first"));
+    expect(anchorOf("c")).toBe(citationId("parrafo", "historia", 0));
+    expect(anchorOf("d")).toBe(citationId("suceso", "event"));
   });
 
   it("carries the whole source, so the note can render its link and date", () => {

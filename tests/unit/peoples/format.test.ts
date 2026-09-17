@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatCount, formatFigure } from "@/lib/peoples/format";
+import { formatCount, formatDate, formatFigure } from "@/lib/peoples/format";
 import type { Figure, FigureUnit } from "@/lib/peoples/types";
 
 const NBSP = " ";
@@ -49,5 +49,22 @@ describe("formatFigure", () => {
     ["communities", "1 comunidad"],
   ] as const)("uses the singular of %s for one", (unit, expected) => {
     expect(formatFigure(figure(1, unit))).toBe(expected);
+  });
+});
+
+describe("formatDate", () => {
+  it("renders an ISO date in Spanish", () => {
+    expect(formatDate("2026-09-11")).toBe("11 de septiembre de 2026");
+  });
+
+  // `new Date("2026-01-01")` is UTC midnight, which is still 31 December in
+  // any negative offset. Parsing the parts keeps the day the source states.
+  it("keeps the day the source states, in any timezone", () => {
+    expect(formatDate("2026-01-01")).toBe("1 de enero de 2026");
+    expect(formatDate("2026-12-31")).toBe("31 de diciembre de 2026");
+  });
+
+  it("drops no leading zero on the month", () => {
+    expect(formatDate("2026-03-05")).toBe("5 de marzo de 2026");
   });
 });

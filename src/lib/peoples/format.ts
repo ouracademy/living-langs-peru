@@ -41,3 +41,31 @@ export function formatFigure(figure: Figure): string {
 
   return `${formatCount(figure.value)} ${noun}`;
 }
+
+const MONTHS = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+] as const;
+
+/**
+ * «2026-09-11» → «11 de septiembre de 2026».
+ *
+ * Reads the parts rather than going through `new Date`, which parses a bare
+ * ISO date as UTC midnight: in any negative offset that renders as the day
+ * before, silently contradicting the date the source is stamped with.
+ */
+export function formatDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+
+  return `${day} de ${MONTHS[month - 1]} de ${year}`;
+}

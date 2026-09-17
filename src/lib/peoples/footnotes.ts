@@ -4,6 +4,23 @@ export type Footnote = {
   /** 1-based, in order of first appearance on the page. */
   number: number;
   source: Source;
+  /** Anchor of the first citation, so the note can link back to the text. */
+  backTo: string;
+};
+
+/**
+ * Anchor for one citation mark. Both the walk below and the components that
+ * render the marks build their ids through this function, so the note's
+ * back-link and the element it points at cannot drift apart.
+ */
+export function citationId(...parts: (string | number)[]): string {
+  return ["cita", ...parts].join("-");
+}
+
+/** One place on the page that cites something. */
+type Citation = {
+  anchor: string;
+  sourceIds: SourceId[];
 };
 
 /**
@@ -14,16 +31,25 @@ export type Footnote = {
  * Photos are absent on purpose — their attribution is rendered next to the
  * image, not as a footnote.
  */
-function citedInRenderOrder(people: People): SourceId[] {
+function citedInRenderOrder(people: People): Citation[] {
   return [
-    ...people.summary.sourceIds,
-    ...people.figures.map((figure) => figure.sourceId),
+    { anchor: citationId("resumen"), sourceIds: people.summary.sourceIds },
+    ...people.figures.map((figure) => ({
+      anchor: citationId("cifra", figure.id),
+      sourceIds: [figure.sourceId],
+    })),
     ...people.sections.flatMap((section) =>
-      section.paragraphs.flatMap((paragraph) => paragraph.sourceIds),
+      section.paragraphs.map((paragraph, index) => ({
+        anchor: citationId("parrafo", section.id, index),
+        sourceIds: paragraph.sourceIds,
+      })),
     ),
-    ...people.timeline.flatMap((event) => event.sourceIds),
-    ...people.territory.sourceIds,
-    ...people.language.sourceIds,
+    ...people.timeline.map((event) => ({
+      anchor: citationId("suceso", event.id),
+      sourceIds: event.sourceIds,
+    })),
+    { anchor: citationId("territorio"), sourceIds: people.territory.sourceIds },
+    { anchor: citationId("lengua"), sourceIds: people.language.sourceIds },
   ];
 }
 
@@ -37,17 +63,23 @@ export function buildFootnotes(people: People): Footnote[] {
   const numbered = new Set<SourceId>();
   const footnotes: Footnote[] = [];
 
-  for (const id of citedInRenderOrder(people)) {
-    if (numbered.has(id)) continue;
+  for (const citation of citedInRenderOrder(people)) {
+    for (const id of citation.sourceIds) {
+      if (numbered.has(id)) continue;
 
-    const source = byId.get(id);
+      const source = byId.get(id);
 
-    // An id with no source is a data error, reported by `peoples:check`.
-    // Rendering skips it rather than printing a citation that leads nowhere.
-    if (!source) continue;
+      // An id with no source is a data error, reported by `peoples:check`.
+      // Rendering skips it rather than printing a citation that leads nowhere.
+      if (!source) continue;
 
-    numbered.add(id);
-    footnotes.push({ number: footnotes.length + 1, source });
+      numbered.add(id);
+      footnotes.push({
+        number: footnotes.length + 1,
+        source,
+        backTo: citation.anchor,
+      });
+    }
   }
 
   return footnotes;

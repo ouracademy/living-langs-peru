@@ -1,8 +1,12 @@
+import { Citation } from "@/components/peoples/citation";
 import { formatFigure } from "@/lib/peoples/format";
+import { citationId, citationsFor } from "@/lib/peoples/footnotes";
+import type { Footnote } from "@/lib/peoples/footnotes";
 import type { Figure } from "@/lib/peoples";
 
 type FigureGridProps = {
   figures: Figure[];
+  footnotes: Footnote[];
 };
 
 /**
@@ -10,7 +14,7 @@ type FigureGridProps = {
  * the page shows all three with their own label and note. Collapsing them into
  * a single "population" number would be factually wrong. See spec §5.3.
  */
-export function FigureGrid({ figures }: FigureGridProps) {
+export function FigureGrid({ figures, footnotes }: FigureGridProps) {
   return (
     <section
       id="poblacion"
@@ -27,6 +31,10 @@ export function FigureGrid({ figures }: FigureGridProps) {
               <dt className="text-sm font-bold text-[#4A4130]">
                 {figure.label}
                 {figure.year ? ` (${figure.year})` : null}
+                <Citation
+                  anchor={citationId("cifra", figure.id)}
+                  numbers={citationsFor(footnotes, [figure.sourceId])}
+                />
               </dt>
               <dd className="mt-2 text-4xl font-bold text-[#C7431C]">
                 {formatFigure(figure)}
