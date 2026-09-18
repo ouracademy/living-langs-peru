@@ -37,9 +37,9 @@ export function HeaderPlataform() {
               fill="none"
             />
           </svg>          
-          <a href="/" className="text-xl font-bold no-underline font-['Baloo_2',sans-serif]">
+          <Link href="/" className="text-xl font-bold no-underline font-['Baloo_2',sans-serif]">
             Lenguas Peruanas
-          </a>
+          </Link>
         </div>
         <nav className="hidden list-none gap-2.5 md:flex">
           {menuItems.map((item) => (
