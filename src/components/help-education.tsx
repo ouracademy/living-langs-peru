@@ -34,7 +34,7 @@ const educationI = [
 export function HelpEducation() {
   return (
     // The hero links here with #educacion, so the id has to exist.
-    <section id="educacion" className="bg-[#FBEFD2] py-20">
+    <section id="education" className="bg-[#FBEFD2] py-20">
       <div className="mx-auto max-w-[1180px] px-8">
         <div className="mx-auto mb-11 max-w-[56ch] text-center">
           <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">

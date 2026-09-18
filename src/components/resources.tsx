@@ -38,7 +38,7 @@ const resources = [
 
 export default function Resources() {
   return (
-    <section className="py-20">
+    <section id="resources" className="py-20">
       <div className="mx-auto max-w-[1180px] px-8">
         <div className="mx-auto mb-11 max-w-[56ch] text-center">
           <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">

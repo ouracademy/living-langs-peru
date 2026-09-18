@@ -14,14 +14,28 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-  { label: "Recursos", href: "/languages-resources" },
-  { label: "Aprende", href: "/events" },
-  { label: "Historias", href: "/stories" },
+  { label: "Recursos", href: "/#resources" },
+  { label: "Aprende", href: "/#education" },
+  { label: "Historias", href: "/#stories" },
   // { label: "Involucrate", href: "/get-involved" },
 ];
 
 export function HeaderPlataform() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith ("/#")) {      
+      const targetId = href.replace("/#", "");
+      const element = document.getElementById(targetId);
+      if (element) {
+        e.preventDefault(); // Evita que el navegador ponga el '#' en la URL
+        element.scrollIntoView({ behavior: "smooth" });
+        
+        // Opcional: Limpia la URL visualmente a "/" sin recargar la página
+        window.history.pushState({}, "", "/");
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-[#FFF7E8]">
       <div className="mx-auto flex max-w-[1180px] items-center justify-between px-8 py-5">
@@ -47,6 +61,7 @@ export function HeaderPlataform() {
               href={item.href}
               key={item.label}
               style={{ color: "#241D14" }}
+              onClick={(e) => handleScroll(e, item.href)}
               className="text-muted-foreground rounded-full px-4 py-2.5 text-sm font-semibold hover:bg-[#F2B705]"
             >
               {item.label}
@@ -88,7 +103,10 @@ export function HeaderPlataform() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      onClick={() => setIsOpen(false)}
+                      onClick={(e) => {
+                        setIsOpen(false);
+                        handleScroll(e, item.href)
+                      }} 
                       className="font-semibold"
                     >
                       {item.label}
