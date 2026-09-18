@@ -36,8 +36,10 @@ export function HeaderPlataform() {
               strokeWidth="2"
               fill="none"
             />
-          </svg>
-          <span className="text-xl font-bold">Lenguas Peruanas</span>
+          </svg>          
+          <a href="/" className="text-xl font-bold no-underline font-['Baloo_2',sans-serif]">
+            Lenguas Peruanas
+          </a>
         </div>
         <nav className="hidden list-none gap-2.5 md:flex">
           {menuItems.map((item) => (
