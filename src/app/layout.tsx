@@ -43,6 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${baloo2.variable} ${mulish.variable} h-full antialiased`}
       suppressHydrationWarning
     >
