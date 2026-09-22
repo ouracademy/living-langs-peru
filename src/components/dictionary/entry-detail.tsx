@@ -45,7 +45,7 @@ export function EntryDetail({
       // 13-entry list it landed ~700px off screen, so tapping a word looked
       // like nothing happened. From md up it returns to the second column.
       // Deliberately a panel, not a modal — the list stays usable behind it.
-      className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] overflow-y-auto rounded-t-[22px] border border-gray-300 bg-white p-6 shadow-[0_-4px_24px_rgba(36,29,20,0.18)] md:static md:max-h-none md:rounded-[22px] md:shadow-none"
+      className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] overflow-y-auto rounded-t-[22px] border border-gray-300 bg-white p-6 shadow-[0_-4px_24px_rgba(36,29,20,0.18)] md:sticky md:top-[100px] md:bottom-auto md:z-40 md:h-fit md:max-h-[calc(100vh-120px)] md:rounded-[22px] md:shadow-none"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
