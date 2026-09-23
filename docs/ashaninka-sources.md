@@ -1,8 +1,8 @@
 # Fuentes de la página del pueblo Asháninka — investigación y licencias
 
 > Tareas T0.1 y T0.2 · Fecha: 2026-09-16 · Spec: [specs/ashaninka.md](../specs/ashaninka.md) §4
-> Estado: **decidido para el texto.** Las imágenes (T5.1) y la cartografía del mapa (T4.1) siguen
-> pendientes de verificación y tienen su sección más abajo.
+> Estado: **decidido para el texto y para las imágenes** (imágenes verificadas el 2026-09-23, T5.1 y
+> T5.3). La cartografía del mapa (T4.1) sigue pendiente y tiene su sección más abajo.
 
 **Esto no es asesoría legal.** Es el registro de lo que dicen las fuentes y de lo que no se pudo
 comprobar. Las decisiones las toma una persona.
@@ -133,35 +133,67 @@ El SVG de las seis regiones necesita contornos de los departamentos del Perú co
 
 ---
 
-## 7. Pendiente: imágenes (T5.1 y T5.3, hito H3)
+## 7. Imágenes: verificadas archivo por archivo (T5.1 y T5.3, hito H3)
 
-**Sin verificar todavía.** Regla de aceptación: sólo entra un archivo cuya página declare **CC BY,
-CC BY-SA, CC0 o dominio público**, con autor identificable. Si la licencia no se puede confirmar, la
-foto no entra.
+> **Verificado el 2026-09-23.** Método: la API `action=query&prop=imageinfo&iiprop=extmetadata` de
+> Wikimedia Commons, que devuelve licencia y autor tal como los declara la página del archivo. No se
+> asumió ninguna licencia por parecido ni por el nombre del archivo.
 
-### 7.1 Candidatas de Wikimedia Commons (T5.1)
+Regla de aceptación: sólo entra un archivo cuya página declare **CC BY, CC BY-SA, CC0 o dominio
+público**, con autor identificable. Si la licencia no se puede confirmar, la foto no entra.
 
-| Archivo                                                              | Por qué                                                  | Licencia |
-| -------------------------------------------------------------------- | -------------------------------------------------------- | -------- |
-| `Asháninka Dance.jpg`                                                | Vida cultural contemporánea.                             | por ver  |
-| `Young Ashaninka girl in an Apiwtxa village, Acre state, Brazil.jpg` | El pueblo también vive en Brasil.                        | por ver  |
-| `An Asháninka man, photographed by Charles Kroehle.jpg`              | Histórica (s. XIX). Probable dominio público.            | por ver  |
-| `An Asháninka settlement along the Palcazu River, circa 1888.png`    | Histórica, territorio.                                   | por ver  |
-| `Alphabet in Ashaninca.jpg`                                          | Puente hacia el diccionario y el alfabeto de 19 grafías. | por ver  |
+### 7.1 Las cinco que entraron a la galería
 
-### 7.2 Las cuatro imágenes que ya están en `public/` (T5.3)
+| Archivo en Commons                                                                                                                                                                                                | Archivo local                               | Licencia        | Autor                                    | Veredicto |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------- | ---------------------------------------- | --------- |
+| [Asháninka Dance.jpg](https://commons.wikimedia.org/wiki/File:Ash%C3%A1ninka_Dance.jpg)                                                                                                                           | `ashaninka-dance.jpg`                       | CC BY-SA 2.0    | Carly Rojas                              | `usable`  |
+| [Mujeres asháninka y yanesha … Flora Tristán, 2025 01.jpg](https://commons.wikimedia.org/wiki/File:Mujeres_ash%C3%A1ninka_y_yanesha_en_capacitaci%C3%B3n_proyecto_Prende_del_CMP_Flora_Trist%C3%A1n,_2025_01.jpg) | `ashaninka-yanesha-women-training-2025.jpg` | CC BY-SA 4.0    | Centro de la Mujer Peruana Flora Tristán | `usable`  |
+| [Alphabet in Ashaninca.jpg](https://commons.wikimedia.org/wiki/File:Alphabet_in_Ashaninca.jpg)                                                                                                                    | `ashaninka-alphabet-school.jpg`             | CC BY-SA 4.0    | Schönitzer                               | `usable`  |
+| [An Asháninka man, photographed by Charles Kroehle.jpg](https://commons.wikimedia.org/wiki/File:An_Ash%C3%A1ninka_man,_photographed_by_Charles_Kroehle.jpg)                                                       | `ashaninka-man-kroehle.jpg`                 | Dominio público | Charles Kroehle                          | `usable`  |
+| [An Asháninka settlement along the Palcazu River, circa 1888.png](https://commons.wikimedia.org/wiki/File:An_Ash%C3%A1ninka_settlement_along_the_Palcazu_River,_circa_1888.png)                                   | `palcazu-river-settlement-1888.jpg`         | Dominio público | Charles Kroehle                          | `usable`  |
 
-Se usan hoy en el home **sin procedencia documentada**. Hay que rastrearlas:
+Todas viven en `public/peoples/ashaninka/` (spec §7.1: no se enlaza en caliente). Las tres grandes se
+reescalaron a 1600 px de ancho y se recodificaron en JPEG —el PNG del asentamiento pesaba 8,9 MB—;
+las dos chicas entraron tal cual. Total en el repo: **680 KB**.
 
-| Archivo                      | Uso actual              | Procedencia  | Licencia |
-| ---------------------------- | ----------------------- | ------------ | -------- |
-| `ash.jpg`                    | Fondo del hero del home | por rastrear | por ver  |
-| `ashb.jpg`                   | —                       | por rastrear | por ver  |
-| `ashaninka-c.webp`           | —                       | por rastrear | por ver  |
-| `ashaninka-Mother-Baby.webp` | —                       | por rastrear | por ver  |
+**`ashaninka-dance.jpg` lleva una marca de agua visible** («©Carly Rojas Aguise») quemada en el
+píxel por su autor. No es un problema de licencia —está publicada como CC BY-SA 2.0— pero es una
+firma que se ve en la página. Si molesta, la salida es reemplazar la foto, no borrarle la marca.
 
-Si su procedencia no se confirma, **no entran a la galería** y quedan registradas como deuda del
-home. Este trabajo **no** las quita de `hero.tsx`: es un cambio aparte, con su propia decisión.
+### 7.2 La que se dejó fuera, y por qué
+
+| Archivo                                                                                                                                                                          | Licencia                      | Motivo de la exclusión                                                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Young Ashaninka girl in an Apiwtxa village, Acre state, Brazil.jpg](https://commons.wikimedia.org/wiki/File:Young_Ashaninka_girl_in_an_Apiwtxa_village,_Acre_state,_Brazil.jpg) | CC BY 2.0 (Pedro França/MinC) | **La licencia alcanza, el resto no.** La página del archivo declara `Restrictions: personality`, el aviso de derechos de imagen de Commons, y la retratada es una niña identificable en primer plano. La licencia cubre el copyright del fotógrafo, no el consentimiento de la persona retratada. |
+
+Es una decisión editorial, no legal, y **es revisable**: si el equipo la quiere dentro, la licencia no
+lo impide. Se dejó fuera porque publicar el retrato de una menor identificable en un sitio sobre su
+pueblo merece una decisión humana explícita, y porque la galería llega a cinco fotos sin ella.
+
+En su lugar entró la foto del **CMP Flora Tristán**, que no estaba en la lista original del spec:
+es contemporánea, está tomada en el Perú —no en Brasil— y muestra a mujeres asháninka y yanesha en un
+taller, que es vida cotidiana y no retrato individual.
+
+### 7.3 Las cuatro imágenes que ya estaban en `public/` (T5.3)
+
+**Veredicto: procedencia no determinada, las cuatro.** Ninguna entra a la galería.
+
+| Archivo                      | Tamaño   | Uso actual                                          | Qué se encontró                                                                                                                                       | Veredicto               |
+| ---------------------------- | -------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `ash.jpg`                    | 900×600  | Fondo del hero del home (`src/components/hero.tsx`) | Sin EXIF, sin IPTC, sin XMP. Añadida en `53c9baf` (2026-07-20) sin nota de origen.                                                                    | `requiere-verificacion` |
+| `ashb.jpg`                   | 1000×667 | **Ninguno**                                         | XMP presente, pero sólo con los espacios de nombres de Adobe: sin `dc:creator`, `dc:rights` ni `photoshop:Credit`. Añadida en `53c9baf` (2026-07-20). | `requiere-verificacion` |
+| `ashaninka-c.webp`           | 535×335  | **Ninguno**                                         | EXIF mínimo, sin autor ni copyright. Añadida en `c06f6a3` (2026-07-17).                                                                               | `requiere-verificacion` |
+| `ashaninka-Mother-Baby.webp` | 400×312  | **Ninguno**                                         | EXIF mínimo, sin autor ni copyright. Añadida en `c06f6a3` (2026-07-17).                                                                               | `requiere-verificacion` |
+
+Lo único que quedó registrado es quién las subió al repo, y eso no dice de dónde salieron.
+
+Dos consecuencias, y ninguna se resuelve en este trabajo:
+
+1. **`ash.jpg` es deuda del home.** Se publica hoy en el hero sin procedencia. Este trabajo **no** la
+   quita de `hero.tsx`: es un cambio aparte, con su propia decisión (spec §7.1).
+2. **Las otras tres no las usa nadie.** No aparecen en ningún `.tsx`, `.ts`, `.json` ni `.css` del
+   repo. Son archivos muertos con licencia desconocida, así que borrarlas no rompe nada y cierra el
+   riesgo — pero borrar es una decisión del equipo, no un efecto colateral de la galería.
 
 ---
 

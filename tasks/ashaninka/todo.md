@@ -1,11 +1,14 @@
 # TODO — Página del pueblo Asháninka
 
 > Plan y razonamiento: [tasks/ashaninka/plan.md](./plan.md) · Spec: [specs/ashaninka.md](../../specs/ashaninka.md)
-> Estado: **F0–F3 terminadas** (2026-09-17). Siguiente: F4 — territorio y mapa, bloqueada por la
-> puerta humana H2 (cartografía con licencia libre).
+> Estado: **F0–F3 y F5 terminadas** (F5 el 2026-09-23). **F4 sigue pendiente** y es lo único que
+> queda antes de F6: está bloqueada por la puerta humana H2 (cartografía con licencia libre).
 >
-> **Pendiente de F3:** los E2E de historia están escritos y verificados contra el HTML del build, pero
-> **no se han corrido en un navegador**. Falta Chromium en la máquina:
+> F5 se hizo fuera de orden, a pedido. No arrastró nada: la galería no toca el territorio ni el mapa,
+> y el plan ya preveía que el fallo de una no bloquea a la otra.
+>
+> **Pendiente en F3 y F5:** los E2E de historia y de galería están escritos y verificados contra el
+> HTML del build, pero **no se han corrido en un navegador**. Falta Chromium en la máquina:
 > `sudo apt-get install -y libnspr4 libnss3 libasound2t64` y después `pnpm test:e2e`.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
@@ -93,14 +96,26 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F5 — Galería de fotos
 
-- [ ] **T5.1** **Puerta humana H3.** Verificar en Commons, **archivo por archivo**, autor y licencia. Sólo entra CC BY / CC BY-SA / CC0 / dominio público `[AC-M3-5]`
-- [ ] **T5.2** Descargar las aprobadas a `public/peoples/ashaninka/` y cargarlas en `photos` con `width`, `height`, `alt` en español y `credit` `[AC-M3-1, AC-M3-3, AC-M3-4]`
-- [ ] **T5.3** Rastrear y clasificar las **4 preexistentes** (`ash.jpg`, `ashb.jpg`, `ashaninka-c.webp`, `ashaninka-Mother-Baby.webp`) en `docs/ashaninka-sources.md` `[AC-M3-6]`
-- [ ] **T5.4** `photo-gallery.tsx`: grilla responsive, `next/image` con `width`/`height`, **crédito visible** con enlace debajo de cada foto. Sin lightbox `[AC-M3-2, AC-M3-7]`
-- [ ] **T5.5** E2E: ≥4 fotos · autor y licencia visibles · ningún `alt` vacío ni genérico · sin layout shift `[AC-M3-1, AC-M3-2, AC-M3-3]`
+- [x] **T5.1** **Puerta humana H3.** Verificar en Commons, **archivo por archivo**, autor y licencia. Sólo entra CC BY / CC BY-SA / CC0 / dominio público `[AC-M3-5]`
+- [x] **T5.2** Descargar las aprobadas a `public/peoples/ashaninka/` y cargarlas en `photos` con `width`, `height`, `alt` en español y `credit` `[AC-M3-1, AC-M3-3, AC-M3-4]`
+- [x] **T5.3** Rastrear y clasificar las **4 preexistentes** (`ash.jpg`, `ashb.jpg`, `ashaninka-c.webp`, `ashaninka-Mother-Baby.webp`) en `docs/ashaninka-sources.md` `[AC-M3-6]`
+- [x] **T5.4** `photo-gallery.tsx`: grilla responsive, `next/image` con `width`/`height`, **crédito visible** con enlace debajo de cada foto. Sin lightbox `[AC-M3-2, AC-M3-7]`
+- [x] **T5.5** E2E: ≥4 fotos · autor y licencia visibles · ningún `alt` vacío ni genérico · sin layout shift `[AC-M3-1, AC-M3-2, AC-M3-3]`
 
 > **⛔ Checkpoint 4** — cada imagen publicada tiene autor, licencia y URL en el doc de fuentes. Si una
 > no se pudo confirmar, **no está en la galería**. No se deja «para después con un TODO».
+
+> **Resultado de H3** (2026-09-23, detalle en `docs/ashaninka-sources.md` §7). Entraron **cinco**
+> fotos, verificadas una por una contra la API de Commons. Dos cambios respecto de la lista del spec,
+> ambos **revisables por el equipo**:
+>
+> - **Fuera** `Young Ashaninka girl in an Apiwtxa village…`. La licencia alcanza (CC BY 2.0), pero
+>   Commons la marca con `Restrictions: personality` y la retratada es una niña identificable. La
+>   licencia cubre el copyright del fotógrafo, no el consentimiento de la persona.
+> - **Dentro**, en su lugar, una foto del CMP Flora Tristán que no estaba en el spec: contemporánea,
+>   tomada en el Perú y no un retrato individual.
+>
+> `Asháninka Dance.jpg` lleva marca de agua del autor quemada en el píxel. Es legal; se ve.
 
 > Si las 4 preexistentes no se confirman, quedan como deuda del home. Este trabajo **no** las quita de
 > `hero.tsx`: es un cambio aparte, con su propia decisión.
