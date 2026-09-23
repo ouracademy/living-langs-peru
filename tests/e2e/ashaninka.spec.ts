@@ -176,3 +176,86 @@ test.describe("history", () => {
     ).toBeVisible();
   });
 });
+
+test.describe("photo gallery", () => {
+  test("shows at least four photos, each with a visible credit", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const gallery = page.getByRole("region", { name: "Galería" });
+    const figures = gallery.locator("figure");
+
+    expect(await figures.count()).toBeGreaterThanOrEqual(4);
+
+    for (const figure of await figures.all()) {
+      // Author and licence sit under the image, not in a hidden `title`.
+      const credit = figure.locator("figcaption");
+
+      await expect(credit).toBeVisible();
+      await expect(credit.getByRole("link")).toHaveAttribute(
+        "href",
+        /commons\.wikimedia\.org/,
+      );
+    }
+  });
+
+  test("every image describes itself for someone who cannot see it", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const images = page.getByRole("region", { name: "Galería" }).locator("img");
+
+    for (const image of await images.all()) {
+      const alt = (await image.getAttribute("alt")) ?? "";
+
+      expect(alt.trim().length).toBeGreaterThan(20);
+      expect(alt.trim().toLowerCase()).not.toMatch(
+        /^(foto|imagen|fotografía|photo|image)\.?$/,
+      );
+    }
+  });
+
+  // AC-M3-7: the browser must be able to reserve each box before the file
+  // arrives, or the page reflows as the gallery loads.
+  test("reserves space for every image before it loads", async ({ page }) => {
+    await page.goto("/ashaninka");
+
+    const images = page.getByRole("region", { name: "Galería" }).locator("img");
+
+    for (const image of await images.all()) {
+      await expect(image).toHaveAttribute("width", /^\d+$/);
+      await expect(image).toHaveAttribute("height", /^\d+$/);
+    }
+  });
+
+  // AC-M3-4: the files are served from `public/`, so a broken path is a 404
+  // that no type check would have caught.
+  test("serves every image from this site, and all of them load", async ({
+    page,
+  }) => {
+    const failed: string[] = [];
+
+    page.on("response", (response) => {
+      if (response.url().includes("/peoples/ashaninka/") && !response.ok()) {
+        failed.push(`${response.status()} ${response.url()}`);
+      }
+    });
+
+    await page.goto("/ashaninka");
+
+    const images = page.getByRole("region", { name: "Galería" }).locator("img");
+
+    for (const image of await images.all()) {
+      await expect(image).toHaveJSProperty("complete", true);
+      const natural = await image.evaluate(
+        (node: HTMLImageElement) => node.naturalWidth,
+      );
+
+      expect(natural).toBeGreaterThan(0);
+    }
+
+    expect(failed).toEqual([]);
+  });
+});

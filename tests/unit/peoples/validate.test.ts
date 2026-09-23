@@ -109,6 +109,60 @@ describe("validatePeople", () => {
     ).toMatch(/licencia|credit/i);
   });
 
+  // AC-M3-3: an alt that says «foto» describes nothing to someone who cannot
+  // see the image. The check is on the whole value, not a substring: a real
+  // alt may legitimately open with «Fotografía antigua de …».
+  it("rejects a generic alt but keeps a descriptive one that mentions a photo", () => {
+    const photo = {
+      src: "/peoples/ashaninka/x.jpg",
+      width: 800,
+      height: 600,
+      alt: "Una persona asháninka tejiendo",
+      credit: {
+        author: "Alguien",
+        license: "CC BY-SA 4.0",
+        url: "https://commons.wikimedia.org/wiki/File:X",
+      },
+    };
+
+    for (const alt of ["foto", "Imagen", "  FOTOGRAFÍA  ", "photo."]) {
+      expect(
+        problemsOf(broken((c) => c.photos.push({ ...photo, alt }))),
+      ).toMatch(/genérico/i);
+    }
+
+    expect(
+      validatePeople(
+        broken((c) =>
+          c.photos.push({
+            ...photo,
+            alt: "Fotografía antigua de una casa comunal de techo de palma.",
+          }),
+        ),
+      ),
+    ).toEqual([]);
+  });
+
+  // AC-M3-7: without real dimensions the browser cannot reserve the box and
+  // the gallery shifts as each file arrives.
+  it("rejects a photo with no usable dimensions", () => {
+    const photo = {
+      src: "/peoples/ashaninka/x.jpg",
+      width: 0,
+      height: 600,
+      alt: "Una persona asháninka tejiendo",
+      credit: {
+        author: "Alguien",
+        license: "CC BY-SA 4.0",
+        url: "https://commons.wikimedia.org/wiki/File:X",
+      },
+    };
+
+    expect(problemsOf(broken((c) => c.photos.push(photo)))).toMatch(
+      /width|height|dimensi/i,
+    );
+  });
+
   it("reports every problem, not just the first", () => {
     const people = broken((copy) => {
       copy.sections[0].paragraphs[0].sourceIds = [];

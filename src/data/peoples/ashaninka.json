@@ -130,7 +130,68 @@
     ],
     "sourceIds": ["bdpi-ashaninka"]
   },
-  "photos": [],
+  "photos": [
+    {
+      "src": "/peoples/ashaninka/ashaninka-dance.jpg",
+      "width": 640,
+      "height": 480,
+      "alt": "Un grupo de personas asháninka danza sobre el suelo de tierra de una aldea, entre casas con techo de palma. Varias visten cushmas, las túnicas largas de algodón teñidas en tonos ocre y marrón.",
+      "caption": "Danza en una comunidad asháninka.",
+      "credit": {
+        "author": "Carly Rojas",
+        "license": "CC BY-SA 2.0",
+        "url": "https://commons.wikimedia.org/wiki/File:Ash%C3%A1ninka_Dance.jpg"
+      }
+    },
+    {
+      "src": "/peoples/ashaninka/ashaninka-yanesha-women-training-2025.jpg",
+      "width": 1600,
+      "height": 813,
+      "alt": "Una veintena de mujeres asháninka y yanesha, de pie en círculo sobre el pasto, sostienen un hilo que cruza el centro y forma una red entre ellas. Varias ríen.",
+      "caption": "Taller del proyecto Prende con mujeres asháninka y yanesha, 2025.",
+      "credit": {
+        "author": "Centro de la Mujer Peruana Flora Tristán",
+        "license": "CC BY-SA 4.0",
+        "url": "https://commons.wikimedia.org/wiki/File:Mujeres_ash%C3%A1ninka_y_yanesha_en_capacitaci%C3%B3n_proyecto_Prende_del_CMP_Flora_Trist%C3%A1n,_2025_01.jpg"
+      }
+    },
+    {
+      "src": "/peoples/ashaninka/ashaninka-alphabet-school.jpg",
+      "width": 1600,
+      "height": 1200,
+      "alt": "Un afiche escolar titulado «Sankenapatotantsi Ashaninka» muestra las grafías del alfabeto asháninka. Cada una va ilustrada con un dibujo y la palabra que la ejemplifica: akiparentsi, cherepito, kaniri, shima.",
+      "caption": "Afiche del alfabeto asháninka en un aula, editado por el Ministerio de Educación del Perú y Unicef.",
+      "credit": {
+        "author": "Schönitzer",
+        "license": "CC BY-SA 4.0",
+        "url": "https://commons.wikimedia.org/wiki/File:Alphabet_in_Ashaninca.jpg"
+      }
+    },
+    {
+      "src": "/peoples/ashaninka/ashaninka-man-kroehle.jpg",
+      "width": 375,
+      "height": 500,
+      "alt": "Retrato en sepia de un hombre asháninka que mira a la cámara. Lleva una vincha clara con dos plumas largas, el rostro pintado con líneas y un collar de cuentas cruzado sobre la cushma.",
+      "caption": "Retrato tomado por Charles Kroehle a fines del siglo XIX.",
+      "credit": {
+        "author": "Charles Kroehle",
+        "license": "Dominio público",
+        "url": "https://commons.wikimedia.org/wiki/File:An_Ash%C3%A1ninka_man,_photographed_by_Charles_Kroehle.jpg"
+      }
+    },
+    {
+      "src": "/peoples/ashaninka/palcazu-river-settlement-1888.jpg",
+      "width": 1600,
+      "height": 739,
+      "alt": "Fotografía antigua de una casa comunal asháninka de techo de palma a dos aguas, sostenida sobre horcones y rodeada de selva. Al fondo se distinguen otras construcciones y varias personas.",
+      "caption": "Asentamiento asháninka en el río Palcazú, hacia 1888.",
+      "credit": {
+        "author": "Charles Kroehle",
+        "license": "Dominio público",
+        "url": "https://commons.wikimedia.org/wiki/File:An_Ash%C3%A1ninka_settlement_along_the_Palcazu_River,_circa_1888.png"
+      }
+    }
+  ],
   "sources": [
     {
       "id": "bdpi-ashaninka",

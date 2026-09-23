@@ -4,6 +4,7 @@ import { FigureGrid } from "@/components/peoples/figure-grid";
 import { Footnotes } from "@/components/peoples/footnotes";
 import { PeopleHero } from "@/components/peoples/people-hero";
 import { PeopleSection } from "@/components/peoples/people-section";
+import { PhotoGallery } from "@/components/peoples/photo-gallery";
 import { Timeline } from "@/components/peoples/timeline";
 import { buildFootnotes } from "@/lib/peoples/footnotes";
 import { ashaninka } from "@/lib/peoples";
@@ -32,6 +33,7 @@ export default function AshaninkaPage() {
         />
       ))}
       <Timeline events={ashaninka.timeline} footnotes={footnotes} />
+      <PhotoGallery photos={ashaninka.photos} />
       <Footnotes footnotes={footnotes} updatedAt={ashaninka.updatedAt} />
     </main>
   );

@@ -41,12 +41,49 @@ function duplicates(ids: string[]): string[] {
   return [...repeated];
 }
 
+/**
+ * Alt values that name the medium instead of describing it. Matched against
+ * the whole normalised value, never as a substring: a real alt may open with
+ * «Fotografía antigua de …» and must survive.
+ */
+const GENERIC_ALTS = new Set([
+  "foto",
+  "fotografia",
+  "imagen",
+  "ilustracion",
+  "dibujo",
+  "image",
+  "photo",
+  "picture",
+]);
+
+function normalise(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{Letter}\s]/gu, "")
+    .trim()
+    .toLowerCase();
+}
+
 function photoProblems(photo: Photo, index: number): string[] {
   const where = `photos[${index}] (${photo.src})`;
   const problems: string[] = [];
 
   if (!photo.alt?.trim()) {
     problems.push(`${where}: alt vacío. Una imagen sin alt no es publicable.`);
+  } else if (GENERIC_ALTS.has(normalise(photo.alt))) {
+    problems.push(
+      `${where}: alt genérico («${photo.alt.trim()}»). Describe la imagen para quien no la ve.`,
+    );
+  }
+
+  for (const side of ["width", "height"] as const) {
+    if (!Number.isFinite(photo[side]) || photo[side] <= 0) {
+      problems.push(
+        `${where}: falta ${side}. Sin las dimensiones reales la galería salta al cargar.`,
+      );
+    }
   }
 
   for (const field of ["author", "license", "url"] as const) {
