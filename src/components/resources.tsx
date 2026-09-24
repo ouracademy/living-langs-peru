@@ -1,4 +1,4 @@
-import { BookMarked, Languages, Newspaper, Paperclip } from "lucide-react";
+import { BookMarked, Languages, Newspaper } from "lucide-react";
 import Link from "next/link";
 
 const resources = [
@@ -26,14 +26,14 @@ const resources = [
     cta: "Leer más",
     href: "#",
   },
-  {
-    icon: Paperclip,
-    color: "bg-[#241D14]",
-    title: "Otros sitios",
-    text: "Enlaces a aliados y archivos.",
-    cta: "Ver enlaces",
-    href: "#",
-  },
+  // {
+  //   icon: Paperclip,
+  //   color: "bg-[#241D14]",
+  //   title: "Otros sitios",
+  //   text: "Enlaces a aliados y archivos.",
+  //   cta: "Ver enlaces",
+  //   href: "#",
+  // },
 ];
 
 export default function Resources() {
@@ -49,7 +49,7 @@ export default function Resources() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2 md:grid-cols-3">
           {resources.map((resource) => {
             const Icon = resource.icon;
             return (
