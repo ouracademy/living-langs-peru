@@ -1,4 +1,4 @@
-import { BookMarked, Languages, Info, Paperclip } from "lucide-react";
+import { BookMarked, Languages, Newspaper, Paperclip } from "lucide-react";
 import Link from "next/link";
 
 const resources = [
@@ -19,10 +19,10 @@ const resources = [
     href: "#",
   },
   {
-    icon: Info,
+    icon: Newspaper,
     color: "bg-[#F2B705]",
-    title: "Info general",
-    text: "Historia y territorio de cada lengua.",
+    title: "Noticias",
+    text: "Actualidad y mucho más.",
     cta: "Leer más",
     href: "#",
   },
