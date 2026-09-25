@@ -1,4 +1,5 @@
 import { citationsInRenderOrder } from "./footnotes.ts";
+import { unknownRegions } from "./territory.ts";
 import type { People, Photo, SourceId } from "./types.ts";
 
 /**
@@ -162,6 +163,13 @@ export function validatePeople(people: People): string[] {
         `figures.${id}: falta la note que explica qué mide esta cifra del censo.`,
       );
     }
+  }
+
+  for (const region of unknownRegions(people.territory)) {
+    problems.push(
+      `territory.regions: «${region}» no corresponde a ningún departamento del mapa. ` +
+        `Sin un id que dibujar, la región desaparecería del SVG en silencio.`,
+    );
   }
 
   people.photos.forEach((photo, index) => {

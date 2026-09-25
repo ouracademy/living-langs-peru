@@ -259,3 +259,115 @@ test.describe("photo gallery", () => {
     expect(failed).toEqual([]);
   });
 });
+
+test.describe("territory", () => {
+  test("the territory section is visible and keeps a stable anchor", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka#territorio");
+
+    const territory = page.getByRole("region", { name: "Territorio" });
+
+    await expect(territory).toBeVisible();
+    await expect(territory).toHaveAttribute("id", "territorio");
+    await expect(
+      territory.getByText(/estación seca|abril a octubre/),
+    ).toBeVisible();
+  });
+
+  // AC-M2-13: the map is one image with a name that lists what it highlights.
+  test("the map names the six highlighted regions to a screen reader", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const map = page.getByRole("img", { name: /Mapa del Perú/ });
+
+    await expect(map).toBeVisible();
+
+    const title = await map.locator("title").textContent();
+
+    expect(title).toContain("6 regiones");
+    for (const region of [
+      "Ayacucho",
+      "Cusco",
+      "Huánuco",
+      "Junín",
+      "Pasco",
+      "Ucayali",
+    ]) {
+      expect(title).toContain(region);
+    }
+  });
+
+  test("exactly six departments are painted as highlighted", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const map = page.getByRole("img", { name: /Mapa del Perú/ });
+
+    // Every department is drawn; only the six carry the highlight colour.
+    expect(await map.locator("path").count()).toBe(26);
+    expect(await map.locator('path[fill="#E4572E"]').count()).toBe(6);
+
+    for (const id of [
+      "junin",
+      "ucayali",
+      "pasco",
+      "cusco",
+      "huanuco",
+      "ayacucho",
+    ]) {
+      await expect(map.locator(`path#${id}`)).toHaveAttribute(
+        "fill",
+        "#E4572E",
+      );
+    }
+  });
+
+  // AC-M2-14: greyscale, colour blindness, or no image at all — the same
+  // information has to be readable as text.
+  test("the regions and rivers are also available as text", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const territory = page.getByRole("region", { name: "Territorio" });
+
+    for (const region of [
+      "Ayacucho",
+      "Cusco",
+      "Huánuco",
+      "Junín",
+      "Pasco",
+      "Ucayali",
+    ]) {
+      await expect(
+        territory.getByRole("listitem").filter({ hasText: region }).first(),
+      ).toBeVisible();
+    }
+
+    for (const river of ["Pichis", "Perené", "Ene", "Tambo", "Ucayali"]) {
+      await expect(
+        territory.getByRole("listitem").filter({ hasText: river }).first(),
+      ).toBeVisible();
+    }
+  });
+
+  test("the map credits the cartography it was built from", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    await page.locator("sup#cita-territorio a").last().click();
+
+    const note = page.locator("li").filter({ hasText: /Natural Earth/ });
+
+    await expect(note).toBeVisible();
+    await expect(note.getByRole("link").first()).toHaveAttribute(
+      "href",
+      /naturalearthdata\.com/,
+    );
+  });
+});

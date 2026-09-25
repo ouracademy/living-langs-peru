@@ -163,6 +163,16 @@ describe("validatePeople", () => {
     );
   });
 
+  // AC-M1-12: a region the map cannot draw would vanish from the SVG without
+  // a word. The data is wrong, so the check fails instead.
+  it("rejects a region that the map has no department for", () => {
+    const people = broken((copy) => {
+      copy.territory.regions = [...copy.territory.regions, "Atlántida"];
+    });
+
+    expect(problemsOf(people)).toMatch(/Atlántida/);
+  });
+
   it("reports every problem, not just the first", () => {
     const people = broken((copy) => {
       copy.sections[0].paragraphs[0].sourceIds = [];

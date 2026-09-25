@@ -75,6 +75,24 @@
           "sourceIds": ["bdpi-ashaninka"]
         }
       ]
+    },
+    {
+      "id": "territorio",
+      "title": "Territorio",
+      "paragraphs": [
+        {
+          "text": "El territorio asháninka ocupa la selva central del Perú y se extiende por seis regiones: Junín, Ucayali, Pasco, Cusco, Huánuco y Ayacucho. No sigue los límites de los departamentos, sino el curso de los ríos: las comunidades se asientan en las riberas y el río es a la vez camino, despensa y frontera.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "Los cinco ríos principales son el Pichis, el Perené, el Ene, el Tambo y el Ucayali. Alrededor de ellos se organizan nueve cuencas —Anacayali, Apurímac, Ene, Pachitea, Perené, Pichis, Sheshea, Tambo y Urubamba—, que son la unidad con la que el propio pueblo describe dónde vive.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "El año se divide en dos estaciones que ordenan la vida y el trabajo. La seca va de abril a octubre y deja los ríos bajos y los caminos transitables; la lluviosa, de diciembre a marzo, crece los cauces y aísla comunidades enteras durante semanas.",
+          "sourceIds": ["bdpi-ashaninka"]
+        }
+      ]
     }
   ],
   "timeline": [
@@ -128,7 +146,7 @@
       "Tambo",
       "Urubamba"
     ],
-    "sourceIds": ["bdpi-ashaninka"]
+    "sourceIds": ["bdpi-ashaninka", "natural-earth-admin1"]
   },
   "photos": [
     {
@@ -208,7 +226,16 @@
       "url": "https://www.ethnologue.com/language/cni/",
       "retrievedAt": "2026-09-11",
       "note": "Consultado como referencia. El sitio bloquea el acceso automatizado, así que el dato se versiona en este repositorio con su fecha."
+    },
+    {
+      "id": "natural-earth-admin1",
+      "title": "Natural Earth — 1:10m Admin 1 States, Provinces",
+      "publisher": "Natural Earth",
+      "url": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/",
+      "retrievedAt": "2026-09-25",
+      "license": "Dominio público",
+      "note": "Cartografía base del mapa, reproyectada y simplificada para este sitio."
     }
   ],
-  "updatedAt": "2026-09-17"
+  "updatedAt": "2026-09-25"
 }

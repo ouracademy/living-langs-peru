@@ -22,7 +22,7 @@ export function Timeline({ events, footnotes }: TimelineProps) {
     <section
       id="linea-de-tiempo"
       aria-labelledby="linea-de-tiempo-title"
-      className="scroll-mt-24 bg-white"
+      className="scroll-mt-24 bg-[#FFF7E8]"
     >
       <div className="mx-auto max-w-[1180px] px-8 py-16">
         <h2

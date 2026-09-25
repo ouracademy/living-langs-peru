@@ -6,20 +6,31 @@ import type { PeopleSection as Section } from "@/lib/peoples";
 type PeopleSectionProps = {
   section: Section;
   footnotes: Footnote[];
+  /** Which band of the page this section sits in. */
+  tone: "cream" | "white";
+  /** Rendered after the prose — the territory map, for instance. */
+  children?: React.ReactNode;
 };
+
+const BACKGROUND = { cream: "bg-[#FFF7E8]", white: "bg-white" } as const;
 
 /**
  * One run of prose about the people. The section id doubles as its URL anchor,
  * so it is in Spanish («historia») and must stay stable once published.
  */
-export function PeopleSection({ section, footnotes }: PeopleSectionProps) {
+export function PeopleSection({
+  section,
+  footnotes,
+  tone,
+  children,
+}: PeopleSectionProps) {
   const titleId = `${section.id}-title`;
 
   return (
     <section
       id={section.id}
       aria-labelledby={titleId}
-      className="scroll-mt-24 bg-[#FFF7E8]"
+      className={`scroll-mt-24 ${BACKGROUND[tone]}`}
     >
       <div className="mx-auto max-w-[1180px] px-8 py-16">
         <h2 id={titleId} className="text-3xl font-bold text-[#241D14]">
@@ -41,6 +52,7 @@ export function PeopleSection({ section, footnotes }: PeopleSectionProps) {
             </p>
           ))}
         </div>
+        {children}
       </div>
     </section>
   );

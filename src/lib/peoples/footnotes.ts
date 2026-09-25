@@ -33,7 +33,9 @@ export type Citation = {
  */
 export function citationsInRenderOrder(people: People): Citation[] {
   return [
+    // The hero, in the order it renders: the summary, then the language card.
     { anchor: citationId("resumen"), sourceIds: people.summary.sourceIds },
+    { anchor: citationId("lengua"), sourceIds: people.language.sourceIds },
     ...people.figures.map((figure) => ({
       anchor: citationId("cifra", figure.id),
       sourceIds: [figure.sourceId],
@@ -44,12 +46,13 @@ export function citationsInRenderOrder(people: People): Citation[] {
         sourceIds: paragraph.sourceIds,
       })),
     ),
+    // The map's own attribution. It renders inside the territory section, so
+    // it is cited with the sections and before the timeline.
+    { anchor: citationId("territorio"), sourceIds: people.territory.sourceIds },
     ...people.timeline.map((event) => ({
       anchor: citationId("suceso", event.id),
       sourceIds: event.sourceIds,
     })),
-    { anchor: citationId("territorio"), sourceIds: people.territory.sourceIds },
-    { anchor: citationId("lengua"), sourceIds: people.language.sourceIds },
   ];
 }
 
