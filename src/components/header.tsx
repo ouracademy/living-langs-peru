@@ -22,14 +22,17 @@ const menuItems = [
 
 export function HeaderPlataform() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith ("/#")) {      
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (href.startsWith("/#")) {
       const targetId = href.replace("/#", "");
       const element = document.getElementById(targetId);
       if (element) {
         e.preventDefault(); // Evita que el navegador ponga el '#' en la URL
         element.scrollIntoView({ behavior: "smooth" });
-        
+
         // Opcional: Limpia la URL visualmente a "/" sin recargar la página
         window.history.pushState({}, "", "/");
       }
@@ -50,8 +53,11 @@ export function HeaderPlataform() {
               strokeWidth="2"
               fill="none"
             />
-          </svg>          
-          <Link href="/" className="text-xl font-bold no-underline font-['Baloo_2',sans-serif]">
+          </svg>
+          <Link
+            href="/"
+            className="font-['Baloo_2',sans-serif] text-xl font-bold no-underline"
+          >
             Lenguas Peruanas
           </Link>
         </div>
@@ -105,8 +111,8 @@ export function HeaderPlataform() {
                       href={item.href}
                       onClick={(e) => {
                         setIsOpen(false);
-                        handleScroll(e, item.href)
-                      }} 
+                        handleScroll(e, item.href);
+                      }}
                       className="font-semibold"
                     >
                       {item.label}

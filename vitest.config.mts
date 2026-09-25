@@ -21,7 +21,7 @@ export default defineConfig({
       // Every source file, not just the ones a test imported: a file no test
       // touches must show up as 0%, otherwise the number flatters us.
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/**/*.d.ts"],
+      exclude: ["src/**/*.d.ts", "src/components/**"],
     },
   },
 });

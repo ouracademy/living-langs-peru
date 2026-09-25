@@ -17,7 +17,7 @@ const testimonials = [
 
 export default function Stories() {
   return (
-    <section id="stories" className="bg-[#FBEFD2] py-20 scroll-mt-20">
+    <section id="stories" className="scroll-mt-20 bg-[#FBEFD2] py-20">
       <div className="mx-auto max-w-[1180px] px-8">
         <div className="mx-auto mb-11 max-w-[56ch] text-center">
           <span className="mb-3.5 inline-block rounded-full bg-[#6A3E8C] px-4 py-1.5 text-sm font-bold text-white">

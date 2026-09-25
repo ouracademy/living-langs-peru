@@ -23,7 +23,7 @@
     "peoples:check": "node --experimental-strip-types scripts/validate-peoples.ts",
     "check:floor": "node --experimental-strip-types scripts/check-floor.ts",
     "check:language": "node --experimental-strip-types scripts/check-language-policy.ts",
-    "check:coverage": "node --experimental-strip-types scripts/check-changed-coverage.ts --min 80 --warn",
+    "check:coverage": "node --experimental-strip-types scripts/check-changed-coverage.ts --min 80",
     "check:secrets": "scripts/check-secrets.sh",
     "check:deps": "scripts/check-deps.sh",
     "check:fast": "pnpm typecheck && pnpm lint && pnpm check:floor && pnpm check:language",
