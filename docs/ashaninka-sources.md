@@ -1,8 +1,8 @@
 # Fuentes de la página del pueblo Asháninka — investigación y licencias
 
 > Tareas T0.1 y T0.2 · Fecha: 2026-09-16 · Spec: [specs/ashaninka.md](../specs/ashaninka.md) §4
-> Estado: **decidido para el texto y para las imágenes** (imágenes verificadas el 2026-09-23, T5.1 y
-> T5.3). La cartografía del mapa (T4.1) sigue pendiente y tiene su sección más abajo.
+> Estado: **decidido para el texto, las imágenes y la cartografía** (imágenes el 2026-09-23, mapa el
+> 2026-09-25). No queda ninguna verificación de licencia pendiente.
 
 **Esto no es asesoría legal.** Es el registro de lo que dicen las fuentes y de lo que no se pudo
 comprobar. Las decisiones las toma una persona.
@@ -117,19 +117,57 @@ las oraciones de ejemplo y las grabaciones.
 
 ---
 
-## 6. Pendiente: cartografía del mapa (T4.1, hito H2)
+## 6. Cartografía del mapa: resuelta (T4.1, hito H2)
 
-El SVG de las seis regiones necesita contornos de los departamentos del Perú con licencia libre.
-**Sin verificar todavía.** Candidatas, por orden de limpieza legal:
+> **Verificado el 2026-09-25. Veredicto: `usable`.** Se eligió Natural Earth, que era la primera
+> opción por limpieza legal en el spec §4.3.
 
-| Candidata                                                  | Licencia esperada          | A comprobar                                           |
-| ---------------------------------------------------------- | -------------------------- | ----------------------------------------------------- |
-| [Natural Earth](https://www.naturalearthdata.com/) admin-1 | Dominio público            | La opción más limpia; requiere convertir a SVG.       |
-| Mapas SVG de divisiones del Perú en Wikimedia Commons      | CC BY-SA / dominio público | Autor y licencia en la página del archivo, uno a uno. |
-| Shapefiles del INEI / datos abiertos del Estado            | Datos abiertos             | Confirmar términos de uso; requiere conversión.       |
+| Fuente                                                                                                                                           | Licencia            | Autor         | Veredicto |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- | ------------- | --------- |
+| [Natural Earth — 1:10m Admin 1 States, Provinces](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/) | **Dominio público** | Natural Earth | `usable`  |
 
-**Si ninguna califica, el mapa no se hace** y el territorio queda en texto. Está previsto en el spec
-§4.3; no es una regresión.
+Natural Earth renuncia expresamente a todo derecho sobre sus datos: «no permission is needed to use
+Natural Earth. Crediting the authors is unnecessary.» Aun así **se cita**, porque la página cita todo
+lo que usa: entra en `sources` con el id `natural-earth-admin1` y aparece como una nota al pie más,
+igual que la BDPI (spec §4.3).
+
+### 6.1 Por qué no se usó un SVG de Wikimedia Commons
+
+Los candidatos de Commons tienen licencia libre y servían legalmente:
+
+| Archivo                                   | Licencia     | Por qué se descartó                                       |
+| ----------------------------------------- | ------------ | --------------------------------------------------------- |
+| `Peru - (Template).svg` (Huhsunqu)        | CC BY-SA 3.0 | 452 `<path>` sin `id` por departamento.                   |
+| `Departamentos del Perú.svg` (Alexis Eco) | CC BY-SA 4.0 | 264 `<path>`; los únicos `id` son `Mapa`, `Capital`, etc. |
+
+El problema no es la licencia, es el dato: ninguno identifica qué path es qué departamento. Asignar
+26 nombres a 264 formas anónimas sería adivinar, y un error ahí pinta la región equivocada sin que
+ningún test lo note. Natural Earth trae el nombre y el código ISO en cada geometría, así que los
+`id` se derivan del dato en vez de escribirse a mano.
+
+### 6.2 Cómo se generó, para poder rehacerlo
+
+El resultado vive en `src/lib/peoples/peru-departments.ts` — data, no imagen — y el componente lo
+dibuja. La receta:
+
+1. Descargar `ne_10m_admin_1_states_provinces.geojson` del repositorio
+   [nvkelso/natural-earth-vector](https://github.com/nvkelso/natural-earth-vector).
+2. Filtrar `properties.adm0_a3 === "PER"` → 26 divisiones (24 departamentos, la Provincia de Lima y
+   el Callao).
+3. Reproyectar a Web Mercator y encajar todo en un `viewBox` común de `800 × 1178`, para que las 26
+   piezas formen un solo país.
+4. Simplificar cada anillo con Douglas-Peucker a **0,4 px** de tolerancia y descartar los anillos de
+   menos de **1,5 px²**, que a este tamaño son ruido.
+5. Redondear a un decimal y emitir `{ id, name, d }`, con el `id` normalizado desde el nombre
+   (`Junín` → `junin`).
+
+Cuesta **42 KB** de path data inline, unos 10 KB ya comprimidos. Es el precio de no cargar una
+librería de mapas ni un GeoJSON en runtime (spec, decisión #9).
+
+> **Ojo con el anillo cerrado.** Un anillo de GeoJSON empieza y termina en el mismo punto. Una pasada
+> de Douglas-Peucker sobre él mide todas las distancias contra un segmento de longitud cero y colapsa
+> el departamento a dos puntos. Hay que partirlo por el vértice más lejano al inicio y simplificar
+> cada mitad como una cadena abierta. El primer intento salió con 26 departamentos vacíos por esto.
 
 ---
 

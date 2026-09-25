@@ -1,14 +1,11 @@
 # TODO — Página del pueblo Asháninka
 
 > Plan y razonamiento: [tasks/ashaninka/plan.md](./plan.md) · Spec: [specs/ashaninka.md](../../specs/ashaninka.md)
-> Estado: **F0–F3 y F5 terminadas** (F5 el 2026-09-23). **F4 sigue pendiente** y es lo único que
-> queda antes de F6: está bloqueada por la puerta humana H2 (cartografía con licencia libre).
+> Estado: **F0–F5 terminadas** (F4 el 2026-09-25). Siguiente: **F6** — vida cotidiana, enlaces y
+> contenido completo. No queda ninguna puerta humana de licencias abierta: H2 y H3 están cerradas.
 >
-> F5 se hizo fuera de orden, a pedido. No arrastró nada: la galería no toca el territorio ni el mapa,
-> y el plan ya preveía que el fallo de una no bloquea a la otra.
->
-> **Pendiente en F3 y F5:** los E2E de historia y de galería están escritos y verificados contra el
-> HTML del build, pero **no se han corrido en un navegador**. Falta Chromium en la máquina:
+> **Pendiente en F3, F4 y F5:** los E2E están escritos y verificados contra el HTML del build, pero
+> **no se han corrido en un navegador**. Falta Chromium en la máquina:
 > `sudo apt-get install -y libnspr4 libnss3 libasound2t64` y después `pnpm test:e2e`.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
@@ -78,19 +75,20 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F4 — Territorio y mapa
 
-- [ ] **T4.1** **Puerta humana H2.** Verificar cartografía de departamentos del Perú con licencia libre (spec §4.3) y registrarla con autor y URL `[AC-M4-6]`
-- [ ] **T4.2** Contenido de `territorio` + `territory` en el JSON: 6 regiones, 5 ríos, cuencas, estación seca (abr-oct) y lluviosa (dic-mar) `[AC-M4-2]`
-- [ ] **T4.3** `lib/peoples/territory.ts`: `highlightedRegionIds` normalizando («Junín» → `junin`). **Tests primero**, incluida la región que el SVG no tiene `[AC-M1-11, AC-M1-12]`
-- [ ] **T4.4** Regla en `validate-peoples.ts`: toda región del JSON existe como `id` del SVG `[AC-M1-12]`
-- [ ] **T4.5** `territory-map.tsx`: SVG **inline**, `role="img"`, `<title>` que nombra las seis regiones, `<path>` decorativos con `aria-hidden`, regiones en `#E4572E` `[AC-M2-13]`
-- [ ] **T4.6** **La lista de regiones y ríos en texto, debajo del mapa.** No es opcional `[AC-M2-14]`
-- [ ] **T4.7** E2E: seis regiones resaltadas · `<title>` que las nombra · la misma información como texto `[AC-M2-13, AC-M2-14]`
+- [x] **T4.1** **Puerta humana H2.** Verificar cartografía de departamentos del Perú con licencia libre (spec §4.3) y registrarla con autor y URL `[AC-M4-6]`
+- [x] **T4.2** Contenido de `territorio` + `territory` en el JSON: 6 regiones, 5 ríos, cuencas, estación seca (abr-oct) y lluviosa (dic-mar) `[AC-M4-2]`
+- [x] **T4.3** `lib/peoples/territory.ts`: `highlightedRegionIds` normalizando («Junín» → `junin`). **Tests primero**, incluida la región que el SVG no tiene `[AC-M1-11, AC-M1-12]`
+- [x] **T4.4** Regla en `validate-peoples.ts`: toda región del JSON existe como `id` del SVG `[AC-M1-12]`
+- [x] **T4.5** `territory-map.tsx`: SVG **inline**, `role="img"`, `<title>` que nombra las seis regiones, `<path>` decorativos con `aria-hidden`, regiones en `#E4572E` `[AC-M2-13]`
+- [x] **T4.6** **La lista de regiones y ríos en texto, debajo del mapa.** No es opcional `[AC-M2-14]`
+- [x] **T4.7** E2E: seis regiones resaltadas · `<title>` que las nombra · la misma información como texto `[AC-M2-13, AC-M2-14]`
 
-> **⛔ Checkpoint 3** — abrir la página en escala de grises. Si el mapa deja de comunicar, la lista de
-> texto de T4.6 tiene que bastar por sí sola. Ese es el criterio, no el mapa bonito.
+> **⛔ Checkpoint 3 — pasado** (2026-09-25). Se rasterizó el SVG del build en escala de grises: las
+> seis regiones quedan en gris oscuro sobre gris claro y se distinguen sin color. La lista de texto
+> de T4.6 está igual, que es lo que de verdad sostiene el criterio.
 
-> **Si H2 falla:** T4.5 no se hace, F4 entrega el territorio en texto y el mapa queda para después.
-> Está previsto en el spec §4.3 — no es una regresión ni una excepción que haya que justificar.
+> **H2 no falló:** se eligió Natural Earth (dominio público), así que T4.5 se hizo y el mapa está
+> dentro. El detalle y la receta para regenerarlo están en `docs/ashaninka-sources.md` §6.
 
 ---
 
@@ -145,13 +143,13 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## Hitos humanos
 
-| id  | Qué                                              | Bloquea                               |
-| --- | ------------------------------------------------ | ------------------------------------- |
-| H1  | Revisar el esquema `People` (checkpoint 1)       | F3 en adelante                        |
-| H2  | Aprobar la cartografía con licencia libre (T4.1) | T4.5, no el resto de F4               |
-| H3  | Aprobar la licencia de cada foto (T5.1)          | F5, no el resto de la página          |
-| H4  | Verificación factual contra la BDPI (T6.3)       | El cierre (T7.6)                      |
-| H5  | Consulta a las organizaciones asháninka          | **Nada.** Corre en paralelo (dec #11) |
+| id  | Qué                                              | Bloquea                               | Estado                                                                                            |
+| --- | ------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| H1  | Revisar el esquema `People` (checkpoint 1)       | F3 en adelante                        | ⚠️ **nunca se registró.** El contenido se escribió sin él y el esquema aguantó F3-F5 sin cambios. |
+| H2  | Aprobar la cartografía con licencia libre (T4.1) | T4.5, no el resto de F4               | ✅ cerrada 2026-09-25 — Natural Earth, dominio público.                                           |
+| H3  | Aprobar la licencia de cada foto (T5.1)          | F5, no el resto de la página          | ✅ cerrada 2026-09-23 — cinco fotos, una excluida por decisión editorial.                         |
+| H4  | Verificación factual contra la BDPI (T6.3)       | El cierre (T7.6)                      | ⏳ pendiente, en F6.                                                                              |
+| H5  | Consulta a las organizaciones asháninka          | **Nada.** Corre en paralelo (dec #11) | ⏳ pendiente, no bloquea.                                                                         |
 
 ---
 
