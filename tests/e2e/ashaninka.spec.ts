@@ -248,6 +248,8 @@ test.describe("photo gallery", () => {
     const images = page.getByRole("region", { name: "Galería" }).locator("img");
 
     for (const image of await images.all()) {
+      await image.scrollIntoViewIfNeeded();
+
       await expect(image).toHaveJSProperty("complete", true);
       const natural = await image.evaluate(
         (node: HTMLImageElement) => node.naturalWidth,
