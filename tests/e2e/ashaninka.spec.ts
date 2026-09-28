@@ -373,3 +373,59 @@ test.describe("territory", () => {
     );
   });
 });
+
+test.describe("daily life", () => {
+  test("the section is visible, anchored and cites every paragraph", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka#vida");
+
+    const life = page.getByRole("region", { name: "Vida cotidiana" });
+
+    await expect(life).toBeVisible();
+    await expect(life).toHaveAttribute("id", "vida");
+    expect(await page.locator("sup[id^='cita-parrafo-vida-'] a").count()).toBe(
+      6,
+    );
+  });
+
+  // Spec §4.2 and AC-M2-10: a screen reader switches pronunciation on `lang`.
+  test("sets the asháninka terms apart with their language", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const terms = await page
+      .locator("section#vida i[lang='cni']")
+      .allTextContents();
+
+    expect(new Set(terms)).toEqual(
+      new Set(["káapa", "intómoe", "kobintaantsi", "pinkathari", "sheripiari"]),
+    );
+  });
+});
+
+test.describe("related links", () => {
+  // AC-M2-9
+  test("leads from the page to the dictionary", async ({ page }) => {
+    await page.goto("/ashaninka");
+
+    await page.getByRole("link", { name: /Diccionario asháninka/ }).click();
+
+    await expect(page).toHaveURL(/\/diccionario\/ashaninka$/);
+  });
+
+  test("opens outside sources in a new tab without leaking the opener", async ({
+    page,
+  }) => {
+    await page.goto("/ashaninka");
+
+    const links = page.getByRole("region", { name: "Para seguir explorando" });
+    const external = links.locator("a[target='_blank']");
+
+    expect(await external.count()).toBeGreaterThanOrEqual(2);
+    for (const link of await external.all()) {
+      await expect(link).toHaveAttribute("rel", /noopener/);
+    }
+  });
+});

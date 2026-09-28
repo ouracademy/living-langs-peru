@@ -91,6 +91,39 @@
           "sourceIds": ["bdpi-ashaninka"]
         }
       ]
+    },
+    {
+      "id": "vida",
+      "title": "Vida cotidiana",
+      "paragraphs": [
+        {
+          "text": "Antiguamente, las familias asháninka vivían en grupos pequeños y dispersos, separados por kilómetros, y tenían dos tipos de casa: la káapa, la casa masculina o de huéspedes, y la intómoe, la casa femenina, donde vivía la familia nuclear, se cocinaba y se dormía. Esta distinción tendría una base social y ritual. Al vivir tan separados, la visita era una de las prácticas más comunes: al llegar un visitante, lo primero era ofrecerle masato e invitarlo a descansar, una costumbre que se mantiene hasta hoy.",
+          "sourceIds": ["bdpi-ashaninka"],
+          "terms": ["káapa", "intómoe"]
+        },
+        {
+          "text": "Hoy el patrón de asentamiento cambió: de parentelas de entre 30 y 50 personas se pasó a aldeas o localidades de entre 200 y 300 habitantes, que se ubican en torno a los servicios públicos de salud y educación. Aun así, la mayoría de las familias abre sus chacras dentro del bosque, junto a quebradas y ríos, y allí construye casas donde pasa varios días lejos de los centros comunales.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "Los Asháninka viven sobre todo de lo que cultivan, además de la caza y la pesca. Practican la agricultura de roza y quema: abren un claro en la vegetación, lo cultivan hasta agotar la parcela y luego abren otro. El cultivo principal es la yuca, de la que en la selva hay al menos treinta variedades y que puede cosecharse durante todo el año. También crecen el maíz, el plátano, el maní, los frijoles, tubérculos nativos y frutas; desde las últimas décadas del siglo XX se sumaron el café y el cacao, que dan ingresos.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "La caza, llamada kobintaantsi, es una de las prácticas que forman la identidad masculina: ser buen cazador da prestigio, y la carne de monte es de los alimentos más valorados en las localidades. Los hombres se internan en el bosque solos o en grupo durante varios días. Se considera que los animales tienen «madres» o «padres» con quienes hay que relacionarse con respeto, y de ahí reglas como no cazar en exceso una misma presa ni hacerla sufrir inútilmente.",
+          "sourceIds": ["bdpi-ashaninka"],
+          "terms": ["kobintaantsi"]
+        },
+        {
+          "text": "La pesca depende de las estaciones: hay una pesca de río grande, cuando el río está en vaciante, y otra de quebradas, cuando está en creciente. La practican sobre todo los hombres, con la atarraya, una red circular que se arroja al río. También existe una pesca comunal: las familias forman una pequeña represa y esparcen barbasco, un veneno que atonta a los peces, que luego mujeres y niños recogen en canastos. Es un momento de convivencia en el que los niños aprenden las funciones que les tocarán al crecer.",
+          "sourceIds": ["bdpi-ashaninka"]
+        },
+        {
+          "text": "Tradicionalmente el liderazgo recaía en figuras masculinas. El pinkathari era el jefe de un clan familiar o de un asentamiento: cuidaba el territorio y resolvía los conflictos dentro del grupo, y su poder se basaba en el prestigio de hombre sabio y conocedor del bosque, buen cazador, valiente en tiempos de guerra y capaz de persuadir. El grupo lo elegía, aunque el cargo también podía ser hereditario. El sheripiari, en cambio, no era elegido por el grupo sino por los espíritus, que decidían quién ocupaba el lugar de chamán. Según la creencia ancestral, conversa con los seres que habitan el bosque, las montañas y los ríos, cura enfermedades y mantiene el equilibrio entre los poderes malignos y el bienestar de los Asháninka.",
+          "sourceIds": ["bdpi-ashaninka"],
+          "terms": ["pinkathari", "sheripiari"]
+        }
+      ]
     }
   ],
   "timeline": [

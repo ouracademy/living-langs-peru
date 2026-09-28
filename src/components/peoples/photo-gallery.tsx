@@ -20,7 +20,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
     <section
       id="galeria"
       aria-labelledby="galeria-title"
-      className="scroll-mt-24 bg-white"
+      className="scroll-mt-24 bg-[#FFF7E8]"
     >
       <div className="mx-auto max-w-[1180px] px-8 py-16">
         <h2 id="galeria-title" className="text-3xl font-bold text-[#241D14]">
