@@ -173,6 +173,43 @@ describe("validatePeople", () => {
     expect(problemsOf(people)).toMatch(/Atlántida/);
   });
 
+  // A term declared for the page must exist in the paragraph that declares it,
+  // or the markup silently does nothing and the typo survives.
+  it("rejects a declared term that the paragraph does not contain", () => {
+    const people = broken((copy) => {
+      copy.sections[0].paragraphs[0].terms = ["pinkathari"];
+    });
+
+    expect(problemsOf(people)).toMatch(/pinkathari.*no aparece/);
+  });
+
+  // Once a word is marked anywhere it has to be marked everywhere, or the same
+  // term is styled as Asháninka in one paragraph and as Spanish in the next.
+  it("rejects a term that appears unmarked in another paragraph", () => {
+    const people = broken((copy) => {
+      const [first, second] = copy.sections[0].paragraphs;
+
+      first.text += " Lo dirigía un pinkathari.";
+      first.terms = ["pinkathari"];
+      second.text += " El pinkathari decidía.";
+    });
+
+    expect(problemsOf(people)).toMatch(
+      /paragraphs\[1\].*pinkathari.*sin marcar/,
+    );
+  });
+
+  it("accepts a term that is declared wherever it appears", () => {
+    const people = broken((copy) => {
+      for (const paragraph of copy.sections[0].paragraphs.slice(0, 2)) {
+        paragraph.text += " Lo dirigía un pinkathari.";
+        paragraph.terms = ["pinkathari"];
+      }
+    });
+
+    expect(validatePeople(people)).toEqual([]);
+  });
+
   it("reports every problem, not just the first", () => {
     const people = broken((copy) => {
       copy.sections[0].paragraphs[0].sourceIds = [];

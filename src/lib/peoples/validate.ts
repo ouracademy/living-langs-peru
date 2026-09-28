@@ -1,6 +1,7 @@
 import { citationsInRenderOrder } from "./footnotes.ts";
 import { unknownRegions } from "./territory.ts";
-import type { People, Photo, SourceId } from "./types.ts";
+import { containsTerm } from "./terms.ts";
+import type { Paragraph, People, Photo, SourceId } from "./types.ts";
 
 /**
  * The three 2017 census counts measure different things — people living in
@@ -98,6 +99,66 @@ function photoProblems(photo: Photo, index: number): string[] {
   return problems;
 }
 
+/** Every run of prose on the page, with where it lives for the error message. */
+function paragraphsOf(
+  people: People,
+): { where: string; paragraph: Paragraph }[] {
+  return [
+    { where: "summary", paragraph: people.summary },
+    ...people.sections.flatMap((section) =>
+      section.paragraphs.map((paragraph, index) => ({
+        where: `sections.${section.id}.paragraphs[${index}]`,
+        paragraph,
+      })),
+    ),
+  ];
+}
+
+/**
+ * A term is a promise about the text. It has to be in the paragraph that
+ * declares it, and once a word is marked anywhere it has to be marked
+ * everywhere — otherwise the same word is styled as Asháninka in one place
+ * and as Spanish in the next, and nothing says which one is right.
+ */
+function termProblems(people: People): string[] {
+  const paragraphs = paragraphsOf(people);
+  const known = new Map<string, string>();
+
+  for (const { paragraph } of paragraphs) {
+    for (const term of paragraph.terms ?? []) {
+      known.set(term.normalize("NFC").toLowerCase(), term);
+    }
+  }
+
+  const problems: string[] = [];
+
+  for (const { where, paragraph } of paragraphs) {
+    const own = new Set(
+      (paragraph.terms ?? []).map((term) =>
+        term.normalize("NFC").toLowerCase(),
+      ),
+    );
+
+    for (const term of paragraph.terms ?? []) {
+      if (!containsTerm(paragraph.text, term)) {
+        problems.push(
+          `${where}: el término «${term}» está en terms pero no aparece en el texto.`,
+        );
+      }
+    }
+
+    for (const [key, term] of known) {
+      if (!own.has(key) && containsTerm(paragraph.text, term)) {
+        problems.push(
+          `${where}: «${term}» aparece sin marcar. Añádelo a terms para que se muestre con lang="cni".`,
+        );
+      }
+    }
+  }
+
+  return problems;
+}
+
 /**
  * Every rule the content must satisfy, checked all at once: the caller gets
  * the whole list of problems rather than only the first one.
@@ -171,6 +232,8 @@ export function validatePeople(people: People): string[] {
         `Sin un id que dibujar, la región desaparecería del SVG en silencio.`,
     );
   }
+
+  problems.push(...termProblems(people));
 
   people.photos.forEach((photo, index) => {
     problems.push(...photoProblems(photo, index));

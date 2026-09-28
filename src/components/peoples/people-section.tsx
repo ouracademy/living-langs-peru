@@ -1,4 +1,5 @@
 import { Citation } from "@/components/peoples/citation";
+import { ParagraphText } from "@/components/peoples/paragraph-text";
 import { citationId, citationsFor } from "@/lib/peoples/footnotes";
 import type { Footnote } from "@/lib/peoples/footnotes";
 import type { PeopleSection as Section } from "@/lib/peoples";
@@ -44,7 +45,7 @@ export function PeopleSection({
               key={citationId("parrafo", section.id, index)}
               className="text-lg leading-relaxed text-[#4A4130]"
             >
-              {paragraph.text}
+              <ParagraphText text={paragraph.text} terms={paragraph.terms} />
               <Citation
                 anchor={citationId("parrafo", section.id, index)}
                 numbers={citationsFor(footnotes, paragraph.sourceIds)}

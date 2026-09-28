@@ -1,4 +1,5 @@
 import { Citation } from "@/components/peoples/citation";
+import { ParagraphText } from "@/components/peoples/paragraph-text";
 import { citationId, citationsFor } from "@/lib/peoples/footnotes";
 import type { Footnote } from "@/lib/peoples/footnotes";
 import type { People } from "@/lib/peoples";
@@ -21,7 +22,10 @@ export function PeopleHero({ people, footnotes }: PeopleHeroProps) {
           {people.name}
         </h1>
         <p className="mt-5 max-w-[60ch] text-lg text-[#4A4130]">
-          {people.summary.text}
+          <ParagraphText
+            text={people.summary.text}
+            terms={people.summary.terms}
+          />
           <Citation
             anchor={citationId("resumen")}
             numbers={citationsFor(footnotes, people.summary.sourceIds)}

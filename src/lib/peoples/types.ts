@@ -40,6 +40,12 @@ export type Figure = {
 export type Paragraph = {
   text: string;
   sourceIds: SourceId[];
+  /**
+   * Asháninka words inside `text`, rendered as `<i lang="cni">`. Declared per
+   * paragraph so the markup comes from data; `peoples:check` fails on a term
+   * the text does not contain and on one left unmarked elsewhere.
+   */
+  terms?: string[];
 };
 
 export type PeopleSection = {
