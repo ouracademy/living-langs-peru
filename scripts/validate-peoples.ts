@@ -3,7 +3,9 @@ import { join } from "node:path";
 
 import { validatePeople } from "../src/lib/peoples/validate.ts";
 
-const DATA_DIR = join(process.cwd(), "src/data/peoples");
+// A folder can be passed as the first argument so the tests can point the
+// real command at deliberately broken data. Without one, it checks the site's.
+const DATA_DIR = process.argv[2] ?? join(process.cwd(), "src/data/peoples");
 
 function main(): void {
   const files = readdirSync(DATA_DIR).filter((name) => name.endsWith(".json"));
