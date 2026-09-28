@@ -19,7 +19,7 @@
       "unit": "people",
       "year": 2017,
       "sourceId": "bdpi-ashaninka",
-      "note": "Personas que viven en las 675 localidades del pueblo Asháninka, según los Censos Nacionales 2017."
+      "note": "Personas que viven en las 675 localidades del pueblo Asháninka, según los Censos Nacionales 2017. La BDPI da la cifra como aproximada."
     },
     {
       "id": "self-identified",
@@ -44,7 +44,6 @@
       "label": "Localidades",
       "value": 675,
       "unit": "localities",
-      "year": 2017,
       "sourceId": "bdpi-ashaninka"
     },
     {
@@ -52,7 +51,6 @@
       "label": "Comunidades nativas reconocidas",
       "value": 405,
       "unit": "communities",
-      "year": 2017,
       "sourceId": "bdpi-ashaninka",
       "note": "De las 675 localidades, las que cuentan con reconocimiento oficial como comunidad nativa."
     }
@@ -67,11 +65,11 @@
           "sourceIds": ["bdpi-ashaninka"]
         },
         {
-          "text": "El contacto con los españoles fue tardío. Los franciscanos iniciaron la evangelización en 1635 y los dominicos llegaron en 1646, pero el dominio colonial sobre el territorio asháninka nunca llegó a consolidarse.",
+          "text": "El contacto con los españoles fue tardío. Desde 1532 los encuentros fueron esporádicos, y recién hacia 1635 los franciscanos iniciaron la evangelización con la primera gran entrada al territorio asháninka; los dominicos llegaron en 1646. Tras la rebelión de Juan Santos Atahualpa, en el siglo XVIII, la selva central conservó su independencia hasta mediados del siglo XIX.",
           "sourceIds": ["bdpi-ashaninka"]
         },
         {
-          "text": "Durante los siglos XIX y XX, la llegada de colonos europeos y andinos desplazó a las comunidades de sus tierras. El auge del caucho y, más tarde, el conflicto armado interno marcaron los dos episodios más duros de su historia reciente.",
+          "text": "Durante el siglo XIX, población de origen europeo y andino obtuvo buena parte de las tierras de la provincia de Chanchamayo y empujó a muchas comunidades hacia las cuencas de los ríos Ene y Tambo. A fines de ese siglo y a inicios del XX, el auge del caucho trajo la captura de población asháninka en «correrías» y su trabajo forzado. Entre 1980 y 2000, el conflicto armado interno alcanzó a los Asháninka, que estuvieron entre los grupos indígenas más afectados por la violencia política.",
           "sourceIds": ["bdpi-ashaninka"]
         }
       ]
@@ -81,15 +79,15 @@
       "title": "Territorio",
       "paragraphs": [
         {
-          "text": "El territorio asháninka ocupa la selva central del Perú y se extiende por seis regiones: Junín, Ucayali, Pasco, Cusco, Huánuco y Ayacucho. No sigue los límites de los departamentos, sino el curso de los ríos: las comunidades se asientan en las riberas y el río es a la vez camino, despensa y frontera.",
+          "text": "El territorio asháninka se extiende por la zona alta del bosque tropical, en el oriente del Perú, y abarca seis regiones: Junín, Ucayali, Pasco, Cusco, Huánuco y Ayacucho. Es un paisaje de selva tropical con espacios de pajonal y una proporción menor de llanura, y en buena parte accidentado, con pendientes, arroyos y quebradas profundas.",
           "sourceIds": ["bdpi-ashaninka"]
         },
         {
-          "text": "Los cinco ríos principales son el Pichis, el Perené, el Ene, el Tambo y el Ucayali. Alrededor de ellos se organizan nueve cuencas —Anacayali, Apurímac, Ene, Pachitea, Perené, Pichis, Sheshea, Tambo y Urubamba—, que son la unidad con la que el propio pueblo describe dónde vive.",
+          "text": "Los cinco ríos principales de estas regiones son el Pichis, el Perené, el Ene, el Tambo y el Ucayali. La BDPI registra además la presencia tradicional del pueblo en nueve cuencas: Anacayali, Apurímac, Ene, Pachitea, Perené, Pichis, Sheshea, Tambo y Urubamba.",
           "sourceIds": ["bdpi-ashaninka"]
         },
         {
-          "text": "El año se divide en dos estaciones que ordenan la vida y el trabajo. La seca va de abril a octubre y deja los ríos bajos y los caminos transitables; la lluviosa, de diciembre a marzo, crece los cauces y aísla comunidades enteras durante semanas.",
+          "text": "El clima tiene dos estaciones definidas. La estación seca va de abril a octubre, con pocas lluvias y baja humedad; la estación lluviosa, de diciembre a marzo, se caracteriza por el crecimiento de los ríos, que pueden volverse peligrosos para la navegación.",
           "sourceIds": ["bdpi-ashaninka"]
         }
       ]
@@ -114,7 +112,7 @@
       "id": "juan-santos-atahualpa",
       "period": "1742–1755",
       "title": "La rebelión de Juan Santos Atahualpa",
-      "text": "Juan Santos Atahualpa, un mestizo andino educado por los jesuitas del Cusco, encabezó una rebelión etnopolítica cuyo fin era restaurar la libertad del pueblo. Expulsó a misioneros y colonos de la selva central durante más de una década.",
+      "text": "Se estima que Juan Santos Atahualpa fue un mestizo andino educado por los jesuitas del Cusco. Encabezó una rebelión etnopolítica cuyo fin era restaurar la libertad y el control de sus propias vidas; su magnitud obligó a misioneros y colonos a evacuar la zona.",
       "sourceIds": ["bdpi-ashaninka"]
     },
     {
@@ -237,5 +235,5 @@
       "note": "Cartografía base del mapa, reproyectada y simplificada para este sitio."
     }
   ],
-  "updatedAt": "2026-09-25"
+  "updatedAt": "2026-09-28"
 }
