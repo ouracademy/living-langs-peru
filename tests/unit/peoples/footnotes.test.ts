@@ -6,7 +6,50 @@ import {
   citationsFor,
 } from "@/lib/peoples/footnotes";
 
+import type { People, Source } from "@/lib/peoples/types";
+
 import { peopleFixture } from "./fixtures";
+
+function extraSource(id: string): Source {
+  return {
+    id,
+    title: `Obra ${id}`,
+    publisher: `Editorial ${id}`,
+    url: `https://example.org/${id}`,
+    retrievedAt: "2026-09-16",
+  };
+}
+
+/**
+ * The map is drawn inside the territory section, so its attribution sits in
+ * the middle of the page: after the history and territory prose, before the
+ * life section that follows.
+ */
+function withMapBetweenSections(): People {
+  const people = peopleFixture();
+
+  people.sources.push(extraSource("map"), extraSource("life"));
+  people.sections = [
+    {
+      id: "historia",
+      title: "Historia",
+      paragraphs: [{ text: "h", sourceIds: ["c"] }],
+    },
+    {
+      id: "territorio",
+      title: "Territorio",
+      paragraphs: [{ text: "t", sourceIds: ["a"] }],
+    },
+    {
+      id: "vida",
+      title: "Vida",
+      paragraphs: [{ text: "v", sourceIds: ["life"] }],
+    },
+  ];
+  people.territory.sourceIds = ["map"];
+
+  return people;
+}
 
 describe("buildFootnotes", () => {
   it("numbers sources in the order they are rendered, not declared", () => {
@@ -20,6 +63,30 @@ describe("buildFootnotes", () => {
       "d",
     ]);
     expect(footnotes.map((footnote) => footnote.number)).toEqual([1, 2, 3, 4]);
+  });
+
+  // The number a reader meets first on the page must be the smallest. The map
+  // renders inside the territory section, so its source comes before the
+  // sections that follow that one — not after all of them.
+  it("numbers the map's source where the map renders", () => {
+    const ids = buildFootnotes(withMapBetweenSections()).map(
+      (footnote) => footnote.source.id,
+    );
+
+    expect(ids).toEqual(["b", "a", "c", "map", "life", "d"]);
+  });
+
+  // With no territory section nothing draws the map, but its source must still
+  // be walked: `peoples:check` validates citations through the same list.
+  it("still walks the map's source when there is no territory section", () => {
+    const people = peopleFixture();
+
+    people.sources.push(extraSource("map"));
+    people.territory.sourceIds = ["map"];
+
+    const ids = buildFootnotes(people).map((footnote) => footnote.source.id);
+
+    expect(ids).toEqual(["b", "a", "c", "map", "d"]);
   });
 
   it("gives a source cited many times a single number", () => {

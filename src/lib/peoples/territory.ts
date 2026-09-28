@@ -12,6 +12,13 @@ function normalise(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/**
+ * The section the map is drawn inside. The page renders the map there and the
+ * footnote walk cites the map's source there, so both read the id from here:
+ * if either used its own copy, the numbering could drift from the layout.
+ */
+export const TERRITORY_SECTION_ID = "territorio";
+
 const BY_ID = new Set(PERU_DEPARTMENTS.map((department) => department.id));
 
 /**

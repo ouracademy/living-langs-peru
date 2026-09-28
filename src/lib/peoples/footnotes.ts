@@ -1,3 +1,4 @@
+import { TERRITORY_SECTION_ID } from "./territory.ts";
 import type { People, Source, SourceId } from "./types";
 
 export type Footnote = {
@@ -32,6 +33,18 @@ export type Citation = {
  * image, not as a footnote.
  */
 export function citationsInRenderOrder(people: People): Citation[] {
+  // The map's own attribution. The map renders inside the territory section,
+  // so it is cited right after that section's prose and before the sections
+  // that follow. Without such a section nothing draws the map, but the source
+  // is still walked so `peoples:check` keeps validating it.
+  const mapCitation: Citation = {
+    anchor: citationId("territorio"),
+    sourceIds: people.territory.sourceIds,
+  };
+  const hasTerritorySection = people.sections.some(
+    (section) => section.id === TERRITORY_SECTION_ID,
+  );
+
   return [
     // The hero, in the order it renders: the summary, then the language card.
     { anchor: citationId("resumen"), sourceIds: people.summary.sourceIds },
@@ -40,15 +53,14 @@ export function citationsInRenderOrder(people: People): Citation[] {
       anchor: citationId("cifra", figure.id),
       sourceIds: [figure.sourceId],
     })),
-    ...people.sections.flatMap((section) =>
-      section.paragraphs.map((paragraph, index) => ({
+    ...people.sections.flatMap((section) => [
+      ...section.paragraphs.map((paragraph, index) => ({
         anchor: citationId("parrafo", section.id, index),
         sourceIds: paragraph.sourceIds,
       })),
-    ),
-    // The map's own attribution. It renders inside the territory section, so
-    // it is cited with the sections and before the timeline.
-    { anchor: citationId("territorio"), sourceIds: people.territory.sourceIds },
+      ...(section.id === TERRITORY_SECTION_ID ? [mapCitation] : []),
+    ]),
+    ...(hasTerritorySection ? [] : [mapCitation]),
     ...people.timeline.map((event) => ({
       anchor: citationId("suceso", event.id),
       sourceIds: event.sourceIds,

@@ -8,6 +8,7 @@ import { PhotoGallery } from "@/components/peoples/photo-gallery";
 import { TerritoryMap } from "@/components/peoples/territory-map";
 import { Timeline } from "@/components/peoples/timeline";
 import { buildFootnotes } from "@/lib/peoples/footnotes";
+import { TERRITORY_SECTION_ID } from "@/lib/peoples/territory";
 import { ashaninka } from "@/lib/peoples";
 
 // Static rather than `generateMetadata`: the route has no params, so there is
@@ -16,9 +17,6 @@ export const metadata: Metadata = {
   title: "Pueblo Asháninka",
   description: ashaninka.summary.text,
 };
-
-/** Anchor of the section the map is rendered inside. */
-const TERRITORY_SECTION = "territorio";
 
 export default function AshaninkaPage() {
   // Numbering is derived once, here, and passed down: the order the sections
@@ -38,7 +36,7 @@ export default function AshaninkaPage() {
           tone={index % 2 === 0 ? "cream" : "white"}
         >
           {/* The map belongs to the territory section, and is cited there. */}
-          {section.id === TERRITORY_SECTION ? (
+          {section.id === TERRITORY_SECTION_ID ? (
             <TerritoryMap
               territory={ashaninka.territory}
               footnotes={footnotes}
