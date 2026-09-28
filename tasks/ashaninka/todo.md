@@ -1,11 +1,12 @@
 # TODO — Página del pueblo Asháninka
 
 > Plan y razonamiento: [tasks/ashaninka/plan.md](./plan.md) · Spec: [specs/ashaninka.md](../../specs/ashaninka.md)
-> Estado: **F0–F5 terminadas** (F4 el 2026-09-25). Siguiente: **F6** — vida cotidiana, enlaces y
-> contenido completo. No queda ninguna puerta humana de licencias abierta: H2 y H3 están cerradas.
+> Estado: **F0–F6 terminadas, salvo la firma humana de H4** (T6.3; F6 el 2026-09-28). Siguiente:
+> **F7** — accesibilidad, rendimiento y cierre. H4 bloquea sólo el cierre (T7.6), no F7.
 >
-> **Pendiente en F3, F4 y F5:** los E2E están escritos y verificados contra el HTML del build, pero
-> **no se han corrido en un navegador**. Falta Chromium en la máquina:
+> **Pendiente en F3–F6:** los E2E están escritos y verificados contra el HTML del build y contra un
+> render de la página en jsdom (`tests/unit/peoples/page.test.tsx`), pero **no se han corrido en un
+> navegador**. Falta Chromium en la máquina:
 > `sudo apt-get install -y libnspr4 libnss3 libasound2t64` y después `pnpm test:e2e`.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
@@ -59,7 +60,7 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 - [x] **T3.1** Contenido de `historia` en el JSON: Arawak (+3 000 años), franciscanos 1635 y dominicos 1646, Juan Santos Atahualpa 1742-1755, caucho y «correrías», conflicto armado 1980-2000. **Parafraseado, nunca copiado** `[AC-M4-2]`
 - [x] **T3.2** `people-section.tsx` + `timeline.tsx`: `<section aria-labelledby>`, `<h2>`, eventos `<h3>` con su `period`, ancla `#historia` `[AC-M2-2]`
-- [ ] **T3.3** → **movida a F6.** Términos asháninka con `<i lang="cni">`: `pinkathari`, `sheripiari`, `kobintaantsi`, `intómoe`, `káapa` `[AC-M2-10]`
+- [x] **T3.3** → **movida a F6 y hecha como T6.1b.** Términos asháninka con `<i lang="cni">`: `pinkathari`, `sheripiari`, `kobintaantsi`, `intómoe`, `káapa` `[AC-M2-10]`
 - [x] **T3.4** E2E: sección Historia visible · `#historia` ancla · la línea de tiempo muestra sus períodos `[AC-M2-2]`
 
 > **Por qué T3.3 se movió a F6** (2026-09-17). Los cinco términos que la tarea nombra no aparecen en
@@ -122,11 +123,28 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## F6 — Vida cotidiana, enlaces y contenido completo
 
-- [ ] **T6.1** Contenido de `vida`: `intómoe`/`káapa`, de parentelas de 30-50 a aldeas de 200-300, yuca y roza y quema, `kobintaantsi`, pesca con atarraya y barbasco, `pinkathari` y `sheripiari` `[AC-M4-2]`
-- [ ] **T6.1b** (era T3.3) Mecanismo de marcado y los términos asháninka en `<i lang="cni">`. `Paragraph.text` es texto plano hoy: el marcado sale de datos, no de buscar palabras en la prosa. **Tests primero**, que es donde aplica D2 `[AC-M2-10]`
-- [ ] **T6.2** `related-links.tsx`: enlace a `/diccionario/ashaninka` y a las fuentes externas `[AC-M2-9]`
-- [ ] **T6.3** **Puerta humana H4.** Verificación factual: cada cifra del JSON contra la BDPI, una por una `[AC-M4-2]`
-- [ ] **T6.4** `pnpm peoples:check` en verde sobre el JSON completo y **en rojo** ante los cuatro fixtures rotos a propósito `[AC-M1-8, AC-M1-9]`
+- [x] **T6.1** Contenido de `vida`: `intómoe`/`káapa`, de parentelas de 30-50 a aldeas de 200-300, yuca y roza y quema, `kobintaantsi`, pesca con atarraya y barbasco, `pinkathari` y `sheripiari` `[AC-M4-2]`
+- [x] **T6.1b** (era T3.3) Mecanismo de marcado y los términos asháninka en `<i lang="cni">`. `Paragraph.text` es texto plano hoy: el marcado sale de datos, no de buscar palabras en la prosa. **Tests primero**, que es donde aplica D2 `[AC-M2-10]`
+- [x] **T6.2** `related-links.tsx`: enlace a `/diccionario/ashaninka` y a las fuentes externas `[AC-M2-9]`
+- [ ] **T6.3** **Puerta humana H4.** Verificación factual: cada cifra del JSON contra la BDPI, una por una `[AC-M4-2]` — **pasada mecánica hecha (2026-09-28), falta la firma de una persona.** Detalle en `docs/ashaninka-sources.md` §8
+- [x] **T6.4** `pnpm peoples:check` en verde sobre el JSON completo y **en rojo** ante los cuatro fixtures rotos a propósito `[AC-M1-8, AC-M1-9]`
+
+> **Resultado de F6** (2026-09-28).
+>
+> - **El esquema pidió un ajuste:** `Paragraph.terms`, opcional, para marcar `<i lang="cni">` desde
+>   los datos y no buscando palabras en la prosa. `peoples:check` falla si un término no está en su
+>   texto o si una palabra marcada queda sin marcar en otro párrafo.
+> - **La pasada de T6.3 encontró prosa, no cifras:** frases que la ficha no dice y estaban citadas a
+>   ella (en Territorio, Historia y la línea de tiempo), más la cifra 118 277, que la ficha da como
+>   aproximada, y el año 2017 en las 675 localidades y 405 comunidades, que la ficha no fecha. Se
+>   corrigió todo; la lista completa está en `docs/ashaninka-sources.md` §8.3.
+> - **La numeración de notas seguía el orden equivocado** apenas `vida` quedó después de `territorio`:
+>   la fuente del mapa se numeraba después de las secciones que le siguen. Se cita ahora donde el mapa
+>   se dibuja, y `TERRITORY_SECTION_ID` lo comparte con la página.
+> - **T6.4 se probó contra la orden real**, no sólo contra `validatePeople`: cuatro fixtures rotos a
+>   propósito, cada uno con código de salida 1.
+> - **La cobertura ya bloquea** (se quitó el `--warn`) y `page.tsx` cuenta: por eso hay un test de
+>   render de la página completa. Los componentes siguen excluidos de la cobertura por config.
 
 ---
 
@@ -143,13 +161,13 @@ Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (
 
 ## Hitos humanos
 
-| id  | Qué                                              | Bloquea                               | Estado                                                                                            |
-| --- | ------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| H1  | Revisar el esquema `People` (checkpoint 1)       | F3 en adelante                        | ⚠️ **nunca se registró.** El contenido se escribió sin él y el esquema aguantó F3-F5 sin cambios. |
-| H2  | Aprobar la cartografía con licencia libre (T4.1) | T4.5, no el resto de F4               | ✅ cerrada 2026-09-25 — Natural Earth, dominio público.                                           |
-| H3  | Aprobar la licencia de cada foto (T5.1)          | F5, no el resto de la página          | ✅ cerrada 2026-09-23 — cinco fotos, una excluida por decisión editorial.                         |
-| H4  | Verificación factual contra la BDPI (T6.3)       | El cierre (T7.6)                      | ⏳ pendiente, en F6.                                                                              |
-| H5  | Consulta a las organizaciones asháninka          | **Nada.** Corre en paralelo (dec #11) | ⏳ pendiente, no bloquea.                                                                         |
+| id  | Qué                                              | Bloquea                               | Estado                                                                                                                                                                                                                                                              |
+| --- | ------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| H1  | Revisar el esquema `People` (checkpoint 1)       | F3 en adelante                        | ⚠️ **la revisión humana nunca se registró.** Lo que sí se sabe: `{ text, sourceIds }` alcanzó hasta F6, que pidió `terms` opcional; `Figure` no necesitó un campo `aprox.` (va en la `note`); `timeline` no necesitó fechas ordenables (`period` como texto bastó). |
+| H2  | Aprobar la cartografía con licencia libre (T4.1) | T4.5, no el resto de F4               | ✅ cerrada 2026-09-25 — Natural Earth, dominio público.                                                                                                                                                                                                             |
+| H3  | Aprobar la licencia de cada foto (T5.1)          | F5, no el resto de la página          | ✅ cerrada 2026-09-23 — cinco fotos, una excluida por decisión editorial.                                                                                                                                                                                           |
+| H4  | Verificación factual contra la BDPI (T6.3)       | El cierre (T7.6)                      | ⏳ **pasada mecánica hecha 2026-09-28, con hallazgos ya corregidos; falta la firma humana.** Ver `docs/ashaninka-sources.md` §8.                                                                                                                                    |
+| H5  | Consulta a las organizaciones asháninka          | **Nada.** Corre en paralelo (dec #11) | ⏳ pendiente, no bloquea.                                                                                                                                                                                                                                           |
 
 ---
 

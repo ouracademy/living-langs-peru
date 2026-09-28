@@ -183,6 +183,7 @@ export type Figure = {
 export type Paragraph = {
   text: string; // español
   sourceIds: SourceId[]; // al menos 1
+  terms?: string[]; // palabras asháninka dentro de `text`; se muestran en <i lang="cni"> (§4.2)
 };
 
 export type PeopleSection = {
@@ -353,7 +354,10 @@ Falla con código de salida ≠ 0 y lista todos los problemas, no sólo el prime
 - Toda `Source` tiene `retrievedAt` en formato `YYYY-MM-DD` válido.
 - Toda `Source` declarada está citada al menos una vez (sin huérfanas).
 - Todo `Paragraph` tiene `sourceIds` no vacío. **Ningún párrafo sin fuente.**
-- Toda `Photo` tiene `alt` no vacío y `credit` con `author`, `license` y `url`.
+- Toda `Photo` tiene `alt` no vacío **y no genérico** («foto», «imagen»), dimensiones positivas y
+  `credit` con `author`, `license` y `url`.
+- Todo término de `Paragraph.terms` aparece en el texto de su párrafo, y una palabra marcada en un
+  párrafo está marcada en todos los que la contienen.
 - Todo `Figure.id` y `PeopleSection.id` es único.
 - Las tres cifras de §5.3 tienen `note` no vacía.
 - Toda región de `territory.regions` corresponde a un `id` del SVG del mapa (decisión #9).

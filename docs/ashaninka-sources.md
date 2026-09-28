@@ -2,7 +2,8 @@
 
 > Tareas T0.1 y T0.2 · Fecha: 2026-09-16 · Spec: [specs/ashaninka.md](../specs/ashaninka.md) §4
 > Estado: **decidido para el texto, las imágenes y la cartografía** (imágenes el 2026-09-23, mapa el
-> 2026-09-25). No queda ninguna verificación de licencia pendiente.
+> 2026-09-25). No queda ninguna verificación de licencia pendiente. La verificación factual del
+> contenido contra la BDPI (§8) está hecha, pero **falta la firma de una persona** (hito H4).
 
 **Esto no es asesoría legal.** Es el registro de lo que dicen las fuentes y de lo que no se pudo
 comprobar. Las decisiones las toma una persona.
@@ -24,7 +25,8 @@ gratuito y sin fines comerciales, con la UNMSM y el Ministerio de Cultura como a
 
 ## 2. Fuentes en uso
 
-Dos, y sólo dos (spec, decisión #11).
+Dos de contenido, y sólo dos (spec, decisión #11). La cartografía del mapa es una tercera fuente,
+de otra naturaleza, y tiene su sección aparte (§6).
 
 | id               | Fuente                                                                   | Institución                    | Licencia declarada            | Veredicto         | Consultado |
 | ---------------- | ------------------------------------------------------------------------ | ------------------------------ | ----------------------------- | ----------------- | ---------- |
@@ -36,12 +38,12 @@ Dos, y sólo dos (spec, decisión #11).
 `solo-referencia` en ambas no impide construir la página, porque **lo que tomamos son hechos, no
 expresión**. La distinción es la misma de `dictionary-sources.md` §1:
 
-| Se toma                                                          | No se toma                                |
-| ---------------------------------------------------------------- | ----------------------------------------- |
-| Cifras del Censo 2017 (118 277, 55 493, 73 567, 675, 405)        | Párrafos literales de la ficha de la BDPI |
-| Hechos históricos con fecha (1635, 1646, 1742-1755, 1980-2000)   | La redacción con que la BDPI los cuenta   |
-| Nombres de regiones, ríos y cuencas                              | Tablas o mapas de la fuente               |
-| Familia lingüística, códigos ISO, número de grafías del alfabeto | El texto de la ficha de Ethnologue        |
+| Se toma                                                                           | No se toma                                |
+| --------------------------------------------------------------------------------- | ----------------------------------------- |
+| Cifras del Censo 2017 (118 277, 55 493, 73 567) y recuentos de la BDPI (675, 405) | Párrafos literales de la ficha de la BDPI |
+| Hechos históricos con fecha (1635, 1646, 1742-1755, 1980-2000)                    | La redacción con que la BDPI los cuenta   |
+| Nombres de regiones, ríos y cuencas                                               | Tablas o mapas de la fuente               |
+| Familia lingüística, códigos ISO, número de grafías del alfabeto                  | El texto de la ficha de Ethnologue        |
 
 **Todo el texto de la página se escribe parafraseado.** El copyright no cubre el hecho de que el
 Censo 2017 haya contado 118 277 personas; cubre cómo se redacta la ficha que lo reporta.
@@ -94,8 +96,9 @@ Consecuencias, ya aplicadas al spec:
 
 - Fuera las dos cifras que sólo CARE reportaba: **45 comunidades** de la cuenca del Ene y **235 000
   hectáreas** monitoreadas.
-- Efecto secundario bueno: las cinco cifras que quedan salen **del mismo censo y de la misma fuente**,
-  así que la página no mezcla años ni metodologías.
+- Efecto secundario bueno: las cinco cifras que quedan salen **de la misma fuente, la BDPI**, que
+  reporta tres cifras del Censo 2017 y dos recuentos propios (las 675 localidades y las 405
+  comunidades, que la ficha no fecha en el censo). La página no mezcla fuentes.
 - Fuera el término _Kametsa Asaike_, que venía de su agenda política.
 - Fuera la foto «Mesa Directiva de CARE» de las candidatas de la galería.
 
@@ -235,7 +238,73 @@ Dos consecuencias, y ninguna se resuelve en este trabajo:
 
 ---
 
-## 8. Lo que no se negocia
+## 8. Verificación factual contra la BDPI (T6.3, hito H4)
+
+> Pasada del 2026-09-28, con la ficha leída ese mismo día en
+> [bdpi.cultura.gob.pe/pueblos/ashaninka](https://bdpi.cultura.gob.pe/pueblos/ashaninka).
+> **La hizo una IA y no cierra H4.** H4 es una verificación humana: esto le da a esa persona una
+> lista concreta de qué mirar, qué se encontró y qué se cambió.
+
+### 8.1 Método
+
+1. Se extrajo el texto de la ficha. **No se guarda en el repositorio:** la BDPI es `solo-referencia`
+   (§2.1) y guardarla sería copiarla.
+2. Cada número que la página muestra —los 29 del texto corrido y las cinco cifras— se buscó en la
+   ficha tras normalizar los separadores (`10 000` es `10,000`). **Ninguno quedó sin respaldo.** Dos
+   los escribe la ficha con palabras (`doscientos y trescientos`) y se comprobaron a mano.
+3. Cada afirmación de prosa se comparó con el pasaje de la ficha, y cada término asháninka se buscó en
+   ella.
+
+Lo que esto comprueba es que **la página diga lo que la BDPI dice**. No comprueba que la BDPI tenga
+razón: la ficha misma cita a Weiss, Rojas Zolezzi, Varese y otros.
+
+### 8.2 Cifras
+
+| Cifra en la página                | Lo que dice la ficha                                            | Veredicto                                                  |
+| --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------- |
+| 118 277 personas en localidades   | «asciende a 118,277 personas **aproximadamente**»               | ✅ Ahora la nota la marca como aproximada.                 |
+| 55 493 se autoidentifican         | «55,493 personas se sienten o consideran parte del pueblo»      | ✅                                                         |
+| 73 567 aprendieron en la niñez    | «73,567 personas aprendieron a hablar en su niñez» en la lengua | ✅ Ver 8.5: la cita es Ethnologue, la cifra está en BDPI.  |
+| 675 localidades · 405 reconocidas | «675 localidades… 405 cuentan con reconocimiento»               | ✅ La ficha **no** las fecha en 2017: se les quitó el año. |
+| 19 grafías · ISO `cni`, `prq`     | «Las grafías de este alfabeto son 19» · «ISO: cni, prq»         | ✅                                                         |
+
+### 8.3 Prosa: qué se encontró y qué se cambió
+
+Ninguna cifra estaba mal. Lo que se encontró fue **paráfrasis que se había deslizado hasta
+afirmaciones** que la ficha no hace, citadas a la ficha:
+
+| Dónde           | Decía la página                                                                                                   | La ficha                                                                                                 | Cambio                                |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Territorio      | la seca «deja los caminos transitables»                                                                           | «poca presencia de lluvias y baja humedad»                                                               | Se dice lo que la ficha dice.         |
+| Territorio      | las lluvias «aíslan comunidades durante semanas»                                                                  | los ríos crecen y pueden ser «peligrosos para la navegación»                                             | Ídem.                                 |
+| Territorio      | el río «es camino, despensa y frontera»; las cuencas, «la unidad con la que el propio pueblo describe dónde vive» | No lo dice.                                                                                              | Quitado.                              |
+| Historia        | el dominio colonial «nunca llegó a consolidarse»                                                                  | tras la rebelión de Juan Santos, la selva central «guardó su independencia hasta mediados del siglo XIX» | Se dice eso.                          |
+| Historia        | caucho y conflicto armado, «los dos episodios más duros de su historia reciente»                                  | el conflicto los ubica «de los grupos indígenas más afectados»                                           | Superlativo propio fuera (spec §4.2). |
+| Línea de tiempo | Juan Santos «fue un mestizo andino»; expulsó a misioneros «durante más de una década»                             | «**se estima** que se trató de un mestizo andino»; la magnitud «forzó… a evacuar»                        | Vuelve la cautela; sale la década.    |
+
+### 8.4 Lo que se escribió nuevo (sección «Vida cotidiana»)
+
+Cada afirmación tiene su pasaje en la ficha: las dos casas (`káapa`, `intómoe`), el paso de parentelas
+de 30–50 personas a aldeas de 200–300, la roza y quema, la yuca con «al menos treinta variedades», el
+café y el cacao, la caza (`kobintaantsi`), la pesca de río grande y de quebradas, la atarraya y el
+barbasco, el `pinkathari` y el `sheripiari`. Se conservaron las cautelas de la fuente: la distinción
+entre casas «**tendría** una base social y ritual».
+
+### 8.5 Lo que sigue en manos de una persona
+
+1. **La firma de H4.** Leer las secciones Historia, Territorio y Vida cotidiana con la ficha al lado.
+2. **La cifra de 73 567 cita a Ethnologue**, que no se pudo abrir (HTTP 403, §3). El número sí está en
+   la BDPI —dos veces— y la nota de la cifra lo dice, pero conviene decidir si la fuente que se cita
+   debería ser la BDPI.
+3. **La ficha escribe `sheripiriari` una vez y `sheripiari` las otras siete.** La página usa la forma
+   mayoritaria, que es también la del spec.
+4. **La sección describe a un chamán y una pesca con veneno.** Ambos están en la ficha y se dicen sin
+   adjetivos, pero es justo el tipo de contenido que el hito H5 —la consulta a las organizaciones
+   asháninka— existe para revisar. No bloquea la publicación (decisión #11).
+
+---
+
+## 9. Lo que no se negocia
 
 Del spec §11 «Nunca»:
 
