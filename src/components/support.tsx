@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import {
   Card,
   CardDescription,
@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Heart, HeartHandshake, NotebookPen } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const options = [
   {
@@ -72,10 +73,12 @@ export function Support() {
                     {item.description}
                   </CardDescription>
                 </CardHeader>
-                <CardFooter className="border-none bg-transparent pt-4 font-bold">
-                  <Button className="rounded-full px-5 py-2.5">
-                    <Link href={item.href}>{item.buttonText}</Link>
-                  </Button>
+                <CardFooter className="border-none bg-transparent pt-4 font-bold">                                   
+                  <Link 
+                    href={item.href} 
+                    className={cn(buttonVariants({ variant: "default" }), "rounded-full px-5 py-2.5")}>
+                    {item.buttonText}
+                  </Link>
                 </CardFooter>
               </Card>
             );
