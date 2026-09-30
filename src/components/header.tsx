@@ -14,9 +14,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-  { label: "Recursos", href: "/#resources" },
-  { label: "Aprende", href: "/#education" },
-  { label: "Historias", href: "/#stories" },
+  { label: "Recursos", href: "/#recursos" },
+  { label: "Aprende", href: "/#educacion" },
+  { label: "Historias", href: "/#historias" },
   // { label: "Involucrate", href: "/get-involved" },
 ];
 
