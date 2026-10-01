@@ -73,10 +73,14 @@ export function Support() {
                     {item.description}
                   </CardDescription>
                 </CardHeader>
-                <CardFooter className="border-none bg-transparent pt-4 font-bold">                                   
-                  <Link 
-                    href={item.href} 
-                    className={cn(buttonVariants({ variant: "default" }), "rounded-full px-5 py-2.5")}>
+                <CardFooter className="border-none bg-transparent pt-4 font-bold">
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      buttonVariants({ variant: "default" }),
+                      "rounded-full px-5 py-2.5",
+                    )}
+                  >
                     {item.buttonText}
                   </Link>
                 </CardFooter>
