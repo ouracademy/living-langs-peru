@@ -6,7 +6,7 @@ import { siFacebook, siInstagram, siX } from "simple-icons";
 const navigation = {
   support: [
     { name: "Registrarse como editor", href: "/registro-editor" },
-    { name: "Voluntarios", href: "/voluntarios" },
+    // { name: "Voluntarios", href: "/voluntarios" },
     { name: "Donar", href: "/donar" },
   ],
   social: [

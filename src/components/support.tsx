@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Heart, HeartHandshake, NotebookPen } from "lucide-react";
+import { Heart, NotebookPen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const options = [
@@ -19,14 +19,14 @@ const options = [
     icon: NotebookPen,
     color: "bg-[#E4572E]",
   },
-  {
-    title: "Voluntarios",
-    description: "Sumate a nuestro equipo del proyecto.",
-    buttonText: "Unirme",
-    href: "/voluntarios",
-    icon: HeartHandshake,
-    color: "bg-[#1B98A0]",
-  },
+  // {
+  //   title: "Voluntarios",
+  //   description: "Sumate a nuestro equipo del proyecto.",
+  //   buttonText: "Unirme",
+  //   href: "/voluntarios",
+  //   icon: HeartHandshake,
+  //   color: "bg-[#1B98A0]",
+  // },
   {
     title: "Donar",
     description: "Ayúdanos a mantener la plataforma viva.",
@@ -49,7 +49,7 @@ export function Support() {
             Súmate de la forma que prefieras
           </h2>
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-5.5 text-left md:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-5.5 text-left md:grid-cols-2">
           {options.map((item) => {
             const Icon = item.icon;
             return (
