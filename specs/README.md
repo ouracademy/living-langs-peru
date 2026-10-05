@@ -4,11 +4,12 @@ Un archivo por **feature**, no por módulo. Una feature que se compone de varias
 verificables por separado declara su mapa de capacidades dentro de su propio archivo, para que el
 diseño completo se lea de una sola vez.
 
-| Spec                                             | Estado       | Plan                                                      | Alcance                                                                    |
-| ------------------------------------------------ | ------------ | --------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [diccionario.md](./diccionario.md)               | Aprobado     | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                   |
-| [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local. |
-| [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes. |
+| Spec                                             | Estado       | Plan                                                      | Alcance                                                                              |
+| ------------------------------------------------ | ------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [diccionario.md](./diccionario.md)               | Aprobado     | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                             |
+| [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local.           |
+| [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes.           |
+| [solicitudes.md](./solicitudes.md)               | Borrador     | `tasks/solicitudes/` (pendiente de aprobación)            | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad. |
 
 ## Dónde va cada cosa
 
