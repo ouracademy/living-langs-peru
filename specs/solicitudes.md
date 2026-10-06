@@ -1,8 +1,8 @@
 # Solicitudes de apoyo (donador / editor)
 
-> Estado: **borrador** · Fecha: 2026-10-05 (decisiones del pedido incorporadas; pendiente de visto bueno final) ·
+> Estado: **aprobado** · Fecha: 2026-10-06 (aprobado por el usuario; S4 requiere completar la política antes de publicar) ·
 > Rama sugerida: `feat/solicitudes`
-> Rama base: `main` · Plan: `tasks/solicitudes/` (se escribe tras la aprobación) · Índice:
+> Rama base: `main` · Plan: [tasks/solicitudes/](../tasks/solicitudes/) · Índice:
 > [specs/README.md](./README.md)
 > Depende de: nada del resto del sitio. Toca [src/components/support.tsx](../src/components/support.tsx).
 
@@ -41,22 +41,22 @@ No es una cuenta ni un pago: no hay login, no hay pasarela, no hay panel. Es un 
 
 ## 2. Decisiones tomadas
 
-| #   | Decisión                     | Elección                                                                                                                                                                                                                                                            |
-| --- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Acceso a datos**           | Solo el servidor, con la `service_role` key. El navegador nunca habla con Supabase. RLS activada **sin políticas** (deniega todo a `anon` y `authenticated`; `service_role` la ignora).                                                                             |
-| 2   | **Un modal por card**        | Cada card monta su propio `Dialog` con el rol ya elegido (`editor` o `donador`). El selector de rol **sigue visible** y se puede cambiar. `Support` sigue siendo componente de servidor; solo el modal es cliente.                                                  |
-| 3   | **Validación**               | Un solo esquema Zod en `src/lib/requests/schema.ts`, importado por el formulario y por el endpoint. Misma regla en ambos lados; el servidor es la que manda.                                                                                                        |
-| 4   | **Anti-spam**                | Tres capas: honeypot `website`, límite por IP y validación estricta. No hay CAPTCHA.                                                                                                                                                                                |
-| 5   | **Respuesta indistinguible** | El éxito real y el del honeypot devuelven **exactamente la misma respuesta** (`200` + mismo cuerpo). Si el éxito real fuera `201`, el bot aprendería cuál es la trampa.                                                                                             |
-| 6   | **Límite por IP**            | **Upstash Redis + `@upstash/ratelimit`**, ventana deslizante de 5 envíos por hora. Ver §6.                                                                                                                                                                          |
-| 7   | **Orden en el endpoint**     | JSON válido → honeypot → validación → límite por IP → insert. El honeypot va antes del límite para que los bots no gasten comandos de Redis; la validación va antes para que un error de tipeo no consuma uno de los 5 envíos.                                      |
-| 8   | **Si Upstash falla**         | **Fail-open**: se registra el error y se deja pasar. Perder una donante legítima cuesta más que un pico de spam, y quedan honeypot, validación y los `check` de la base. Si faltan las variables de Upstash **en producción**, es un error de configuración: `500`. |
-| 9   | **Lengua del código**        | Las claves del JSON y las columnas de la tabla van **en español** (`nombre`, `telefono`...), confirmado. El código usa inglés: se renombran al entrar al handler (ver §3.2).                                                                                        |
-| 10  | **Rutas de archivo**         | El repo usa `src/` y kebab-case, así que `app/api/solicitudes/route.ts` → `src/app/api/solicitudes/route.ts` y `lib/supabaseAdmin.ts` → `src/lib/supabase-admin.ts` (`check:language` exige kebab-case).                                                            |
-| 11  | **Preview y producción**     | Los deploys de Preview usan **el mismo proyecto de Supabase** que producción (confirmado). Consecuencia: toda prueba hecha en Preview escribe filas reales; ver §4.2.                                                                                               |
-| 12  | **Política de privacidad**   | Se escribe, en `docs/politica-privacidad.md`, y se publica como página `/privacidad` (capacidad S4). El checkbox de consentimiento enlaza a ella.                                                                                                                   |
-| 13  | **Borrado de datos**         | Manual. Quien administra el proyecto borra la fila desde el _Table Editor_ de Supabase cuando recibe el pedido. No se construye ningún endpoint de borrado.                                                                                                         |
-| 14  | **Bloque de Voluntarios**    | No se toca. El bloque comentado de `support.tsx` lo elimina el usuario a mano si corresponde. El cambio en ese archivo debe dejarlo tal cual.                                                                                                                       |
+| #   | Decisión                     | Elección                                                                                                                                                                                                           |
+| --- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | **Acceso a datos**           | Solo el servidor, con la `service_role` key. El navegador nunca habla con Supabase. RLS activada **sin políticas** (deniega todo a `anon` y `authenticated`; `service_role` la ignora).                            |
+| 2   | **Un modal por card**        | Cada card monta su propio `Dialog` con el rol ya elegido (`editor` o `donador`). El selector de rol **sigue visible** y se puede cambiar. `Support` sigue siendo componente de servidor; solo el modal es cliente. |
+| 3   | **Validación**               | Un solo esquema Zod en `src/lib/requests/schema.ts`, importado por el formulario y por el endpoint. Misma regla en ambos lados; el servidor es la que manda.                                                       |
+| 4   | **Anti-spam**                | Dos capas: honeypot `website` y validación estricta en el servidor, más los `check` de la base. **Sin límite por IP** y sin CAPTCHA: el sitio es pequeño (decisión #6).                                            |
+| 5   | **Respuesta indistinguible** | El éxito real y el del honeypot devuelven **exactamente la misma respuesta** (`200` + mismo cuerpo). Si el éxito real fuera `201`, el bot aprendería cuál es la trampa.                                            |
+| 6   | **Sin límite por IP**        | **Se retiró Upstash Redis** y con él el límite por IP: el sitio es pequeño y no justifica otro servicio. Ver §6 para el riesgo aceptado y qué hacer si aparece spam.                                               |
+| 7   | **Orden en el endpoint**     | JSON válido → honeypot → validación → insert. El honeypot va primero para que un bot no llegue ni a validar ni a tocar la base.                                                                                    |
+| 8   | **Si Supabase falla**        | Respuesta `500` genérica y el error real se registra en el servidor (sin datos personales). Nunca se devuelve el error crudo.                                                                                      |
+| 9   | **Lengua del código**        | Las claves del JSON y las columnas de la tabla van **en español** (`nombre`, `telefono`...), confirmado. El código usa inglés: se renombran al entrar al handler (ver §3.2).                                       |
+| 10  | **Rutas de archivo**         | El repo usa `src/` y kebab-case, así que `app/api/solicitudes/route.ts` → `src/app/api/solicitudes/route.ts` y `lib/supabaseAdmin.ts` → `src/lib/supabase-admin.ts` (`check:language` exige kebab-case).           |
+| 11  | **Preview y producción**     | Los deploys de Preview usan **el mismo proyecto de Supabase** que producción (confirmado). Consecuencia: toda prueba hecha en Preview escribe filas reales; ver §4.2.                                              |
+| 12  | **Política de privacidad**   | Se escribe, en `docs/politica-privacidad.md`, y se publica como página `/privacidad` (capacidad S4). El checkbox de consentimiento enlaza a ella.                                                                  |
+| 13  | **Borrado de datos**         | Manual. Quien administra el proyecto borra la fila desde el _Table Editor_ de Supabase cuando recibe el pedido. No se construye ningún endpoint de borrado.                                                        |
+| 14  | **Bloque de Voluntarios**    | No se toca. El bloque comentado de `support.tsx` lo elimina el usuario a mano si corresponde. El cambio en ese archivo debe dejarlo tal cual.                                                                      |
 
 ---
 
@@ -67,7 +67,7 @@ Una feature, cuatro capacidades que se verifican por separado. Las flechas apunt
 | Id  | Capacidad                                  | Depende de | Se verifica con                                   |
 | --- | ------------------------------------------ | ---------- | ------------------------------------------------- |
 | S1  | Base de datos + variables de entorno       | —          | SQL en Supabase, `curl` con la `service_role`     |
-| S2  | Endpoint `POST /api/solicitudes` + esquema | S1         | Tests unitarios con Supabase y Upstash simulados  |
+| S2  | Endpoint `POST /api/solicitudes` + esquema | S1         | Tests unitarios con Supabase simulado             |
 | S3  | Modal + formulario cliente                 | S2, S4     | Tests de componente + e2e con la API interceptada |
 | S4  | Página `/privacidad` con la política       | —          | e2e de la página + revisión del texto             |
 
@@ -81,7 +81,6 @@ rechaza; S4: la página se abre; S3: se usa desde la portada y enlaza a la polí
 src/app/api/solicitudes/route.ts          POST (S2)
 src/lib/supabase-admin.ts                 cliente de servidor, `server-only` (S1/S2)
 src/lib/requests/schema.ts                esquema Zod + tipos + mensajes; lo importan cliente y servidor (S2)
-src/lib/requests/rate-limit.ts            límite por IP + lectura de la IP (S2)
 src/components/support-request-dialog.tsx modal (cliente) con el botón disparador (S3)
 src/components/support-request-form.tsx   formulario (cliente) (S3)
 src/components/ui/{dialog,textarea,label,checkbox,select}.tsx   shadcn, estilo base-nova (S3)
@@ -153,12 +152,10 @@ quedar vacío), y se agrega el `revoke` (decisión confirmada). Sin funciones, s
 
 ### 4.2 Variables de entorno
 
-| Variable                    | Dónde se usa                  | Notas                                                        |
-| --------------------------- | ----------------------------- | ------------------------------------------------------------ |
-| `SUPABASE_URL`              | `src/lib/supabase-admin`      | Supabase → _Project Settings → API → Project URL_.           |
-| `SUPABASE_SERVICE_ROLE_KEY` | `src/lib/supabase-admin`      | _Project Settings → API Keys_ → `service_role`. **Secreta.** |
-| `UPSTASH_REDIS_REST_URL`    | `src/lib/requests/rate-limit` | De la base Upstash (§6).                                     |
-| `UPSTASH_REDIS_REST_TOKEN`  | `src/lib/requests/rate-limit` | **Secreto.**                                                 |
+| Variable                    | Dónde se usa             | Notas                                                        |
+| --------------------------- | ------------------------ | ------------------------------------------------------------ |
+| `SUPABASE_URL`              | `src/lib/supabase-admin` | Supabase → _Project Settings → API → Project URL_.           |
+| `SUPABASE_SERVICE_ROLE_KEY` | `src/lib/supabase-admin` | _Project Settings → API Keys_ → `service_role`. **Secreta.** |
 
 **Ninguna lleva el prefijo `NEXT_PUBLIC_`.** Next.js solo incrusta en el bundle del navegador las que
 lo llevan; las demás existen solo en Node
@@ -168,26 +165,20 @@ importa `server-only`, así que si un componente cliente lo importa por error, *
 **`.env.local` (local)** — el repo ya ignora `.env*` en `.gitignore`:
 
 1. Crea `.env.local` en la raíz del repo.
-2. Pega las cuatro variables, sin comillas ni espacios alrededor del `=`.
+2. Pega las dos variables, sin comillas ni espacios alrededor del `=`.
 3. Reinicia `pnpm dev` (Next solo lee el archivo al arrancar).
 
 ```bash
 SUPABASE_URL=https://xxxx.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=...
-UPSTASH_REDIS_REST_URL=https://xxxx.upstash.io
-UPSTASH_REDIS_REST_TOKEN=...
 ```
 
 **Vercel**:
 
 1. _Project → Settings → Environment Variables_.
-2. Agrega las cuatro, en los entornos **Production** y **Preview** (y **Development** si usas
-   `vercel env pull`). Marca las dos secretas como **Sensitive**.
+2. Agrega las dos, en los entornos **Production** y **Preview** (y **Development** si usas
+   `vercel env pull`). Marca `SUPABASE_SERVICE_ROLE_KEY` como **Sensitive**.
 3. **Vuelve a desplegar**: las variables nuevas no llegan a un deploy que ya existe.
-4. Alternativa para Upstash: _Storage → Marketplace → Upstash Redis_ crea la base y le inyecta las
-   variables al proyecto. Esa integración puede nombrarlas `KV_REST_API_URL` / `KV_REST_API_TOKEN`; si es así,
-   se copian a los nombres `UPSTASH_REDIS_REST_*` o se cambia el código a los suyos (se confirma al
-   configurar).
 
 **Preview comparte el proyecto de Supabase de producción** (decisión #11), así que las variables son las
 mismas en ambos entornos y cualquier envío hecho desde un deploy de Preview queda en la tabla real. Al
@@ -203,7 +194,7 @@ automáticos nunca escriben: simulan la API (§10).
 | AC-S1-3 | Insertar con la `anon` key (REST de Supabase) devuelve error de permisos y **no** crea fila.                                                                             |
 | AC-S1-4 | Leer con la `anon` key devuelve cero filas aunque haya datos.                                                                                                            |
 | AC-S1-5 | La base rechaza `rol = 'voluntario'`, un `motivo` de 9 o 1001 caracteres y `consentimiento = false`.                                                                     |
-| AC-S1-6 | `grep -rn "NEXT_PUBLIC_" src/` no encuentra ninguna de las cuatro variables, y ningún componente importa `supabase-admin`.                                               |
+| AC-S1-6 | `grep -rn "NEXT_PUBLIC_" src/` no encuentra ninguna de las dos variables, y ningún componente importa `supabase-admin`.                                                  |
 | AC-S1-7 | Con la política `anon` simulada (crear a propósito una política permisiva de prueba) la `anon` key **sigue** sin acceso gracias al `revoke`; luego se borra la política. |
 
 ---
@@ -229,13 +220,12 @@ automáticos nunca escriben: simulan la API (§10).
 | Caso                       | Estado | Cuerpo                                                                                                                                          |
 | -------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | Guardada                   | 200    | `{ "ok": true, "message": "¡Gracias! Recibimos tu solicitud y te contactaremos pronto." }`                                                      |
-| Honeypot con contenido     | 200    | **El mismo cuerpo**, sin tocar la base ni Redis (decisión #5).                                                                                  |
+| Honeypot con contenido     | 200    | **El mismo cuerpo**, sin tocar la base (decisión #5).                                                                                           |
 | Cuerpo no es JSON          | 400    | `{ "error": "invalid_json", "message": "No pudimos leer tu solicitud. Intenta de nuevo." }`                                                     |
 | Validación                 | 400    | `{ "error": "validation_error", "message": "Revisa los campos marcados.", "fields": { "telefono": "Ingresa un teléfono de 7 a 15 dígitos." } }` |
-| Demasiados envíos          | 429    | `{ "error": "rate_limited", "message": "Enviaste varias solicitudes. Intenta de nuevo en una hora." }` + cabecera `Retry-After`                 |
 | Fallo de Supabase / config | 500    | `{ "error": "server_error", "message": "No pudimos guardar tu solicitud. Intenta de nuevo más tarde." }`                                        |
 
-Nunca se devuelve la fila guardada, el `id`, ni el mensaje crudo de Supabase o Upstash. Los errores
+Nunca se devuelve la fila guardada, el `id`, ni el mensaje crudo de Supabase. Los errores
 reales se registran con `console.error` en el servidor (sin el cuerpo de la solicitud: tiene datos
 personales).
 
@@ -287,42 +277,39 @@ el `throw` ocurre al importar el módulo; el handler lo captura y responde `500`
 
 ### 5.4 Criterios de aceptación
 
-| ID       | Criterio                                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ |
-| AC-S2-1  | Un cuerpo válido responde 200 con el cuerpo de éxito e inserta **una** fila con los valores recortados.                  |
-| AC-S2-2  | Sin `email` o con `email: ""`, la fila se guarda con `email = NULL`.                                                     |
-| AC-S2-3  | `website` con contenido → 200 con el **mismo** cuerpo que AC-S2-1; no se llama a Supabase ni a Upstash.                  |
-| AC-S2-4  | Cada regla de §5.2 se rechaza con 400, `error: "validation_error"` y el mensaje en español bajo la clave del campo.      |
-| AC-S2-5  | Un cuerpo que no es JSON responde 400 `invalid_json`.                                                                    |
-| AC-S2-6  | `telefono` acepta `+51 987 654 321` y `987654321`; rechaza 6 y 16 dígitos, letras, y `+` en medio.                       |
-| AC-S2-7  | `motivo` de 10 y 1000 caracteres pasa; de 9 y 1001 no; `"😀😀😀😀😀"` (5 caracteres) no pasa.                            |
-| AC-S2-8  | La 6.ª solicitud válida de la misma IP en una hora responde 429 con `Retry-After`; otra IP no se ve afectada.            |
-| AC-S2-9  | Si el insert falla, responde 500 con el mensaje genérico; el cuerpo no contiene el texto del error simulado de Supabase. |
-| AC-S2-10 | Si Upstash lanza un error, la solicitud se procesa (fail-open) y el error se registra.                                   |
-| AC-S2-11 | Ninguna respuesta incluye `id`, `created_at` ni los datos enviados.                                                      |
-| AC-S2-12 | Una solicitud inválida no consume cupo del límite por IP (decisión #7).                                                  |
+| ID      | Criterio                                                                                                                 |
+| ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| AC-S2-1 | Un cuerpo válido responde 200 con el cuerpo de éxito e inserta **una** fila con los valores recortados.                  |
+| AC-S2-2 | Sin `email` o con `email: ""`, la fila se guarda con `email = NULL`.                                                     |
+| AC-S2-3 | `website` con contenido → 200 con el **mismo** cuerpo que AC-S2-1; no se llama a Supabase.                               |
+| AC-S2-4 | Cada regla de §5.2 se rechaza con 400, `error: "validation_error"` y el mensaje en español bajo la clave del campo.      |
+| AC-S2-5 | Un cuerpo que no es JSON responde 400 `invalid_json`.                                                                    |
+| AC-S2-6 | `telefono` acepta `+51 987 654 321` y `987654321`; rechaza 6 y 16 dígitos, letras, y `+` en medio.                       |
+| AC-S2-7 | `motivo` de 10 y 1000 caracteres pasa; de 9 y 1001 no; `"😀😀😀😀😀"` (5 caracteres) no pasa.                            |
+| AC-S2-8 | Si el insert falla, responde 500 con el mensaje genérico; el cuerpo no contiene el texto del error simulado de Supabase. |
+| AC-S2-9 | Ninguna respuesta incluye `id`, `created_at` ni los datos enviados.                                                      |
 
 ---
 
-## 6. Límite por IP — opción elegida
+## 6. Anti-spam sin límite por IP
 
-**Upstash Redis + `@upstash/ratelimit`** (algoritmo `slidingWindow(5, "1 h")`).
+Se **retiró Upstash Redis** y con él el límite de 5 envíos por hora por IP (decisión #6). Lo que queda:
 
-- **Por qué esta**: en Vercel cada petición puede caer en una instancia distinta y las instancias se
-  apagan. Un contador en memoria no sirve, hace falta un almacén compartido. Upstash habla HTTP/REST (sin
-  conexiones TCP persistentes, que es lo que le conviene a serverless), tiene plan gratuito y una librería de
-  límite ya hecha, y se puede crear desde el Marketplace de Vercel.
-- **Por qué no Vercel KV**: Vercel dejó de ofrecer KV propio y lo reemplazó por integraciones de
-  Marketplace; la de Redis es Upstash. Es lo mismo con un paso menos de indirección.
-- **Por qué no una tabla en Supabase**: obliga a una consulta y a una limpieza por cada envío, y el pedido
-  dice «sin funciones de Postgres».
-- **Costo**: el plan gratuito de Upstash cubre este volumen de sobra (unos pocos comandos por envío). Se
-  confirman los límites vigentes al crear la base.
-- **La IP**: se toma de `x-forwarded-for` (primer valor) y, si falta, de `x-real-ip`. Vercel establece esas
-  cabeceras en su borde, así que el cliente no puede falsearlas. Sin IP legible (local), la clave es
-  `"unknown"`. Detrás de una red compartida (colegio, cabina) varias personas comparten IP: 5 por hora es
-  un límite generoso para ese caso, pero existe.
-- **Prefijo de clave**: `ratelimit:solicitudes`, para que otros usos futuros de la misma base no choquen.
+- **Honeypot** `website`: un bot que rellena todos los campos recibe un éxito falso y no se guarda nada.
+- **Validación estricta** en el servidor: nada que no cumpla el esquema llega a la base.
+- **`check` de la base**: rol, largo del motivo y consentimiento no se pueden saltar ni con la `service_role`.
+- **Tamaños máximos** en nombre (100), email (254) y motivo (1000): una solicitud no puede ser enorme.
+
+**Riesgo aceptado.** Un script que respete el honeypot y envíe datos válidos puede llenar la tabla sin
+freno. Con un sitio pequeño y sin que nadie reciba aviso por cada fila, el daño es ruido en el _Table
+Editor_, no costo ni caída. La tabla se limpia a mano.
+
+**Si algún día aparece spam**, en este orden y sin cambiar el contrato de la API:
+
+1. Revisar si el plan de Vercel incluye reglas de _rate limiting_ en el Firewall: se configuran en el panel,
+   sin código ni servicios nuevos.
+2. Agregar un CAPTCHA (Turnstile) al formulario.
+3. Reintroducir un límite por IP con un almacén compartido (la opción descartada fue Upstash).
 
 ---
 
@@ -367,7 +354,7 @@ modal. Su valor se envía en el cuerpo del POST como `website`.
 3. **200** → se muestra «¡Gracias! Recibimos tu solicitud…», se **limpia el formulario** y se **cierra el
    modal**. Como al cerrar el modal el mensaje desaparecería, el éxito se anuncia fuera del modal: un
    aviso en la propia sección (`role="status"`) que queda visible unos segundos.
-4. **400 con `fields`** → los mensajes del servidor se muestran bajo sus campos. **429 / 500 / error de red**
+4. **400 con `fields`** → los mensajes del servidor se muestran bajo sus campos. **500 / error de red**
    → mensaje de error general dentro del modal (`role="alert"`), el formulario **conserva lo escrito**, el
    botón se rehabilita.
 5. Cerrar el modal con Esc o clic fuera **no** borra lo escrito; solo el éxito lo limpia.
@@ -383,7 +370,7 @@ modal. Su valor se envía en el cuerpo del POST como `website`.
 | AC-S3-4  | El contador del motivo muestra `n / 1000` y no permite superar 1000.                                                                                  |
 | AC-S3-5  | Mientras se envía, el botón está deshabilitado y no se puede duplicar el envío con doble clic.                                                        |
 | AC-S3-6  | En 200 el formulario queda vacío, el modal cerrado y aparece el aviso de éxito en español.                                                            |
-| AC-S3-7  | En 400, 429, 500 y error de red aparece un mensaje en español, se conserva lo escrito y el botón vuelve a estar activo.                               |
+| AC-S3-7  | En 400, 500 y error de red aparece un mensaje en español, se conserva lo escrito y el botón vuelve a estar activo.                                    |
 | AC-S3-8  | El honeypot está en el DOM, fuera de pantalla, sin `display:none`, con `tabIndex=-1` y `aria-hidden`; Tab nunca cae en él; su valor viaja en el POST. |
 | AC-S3-9  | El modal es usable a 360 px de ancho (sin scroll horizontal) y el contenido largo se desplaza dentro del modal.                                       |
 | AC-S3-10 | El cuerpo del POST tiene las claves de §5.1 y `email` vacío viaja como `""` o ausente.                                                                |
@@ -399,9 +386,8 @@ con el mismo estilo tipográfico y de contenedor que el resto del sitio (`max-w`
 clases ya usadas) y `metadata` con título «Política de privacidad».
 
 Qué dice el texto (resumen): quién es responsable y cómo contactarlo; qué datos se guardan (nombre,
-teléfono, email opcional, rol, motivo, consentimiento, fecha) y que la IP se usa solo para limitar envíos
-y se conserva cerca de una hora en Upstash; para qué se usan (contactar sobre la solicitud, nada más);
-base (el consentimiento); proveedores (Supabase, Upstash, Vercel) y posible procesamiento fuera del Perú;
+teléfono, email opcional, rol, motivo, consentimiento, fecha) y que no se guarda la IP; para qué se usan (contactar sobre la solicitud, nada más);
+base (el consentimiento); proveedores (Supabase y Vercel) y posible procesamiento fuera del Perú;
 quién ve los datos; cuánto tiempo se guardan; derechos de acceso, corrección, borrado y oposición,
 atendidos **a mano** por correo (decisión #13).
 
@@ -412,13 +398,13 @@ completar** (AC-S4-3).
 
 ### 8.1 Criterios de aceptación
 
-| ID      | Criterio                                                                                                                                       |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| AC-S4-1 | `/privacidad` responde 200 y muestra el título y las nueve secciones de la política.                                                           |
-| AC-S4-2 | Los textos de la página coinciden con `docs/politica-privacidad.md` (mismas secciones y mismos datos).                                         |
-| AC-S4-3 | Ni la página ni el documento contienen marcadores `[...]` sin completar antes de publicar en producción.                                       |
-| AC-S4-4 | El texto declara exactamente los datos que guarda S1 (nombre, teléfono, email, rol, motivo, consentimiento, fecha) y el uso temporal de la IP. |
-| AC-S4-5 | La página es legible a 360 px de ancho y tiene un único `h1`.                                                                                  |
+| ID      | Criterio                                                                                                                                                      |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-S4-1 | `/privacidad` responde 200 y muestra el título y las nueve secciones de la política.                                                                          |
+| AC-S4-2 | Los textos de la página coinciden con `docs/politica-privacidad.md` (mismas secciones y mismos datos).                                                        |
+| AC-S4-3 | Ni la página ni el documento contienen marcadores `[...]` sin completar antes de publicar en producción.                                                      |
+| AC-S4-4 | El texto declara exactamente los datos que guarda S1 (nombre, teléfono, email, rol, motivo, consentimiento, fecha); y no menciona la IP, porque no se guarda. |
+| AC-S4-5 | La página es legible a 360 px de ancho y tiene un único `h1`.                                                                                                 |
 
 ---
 
@@ -436,10 +422,10 @@ pnpm check:task              # al terminar cada tarea
 ```
 
 Dependencias nuevas (**pedir visto bueno**, ver §11): `zod`, `@supabase/supabase-js`,
-`@upstash/ratelimit`, `@upstash/redis`, `server-only`.
+`server-only`.
 
 ```bash
-pnpm add zod @supabase/supabase-js @upstash/ratelimit @upstash/redis server-only
+pnpm add zod @supabase/supabase-js server-only
 pnpm dlx shadcn@latest add dialog textarea label checkbox select
 ```
 
@@ -451,13 +437,13 @@ Marco: Vitest + Testing Library (unitarios en `tests/unit/`), Playwright (e2e en
 CONSTRAINTS.md pide ≥ 80 % de cobertura en las líneas cambiadas (hoy avisa); `src/components/**` está
 excluido de la cobertura, así que el peso va en `src/lib/` y `src/app/api/`.
 
-| Nivel      | Qué cubre                                                                        | Cómo                                                                                                                                                                            |
-| ---------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unitario   | `requestSchema` (cada regla y los bordes de AC-S2-6/7), lectura de IP.           | Funciones puras, sin red.                                                                                                                                                       |
-| Unitario   | Handler `POST`: AC-S2-1…12.                                                      | Se llama `POST(new Request(...))` como en `tests/unit/dictionary/api.test.ts`; `vi.mock` de `@/lib/supabase-admin` y de `rate-limit`. Nunca se toca Supabase ni Upstash reales. |
-| Componente | Formulario: validación, estados de carga/éxito/error, honeypot (AC-S3-3…8).      | Testing Library con `fetch` simulado. `Select` de base-ui es incómodo en jsdom: la lógica va en funciones puras y el selector se ejerce en e2e.                                 |
-| E2E        | Abrir el modal desde cada card, enviar, ver éxito y error (AC-S3-1, 2, 6, 7, 9). | `page.route('**/api/solicitudes', ...)`: no hay Supabase en CI.                                                                                                                 |
-| Manual     | AC-S1-1…7 y un envío real de punta a punta con Upstash real.                     | Una vez, con un nombre reconocible («PRUEBA»); como Preview y producción comparten proyecto (decisión #11), se borra la fila a mano después.                                    |
+| Nivel      | Qué cubre                                                                        | Cómo                                                                                                                                             |
+| ---------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Unitario   | `requestSchema` (cada regla y los bordes de AC-S2-6/7).                          | Funciones puras, sin red.                                                                                                                        |
+| Unitario   | Handler `POST`: AC-S2-1…9.                                                       | Se llama `POST(new Request(...))` como en `tests/unit/dictionary/api.test.ts`; `vi.mock` de `@/lib/supabase-admin`. Nunca se toca Supabase real. |
+| Componente | Formulario: validación, estados de carga/éxito/error, honeypot (AC-S3-3…8).      | Testing Library con `fetch` simulado. `Select` de base-ui es incómodo en jsdom: la lógica va en funciones puras y el selector se ejerce en e2e.  |
+| E2E        | Abrir el modal desde cada card, enviar, ver éxito y error (AC-S3-1, 2, 6, 7, 9). | `page.route('**/api/solicitudes', ...)`: no hay Supabase en CI.                                                                                  |
+| Manual     | AC-S1-1…7 y un envío real de punta a punta.                                      | Una vez, con un nombre reconocible («PRUEBA»); como Preview y producción comparten proyecto (decisión #11), se borra la fila a mano después.     |
 
 Reglas del piso (CONSTRAINTS.md): sin `@ts-ignore`/`eslint-disable`, sin tests saltados, sin `catch {}`
 vacío (los `catch` registran con `console.error`), sin `TODO` en el código.

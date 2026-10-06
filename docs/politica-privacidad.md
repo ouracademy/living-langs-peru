@@ -25,9 +25,7 @@ Cuando envías el formulario guardamos:
 - **Motivo**: el texto que escribes sobre por qué quieres apoyar.
 - Que **aceptaste** esta política y la fecha y hora del envío.
 
-Además, para evitar abusos del formulario, nuestro sistema lee tu **dirección IP** y la usa solo para
-contar cuántos envíos se hacen desde ella. Ese contador se conserva alrededor de una hora y después
-desaparece. No lo asociamos a tu nombre ni a tu solicitud.
+No guardamos tu dirección IP junto con tu solicitud.
 
 No usamos cookies de seguimiento ni herramientas de publicidad en este formulario.
 
@@ -49,11 +47,10 @@ Para que el formulario funcione usamos proveedores que procesan datos en nuestro
 | Proveedor | Para qué                                          |
 | --------- | ------------------------------------------------- |
 | Supabase  | Guardar tu solicitud en una base de datos privada |
-| Upstash   | Contar los envíos por IP (dato temporal)          |
 | Vercel    | Alojar el sitio web                               |
 
 Estos servicios pueden tener servidores fuera del Perú, por lo que tus datos podrían procesarse en otro
-país. [REGIÓN DE LOS SERVIDORES DE SUPABASE, UPSTASH Y VERCEL, A CONFIRMAR]
+país. [REGIÓN DE LOS SERVIDORES DE SUPABASE Y VERCEL, A CONFIRMAR]
 
 ## 6. Quién puede verlos
 

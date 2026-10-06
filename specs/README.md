@@ -9,7 +9,7 @@ diseño completo se lea de una sola vez.
 | [diccionario.md](./diccionario.md)               | Aprobado     | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                             |
 | [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local.           |
 | [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes.           |
-| [solicitudes.md](./solicitudes.md)               | Borrador     | `tasks/solicitudes/` (pendiente de aprobación)            | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad. |
+| [solicitudes.md](./solicitudes.md)               | Aprobado     | [tasks/solicitudes/](../tasks/solicitudes/)               | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad. |
 
 ## Dónde va cada cosa
 
