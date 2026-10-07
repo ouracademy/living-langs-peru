@@ -19,14 +19,6 @@ const options = [
     icon: NotebookPen,
     color: "bg-[#E4572E]",
   },
-  // {
-  //   title: "Voluntarios",
-  //   description: "Sumate a nuestro equipo del proyecto.",
-  //   buttonText: "Unirme",
-  //   href: "/voluntarios",
-  //   icon: HeartHandshake,
-  //   color: "bg-[#1B98A0]",
-  // },
   {
     title: "Donar",
     description: "Ayúdanos a mantener la plataforma viva.",
