@@ -1,19 +1,14 @@
 # Política de privacidad
 
-> Estado: **borrador sin revisar** · Fecha: 2026-10-05
-> Fuente de verdad del texto de la página `/privacidad` (spec: [specs/solicitudes.md](../specs/solicitudes.md), S4).
-> Los textos entre `[CORCHETES]` son datos que el equipo debe completar antes de publicar. El texto no
-> fue revisado por un abogado: antes de difundirlo, que lo lea quien responda por el proyecto.
-
-Última actualización: [FECHA DE PUBLICACIÓN]
+Última actualización: 12/10/26
 
 Esta política explica qué datos personales recogemos cuando envías el formulario de «Crear cuenta» o
 «Donar» en Living Langs Peru, para qué los usamos y cómo puedes pedir que los borremos.
 
 ## 1. Quién es responsable
 
-[NOMBRE DE LA PERSONA, ORGANIZACIÓN O INSTITUCIÓN RESPONSABLE DEL PROYECTO]
-Contacto para temas de datos personales: [CORREO DE CONTACTO]
+Arthur Mauricio Delgadillo, UNMSM
+Contacto para temas de datos personales: amd11dot4@gmail.com
 
 ## 2. Qué datos recogemos
 
@@ -50,7 +45,7 @@ Para que el formulario funcione usamos proveedores que procesan datos en nuestro
 | Vercel    | Alojar el sitio web                               |
 
 Estos servicios pueden tener servidores fuera del Perú, por lo que tus datos podrían procesarse en otro
-país. [REGIÓN DE LOS SERVIDORES DE SUPABASE Y VERCEL, A CONFIRMAR]
+país. Estados Unidos
 
 ## 6. Quién puede verlos
 
@@ -59,8 +54,7 @@ pueden leerlos, y las usamos únicamente para el fin descrito en el punto 3.
 
 ## 7. Cuánto tiempo los guardamos
 
-Mientras sean necesarios para atender tu solicitud, o hasta que nos pidas borrarlos. [PLAZO MÁXIMO DE
-CONSERVACIÓN, SI SE QUIERE FIJAR UNO]
+Mientras sean necesarios para atender tu solicitud, o hasta que nos pidas borrarlos.
 
 ## 8. Tus derechos
 
@@ -71,9 +65,9 @@ Puedes pedirnos, en cualquier momento:
 - **Borrarlos**.
 - **Oponerte** a que los sigamos usando, o **retirar tu consentimiento**.
 
-Escríbenos a [CORREO DE CONTACTO] indicando el nombre y el teléfono (o el correo) con los que enviaste el
+Escríbenos a amd11dot4@gmail.com indicando el nombre y el teléfono (o el correo) con los que enviaste el
 formulario, para poder encontrar tu solicitud. Atendemos estos pedidos de forma manual y te respondemos en
-un plazo de [PLAZO DE RESPUESTA].
+un plazo de 2 días.
 
 ## 9. Cambios en esta política
 
