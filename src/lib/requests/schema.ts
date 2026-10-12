@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const REQUEST_ROLES = ["donador", "editor"] as const;
+export type RequestRole = (typeof REQUEST_ROLES)[number];
 
 export const NAME_MAX_LENGTH = 100;
 export const EMAIL_MAX_LENGTH = 254;
