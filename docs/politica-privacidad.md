@@ -45,7 +45,7 @@ Para que el formulario funcione usamos proveedores que procesan datos en nuestro
 | Vercel    | Alojar el sitio web                               |
 
 Estos servicios pueden tener servidores fuera del Perú, por lo que tus datos podrían procesarse en otro
-país. Estados Unidos
+país, como Estados Unidos
 
 ## 6. Quién puede verlos
 

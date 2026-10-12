@@ -101,7 +101,7 @@ export const privacyPolicy: PrivacyPolicy = {
         },
         {
           kind: "paragraph",
-          text: "Estos servicios pueden tener servidores fuera del Perú, por lo que tus datos podrían procesarse en otro país. Estados Unidos",
+          text: "Estos servicios pueden tener servidores fuera del Perú, por lo que tus datos podrían procesarse en otro país, como Estados Unidos",
         },
       ],
     },

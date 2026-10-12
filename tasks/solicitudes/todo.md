@@ -1,7 +1,7 @@
 # TODO — Solicitudes de apoyo (donador / editor)
 
 > Plan y razonamiento: [tasks/solicitudes/plan.md](./plan.md) · Spec: [specs/solicitudes.md](../../specs/solicitudes.md)
-> Estado: **F1, F2 y F3 terminadas** (2026-10-12). Pendiente humano: **H4** (revisión del texto de la política). Siguiente: **F4**.
+> Estado: **F1–F4 terminadas** (2026-10-12), a falta del Checkpoint 4 (uso real del formulario contra Supabase). Pendiente humano: **H4** (revisión del texto de la política). Siguiente: **F5**.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · commit propio.
@@ -75,14 +75,14 @@ Antes de empezar: `git status` (hay cambios sin commitear del usuario en `suppor
 
 ## F4 — Modal, formulario y envío real (S3)
 
-- [ ] **T4.1** `pnpm dlx shadcn@latest add dialog textarea label checkbox select`. **Comprobar** que los archivos nuevos usan `@base-ui/react` (como `sheet.tsx`) y no Radix. Si no, escribirlos a mano. Revisar el estilo contra `input.tsx` y `button.tsx` `[AC-S3-2]`
-- [ ] **T4.2** **Modal vacío con el rol correcto.** `support-request-dialog.tsx`: `Dialog` con título y descripción en español; el botón conserva el aspecto (`rounded-full px-5 py-2.5`). `support.tsx`: reemplazar `href` y `<Link>` por el modal (**sin tocar el bloque comentado**). «Crear cuenta» → `editor`; «Donar» → `donador` `[AC-S3-1, AC-S3-2]`
-- [ ] **T4.3** **Formulario sin red.** `support-request-form.tsx`: los seis campos, contador `n / 1000` por caracteres Unicode, honeypot `website` (`absolute -left-[9999px]`, `tabIndex={-1}`, `aria-hidden`, sin `display:none`), enlace a `/privacidad` bajo el checkbox con `target="_blank" rel="noopener"`. Funciones puras `validateForm` y `buildPayload` con **tests primero** `[AC-S3-3, AC-S3-4, AC-S3-8, AC-S3-10, AC-S3-11]`
-- [ ] **T4.4** **Mensajes de error bajo cada campo** con `aria-describedby` y `aria-invalid`; el foco va al primer campo con error; sin errores no hay `fetch` `[AC-S3-3]`
-- [ ] **T4.5** **Envío.** `fetch('/api/solicitudes', { method: 'POST' })`; botón deshabilitado y «Enviando…» durante la petición; 400 con `fields` → mensajes bajo los campos; 500 o error de red → alerta general, el formulario conserva lo escrito; 200 → limpia, cierra el modal y muestra el aviso de éxito fuera del modal (`role="status"`) `[AC-S3-5, AC-S3-6, AC-S3-7]`
-- [ ] **T4.6** Tests de componente con `fetch` simulado: 200, 400, 500 y error de red; doble clic no duplica el envío `[AC-S3-5, AC-S3-6, AC-S3-7]`
-- [ ] **T4.7** E2E `tests/e2e/support-request.spec.ts` con `page.route('**/api/solicitudes', …)`: abrir desde cada card, enviar vacío, enviar válido, error del servidor, Esc cierra y devuelve el foco, 360 px sin scroll horizontal `[AC-S3-1, AC-S3-2, AC-S3-6, AC-S3-7, AC-S3-9]`
-- [ ] **T4.8** Verificar en navegador (`pnpm dev`): estilo coherente con las cards, teclado completo, modal usable en celular.
+- [x] **T4.1** `pnpm dlx shadcn@latest add dialog textarea label checkbox select`. **Comprobar** que los archivos nuevos usan `@base-ui/react` (como `sheet.tsx`) y no Radix. Si no, escribirlos a mano. Revisar el estilo contra `input.tsx` y `button.tsx` `[AC-S3-2]`
+- [x] **T4.2** **Modal vacío con el rol correcto.** `support-request-dialog.tsx`: `Dialog` con título y descripción en español; el botón conserva el aspecto (`rounded-full px-5 py-2.5`). `support.tsx`: reemplazar `href` y `<Link>` por el modal (**sin tocar el bloque comentado**). «Crear cuenta» → `editor`; «Donar» → `donador` `[AC-S3-1, AC-S3-2]`
+- [x] **T4.3** **Formulario sin red.** `support-request-form.tsx`: los seis campos, contador `n / 1000` por caracteres Unicode, honeypot `website` (`absolute -left-[9999px]`, `tabIndex={-1}`, `aria-hidden`, sin `display:none`), enlace a `/privacidad` bajo el checkbox con `target="_blank" rel="noopener"`. Funciones puras `validateForm` y `buildPayload` con **tests primero** `[AC-S3-3, AC-S3-4, AC-S3-8, AC-S3-10, AC-S3-11]`
+- [x] **T4.4** **Mensajes de error bajo cada campo** con `aria-describedby` y `aria-invalid`; el foco va al primer campo con error; sin errores no hay `fetch` `[AC-S3-3]`
+- [x] **T4.5** **Envío.** `fetch('/api/solicitudes', { method: 'POST' })`; botón deshabilitado y «Enviando…» durante la petición; 400 con `fields` → mensajes bajo los campos; 500 o error de red → alerta general, el formulario conserva lo escrito; 200 → limpia, cierra el modal y muestra el aviso de éxito fuera del modal (`role="status"`) `[AC-S3-5, AC-S3-6, AC-S3-7]`
+- [x] **T4.6** Tests de componente con `fetch` simulado: 200, 400, 500 y error de red; doble clic no duplica el envío `[AC-S3-5, AC-S3-6, AC-S3-7]`
+- [x] **T4.7** E2E `tests/e2e/support-request.spec.ts` con `page.route('**/api/solicitudes', …)`: abrir desde cada card, enviar vacío, enviar válido, error del servidor, Esc cierra y devuelve el foco, 360 px sin scroll horizontal `[AC-S3-1, AC-S3-2, AC-S3-6, AC-S3-7, AC-S3-9]`
+- [x] **T4.8** Verificar en navegador (`pnpm dev`): estilo coherente con las cards, teclado completo, modal usable en celular.
 
 > **⛔ Checkpoint 4** — alguien usa el formulario real desde la portada y la solicitud aparece en
 > Supabase. Se borra la fila de prueba.
