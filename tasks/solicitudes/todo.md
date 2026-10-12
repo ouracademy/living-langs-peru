@@ -1,7 +1,7 @@
 # TODO — Solicitudes de apoyo (donador / editor)
 
 > Plan y razonamiento: [tasks/solicitudes/plan.md](./plan.md) · Spec: [specs/solicitudes.md](../../specs/solicitudes.md)
-> Estado: **sin empezar.** Siguiente: **H1** (proyecto de Supabase) y después **F1**.
+> Estado: **F1 y F2 terminadas** (2026-10-12). Siguiente: **F3** (página `/privacidad`) y después **F4**.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · commit propio.
@@ -23,38 +23,38 @@ Antes de empezar: `git status` (hay cambios sin commitear del usuario en `suppor
 
 ## H1 — Proyecto de Supabase (humano)
 
-- [ ] **H1.1** Crear (o elegir) el proyecto de Supabase.
-- [ ] **H1.2** Copiar `Project URL` y la `service_role` key. **No** pegarlas en el chat ni en un commit.
+- [x] **H1.1** Crear (o elegir) el proyecto de Supabase.
+- [x] **H1.2** Copiar `Project URL` y la `service_role` key. **No** pegarlas en el chat ni en un commit.
 
 ---
 
 ## F1 — Tabla lista y verificada (S1)
 
-- [ ] **T1.1** Guardar el SQL de spec §4.1 en `docs/solicitudes-schema.sql` (referencia; el código no lo ejecuta) y correrlo en el _SQL Editor_ de Supabase. Incluye el `revoke` `[AC-S1-1]`
-- [ ] **T1.2** Verificar con la `service_role`: insertar una fila válida a mano `[AC-S1-2]`
-- [ ] **T1.3** Verificar con la `anon` key (REST): insertar y leer fallan, no crean ni devuelven filas `[AC-S1-3, AC-S1-4]`
-- [ ] **T1.4** Verificar los `check`: `rol = 'voluntario'`, motivo de 9 y 1001, `consentimiento = false` son rechazados `[AC-S1-5]`
-- [ ] **T1.5** Prueba del `revoke`: crear una política permisiva **de prueba**, comprobar que `anon` sigue sin acceso, **borrar la política** `[AC-S1-7]`
-- [ ] **T1.6** Borrar la fila de prueba. Anotar en `docs/solicitudes-schema.sql` la fecha en que se corrió.
+- [x] **T1.1** Guardar el SQL de spec §4.1 en `docs/solicitudes-schema.sql` (referencia; el código no lo ejecuta) y correrlo en el _SQL Editor_ de Supabase. Incluye el `revoke` y el `grant insert` a `service_role` (hallazgo de F1) `[AC-S1-1]`
+- [x] **T1.2** Verificar con la `service_role`: insertar una fila válida por REST; un `select` y un `delete` fallan con `42501` (solo tiene `INSERT`). La fila se comprueba en el _Table Editor_ `[AC-S1-2, AC-S1-8]`
+- [x] **T1.3** Verificar con la `anon` key (REST): insertar y leer fallan, no crean ni devuelven filas `[AC-S1-3, AC-S1-4]`
+- [x] **T1.4** Verificar los `check`: `rol = 'voluntario'`, motivo de 9 y 1001, `consentimiento = false` son rechazados `[AC-S1-5]`
+- [x] **T1.5** Prueba del `revoke`: crear una política permisiva **de prueba**, comprobar que `anon` sigue sin acceso, **borrar la política** `[AC-S1-7]`
+- [x] **T1.6** Borrar la fila de prueba. Anotar en `docs/solicitudes-schema.sql` la fecha en que se corrió.
 
 > **⛔ Checkpoint 1** — la tabla existe, está cerrada a `anon` y a `authenticated`, y nadie dejó una
 > política de prueba. Se confirma mirando _Authentication → Policies_ en Supabase.
 
 ## H2 — Variables de entorno (humano)
 
-- [ ] **H2.1** `.env.local` con `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` (spec §4.2).
-- [ ] **H2.2** Vercel → _Settings → Environment Variables_: las mismas dos en **Production** y **Preview**; `service_role` como **Sensitive**. Redeploy.
+- [x] **H2.1** `.env.local` con `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` (spec §4.2).
+- [x] **H2.2** Vercel → _Settings → Environment Variables_: las mismas dos en **Production** y **Preview**; `service_role` como **Sensitive**. Redeploy.
 
 ---
 
 ## F2 — Endpoint que guarda y rechaza (S2)
 
-- [ ] **T2.1** `pnpm add zod @supabase/supabase-js server-only`. `src/lib/requests/schema.ts` con `requestSchema`, tipos y mensajes en español. **Tests primero, en rojo:** cada regla de spec §5.2 y los bordes (7/15 dígitos, `+` en medio, 9/10/1000/1001 caracteres, 5 emojis, `email: ""`) `[AC-S2-4, AC-S2-6, AC-S2-7]`
-- [ ] **T2.2** `src/lib/supabase-admin.ts` con `import "server-only"`, creación **perezosa** (`getSupabaseAdmin()`, plan §3.4) y `auth: { persistSession: false, autoRefreshToken: false }`. Si cambia el snippet de spec §5.3, actualizar el spec `[AC-S1-6]`
-- [ ] **T2.3** `src/app/api/solicitudes/route.ts`: JSON válido → honeypot → validación → insert. Éxito y honeypot devuelven **el mismo** cuerpo. Errores con los códigos de spec §5.1. **Tests primero** con `vi.mock('@/lib/supabase-admin')`, llamando `POST(new Request(...))` como en `tests/unit/dictionary/api.test.ts` `[AC-S2-1, AC-S2-2, AC-S2-3, AC-S2-5, AC-S2-8, AC-S2-9]`
-- [ ] **T2.4** Leer `node_modules/next/dist/docs/01-app/01-getting-started/15-route-handlers.md` antes de T2.3 y confirmar que `POST` no se cachea ni se prerrenderiza.
-- [ ] **T2.5** Verificar a mano con `curl` y las variables reales: un envío válido crea una fila (nombre «PRUEBA»); uno inválido devuelve 400 con `fields`; el honeypot devuelve 200 **sin** crear fila `[AC-S2-1, AC-S2-3, AC-S2-4]`
-- [ ] **T2.6** `grep -rn "NEXT_PUBLIC_" src/` y `grep -rn "supabase-admin" src/components/` → vacíos `[AC-S1-6]`
+- [x] **T2.1** `pnpm add zod @supabase/supabase-js server-only`. `src/lib/requests/schema.ts` con `requestSchema`, tipos y mensajes en español. **Tests primero, en rojo:** cada regla de spec §5.2 y los bordes (7/15 dígitos, `+` en medio, 9/10/1000/1001 caracteres, 5 emojis, `email: ""`) `[AC-S2-4, AC-S2-6, AC-S2-7]`
+- [x] **T2.2** `src/lib/supabase-admin.ts` con `import "server-only"`, creación **perezosa** (`getSupabaseAdmin()`, plan §3.4) y `auth: { persistSession: false, autoRefreshToken: false }`. Si cambia el snippet de spec §5.3, actualizar el spec `[AC-S1-6]`
+- [x] **T2.3** `src/app/api/solicitudes/route.ts`: JSON válido → honeypot → validación → insert. Éxito y honeypot devuelven **el mismo** cuerpo. Errores con los códigos de spec §5.1. **Tests primero** con `vi.mock('@/lib/supabase-admin')`, llamando `POST(new Request(...))` como en `tests/unit/dictionary/api.test.ts` `[AC-S2-1, AC-S2-2, AC-S2-3, AC-S2-5, AC-S2-8, AC-S2-9]`
+- [x] **T2.4** Leer `node_modules/next/dist/docs/01-app/01-getting-started/15-route-handlers.md` antes de T2.3 y confirmar que `POST` no se cachea ni se prerrenderiza.
+- [x] **T2.5** Verificar a mano con `curl` y las variables reales: un envío válido crea una fila (nombre «PRUEBA»); uno inválido devuelve 400 con `fields`; el honeypot devuelve 200 **sin** crear fila `[AC-S2-1, AC-S2-3, AC-S2-4]`
+- [x] **T2.6** `grep -rn "NEXT_PUBLIC_" src/` y `grep -rn "supabase-admin" src/components/` → vacíos `[AC-S1-6]`
 
 > **⛔ Checkpoint 2** — `curl` guarda y rechaza contra Supabase real. Se borra la fila de prueba.
 > No se mergea nada a `main` todavía: el formulario aún no existe.
@@ -65,7 +65,7 @@ Antes de empezar: `git status` (hay cambios sin commitear del usuario en `suppor
 
 - [ ] **T3.1** `src/app/privacidad/page.tsx`: componente de servidor, `metadata` «Política de privacidad», un único `h1`, las nueve secciones de `docs/politica-privacidad.md`, mismo contenedor y tipografía que el resto del sitio `[AC-S4-1, AC-S4-2, AC-S4-5]`
 - [ ] **T3.2** E2E `tests/e2e/privacy.spec.ts`: la página abre, tiene `h1`, nueve encabezados `h2`, y a 360 px no hay scroll horizontal `[AC-S4-1, AC-S4-5]`
-- [ ] **T3.3** Comprobar que el texto declara lo mismo que guarda la tabla y **no** menciona la IP `[AC-S4-4]`
+- [ ] **T3.3** Comprobar que el texto declara lo mismo que guarda la tabla y dice que **no** se guarda la IP `[AC-S4-4]`
 - [ ] **T3.4** `pnpm build`: `/privacidad` sale **estática** (`○`).
 
 > **⛔ Checkpoint 3 · H3/H4** — el equipo completa los `[CORCHETES]` y alguien revisa el texto. Sin

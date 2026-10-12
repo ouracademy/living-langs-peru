@@ -142,13 +142,20 @@ create table public.solicitudes (
 -- El servidor usa la service_role key, que ignora RLS.
 alter table public.solicitudes enable row level security;
 
--- Segunda barrera: aunque alguien cree por error una política permisiva más
--- adelante, estos roles siguen sin permisos sobre la tabla.
-revoke all on public.solicitudes from anon, authenticated;
+-- Permisos de tabla. Supabase ya no concede permisos de lectura/escritura a las
+-- tablas nuevas, pero sí deja REFERENCES, TRIGGER y TRUNCATE a todos los roles
+-- de la API. Se cierra todo y se abre solo lo que el servidor necesita: insertar.
+-- Además actúa como segunda barrera si alguien crea por error una política RLS
+-- permisiva más adelante.
+revoke all on public.solicitudes from anon, authenticated, service_role;
+grant insert on public.solicitudes to service_role;
 ```
 
-Diferencia con el pedido: `created_at` lleva `not null` además de `default now()` (nunca debería
-quedar vacío), y se agrega el `revoke` (decisión confirmada). Sin funciones, sin triggers, sin índice único.
+Diferencias con el pedido: `created_at` lleva `not null` además de `default now()`; el `revoke` y el
+`grant` son un hallazgo de F1 (2026-10-12): en el proyecto real `service_role` no tenía `SELECT` ni
+`INSERT` sobre la tabla y el servidor recibía `42501`. El servidor **solo inserta**, así que solo recibe
+`INSERT`: si la `service_role` key se filtrara, no podría leer las solicitudes guardadas. Quien las lee es el
+equipo desde el _Table Editor_, que usa el rol `postgres`. Sin funciones, sin triggers, sin índice único.
 
 ### 4.2 Variables de entorno
 
@@ -196,6 +203,7 @@ automáticos nunca escriben: simulan la API (§10).
 | AC-S1-5 | La base rechaza `rol = 'voluntario'`, un `motivo` de 9 o 1001 caracteres y `consentimiento = false`.                                                                     |
 | AC-S1-6 | `grep -rn "NEXT_PUBLIC_" src/` no encuentra ninguna de las dos variables, y ningún componente importa `supabase-admin`.                                                  |
 | AC-S1-7 | Con la política `anon` simulada (crear a propósito una política permisiva de prueba) la `anon` key **sigue** sin acceso gracias al `revoke`; luego se borra la política. |
+| AC-S1-8 | Con la `service_role` key, un `insert` válido funciona y un `select` o `delete` devuelve `42501` (solo tiene `INSERT`).                                                  |
 
 ---
 
@@ -258,22 +266,31 @@ Detalles que importan:
 
 ```ts
 import "server-only";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const url = process.env.SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let client: SupabaseClient | undefined;
 
-if (!url || !serviceRoleKey) {
-  throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+export function getSupabaseAdmin(): SupabaseClient {
+  if (client) return client;
+  const url = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceRoleKey) {
+    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+  }
+  client = createClient(url, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  return client;
 }
-
-export const supabaseAdmin = createClient(url, serviceRoleKey, {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
 ```
 
-Es un servidor sin sesión, así que no se persiste ni se refresca nada. Si faltan las variables,
-el `throw` ocurre al importar el módulo; el handler lo captura y responde `500` genérico.
+Es un servidor sin sesión, así que no se persiste ni se refresca nada. El cliente se crea **al primer uso**,
+no al importar el módulo: un `throw` a nivel de módulo rompería toda la ruta en vez de fallar solo la
+solicitud (cambio respecto al primer borrador, decidido en F2). Si faltan las variables, `getSupabaseAdmin()`
+lanza y el handler responde `500` genérico.
+
+Al registrar un error del insert se loguea **solo `error.code`**: el `message` y los `details` de Supabase
+pueden citar la fila completa (por ejemplo, «Failing row contains (…)»), que son datos personales.
 
 ### 5.4 Criterios de aceptación
 
@@ -386,7 +403,7 @@ con el mismo estilo tipográfico y de contenedor que el resto del sitio (`max-w`
 clases ya usadas) y `metadata` con título «Política de privacidad».
 
 Qué dice el texto (resumen): quién es responsable y cómo contactarlo; qué datos se guardan (nombre,
-teléfono, email opcional, rol, motivo, consentimiento, fecha) y que no se guarda la IP; para qué se usan (contactar sobre la solicitud, nada más);
+teléfono, email opcional, rol, motivo, consentimiento, fecha) y que no se guarda la IP junto con la solicitud; para qué se usan (contactar sobre la solicitud, nada más);
 base (el consentimiento); proveedores (Supabase y Vercel) y posible procesamiento fuera del Perú;
 quién ve los datos; cuánto tiempo se guardan; derechos de acceso, corrección, borrado y oposición,
 atendidos **a mano** por correo (decisión #13).
@@ -398,13 +415,13 @@ completar** (AC-S4-3).
 
 ### 8.1 Criterios de aceptación
 
-| ID      | Criterio                                                                                                                                                      |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AC-S4-1 | `/privacidad` responde 200 y muestra el título y las nueve secciones de la política.                                                                          |
-| AC-S4-2 | Los textos de la página coinciden con `docs/politica-privacidad.md` (mismas secciones y mismos datos).                                                        |
-| AC-S4-3 | Ni la página ni el documento contienen marcadores `[...]` sin completar antes de publicar en producción.                                                      |
-| AC-S4-4 | El texto declara exactamente los datos que guarda S1 (nombre, teléfono, email, rol, motivo, consentimiento, fecha); y no menciona la IP, porque no se guarda. |
-| AC-S4-5 | La página es legible a 360 px de ancho y tiene un único `h1`.                                                                                                 |
+| ID      | Criterio                                                                                                                                                 |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-S4-1 | `/privacidad` responde 200 y muestra el título y las nueve secciones de la política.                                                                     |
+| AC-S4-2 | Los textos de la página coinciden con `docs/politica-privacidad.md` (mismas secciones y mismos datos).                                                   |
+| AC-S4-3 | Ni la página ni el documento contienen marcadores `[...]` sin completar antes de publicar en producción.                                                 |
+| AC-S4-4 | El texto declara exactamente los datos que guarda S1 (nombre, teléfono, email, rol, motivo, consentimiento, fecha); y aclara que **no** se guarda la IP. |
+| AC-S4-5 | La página es legible a 360 px de ancho y tiene un único `h1`.                                                                                            |
 
 ---
 
