@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { buttonVariants } from "./ui/button";
+import { SupportRequestDialog } from "./support-request-dialog";
 import {
   Card,
   CardDescription,
@@ -7,15 +6,25 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Heart, NotebookPen } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Heart, NotebookPen, type LucideIcon } from "lucide-react";
+import type { RequestRole } from "@/lib/requests/schema";
 
-const options = [
+const options: {
+  title: string;
+  description: string;
+  buttonText: string;
+  role: RequestRole;
+  dialogDescription: string;
+  icon: LucideIcon;
+  color: string;
+}[] = [
   {
     title: "Registrarse como editor",
     description: "Ayúdanos a traducir y validar la información.",
     buttonText: "Crear cuenta",
-    href: "/registro-editor",
+    role: "editor",
+    dialogDescription:
+      "Déjanos tus datos y te contactaremos para sumarte al equipo de editores.",
     icon: NotebookPen,
     color: "bg-[#E4572E]",
   },
@@ -23,7 +32,9 @@ const options = [
     title: "Donar",
     description: "Ayúdanos a mantener la plataforma viva.",
     buttonText: "Donar",
-    href: "/donar",
+    role: "donador",
+    dialogDescription:
+      "Déjanos tus datos y te contactaremos para conversar sobre tu aporte.",
     icon: Heart,
     color: "bg-[#6A3E8C]",
   },
@@ -66,15 +77,12 @@ export function Support() {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter className="border-none bg-transparent pt-4 font-bold">
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      buttonVariants({ variant: "default" }),
-                      "rounded-full px-5 py-2.5",
-                    )}
-                  >
-                    {item.buttonText}
-                  </Link>
+                  <SupportRequestDialog
+                    role={item.role}
+                    triggerLabel={item.buttonText}
+                    title={item.title}
+                    description={item.dialogDescription}
+                  />
                 </CardFooter>
               </Card>
             );
