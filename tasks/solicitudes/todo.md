@@ -1,7 +1,7 @@
 # TODO — Solicitudes de apoyo (donador / editor)
 
 > Plan y razonamiento: [tasks/solicitudes/plan.md](./plan.md) · Spec: [specs/solicitudes.md](../../specs/solicitudes.md)
-> Estado: **F1 y F2 terminadas** (2026-10-12). Siguiente: **F3** (página `/privacidad`) y después **F4**.
+> Estado: **F1, F2 y F3 terminadas** (2026-10-12). Pendiente humano: **H4** (revisión del texto de la política). Siguiente: **F4**.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · commit propio.
@@ -63,10 +63,10 @@ Antes de empezar: `git status` (hay cambios sin commitear del usuario en `suppor
 
 ## F3 — Página de privacidad (S4) · puede ir en paralelo con F2
 
-- [ ] **T3.1** `src/app/privacidad/page.tsx`: componente de servidor, `metadata` «Política de privacidad», un único `h1`, las nueve secciones de `docs/politica-privacidad.md`, mismo contenedor y tipografía que el resto del sitio `[AC-S4-1, AC-S4-2, AC-S4-5]`
-- [ ] **T3.2** E2E `tests/e2e/privacy.spec.ts`: la página abre, tiene `h1`, nueve encabezados `h2`, y a 360 px no hay scroll horizontal `[AC-S4-1, AC-S4-5]`
-- [ ] **T3.3** Comprobar que el texto declara lo mismo que guarda la tabla y dice que **no** se guarda la IP `[AC-S4-4]`
-- [ ] **T3.4** `pnpm build`: `/privacidad` sale **estática** (`○`).
+- [x] **T3.1** `src/app/privacidad/page.tsx`: componente de servidor, `metadata` «Política de privacidad», un único `h1`, las nueve secciones de `docs/politica-privacidad.md`, mismo contenedor y tipografía que el resto del sitio `[AC-S4-1, AC-S4-2, AC-S4-5]`
+- [x] **T3.2** E2E `tests/e2e/privacy.spec.ts`: la página abre, tiene `h1`, nueve encabezados `h2`, y a 360 px no hay scroll horizontal `[AC-S4-1, AC-S4-5]`
+- [x] **T3.3** Comprobar que el texto declara lo mismo que guarda la tabla y dice que **no** se guarda la IP `[AC-S4-4]`
+- [x] **T3.4** `pnpm build`: `/privacidad` sale **estática** (`○`).
 
 > **⛔ Checkpoint 3 · H3/H4** — el equipo completa los `[CORCHETES]` y alguien revisa el texto. Sin
 > esto, F3 **no se mergea a `main`**. Las tareas de F4 y F5 sí pueden avanzar en la rama.
