@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import {
   SupportRequestForm,
   useSupportRequestForm,
@@ -47,7 +46,7 @@ export function SupportRequestDialog({
     <div className="flex flex-col gap-3">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
-          render={<Button className="w-fit rounded-full px-5 py-2.5" />}
+          render={<Button className="w-fit rounded-full px-5 py-2.5 cursor-pointer" />}
         >
           {triggerLabel}
         </DialogTrigger>
