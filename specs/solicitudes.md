@@ -1,6 +1,7 @@
 # Solicitudes de apoyo (donador / editor)
 
-> Estado: **aprobado** · Fecha: 2026-10-06 (aprobado por el usuario; S4 requiere completar la política antes de publicar) ·
+> Estado: **implementado** · Fecha: 2026-10-14 (aprobado el 2026-10-06). Pendiente humano antes de mergear a `main`: revisión
+> del texto de la política (H4) y la prueba desde Preview ([docs/solicitudes-pruebas.md](../docs/solicitudes-pruebas.md)) ·
 > Rama sugerida: `feat/solicitudes`
 > Rama base: `main` · Plan: [tasks/solicitudes/](../tasks/solicitudes/) · Índice:
 > [specs/README.md](./README.md)
