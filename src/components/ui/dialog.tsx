@@ -62,6 +62,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
+            className="cursor-pointer"
             render={
               <Button
                 variant="ghost"
