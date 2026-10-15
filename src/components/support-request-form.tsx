@@ -315,7 +315,7 @@ export function SupportRequestForm({
       <Button
         type="submit"
         disabled={submitting}
-        className="rounded-full px-5 py-2.5"
+        className="rounded-full px-5 py-2.5 cursor-pointer"
       >
         {submitting ? "Enviando…" : "Enviar solicitud"}
       </Button>
