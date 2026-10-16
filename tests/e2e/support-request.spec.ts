@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 const THANKS = "¡Gracias! Recibimos tu solicitud y te contactaremos pronto.";
+const SNACKBAR = "Solicitud enviada exitosamente. En breve lo contactaremos";
 
 const openFrom = async (page: Page, button: string) => {
   await page.goto("/");
@@ -122,7 +123,7 @@ test("a valid send posts the contract, closes the dialog and thanks the person",
 
   await expect(dialog).toBeHidden();
   await expect(
-    page.getByRole("status").filter({ hasText: THANKS }),
+    page.getByRole("status").filter({ hasText: SNACKBAR }),
   ).toBeVisible();
   expect(body).toEqual({
     nombre: "Rosa Quispe",
@@ -140,6 +141,51 @@ test("a valid send posts the contract, closes the dialog and thanks the person",
   await expect(
     page.getByRole("checkbox", { name: /Acepto que me contacten/ }),
   ).not.toBeChecked();
+});
+
+// AC-S3-12
+test("the snackbar can be dismissed", async ({ page }) => {
+  await page.route("**/api/solicitudes", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true, message: THANKS }),
+    }),
+  );
+  const dialog = await openFrom(page, "Crear cuenta");
+  await fillValid(page);
+  await dialog.getByRole("button", { name: "Enviar solicitud" }).click();
+  await expect(
+    page.getByRole("status").filter({ hasText: SNACKBAR }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Cerrar aviso" }).click();
+
+  await expect(
+    page.getByRole("status").filter({ hasText: SNACKBAR }),
+  ).toHaveCount(0);
+});
+
+// AC-S3-12
+test("no snackbar appears when the form is invalid or the send fails", async ({
+  page,
+}) => {
+  await page.route("**/api/solicitudes", (route) =>
+    route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "server_error", message: "Falló." }),
+    }),
+  );
+  const dialog = await openFrom(page, "Crear cuenta");
+
+  await dialog.getByRole("button", { name: "Enviar solicitud" }).click();
+  await expect(dialog.getByText("Ingresa tu nombre.")).toBeVisible();
+  await fillValid(page);
+  await dialog.getByRole("button", { name: "Enviar solicitud" }).click();
+  await expect(dialog.getByRole("alert")).toHaveText("Falló.");
+
+  await expect(page.getByText(SNACKBAR)).toHaveCount(0);
 });
 
 // AC-S3-7

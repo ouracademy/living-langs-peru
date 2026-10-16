@@ -10,6 +10,7 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SupportRequestDialog } from "@/components/support-request-dialog";
+import { SENT_NOTICE } from "@/lib/requests/form";
 
 const THANKS = "¡Gracias! Recibimos tu solicitud y te contactaremos pronto.";
 
@@ -123,7 +124,7 @@ describe("SupportRequestDialog", () => {
   });
 
   // AC-S3-6
-  it("sends, closes, thanks the person outside the dialog and clears the form", async () => {
+  it("sends, closes, shows the snackbar outside the dialog and clears the form", async () => {
     fetchMock.mockResolvedValue(
       jsonResponse(200, { ok: true, message: THANKS }),
     );
@@ -134,7 +135,7 @@ describe("SupportRequestDialog", () => {
     send();
 
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    expect(screen.getByRole("status").textContent).toBe(THANKS);
+    expect(screen.getByRole("status").textContent).toContain(SENT_NOTICE);
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
       nombre: "Rosa Quispe",
       telefono: "+51 987 654 321",
@@ -245,6 +246,50 @@ describe("SupportRequestDialog", () => {
       finish(jsonResponse(200, { ok: true, message: THANKS }));
     });
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  // AC-S3-12
+  it("shows no snackbar before a send succeeds", async () => {
+    renderDialog();
+    await openDialog();
+
+    expect(screen.getByRole("status").textContent).toBe("");
+    send();
+    await screen.findByText("Ingresa tu nombre.");
+
+    expect(screen.getByRole("status").textContent).toBe("");
+  });
+
+  it("shows no snackbar when the send fails", async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse(500, {
+        error: "server_error",
+        message: "Intenta más tarde.",
+      }),
+    );
+    renderDialog();
+    await openDialog();
+    fillValid();
+
+    send();
+    await screen.findByRole("alert");
+
+    expect(screen.getByRole("status").textContent).toBe("");
+  });
+
+  it("lets the person close the snackbar", async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse(200, { ok: true, message: THANKS }),
+    );
+    renderDialog();
+    await openDialog();
+    fillValid();
+    send();
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar aviso" }));
+
+    expect(screen.getByRole("status").textContent).toBe("");
   });
 
   // AC-S3-8

@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   SupportRequestForm,
   useSupportRequestForm,
 } from "@/components/support-request-form";
 import { Button } from "@/components/ui/button";
+import { Snackbar } from "@/components/ui/snackbar";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { SENT_NOTICE } from "@/lib/requests/form";
 import type { RequestRole } from "@/lib/requests/schema";
-
-const NOTICE_MS = 8000;
 
 type SupportRequestDialogProps = {
   /** The role this card stands for; the form opens preselected on it. */
@@ -33,14 +33,8 @@ export function SupportRequestDialog({
   description,
 }: SupportRequestDialogProps) {
   const [open, setOpen] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
   const form = useSupportRequestForm(role);
-
-  useEffect(() => {
-    if (!notice) return;
-    const timer = setTimeout(() => setNotice(null), NOTICE_MS);
-    return () => clearTimeout(timer);
-  }, [notice]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -64,17 +58,17 @@ export function SupportRequestDialog({
           </DialogHeader>
           <SupportRequestForm
             form={form}
-            onSuccess={(message) => {
+            onSuccess={() => {
               setOpen(false);
-              setNotice(message);
+              setSent(true);
             }}
           />
         </DialogContent>
       </Dialog>
-      {/* Outside the dialog: it closes on success, and the thanks must outlive it. */}
-      <p role="status" className="text-sm font-bold text-[#1B6E4A]">
-        {notice}
-      </p>
+      {/* Outside the dialog: it closes on success, and the notice must outlive it. */}
+      <Snackbar open={sent} onClose={() => setSent(false)}>
+        {SENT_NOTICE}
+      </Snackbar>
     </div>
   );
 }

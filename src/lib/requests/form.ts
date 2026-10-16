@@ -44,6 +44,11 @@ export const SUBMIT_MESSAGES = {
   success: "¡Gracias! Recibimos tu solicitud y te contactaremos pronto.",
 } as const;
 
+// What the person sees after a successful send. It is fixed here rather than
+// taken from the server's message, which stays part of the API contract.
+export const SENT_NOTICE =
+  "Solicitud enviada exitosamente. En breve lo contactaremos";
+
 export function emptyValues(role: RequestRole): FormValues {
   return {
     nombre: "",

@@ -86,7 +86,7 @@ export function useSupportRequestForm(defaultRole: RequestRole) {
     if (name) setFocusRequest({ name });
   }
 
-  async function submit(onSuccess: (message: string) => void) {
+  async function submit(onSuccess: () => void) {
     if (inFlight.current) return;
     setFormError(null);
 
@@ -105,7 +105,7 @@ export function useSupportRequestForm(defaultRole: RequestRole) {
 
     if (outcome.kind === "success") {
       setValues(emptyValues(defaultRole));
-      onSuccess(outcome.message);
+      onSuccess();
       return;
     }
     if (outcome.kind === "invalid") {
@@ -120,7 +120,7 @@ export function useSupportRequestForm(defaultRole: RequestRole) {
 
 type SupportRequestFormProps = {
   form: ReturnType<typeof useSupportRequestForm>;
-  onSuccess: (message: string) => void;
+  onSuccess: () => void;
 };
 
 export function SupportRequestForm({
@@ -315,7 +315,7 @@ export function SupportRequestForm({
       <Button
         type="submit"
         disabled={submitting}
-        className="rounded-full px-5 py-2.5 cursor-pointer"
+        className="cursor-pointer rounded-full px-5 py-2.5"
       >
         {submitting ? "Enviando…" : "Enviar solicitud"}
       </Button>

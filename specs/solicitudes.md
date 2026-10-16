@@ -369,9 +369,12 @@ modal. Su valor se envía en el cuerpo del POST como `website`.
    `aria-invalid`. El foco va al primer campo con error. Si hay errores no se hace `fetch`.
 2. Si es válido: `fetch('/api/solicitudes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body })`.
    Durante la petición el botón de enviar queda **deshabilitado** y dice «Enviando…»; los campos también.
-3. **200** → se muestra «¡Gracias! Recibimos tu solicitud…», se **limpia el formulario** y se **cierra el
-   modal**. Como al cerrar el modal el mensaje desaparecería, el éxito se anuncia fuera del modal: un
-   aviso en la propia sección (`role="status"`) que queda visible unos segundos.
+3. **200** → se **limpia el formulario**, se **cierra el modal** y aparece un **Snackbar** abajo y al centro con el
+   texto «Solicitud enviada exitosamente. En breve lo contactaremos». El texto es fijo en el cliente (el
+   `message` del servidor sigue siendo parte del contrato de la API, pero no se muestra). El Snackbar vive
+   fuera del modal, que se cierra, es una región `role="status"` / `aria-live="polite"` que siempre está en el
+   DOM, se cierra solo a los 6 segundos y tiene un botón «Cerrar aviso». **No** aparece si la validación falla ni
+   si el envío falla.
 4. **400 con `fields`** → los mensajes del servidor se muestran bajo sus campos. **500 / error de red**
    → mensaje de error general dentro del modal (`role="alert"`), el formulario **conserva lo escrito**, el
    botón se rehabilita.
@@ -380,19 +383,20 @@ modal. Su valor se envía en el cuerpo del POST como `website`.
 
 ### 7.4 Criterios de aceptación
 
-| ID       | Criterio                                                                                                                                              |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AC-S3-1  | «Crear cuenta» abre el modal con el rol «Editor» preseleccionado; «Donar» lo abre con «Donador». Ninguno navega.                                      |
-| AC-S3-2  | El modal se cierra con Esc y con el botón de cierre, devuelve el foco al botón que lo abrió y atrapa el foco mientras está abierto.                   |
-| AC-S3-3  | Enviar vacío muestra un mensaje bajo cada campo obligatorio (nombre, teléfono, rol si se borró, motivo, consentimiento) y **no** hace `fetch`.        |
-| AC-S3-4  | El contador del motivo muestra `n / 1000` y no permite superar 1000.                                                                                  |
-| AC-S3-5  | Mientras se envía, el botón está deshabilitado y no se puede duplicar el envío con doble clic.                                                        |
-| AC-S3-6  | En 200 el formulario queda vacío, el modal cerrado y aparece el aviso de éxito en español.                                                            |
-| AC-S3-7  | En 400, 500 y error de red aparece un mensaje en español, se conserva lo escrito y el botón vuelve a estar activo.                                    |
-| AC-S3-8  | El honeypot está en el DOM, fuera de pantalla, sin `display:none`, con `tabIndex=-1` y `aria-hidden`; Tab nunca cae en él; su valor viaja en el POST. |
-| AC-S3-9  | El modal es usable a 360 px de ancho (sin scroll horizontal) y el contenido largo se desplaza dentro del modal.                                       |
-| AC-S3-10 | El cuerpo del POST tiene las claves de §5.1 y `email` vacío viaja como `""` o ausente.                                                                |
-| AC-S3-11 | Bajo el checkbox hay un enlace a `/privacidad` que abre en pestaña nueva; el formulario conserva lo escrito.                                          |
+| ID       | Criterio                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC-S3-1  | «Crear cuenta» abre el modal con el rol «Editor» preseleccionado; «Donar» lo abre con «Donador». Ninguno navega.                                       |
+| AC-S3-2  | El modal se cierra con Esc y con el botón de cierre, devuelve el foco al botón que lo abrió y atrapa el foco mientras está abierto.                    |
+| AC-S3-3  | Enviar vacío muestra un mensaje bajo cada campo obligatorio (nombre, teléfono, rol si se borró, motivo, consentimiento) y **no** hace `fetch`.         |
+| AC-S3-4  | El contador del motivo muestra `n / 1000` y no permite superar 1000.                                                                                   |
+| AC-S3-5  | Mientras se envía, el botón está deshabilitado y no se puede duplicar el envío con doble clic.                                                         |
+| AC-S3-6  | En 200 el formulario queda vacío, el modal cerrado y aparece el Snackbar con «Solicitud enviada exitosamente. En breve lo contactaremos».              |
+| AC-S3-7  | En 400, 500 y error de red aparece un mensaje en español, se conserva lo escrito y el botón vuelve a estar activo.                                     |
+| AC-S3-8  | El honeypot está en el DOM, fuera de pantalla, sin `display:none`, con `tabIndex=-1` y `aria-hidden`; Tab nunca cae en él; su valor viaja en el POST.  |
+| AC-S3-9  | El modal es usable a 360 px de ancho (sin scroll horizontal) y el contenido largo se desplaza dentro del modal.                                        |
+| AC-S3-10 | El cuerpo del POST tiene las claves de §5.1 y `email` vacío viaja como `""` o ausente.                                                                 |
+| AC-S3-11 | Bajo el checkbox hay un enlace a `/privacidad` que abre en pestaña nueva; el formulario conserva lo escrito.                                           |
+| AC-S3-12 | El Snackbar solo aparece tras un envío exitoso (no con errores de validación ni de servidor), se puede cerrar con su botón y se cierra solo a los 6 s. |
 
 ---
 
