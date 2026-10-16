@@ -59,3 +59,8 @@ Probado contra el servidor de desarrollo con las variables reales:
 
 `pnpm check:task`: 423 pruebas unitarias, cobertura del cambio 93,9 %. `pnpm format:check` limpio.
 E2E: 109 pruebas, todas pasan contra el build de producción.
+
+## Confirmación del equipo — 2026-10-16
+
+El equipo confirmó que la fila `PRUEBA F5` existía con los datos correctos y la borró, que el texto de la
+política fue revisado (H4) y que el envío desde Preview funcionó. Con eso se mergeó `feat/solicitudes` a `main`.

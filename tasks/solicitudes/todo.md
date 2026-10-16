@@ -1,8 +1,7 @@
 # TODO — Solicitudes de apoyo (donador / editor)
 
 > Plan y razonamiento: [tasks/solicitudes/plan.md](./plan.md) · Spec: [specs/solicitudes.md](../../specs/solicitudes.md)
-> Estado: **F1–F5 construidas** (2026-10-14). Pendiente humano antes de mergear a `main`: confirmar la fila `PRUEBA F5` y borrarla,
-> **H4** (revisión del texto de la política) y repetir el envío desde Preview (T5.4). Registro: [docs/solicitudes-pruebas.md](../../docs/solicitudes-pruebas.md).
+> Estado: **terminada y mergeada a `main`** (2026-10-16). El equipo confirmó la fila `PRUEBA F5`, la revisión de la política (H4) y el envío desde Preview. Registro: [docs/solicitudes-pruebas.md](../../docs/solicitudes-pruebas.md).
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · commit propio.
@@ -95,9 +94,9 @@ Antes de empezar: `git status` (hay cambios sin commitear del usuario en `suppor
 - [x] **T5.1** `pnpm check:full` en verde (si falta Chromium: `sudo apt-get install -y libnspr4 libnss3 libasound2t64`).
 - [x] **T5.2** `pnpm build`: `/privacidad` estática (`○`), `/api/solicitudes` dinámica (`ƒ`). Medir cuánto agrega Zod al bundle del cliente; si molesta, plan §3.1.
 - [x] **T5.3** Auditoría de secretos y logs: `pnpm check:secrets`; `grep -rn "console\." src/app/api/solicitudes src/lib` y confirmar que ningún log incluye datos personales `[spec §11]`
-- [ ] **T5.4** _(hecha en local sobre el build de producción el 2026-10-14; falta repetirla desde Preview)_ Prueba real en el deploy de Preview con el nombre «PRUEBA»; borrar la fila a mano. Anotar el resultado en `docs/solicitudes-pruebas.md` `[AC-S1-1…7, AC-S2-1…9]`
+- [x] **T5.4** _(hecha en local sobre el build de producción el 2026-10-14; falta repetirla desde Preview)_ Prueba real en el deploy de Preview con el nombre «PRUEBA»; borrar la fila a mano. Anotar el resultado en `docs/solicitudes-pruebas.md` `[AC-S1-1…7, AC-S2-1…9]`
 - [x] **T5.5** Actualizar `specs/solicitudes.md` y `specs/README.md` a **implementado** con la fecha, y marcar este todo.
-- [ ] **T5.6** Confirmar que H3 y H4 están cerrados antes de mergear a `main`.
+- [x] **T5.6** Confirmar que H3 y H4 están cerrados antes de mergear a `main`.
 
 > **⛔ Checkpoint 5 · cierre** — todos los criterios `AC-S1-*`, `AC-S2-*`, `AC-S3-*` y `AC-S4-*` pasan, la
 > política no tiene corchetes (`AC-S4-3`) y se puede mergear.
