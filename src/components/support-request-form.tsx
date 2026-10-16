@@ -264,7 +264,7 @@ export function SupportRequestForm({
       <div className="grid gap-1.5">
         <label className="flex items-start gap-2 text-sm leading-snug">
           <Checkbox
-            className="mt-0.5"
+            className="mt-0.5 cursor-pointer"
             checked={values.consentimiento}
             disabled={submitting}
             ref={register("consentimiento")}
