@@ -1,0 +1,69 @@
+{
+  "schema": "language-pack/1",
+  "language": {
+    "slug": "ashaninka",
+    "isoCode": "cni",
+    "name": "Asháninka",
+    "title": "PRUEBA — paquete de prueba para los tests",
+    "vowels": ["a", "e", "i", "o"],
+    "graphemes": ["a", "b", "e", "i", "o", "p", "r", "u"],
+    "translationLabel": "castellano"
+  },
+  "sources": [
+    {
+      "id": "fuente-prueba",
+      "kind": "publication",
+      "title": "Fuente de prueba"
+    }
+  ],
+  "themes": [
+    {
+      "id": "tema-prueba",
+      "name": "Tema de prueba",
+      "icon": "🧪",
+      "mode": "pic2word",
+      "items": [
+        {
+          "id": "item-uno",
+          "word": "PRUEBA uno",
+          "translation": "uno de prueba",
+          "emoji": "🍎",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-dos",
+          "word": "PRUEBA dos",
+          "translation": "dos de prueba",
+          "emoji": "🐶",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-tres",
+          "word": "PRUEBA tres",
+          "translation": "tres de prueba",
+          "emoji": "🌳",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-cuatro",
+          "word": "PRUEBA cuatro",
+          "translation": "cuatro de prueba",
+          "emoji": "🐟",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-oculto",
+          "word": "PRUEBA oculta",
+          "translation": "oculta de prueba",
+          "emoji": "👻",
+          "sourceId": "fuente-prueba",
+          "verified": false
+        }
+      ]
+    }
+  ]
+}
