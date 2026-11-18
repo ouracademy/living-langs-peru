@@ -23,12 +23,18 @@ importers:
       cn:
         specifier: ^0.2.6
         version: 0.2.6
+      image-size:
+        specifier: ^2.1.0
+        version: 2.1.0
       lucide-react:
         specifier: ^1.24.0
         version: 1.24.0(react@19.2.4)
       next:
         specifier: 16.2.10
         version: 16.2.10(@babel/core@7.29.7)(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      prettier:
+        specifier: ^3.9.6
+        version: 3.9.6
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -102,9 +108,6 @@ importers:
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
-      prettier:
-        specifier: ^3.9.6
-        version: 3.9.6
       prettier-plugin-tailwindcss:
         specifier: ^0.8.1
         version: 0.8.1(prettier@3.9.6)
@@ -2281,6 +2284,11 @@ packages:
   ignore@7.0.6:
     resolution: {integrity: sha512-BAg6QkE8W+TuQLrrw0Ugr7HegXduRuuj8/ti2kSOc+jz1dmx8/WNcjr6XGnq5YpDWxFwwaavqD0+jIUOKelTsw==}
     engines: {node: '>= 4'}
+
+  image-size@2.1.0:
+    resolution: {integrity: sha512-6Dbisa46RsgeAh3TMSFL2i8+uIFG+/LRmz6Q2oscSJJvXo1sOw3EgNO4M8jPl1P+gR1atJLDPrpclX4IHz63sA==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -6110,6 +6118,8 @@ snapshots:
   ignore@5.3.2: {}
 
   ignore@7.0.6: {}
+
+  image-size@2.1.0: {}
 
   import-fresh@3.3.1:
     dependencies:
