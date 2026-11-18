@@ -10,6 +10,7 @@ diseño completo se lea de una sola vez.
 | [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local.           |
 | [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes.           |
 | [solicitudes.md](./solicitudes.md)               | Implementado | [tasks/solicitudes/](../tasks/solicitudes/)               | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad. |
+| [saltapalabras.md](./saltapalabras.md)           | Borrador     | [tasks/saltapalabras/](../tasks/saltapalabras/)           | Juego de vocabulario por paquetes, sin login; `/admin/juego` para publicar y audio.  |
 
 ## Dónde va cada cosa
 
