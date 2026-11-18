@@ -17,6 +17,9 @@ export default defineConfig({
     // route is prerendered and reads ?palabra client-side via useSearchParams;
     // dev does not reproduce that split identically.
     command: "pnpm build && pnpm start",
+    // Test-only credentials so /admin answers 401 (not 503) without them.
+    // Not a secret: they only exist in this server process.
+    env: { ADMIN_USER: "e2e-editor", ADMIN_PASSWORD: "e2e-not-a-secret" },
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
