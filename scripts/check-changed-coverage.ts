@@ -7,7 +7,8 @@
 //          [--base <ref>] [--min <percent>] [--warn]
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { relative, resolve } from "node:path";
+
+import { toRepoPath } from "./lib/repo-path.ts";
 
 const LCOV = "coverage/lcov.info";
 // Only product code counts. Tests, type declarations and data are excluded:
@@ -88,7 +89,7 @@ const hits = new Map<string, Map<number, number>>();
 let record = "";
 for (const line of readFileSync(LCOV, "utf8").split("\n")) {
   if (line.startsWith("SF:")) {
-    record = relative(process.cwd(), resolve(line.slice(3).trim()));
+    record = toRepoPath(line.slice(3).trim());
     hits.set(record, new Map());
   } else if (line.startsWith("DA:")) {
     const [lineNumber, count] = line.slice(3).split(",").map(Number);
