@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const requestHeaders = vi.fn(async () => new Headers());
 vi.mock("next/headers", () => ({ headers: requestHeaders }));
+// The editor refreshes the route after a save; there is no app router here.
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 
 const { default: AdminPhotosPage, metadata } =
   await import("@/app/admin/fotos/page");

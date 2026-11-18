@@ -43,7 +43,7 @@ export default async function AdminPhotosPage() {
         navegador.
       </p>
       {gallery.ok ? (
-        <PhotoEditor photos={gallery.value.photos} />
+        <PhotoEditor photos={gallery.value.photos} sha={gallery.value.sha} />
       ) : (
         // No form on failure: an empty list would invite overwriting the gallery.
         <p

@@ -68,13 +68,21 @@ function normalise(value: string): string {
     .toLowerCase();
 }
 
+/**
+ * True when an alt names the medium instead of describing it. Exported so the
+ * photo form (/admin/fotos) applies this exact rule, not a copy of it.
+ */
+export function isGenericAlt(alt: string): boolean {
+  return GENERIC_ALTS.has(normalise(alt));
+}
+
 function photoProblems(photo: Photo, index: number): string[] {
   const where = `photos[${index}] (${photo.src})`;
   const problems: string[] = [];
 
   if (!photo.alt?.trim()) {
     problems.push(`${where}: alt vacío. Una imagen sin alt no es publicable.`);
-  } else if (GENERIC_ALTS.has(normalise(photo.alt))) {
+  } else if (isGenericAlt(photo.alt)) {
     problems.push(
       `${where}: alt genérico («${photo.alt.trim()}»). Describe la imagen para quien no la ve.`,
     );
