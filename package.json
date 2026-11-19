@@ -21,6 +21,7 @@
     "dictionary:check": "node --experimental-strip-types scripts/validate-dictionary.ts",
     "game:check": "node --experimental-strip-types scripts/validate-game-items.ts",
     "peoples:check": "node --experimental-strip-types scripts/validate-peoples.ts",
+    "pack:draft": "node --experimental-strip-types scripts/draft-pack-from-dictionary.ts",
     "check:floor": "node --experimental-strip-types scripts/check-floor.ts",
     "check:language": "node --experimental-strip-types scripts/check-language-policy.ts",
     "check:coverage": "node --experimental-strip-types scripts/check-changed-coverage.ts --min 80",

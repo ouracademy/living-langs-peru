@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Saltapalabras pack drafts (pnpm pack:draft): reviewed and published at
+# /admin/juego, the database keeps the history, never the repo.
+paquete-*-borrador.json
+
 # vercel
 .vercel
 
