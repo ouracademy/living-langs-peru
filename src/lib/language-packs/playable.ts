@@ -70,6 +70,27 @@ function meetsMinimum(
   }
 }
 
+function hasText(item: PackItem): boolean {
+  return item.word.trim() !== "" && item.translation.trim() !== "";
+}
+
+/** Keeps the items `keep` accepts, then the themes that still reach their minimum. */
+function themesWith(
+  pack: LanguagePack,
+  keep: (item: PackItem) => boolean,
+): Theme[] {
+  return pack.themes.flatMap((theme) => {
+    const kept = theme.items.filter((item) => hasText(item) && keep(item));
+    const usable = usableForMode(theme.mode, kept, pack.language);
+
+    if (!meetsMinimum(theme.mode, usable, pack.language)) {
+      return [];
+    }
+
+    return [{ ...theme, items: usable }];
+  });
+}
+
 /**
  * The only door between a pack and the person playing (spec §4.2): keeps, in
  * each theme, the items that are verified, cite a source that exists, and have
@@ -79,21 +100,20 @@ function meetsMinimum(
 export function playableThemes(pack: LanguagePack): Theme[] {
   const sourceIds = new Set(pack.sources.map((source) => source.id));
 
-  return pack.themes.flatMap((theme) => {
-    const checked = theme.items.filter(
-      (item) =>
-        item.verified &&
-        item.sourceId !== undefined &&
-        sourceIds.has(item.sourceId) &&
-        item.word.trim() !== "" &&
-        item.translation.trim() !== "",
-    );
-    const usable = usableForMode(theme.mode, checked, pack.language);
+  return themesWith(
+    pack,
+    (item) =>
+      item.verified &&
+      item.sourceId !== undefined &&
+      sourceIds.has(item.sourceId),
+  );
+}
 
-    if (!meetsMinimum(theme.mode, usable, pack.language)) {
-      return [];
-    }
-
-    return [{ ...theme, items: usable }];
-  });
+/**
+ * «Probar» in /admin/juego (spec §9.1, AC-SP6-10): the same themes, but with
+ * the unverified and unsourced items too, so they can be reviewed before
+ * publishing. Only the admin page uses it; the public page never does.
+ */
+export function previewThemes(pack: LanguagePack): Theme[] {
+  return themesWith(pack, () => true);
 }

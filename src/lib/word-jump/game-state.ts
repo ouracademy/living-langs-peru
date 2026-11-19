@@ -1,4 +1,4 @@
-import { playableThemes } from "../language-packs/playable.ts";
+import { playableThemes, previewThemes } from "../language-packs/playable.ts";
 import type {
   LanguagePack,
   PackReadResult,
@@ -37,14 +37,12 @@ export type GameState =
   | { kind: "empty" }
   | { kind: "ready"; pack: PublicPack };
 
-/** What the game page shows for a read result. Pure, so it is tested alone. */
-export function resolveGameState(result: PackReadResult): GameState {
-  if (result.status === "unconfigured") return { kind: "unavailable" };
-  if (result.status === "none") return { kind: "empty" };
-
-  const themes = playableThemes(result.pack);
-  if (themes.length === 0) return { kind: "empty" };
-
+/** The browser's share of a pack, given the themes already chosen for it. */
+function toPublicPack(
+  pack: LanguagePack,
+  themes: Theme[],
+  version: number,
+): PublicPack {
   const cited = new Set(
     themes.flatMap((theme) => theme.items.map((item) => item.sourceId)),
   );
@@ -59,26 +57,47 @@ export function resolveGameState(result: PackReadResult): GameState {
     vowels,
     vowelVariants,
     confusable,
-  } = result.pack.language;
+  } = pack.language;
+
+  return {
+    language: {
+      slug,
+      isoCode,
+      name,
+      title,
+      translationLabel,
+      graphemes,
+      vowels,
+      ...(praise ? { praise } : {}),
+      ...(vowelVariants ? { vowelVariants } : {}),
+      ...(confusable ? { confusable } : {}),
+    },
+    sources: pack.sources.filter((source) => cited.has(source.id)),
+    themes,
+    version,
+  };
+}
+
+/** What the game page shows for a read result. Pure, so it is tested alone. */
+export function resolveGameState(result: PackReadResult): GameState {
+  if (result.status === "unconfigured") return { kind: "unavailable" };
+  if (result.status === "none") return { kind: "empty" };
+
+  const themes = playableThemes(result.pack);
+  if (themes.length === 0) return { kind: "empty" };
 
   return {
     kind: "ready",
-    pack: {
-      language: {
-        slug,
-        isoCode,
-        name,
-        title,
-        translationLabel,
-        graphemes,
-        vowels,
-        ...(praise ? { praise } : {}),
-        ...(vowelVariants ? { vowelVariants } : {}),
-        ...(confusable ? { confusable } : {}),
-      },
-      sources: result.pack.sources.filter((source) => cited.has(source.id)),
-      themes,
-      version: result.version,
-    },
+    pack: toPublicPack(result.pack, themes, result.version),
   };
+}
+
+/**
+ * The pack «Probar» plays in /admin/juego (AC-SP6-10): unverified items
+ * included, so they can be reviewed. `null` when no theme reaches its minimum.
+ * Version 0: it is not published.
+ */
+export function previewPack(pack: LanguagePack): PublicPack | null {
+  const themes = previewThemes(pack);
+  return themes.length === 0 ? null : toPublicPack(pack, themes, 0);
 }

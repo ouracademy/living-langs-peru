@@ -63,4 +63,15 @@ describe("/admin", () => {
     });
     expect(link.getAttribute("href")).toBe("/admin/fotos");
   });
+
+  it("links to the Saltapalabras packs with valid credentials", async () => {
+    withAuthorization(credentials);
+
+    render(await AdminHomePage());
+
+    const link = screen.getByRole("link", {
+      name: /Paquetes de Saltapalabras/,
+    });
+    expect(link.getAttribute("href")).toBe("/admin/juego");
+  });
 });

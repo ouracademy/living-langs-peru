@@ -26,6 +26,11 @@ import { RoundView, buttonClass } from "./round-view";
 type WordJumpGameProps = {
   /** Already filtered by `playableThemes` on the server. */
   pack: PublicPack;
+  /**
+   * «Probar» in /admin/juego (AC-SP6-10): the pack may hold unverified items,
+   * a warning is shown, and nothing is read from or written to the progress.
+   */
+  preview?: boolean;
 };
 
 const MODE_NAMES: Record<GameMode, string> = {
@@ -45,7 +50,7 @@ const NO_PROGRESS: LanguageProgress = Object.freeze({});
  * during render would not match the cached HTML. Progress lives only in this
  * browser (spec §7.4).
  */
-export function WordJumpGame({ pack }: WordJumpGameProps) {
+export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
   const [theme, setTheme] = useState<Theme | null>(null);
   const [round, setRound] = useState<RoundState | null>(null);
   const { progress, storageAvailable } = useSyncExternalStore(
@@ -55,7 +60,10 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
   );
   const lang = pack.language.isoCode;
   const slug = pack.language.slug;
-  const seen = progress.languages[slug] ?? NO_PROGRESS;
+  // A preview never counts: it plays content that is not published.
+  const seen = preview
+    ? NO_PROGRESS
+    : (progress.languages[slug] ?? NO_PROGRESS);
 
   const context: RoundContext | null = useMemo(
     () =>
@@ -96,15 +104,29 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
   const next = useCallback(() => {
     if (!round || !context) return;
     const after = nextQuestion(round, context);
-    // Written once, when the round ends (spec §7.4).
-    if (after.status === "finished") saveRound(slug, roundOutcomes(after));
+    // Written once, when the round ends (spec §7.4), and never in a preview.
+    if (after.status === "finished" && !preview) {
+      saveRound(slug, roundOutcomes(after));
+    }
     setRound(after);
-  }, [round, context, slug]);
+  }, [round, context, slug, preview]);
+
+  const previewNotice = preview ? (
+    <p
+      role="note"
+      className="mt-6 rounded-[20px] border-2 border-dashed border-[#C7431C] bg-[#FFF7E8] px-5 py-4 text-[#241D14]"
+    >
+      <strong>Vista previa: puede tener errores.</strong> Incluye palabras sin
+      verificar, marcadas como tales. No cuenta para el progreso y nadie más la
+      ve.
+    </p>
+  ) : null;
 
   if (!theme || !round || !context) {
     return (
       <section aria-labelledby="temas" className="mt-8">
-        <h2 id="temas" className="text-xl font-bold">
+        {previewNotice}
+        <h2 id="temas" className="mt-6 text-xl font-bold">
           Elige un tema
         </h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -131,8 +153,12 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
                       </span>
                     ) : null}
                     <span className="block text-sm font-normal">
-                      {MODE_NAMES[item.mode]} · Palabras vistas: {known} de{" "}
-                      {item.items.length}
+                      {MODE_NAMES[item.mode]} ·{" "}
+                      {preview
+                        ? `${item.items.length} palabras, ${
+                            item.items.filter((each) => !each.verified).length
+                          } sin verificar`
+                        : `Palabras vistas: ${known} de ${item.items.length}`}
                     </span>
                   </span>
                 </button>
@@ -140,7 +166,7 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
             );
           })}
         </ul>
-        {storageAvailable ? null : (
+        {storageAvailable || preview ? null : (
           // Said once, plainly: the game still works.
           <p className="mt-4 text-sm text-[#4A4130]">
             Tu navegador no nos deja guardar el progreso, así que no vamos a
@@ -207,13 +233,16 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
   }
 
   return (
-    <RoundView
-      round={round}
-      theme={theme}
-      lang={lang}
-      sourceTitles={sourceTitles}
-      onAnswer={answer}
-      onNext={next}
-    />
+    <>
+      {previewNotice}
+      <RoundView
+        round={round}
+        theme={theme}
+        lang={lang}
+        sourceTitles={sourceTitles}
+        onAnswer={answer}
+        onNext={next}
+      />
+    </>
   );
 }

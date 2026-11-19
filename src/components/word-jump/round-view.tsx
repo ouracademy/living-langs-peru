@@ -237,6 +237,13 @@ export function RoundView({
               </span>
               : {feedback.item.translation}.
             </p>
+            {feedback.item.verified ? null : (
+              // Only reachable from «Probar» in /admin/juego: the public game
+              // filters unverified items out before they get here (decision #4).
+              <p className="mt-1 text-sm font-bold text-[#C7431C]">
+                ⚠ Sin verificar
+              </p>
+            )}
             {source ? (
               <p className="mt-1 text-sm text-[#4A4130]">
                 Fuente: {source}

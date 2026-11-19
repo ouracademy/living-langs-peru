@@ -15,12 +15,18 @@ type AdminSection = {
   description: string;
 };
 
-/** One entry per admin page that exists. Add /admin/juego here when it ships. */
+/** One entry per admin page that exists. */
 const SECTIONS: AdminSection[] = [
   {
     href: "/admin/fotos",
     title: "Fotos de la galería asháninka",
     description: "Ver, agregar y corregir las fotos de la página /ashaninka.",
+  },
+  {
+    href: "/admin/juego",
+    title: "Paquetes de Saltapalabras",
+    description:
+      "Importar, probar y publicar las palabras del juego, y ver su historial.",
   },
 ];
 
