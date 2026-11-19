@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { mulberry32 } from "@/lib/game/random";
 import { normalizeWord } from "@/lib/language-packs/clean";
 import { playableThemes } from "@/lib/language-packs/playable";
+import type { LanguagePack, PackItem } from "@/lib/language-packs/types";
 import { buildQuestion } from "@/lib/word-jump/questions";
 
 import { testItem, testPack, testTheme } from "../language-packs/fixtures";
@@ -157,7 +158,7 @@ describe("buildQuestion (pic2word)", () => {
 
     expect(question.options).toHaveLength(3);
     const borrowed = question.options.filter((option) =>
-      option.itemId.startsWith("otro-"),
+      option.itemId?.startsWith("otro-"),
     );
     expect(borrowed).toHaveLength(2);
   });
@@ -179,5 +180,188 @@ describe("buildQuestion (pic2word)", () => {
     );
 
     expect(positions.size).toBe(3);
+  });
+});
+
+/** The letter rules of the test pack, as the round passes them in. */
+function rulesOf(pack = testPack()) {
+  return pack.language;
+}
+
+/** Seeds 0..n-1, each with its own question. */
+function questionsFor(
+  pack: LanguagePack,
+  pick: (items: PackItem[]) => PackItem,
+  count = 40,
+) {
+  const playable = playableThemes(pack);
+  const theme = playable[0];
+  const item = pick(theme.items);
+  return Array.from({ length: count }, (_, seed) =>
+    buildQuestion(item, theme, playable, mulberry32(seed), rulesOf(pack)),
+  );
+}
+
+describe("buildQuestion (word2pic)", () => {
+  const pack = testPack({ themes: [testTheme({ mode: "word2pic" })] });
+
+  it("shows the word and offers three different pictures named by their meaning", () => {
+    const [question] = questionsFor(pack, (items) => items[1]);
+    const item = testTheme().items[1];
+
+    expect(question.mode).toBe("word2pic");
+    expect(question.prompt).toEqual({ text: item.word });
+    expect(question.optionsInLanguage).toBe(false);
+    expect(question.options[question.answerIndex]).toEqual({
+      itemId: item.id,
+      text: item.emoji,
+      label: item.translation,
+    });
+    expect(new Set(question.options.map((option) => option.text)).size).toBe(3);
+  });
+
+  // AC-SP2-2
+  it("never offers a picture or a meaning equal to the answer's", () => {
+    const base = testTheme({ mode: "word2pic" });
+    const withTwins = testPack({
+      themes: [
+        testTheme({
+          mode: "word2pic",
+          items: [
+            ...base.items,
+            testItem({
+              id: "mismo-dibujo",
+              word: "PRUEBA cinco",
+              translation: "cinco de prueba",
+              emoji: base.items[0].emoji,
+            }),
+            testItem({
+              id: "mismo-significado",
+              word: "PRUEBA seis",
+              translation: base.items[0].translation,
+              emoji: "🐱",
+            }),
+          ],
+        }),
+      ],
+    });
+
+    for (const question of questionsFor(withTwins, (items) => items[0])) {
+      const distractors = question.options.filter(
+        (_, index) => index !== question.answerIndex,
+      );
+      for (const option of distractors) {
+        expect(option.text).not.toBe(base.items[0].emoji);
+        expect(option.itemId).not.toBe("mismo-significado");
+      }
+    }
+  });
+});
+
+describe("buildQuestion (first)", () => {
+  const pack = testPack({ themes: [testTheme({ mode: "first" })] });
+
+  it("hides the initial and offers three graphemes, one of them right", () => {
+    const [question] = questionsFor(pack, (items) => items[0]);
+
+    expect(question.mode).toBe("first");
+    expect(question.prompt).toEqual({
+      emoji: "🍎",
+      label: "uno de prueba",
+      text: "＿RUEBA uno",
+    });
+    expect(question.optionsInLanguage).toBe(true);
+    expect(question.options[question.answerIndex]).toEqual({ text: "p" });
+    expect(new Set(question.options.map((option) => option.text)).size).toBe(3);
+  });
+
+  // AC-SP2-4
+  it("prefers the confusable graphemes as distractors", () => {
+    const base = testPack();
+    const confusable = testPack({
+      language: { ...base.language, confusable: { p: ["b", "r"] } },
+      themes: [testTheme({ mode: "first" })],
+    });
+
+    for (const question of questionsFor(confusable, (items) => items[0])) {
+      expect(question.options.map((option) => option.text).sort()).toEqual([
+        "b",
+        "p",
+        "r",
+      ]);
+    }
+  });
+
+  // AC-SP2-1, AC-SP2-9
+  it("is seeded and moves the answer around", () => {
+    const questions = questionsFor(pack, (items) => items[0]);
+
+    expect(questions[5]).toEqual(questionsFor(pack, (items) => items[0])[5]);
+    expect(
+      new Set(questions.map((question) => question.answerIndex)).size,
+    ).toBe(3);
+  });
+});
+
+describe("buildQuestion (vowel)", () => {
+  const pack = testPack({ themes: [testTheme({ mode: "vowel" })] });
+
+  it("hides exactly one vowel and offers the vowels of the language", () => {
+    for (const question of questionsFor(pack, (items) => items[0])) {
+      const text = question.prompt.text ?? "";
+      expect(question.mode).toBe("vowel");
+      expect([...text].filter((letter) => letter === "＿")).toHaveLength(1);
+      expect(question.options.map((option) => option.text).sort()).toEqual([
+        "a",
+        "e",
+        "i",
+        "o",
+      ]);
+      const answer = question.options[question.answerIndex].text;
+      // Putting the answer back gives the word again.
+      expect(text.replace("＿", answer).toLowerCase()).toBe("prueba uno");
+    }
+  });
+
+  it("hides different vowels with different seeds", () => {
+    const hidden = new Set(
+      questionsFor(pack, (items) => items[0]).map(
+        (question) => question.prompt.text,
+      ),
+    );
+
+    expect(hidden.size).toBeGreaterThan(1);
+  });
+
+  // AC-SP2-5
+  it("folds a variant onto its vowel", () => {
+    const base = testPack();
+    const accented = testPack({
+      language: { ...base.language, vowelVariants: { á: "a" } },
+      themes: [
+        testTheme({
+          mode: "vowel",
+          items: [testItem({ word: "prá" })],
+        }),
+      ],
+    });
+
+    for (const question of questionsFor(accented, (items) => items[0], 5)) {
+      expect(question.prompt.text).toBe("pr＿");
+      expect(question.options[question.answerIndex].text).toBe("a");
+    }
+  });
+
+  it("offers at most four vowels, the answer always among them", () => {
+    const base = testPack();
+    const many = testPack({
+      language: { ...base.language, vowels: ["a", "e", "i", "o", "u"] },
+      themes: [testTheme({ mode: "vowel" })],
+    });
+
+    for (const question of questionsFor(many, (items) => items[0])) {
+      expect(question.options.length).toBe(4);
+      expect(question.answerIndex).toBeGreaterThanOrEqual(0);
+    }
   });
 });

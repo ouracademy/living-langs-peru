@@ -7,7 +7,10 @@
     "title": "PRUEBA — paquete de prueba para los tests",
     "vowels": ["a", "e", "i", "o"],
     "graphemes": ["a", "b", "e", "i", "o", "p", "r", "u"],
-    "translationLabel": "castellano"
+    "translationLabel": "castellano",
+    "confusable": {
+      "p": ["b"]
+    }
   },
   "sources": [
     {
@@ -62,6 +65,86 @@
           "emoji": "👻",
           "sourceId": "fuente-prueba",
           "verified": false
+        }
+      ]
+    },
+    {
+      "id": "tema-dibujos",
+      "name": "Dibujos de prueba",
+      "icon": "🖼️",
+      "mode": "word2pic",
+      "items": [
+        {
+          "id": "item-cinco",
+          "word": "PRUEBA cinco",
+          "translation": "cinco de prueba",
+          "emoji": "🐱",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-seis",
+          "word": "PRUEBA seis",
+          "translation": "seis de prueba",
+          "emoji": "🌽",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-siete",
+          "word": "PRUEBA siete",
+          "translation": "siete de prueba",
+          "emoji": "🏠",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "tema-inicial",
+      "name": "Letra inicial de prueba",
+      "icon": "🔤",
+      "mode": "first",
+      "items": [
+        {
+          "id": "item-ocho",
+          "word": "PRUEBA ocho",
+          "translation": "ocho de prueba",
+          "emoji": "🌙",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-nueve",
+          "word": "PRUEBA nueve",
+          "translation": "nueve de prueba",
+          "emoji": "⭐",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "tema-vocal",
+      "name": "Vocales de prueba",
+      "icon": "🅰️",
+      "mode": "vowel",
+      "items": [
+        {
+          "id": "item-diez",
+          "word": "PRUEBA diez",
+          "translation": "diez de prueba",
+          "emoji": "🔥",
+          "sourceId": "fuente-prueba",
+          "verified": true
+        },
+        {
+          "id": "item-once",
+          "word": "PRUEBA once",
+          "translation": "once de prueba",
+          "emoji": "💧",
+          "sourceId": "fuente-prueba",
+          "verified": true
         }
       ]
     }

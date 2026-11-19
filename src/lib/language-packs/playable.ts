@@ -1,26 +1,73 @@
 import { normalizeWord } from "./clean.ts";
+import {
+  type LetterRules,
+  initialGrapheme,
+  normalizeGrapheme,
+  vowelSlots,
+} from "./graphemes.ts";
 import type { GameMode, LanguagePack, PackItem, Theme } from "./types.ts";
 
-/** Smallest number of usable items a mode needs to make a question (spec §4.3). */
-const MINIMUM_ITEMS: Partial<Record<GameMode, number>> = {
-  pic2word: 3,
-};
+/** Smallest number of distinct options a question needs (spec §4.3). */
+const MINIMUM_CHOICES = 3;
 
-/**
- * Items a mode can ask about. Only pic2word is playable in F1a; the other modes
- * return nothing until they are built (tasks/saltapalabras T1.15, T3.3).
- */
-function usableForMode(mode: GameMode, items: PackItem[]): PackItem[] {
+function distinct(values: string[]): number {
+  return new Set(values).size;
+}
+
+/** Items a mode can ask about (spec §4.3, «Mínimo para jugar»). */
+function usableForMode(
+  mode: GameMode,
+  items: PackItem[],
+  rules: LetterRules,
+): PackItem[] {
   switch (mode) {
     case "pic2word":
+    case "word2pic":
       return items.filter((item) => (item.emoji ?? "") !== "");
-    default:
+    case "first":
+      return items.filter(
+        (item) => initialGrapheme(item.word, rules.graphemes) !== null,
+      );
+    case "vowel":
+      return items.filter(
+        (item) => vowelSlots(item.word, rules).slots.length > 0,
+      );
+    case "listen":
+      // Built with audio in F3 (tasks/saltapalabras T3.3). Until then a listen
+      // theme is never played, whatever audio it carries (AC-SP1-6).
       return [];
   }
 }
 
-function distinctWords(items: PackItem[]): number {
-  return new Set(items.map((item) => normalizeWord(item.word))).size;
+/** Whether a mode can make questions out of these usable items. */
+function meetsMinimum(
+  mode: GameMode,
+  usable: PackItem[],
+  rules: LetterRules,
+): boolean {
+  switch (mode) {
+    case "pic2word":
+      return (
+        distinct(usable.map((item) => normalizeWord(item.word))) >=
+        MINIMUM_CHOICES
+      );
+    case "word2pic":
+      return (
+        distinct(usable.map((item) => item.emoji ?? "")) >= MINIMUM_CHOICES
+      );
+    case "first":
+      return (
+        usable.length > 0 &&
+        distinct(rules.graphemes.map(normalizeGrapheme)) >= MINIMUM_CHOICES
+      );
+    case "vowel":
+      // Two vowels at least: one vowel alone is not a choice.
+      return (
+        usable.length > 0 && distinct(rules.vowels.map(normalizeGrapheme)) >= 2
+      );
+    case "listen":
+      return false;
+  }
 }
 
 /**
@@ -41,10 +88,9 @@ export function playableThemes(pack: LanguagePack): Theme[] {
         item.word.trim() !== "" &&
         item.translation.trim() !== "",
     );
-    const usable = usableForMode(theme.mode, checked);
-    const minimum = MINIMUM_ITEMS[theme.mode];
+    const usable = usableForMode(theme.mode, checked, pack.language);
 
-    if (minimum === undefined || distinctWords(usable) < minimum) {
+    if (!meetsMinimum(theme.mode, usable, pack.language)) {
       return [];
     }
 

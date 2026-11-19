@@ -13,7 +13,17 @@ import type {
 export type PublicPack = {
   language: Pick<
     LanguagePack["language"],
-    "slug" | "isoCode" | "name" | "title" | "translationLabel" | "praise"
+    | "slug"
+    | "isoCode"
+    | "name"
+    | "title"
+    | "translationLabel"
+    | "praise"
+    // The letter modes (first, vowel) build their questions from these.
+    | "graphemes"
+    | "vowels"
+    | "vowelVariants"
+    | "confusable"
   >;
   sources: PackSource[];
   themes: Theme[];
@@ -38,8 +48,18 @@ export function resolveGameState(result: PackReadResult): GameState {
   const cited = new Set(
     themes.flatMap((theme) => theme.items.map((item) => item.sourceId)),
   );
-  const { slug, isoCode, name, title, translationLabel, praise } =
-    result.pack.language;
+  const {
+    slug,
+    isoCode,
+    name,
+    title,
+    translationLabel,
+    praise,
+    graphemes,
+    vowels,
+    vowelVariants,
+    confusable,
+  } = result.pack.language;
 
   return {
     kind: "ready",
@@ -50,7 +70,11 @@ export function resolveGameState(result: PackReadResult): GameState {
         name,
         title,
         translationLabel,
+        graphemes,
+        vowels,
         ...(praise ? { praise } : {}),
+        ...(vowelVariants ? { vowelVariants } : {}),
+        ...(confusable ? { confusable } : {}),
       },
       sources: result.pack.sources.filter((source) => cited.has(source.id)),
       themes,

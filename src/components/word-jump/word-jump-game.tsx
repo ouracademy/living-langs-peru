@@ -1,9 +1,15 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 
-import type { Theme } from "@/lib/language-packs/types";
+import type { GameMode, Theme } from "@/lib/language-packs/types";
 import type { PublicPack } from "@/lib/word-jump/game-state";
+import {
+  getServerSnapshot,
+  getSnapshot,
+  saveRound,
+  subscribe,
+} from "@/lib/word-jump/progress-store";
 import {
   type RoundContext,
   type RoundState,
@@ -13,30 +19,48 @@ import {
   nextQuestion,
   roundOutcomes,
 } from "@/lib/word-jump/round";
+import type { LanguageProgress } from "@/lib/word-jump/stats";
 
-import { JumpCanvas } from "./jump-canvas";
+import { RoundView, buttonClass } from "./round-view";
 
 type WordJumpGameProps = {
   /** Already filtered by `playableThemes` on the server. */
   pack: PublicPack;
 };
 
-const buttonClass =
-  "min-h-11 min-w-11 rounded-full px-6 py-3 text-base font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#241D14]";
+const MODE_NAMES: Record<GameMode, string> = {
+  pic2word: "Dibujo → palabra",
+  listen: "Escuchar → palabra",
+  word2pic: "Palabra → dibujo",
+  first: "Letra inicial",
+  vowel: "Vocal que falta",
+};
+
+/** Stable identity for a language never played: no fresh object per render. */
+const NO_PROGRESS: LanguageProgress = Object.freeze({});
 
 /**
  * Owns the round and switches between the start, round and summary screens.
  * The round is built on the client, when the player asks for it: shuffling
- * during render would not match the cached HTML.
+ * during render would not match the cached HTML. Progress lives only in this
+ * browser (spec §7.4).
  */
 export function WordJumpGame({ pack }: WordJumpGameProps) {
   const [theme, setTheme] = useState<Theme | null>(null);
   const [round, setRound] = useState<RoundState | null>(null);
+  const { progress, storageAvailable } = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
   const lang = pack.language.isoCode;
+  const slug = pack.language.slug;
+  const seen = progress.languages[slug] ?? NO_PROGRESS;
 
   const context: RoundContext | null = useMemo(
-    () => (theme ? { theme, playable: pack.themes } : null),
-    [theme, pack.themes],
+    () =>
+      theme ? { theme, playable: pack.themes, rules: pack.language } : null,
+    [theme, pack.themes, pack.language],
   );
 
   const sourceTitles = useMemo(
@@ -52,14 +76,30 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
       setTheme(chosen);
       setRound(
         createRound(
-          buildRound(chosen.items, {}, seed),
-          { theme: chosen, playable: pack.themes },
+          buildRound(chosen.items, seen, seed),
+          { theme: chosen, playable: pack.themes, rules: pack.language },
           seed,
         ),
       );
     },
-    [pack.themes],
+    [pack.themes, pack.language, seen],
   );
+
+  const answer = useCallback(
+    (index: number) =>
+      setRound((current) =>
+        current ? answerQuestion(current, index) : current,
+      ),
+    [],
+  );
+
+  const next = useCallback(() => {
+    if (!round || !context) return;
+    const after = nextQuestion(round, context);
+    // Written once, when the round ends (spec §7.4).
+    if (after.status === "finished") saveRound(slug, roundOutcomes(after));
+    setRound(after);
+  }, [round, context, slug]);
 
   if (!theme || !round || !context) {
     return (
@@ -68,28 +108,45 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
           Elige un tema
         </h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          {pack.themes.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                onClick={() => start(item)}
-                className={`${buttonClass} flex w-full items-center gap-3 bg-[#FBEFD2] text-left text-[#241D14] hover:bg-[#F6E3B4]`}
-              >
-                <span aria-hidden="true" className="text-2xl">
-                  {item.icon}
-                </span>
-                <span>
-                  {item.name}
-                  {item.nameNative ? (
-                    <span lang={lang} className="block text-sm font-normal">
-                      {item.nameNative}
+          {pack.themes.map((item) => {
+            const known = item.items.filter(
+              (each) => (seen[each.id]?.seen ?? 0) > 0,
+            ).length;
+
+            return (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => start(item)}
+                  className={`${buttonClass} flex w-full items-center gap-3 bg-[#FBEFD2] text-left text-[#241D14] hover:bg-[#F6E3B4]`}
+                >
+                  <span aria-hidden="true" className="text-2xl">
+                    {item.icon}
+                  </span>
+                  <span>
+                    {item.name}
+                    {item.nameNative ? (
+                      <span lang={lang} className="block text-sm font-normal">
+                        {item.nameNative}
+                      </span>
+                    ) : null}
+                    <span className="block text-sm font-normal">
+                      {MODE_NAMES[item.mode]} · Palabras vistas: {known} de{" "}
+                      {item.items.length}
                     </span>
-                  ) : null}
-                </span>
-              </button>
-            </li>
-          ))}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
+        {storageAvailable ? null : (
+          // Said once, plainly: the game still works.
+          <p className="mt-4 text-sm text-[#4A4130]">
+            Tu navegador no nos deja guardar el progreso, así que no vamos a
+            recordar tus rondas. El juego funciona igual.
+          </p>
+        )}
       </section>
     );
   }
@@ -149,102 +206,14 @@ export function WordJumpGame({ pack }: WordJumpGameProps) {
     );
   }
 
-  const question = round.question;
-  const feedback = round.feedback;
-  if (!question) return null;
-  const done = round.cleared.length + round.revealed.length;
-  const answer = feedback?.question.options[feedback.question.answerIndex];
-  const source = feedback?.item.sourceId
-    ? sourceTitles.get(feedback.item.sourceId)
-    : undefined;
-
   return (
-    <section aria-labelledby="ronda" className="mt-8">
-      <h2 id="ronda" className="sr-only">
-        Ronda de {theme.name}
-      </h2>
-      <div
-        role="progressbar"
-        aria-label="Progreso de la ronda"
-        aria-valuemin={0}
-        aria-valuemax={round.total}
-        aria-valuenow={done}
-        className="h-3 overflow-hidden rounded-full bg-[#FBEFD2]"
-      >
-        <div
-          className="h-full bg-[#1B98A0]"
-          style={{ width: `${(done / round.total) * 100}%` }}
-        />
-      </div>
-
-      <p className="mt-6 text-center">
-        <span
-          role="img"
-          aria-label={question.prompt.label}
-          className="text-6xl"
-        >
-          {question.prompt.emoji}
-        </span>
-      </p>
-      <p className="mt-2 text-center font-bold">¿Cómo se dice?</p>
-
-      <div className="mt-4">
-        <JumpCanvas
-          platforms={question.options.length}
-          target={feedback ? feedback.selectedIndex : null}
-          outcome={feedback ? (feedback.correct ? "land" : "bounce") : null}
-        />
-      </div>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        {question.options.map((option, index) => (
-          <button
-            key={option.itemId}
-            type="button"
-            lang={lang}
-            disabled={feedback !== null}
-            onClick={() => setRound(answerQuestion(round, index))}
-            className={`${buttonClass} bg-[#241D14] text-white hover:bg-[#4A4130] disabled:opacity-60`}
-          >
-            {option.text}
-          </button>
-        ))}
-      </div>
-
-      <div role="status" className="mt-6">
-        {feedback ? (
-          <div className="rounded-[20px] bg-[#FBEFD2] px-6 py-5">
-            <p className="text-lg font-bold">
-              {feedback.correct ? "✓ ¡Correcto!" : "✗ No es esa."}
-            </p>
-            <p className="mt-2">
-              {feedback.correct ? "" : "La respuesta es "}
-              <span lang={lang} className="font-bold">
-                {answer?.text}
-              </span>
-              : {feedback.item.translation}.
-            </p>
-            {source ? (
-              <p className="mt-1 text-sm text-[#4A4130]">
-                Fuente: {source}
-                {feedback.item.sourceRef ? `, ${feedback.item.sourceRef}` : ""}
-              </p>
-            ) : null}
-            {!feedback.correct && !feedback.revealed ? (
-              <p className="mt-1 text-sm text-[#4A4130]">
-                Esta palabra volverá más adelante en la ronda.
-              </p>
-            ) : null}
-            <button
-              type="button"
-              onClick={() => setRound(nextQuestion(round, context))}
-              className={`${buttonClass} mt-4 bg-[#E4572E] text-white hover:bg-[#C7431C]`}
-            >
-              Seguir
-            </button>
-          </div>
-        ) : null}
-      </div>
-    </section>
+    <RoundView
+      round={round}
+      theme={theme}
+      lang={lang}
+      sourceTitles={sourceTitles}
+      onAnswer={answer}
+      onNext={next}
+    />
   );
 }

@@ -164,17 +164,15 @@ describe("buildRound", () => {
   it("puts the items never answered right first", () => {
     const items = manyItems(12);
     const stats = Object.fromEntries(
-      items
-        .slice(0, 9)
-        .map((item) => [
-          item.id,
-          {
-            seen: 3,
-            correctFirstTry: 2,
-            missed: 0,
-            lastSeenAt: "2026-11-01T00:00:00Z",
-          },
-        ]),
+      items.slice(0, 9).map((item) => [
+        item.id,
+        {
+          seen: 3,
+          correctFirstTry: 2,
+          missed: 0,
+          lastSeenAt: "2026-11-01T00:00:00Z",
+        },
+      ]),
     );
     const neverRight = items.slice(9).map((item) => item.id);
 
@@ -215,5 +213,22 @@ describe("buildRound", () => {
   it("is the same for the same seed", () => {
     const items = manyItems(12);
     expect(buildRound(items, {}, 9)).toEqual(buildRound(items, {}, 9));
+  });
+});
+
+describe("rounds of the letter modes", () => {
+  it("asks first-letter questions with the language's graphemes", () => {
+    const pack = testPack({ themes: [testTheme({ mode: "first" })] });
+    const playable = playableThemes(pack);
+    const context = {
+      theme: playable[0],
+      playable,
+      rules: pack.language,
+    };
+
+    const state = createRound(playable[0].items, context, 11);
+
+    expect(state.question?.mode).toBe("first");
+    expect(state.question?.options[state.question.answerIndex].text).toBe("p");
   });
 });

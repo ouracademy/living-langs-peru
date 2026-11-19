@@ -2,7 +2,11 @@ import { hash } from "../game/hash.ts";
 import { mulberry32, shuffle } from "../game/random.ts";
 import type { PackItem, Theme } from "../language-packs/types.ts";
 import { MAX_REQUEUES, ROUND_SIZE } from "./constants.ts";
-import { buildQuestion, type Question } from "./questions.ts";
+import {
+  type Question,
+  type QuestionRules,
+  buildQuestion,
+} from "./questions.ts";
 import type { LanguageProgress } from "./stats.ts";
 
 /**
@@ -14,6 +18,8 @@ export type RoundContext = {
   theme: Theme;
   /** The output of `playableThemes`: where distractors may come from. */
   playable: Theme[];
+  /** Graphemes and vowels of the language, for the letter modes. */
+  rules?: QuestionRules;
 };
 
 export type Feedback = {
@@ -66,6 +72,7 @@ function questionFor(
     context.theme,
     context.playable,
     mulberry32(hash(`${seed}:${step}`)),
+    context.rules,
   );
 }
 

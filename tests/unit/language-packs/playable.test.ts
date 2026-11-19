@@ -109,12 +109,95 @@ describe("playableThemes", () => {
     expect(itemIds(pack)).not.toContain("sin-traduccion");
   });
 
-  it("does not play the other modes yet (F1b)", () => {
+  // AC-SP1-6: listen needs three items with audio, and is built in F3.
+  it("does not play a listen theme with only two items with audio", () => {
+    const base = testTheme();
     const pack = testPack({
-      themes: [testTheme({ id: "otro", mode: "word2pic" })],
+      themes: [
+        testTheme({
+          id: "escuchar",
+          mode: "listen",
+          items: [
+            ...base.items,
+            testItem({ id: "item-cinco", word: "PRUEBA cinco" }),
+          ].map((item, index) =>
+            index < 2
+              ? { ...item, audio: `https://audio.prueba/${item.id}.webm` }
+              : item,
+          ),
+        }),
+      ],
     });
 
     expect(playableThemes(pack)).toEqual([]);
+  });
+
+  it("plays word2pic with three different emojis, not with two", () => {
+    const base = testTheme();
+    const three = testPack({
+      themes: [testTheme({ mode: "word2pic", items: base.items.slice(0, 3) })],
+    });
+    const two = testPack({
+      themes: [
+        testTheme({
+          mode: "word2pic",
+          items: base.items
+            .slice(0, 3)
+            .map((item, index) =>
+              index === 2 ? { ...item, emoji: "🍎" } : item,
+            ),
+        }),
+      ],
+    });
+
+    expect(playableThemes(three).map((theme) => theme.id)).toEqual([
+      "tema-prueba",
+    ]);
+    expect(playableThemes(two)).toEqual([]);
+  });
+
+  it("plays first with one item whose initial is a grapheme of the language", () => {
+    const pack = testPack({
+      themes: [testTheme({ mode: "first", items: [testItem()] })],
+    });
+
+    expect(itemIds(pack)).toEqual(["item-uno"]);
+  });
+
+  it("drops first items whose initial the language does not list", () => {
+    const pack = testPack({
+      themes: [
+        testTheme({
+          mode: "first",
+          items: [testItem(), testItem({ id: "item-zeta", word: "zPRUEBA" })],
+        }),
+      ],
+    });
+
+    expect(itemIds(pack)).toEqual(["item-uno"]);
+  });
+
+  it("does not play first when the language has fewer than three graphemes", () => {
+    const base = testPack();
+    const pack = testPack({
+      language: { ...base.language, graphemes: ["p", "r"] },
+      themes: [testTheme({ mode: "first", items: [testItem()] })],
+    });
+
+    expect(playableThemes(pack)).toEqual([]);
+  });
+
+  it("plays vowel with one item that has a vowel of the language", () => {
+    const pack = testPack({
+      themes: [
+        testTheme({
+          mode: "vowel",
+          items: [testItem(), testItem({ id: "item-prb", word: "prb" })],
+        }),
+      ],
+    });
+
+    expect(itemIds(pack)).toEqual(["item-uno"]);
   });
 
   it("does not change the pack", () => {

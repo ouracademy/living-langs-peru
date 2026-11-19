@@ -51,7 +51,8 @@ describe("resolveGameState", () => {
             testItem({ id: "oculto", word: "PRUEBA oculta", verified: false }),
           ],
         }),
-        testTheme({ id: "pendiente", mode: "word2pic" }),
+        // listen is not playable until F3 (audio), so the theme is dropped.
+        testTheme({ id: "pendiente", mode: "listen" }),
       ],
     });
 

@@ -1,7 +1,7 @@
 # TODO — Saltapalabras
 
 > Plan y razonamiento: [tasks/saltapalabras/plan.md](./plan.md) · Spec: [specs/saltapalabras.md](../../specs/saltapalabras.md)
-> Estado: **F0 y F1a hechas (2026-11-18), sin commit**. F1b en adelante, sin empezar. El spec sigue en `borrador`.
+> Estado: **F0 y F1a hechas y commiteadas (2026-11-18). F1b hecha (2026-11-18), sin commit.** F2 en adelante, sin empezar. El spec sigue en `borrador`.
 
 Cada tarea cierra cuando pasan sus criterios **y** la definición de terminado (plan §6):
 `pnpm check:fast` · `pnpm check:task` · commit propio.
@@ -90,12 +90,19 @@ corregido.
 
 ## F1b — Los modos sin audio, progreso y accesibilidad (SP1, SP2, SP4)
 
-- [ ] **T1.14** (M) `graphemes.ts`: `tokenizeGraphemes`. **Tests primero** `[AC-SP1-8]`
-- [ ] **T1.15** (M) `questions.ts` + `playable.ts`: modos `word2pic`, `first` (con `confusable`) y `vowel` (con `vowelVariants`) y sus mínimos. **Tests primero** `[AC-SP2-1, AC-SP2-2, AC-SP2-4, AC-SP2-5]`
-- [ ] **T1.16** (M) `validate.ts`: `validatePack(pack, { audioBaseUrl })` con errores y avisos de spec §4.3. **Tests primero** `[AC-SP1-6, AC-SP1-7]`
-- [ ] **T1.17** (M) `progress.ts` + `progress-store.ts` (`living-langs:word-jump:v1`, `useSyncExternalStore`, valor validado al leer, juego jugable si `localStorage` falla), siguiendo `src/lib/game/progress-store.ts` `[AC-SP4-7]`
-- [ ] **T1.18** (M) Accesibilidad completa: atajos 1/2/3 con `aria-keyshortcuts`, foco a «Seguir», `role="status"`, `prefers-reduced-motion`, botones ≥ 44 × 44 px, emoji con nombre accesible `[AC-SP4-5, AC-SP4-6, AC-SP4-11]`
-- [ ] **T1.19** (M) E2E: ronda de cada modo con fixtures; ronda completa solo con teclado; recargar conserva el progreso; reduced-motion sin animación `[AC-SP4-5, AC-SP4-6, AC-SP4-7]`
+- [x] **T1.14** (M) `graphemes.ts`: `tokenizeGraphemes`. **Tests primero** `[AC-SP1-8]`
+  - Hecho. Además `initialGrapheme` y `vowelSlots` (los usan `playable`, `questions` y `validate`). La coincidencia ignora mayúsculas y los tokens conservan la escritura de la palabra, para que la palabra con hueco se lea como fue escrita.
+- [x] **T1.15** (M) `questions.ts` + `playable.ts`: modos `word2pic`, `first` (con `confusable`) y `vowel` (con `vowelVariants`) y sus mínimos. **Tests primero** `[AC-SP2-1, AC-SP2-2, AC-SP2-4, AC-SP2-5]`
+  - Hecho. Desvíos: `buildQuestion` recibe las reglas de la lengua como 5.º argumento opcional (`RoundContext.rules`), y `PublicPack.language` ahora lleva `graphemes`, `vowels`, `vowelVariants` y `confusable`. El modo `vowel` exige además **dos vocales** en la lengua (una sola no es una elección; no está en spec §4.3). `listen` sigue sin jugarse hasta F3. Las opciones pasan a `{ text, itemId?, label? }`.
+- [x] **T1.16** (M) `validate.ts`: `validatePack(pack, { audioBaseUrl })` con errores y avisos de spec §4.3. **Tests primero** `[AC-SP1-6, AC-SP1-7]`
+  - Hecho, con `language` opcional para `language_mismatch`. Desvío: los problemas del paquete entero (lengua, tamaño) no llevan `themeId` (spec §4.2 dice que cada `Issue` lo lleva). El audio exige `audioBaseUrl` + `/`, para no aceptar un bucket que solo empieza igual.
+- [x] **T1.17** (M) `progress.ts` + `progress-store.ts` (`living-langs:word-jump:v1`, `useSyncExternalStore`, valor validado al leer, juego jugable si `localStorage` falla), siguiendo `src/lib/game/progress-store.ts` `[AC-SP4-7]`
+  - Hecho. Reusa `defaultStorage` y `canPersist` de `src/lib/game/progress.ts` (solo import). La pantalla de temas muestra «Palabras vistas: N de M» y el aviso si el navegador no guarda nada.
+- [x] **T1.18** (M) Accesibilidad completa: atajos 1/2/3 con `aria-keyshortcuts`, foco a «Seguir», `role="status"`, `prefers-reduced-motion`, botones ≥ 44 × 44 px, emoji con nombre accesible `[AC-SP4-5, AC-SP4-6, AC-SP4-11]`
+  - Hecho en `src/components/word-jump/round-view.tsx` (nuevo; la ronda sale de `word-jump-game.tsx`). Tras «Seguir» el foco vuelve al título de la pregunta. El hueco se lee «(hueco)». Correcto/incorrecto: texto en `role="status"` y borde sólido/punteado, nunca solo color. Los atajos van como texto de ayuda, no dentro del botón, para que su nombre accesible siga siendo la palabra.
+- [x] **T1.19** (M) E2E: ronda de cada modo con fixtures; ronda completa solo con teclado; recargar conserva el progreso; reduced-motion sin animación `[AC-SP4-5, AC-SP4-6, AC-SP4-7]`
+  - Hecho en `tests/e2e/word-jump.spec.ts`, con tres temas «PRUEBA» nuevos en el fixture. Reduced-motion se verifica contando `requestAnimationFrame` tras responder (> 0 sin la preferencia, 0 con ella).
+- [x] **Extra (pedido 2026-11-18):** Saltapalabras en la tarjeta «Juegos» de la portada (`help-education.tsx`), enlazando a `/juegos/saltapalabras`. Test de componente + e2e. Cierra la pregunta 5 de spec §14.
 
 > **⛔ Checkpoint 1b** — los cuatro modos sin audio se juegan con teclado y el progreso sobrevive a
 > recargar. `pnpm check:task`, `pnpm build`, `pnpm test:e2e`.
