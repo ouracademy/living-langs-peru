@@ -356,6 +356,8 @@ Falla con código de salida ≠ 0 y lista todos los problemas, no sólo el prime
 - Todo `Paragraph` tiene `sourceIds` no vacío. **Ningún párrafo sin fuente.**
 - Toda `Photo` tiene `alt` no vacío **y no genérico** («foto», «imagen»), dimensiones positivas y
   `credit` con `author`, `license` y `url`.
+  _Nota (2026-11-18): `url` es opcional desde esa fecha; si está, tiene que ser `https://`. Ver
+  [edicion-fotos.md](./edicion-fotos.md) §6.3._
 - Todo término de `Paragraph.terms` aparece en el texto de su párrafo, y una palabra marcada en un
   párrafo está marcada en todos los que la contienen.
 - Todo `Figure.id` y `PeopleSection.id` es único.
@@ -545,6 +547,9 @@ rastrea y las clasifica en `docs/ashaninka-sources.md`:
 
 - **AC-M3-1** La galería muestra al menos **4** fotos.
 - **AC-M3-2** Cada foto muestra autor y licencia visibles, con enlace a su página de origen.
+  _Nota (2026-11-18): la URL de origen es opcional desde esa fecha. Una foto sin ella (p. ej. tomada
+  por el equipo) muestra autor y licencia como texto, sin enlace. Ver
+  [edicion-fotos.md](./edicion-fotos.md) §6.3._
 - **AC-M3-3** Ninguna imagen tiene `alt` vacío, y ningún `alt` es genérico («imagen», «foto»).
 - **AC-M3-4** Todas las imágenes se sirven desde `public/`; `next.config.ts` no gana `remotePatterns`.
 - **AC-M3-5** `docs/ashaninka-sources.md` tiene una fila por imagen usada, con su licencia y URL.

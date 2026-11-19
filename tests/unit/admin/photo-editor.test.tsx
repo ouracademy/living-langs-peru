@@ -19,26 +19,23 @@ vi.mock("@/components/admin/resize-image", async (importOriginal) => ({
 const { PhotoEditor } = await import("@/components/admin/photo-editor");
 
 const SHA = "a".repeat(40);
+const DESCRIPTION = "Descripción (para quien no ve la foto)";
+const ALT = "Tres mujeres asháninka tejen una cushma bajo un techo de palma.";
 
-const fields = {
-  "Descripción (para quien no ve la foto)":
-    "Tres mujeres asháninka tejen una cushma bajo un techo de palma.",
-  Autor: "Centro de la Mujer Peruana Flora Tristán",
-  Licencia: "CC BY-SA 4.0",
-  "Dirección de origen (https://…)":
-    "https://commons.wikimedia.org/wiki/File:Ejemplo.jpg",
-};
+const openPanel = () =>
+  fireEvent.click(screen.getByRole("button", { name: "Agregar foto" }));
 
-function fillForm() {
-  for (const [label, value] of Object.entries(fields)) {
-    fireEvent.change(screen.getByLabelText(label), { target: { value } });
-  }
-  fireEvent.change(screen.getByLabelText("Foto (JPEG, PNG o WebP)"), {
+async function choosePhoto() {
+  fireEvent.change(screen.getByLabelText(/Elige una foto/), {
     target: {
       files: [new File(["x"], "IMG_0001.jpeg", { type: "image/jpeg" })],
     },
   });
+  await screen.findByText(/Se guardará así/);
 }
+
+const describePhoto = (value = ALT) =>
+  fireEvent.change(screen.getByLabelText(DESCRIPTION), { target: { value } });
 
 const save = () =>
   fireEvent.click(screen.getByRole("button", { name: "Guardar foto" }));
@@ -48,6 +45,11 @@ let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   fetchMock = vi.fn();
   vi.stubGlobal("fetch", fetchMock);
+  // jsdom has no blob URLs; the preview only needs a string to show.
+  Object.assign(URL, {
+    createObjectURL: vi.fn(() => "blob:preview"),
+    revokeObjectURL: vi.fn(),
+  });
   resizeToJpeg.mockResolvedValue({
     ok: true,
     photo: {
@@ -65,38 +67,119 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe("Agregar foto", () => {
-  // AC-E3-4: required fields never leave the browser empty.
-  it("does not send anything while required fields are empty", async () => {
-    save();
+describe("the panel (UI-1, UI-2)", () => {
+  it("counts the photos and opens above the list with the focus on its title", () => {
+    expect(screen.getByText("0 de 24 fotos")).toBeTruthy();
+    expect(screen.getByText(/no tiene fotos todavía/)).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Agregar foto" })).toBeNull();
 
-    expect(await screen.findByText("Elige una foto.")).toBeTruthy();
+    openPanel();
+
+    const title = screen.getByRole("heading", { name: "Agregar foto" });
+    expect(document.activeElement).toBe(title);
+    expect(screen.queryByRole("dialog")).toBeNull();
     expect(
-      screen.getByText("Escribe una descripción de la foto."),
-    ).toBeTruthy();
-    expect(screen.getByText("Escribe quién tomó la foto.")).toBeTruthy();
-    expect(screen.getByText("Escribe la licencia de la foto.")).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(resizeToJpeg).not.toHaveBeenCalled();
-    expect(screen.getByLabelText("Autor").getAttribute("aria-invalid")).toBe(
-      "true",
+      screen
+        .getByRole("button", { name: "Agregar foto" })
+        .getAttribute("aria-expanded"),
+    ).toBe("true");
+  });
+
+  it("closes with «Cancelar» and gives the focus back", async () => {
+    openPanel();
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+
+    expect(screen.queryByRole("heading", { name: "Agregar foto" })).toBeNull();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "Agregar foto" }),
+      ),
     );
   });
 
-  it("refuses a generic description before uploading", async () => {
-    fillForm();
-    fireEvent.change(
-      screen.getByLabelText("Descripción (para quien no ve la foto)"),
-      { target: { value: "Foto" } },
+  it("prefills the team's credit and leaves the source URL empty", () => {
+    openPanel();
+
+    expect((screen.getByLabelText("Autor") as HTMLInputElement).value).toBe(
+      "Living Langs Peru",
     );
+    expect((screen.getByLabelText("Licencia") as HTMLInputElement).value).toBe(
+      "Foto del equipo",
+    );
+    expect(
+      (screen.getByLabelText(/Dirección de origen/) as HTMLInputElement).value,
+    ).toBe("");
+  });
+});
+
+describe("Agregar foto", () => {
+  beforeEach(openPanel);
+
+  // Only the photo and its description are required (2026-11-18).
+  it("asks only for the photo and the description, with a summary", async () => {
+    fireEvent.change(screen.getByLabelText("Autor"), { target: { value: "" } });
+    save();
+
+    const summary = await screen.findByRole("group", {
+      name: "Revisa 2 campos",
+    });
+    expect(screen.getAllByText("Elige una foto.").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("Escribe una descripción de la foto.").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByLabelText("Autor").getAttribute("aria-invalid")).toBe(
+      null,
+    );
+    await waitFor(() => expect(document.activeElement).toBe(summary));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(resizeToJpeg).not.toHaveBeenCalled();
+  });
+
+  it("focuses the one field when it is the only problem (UI-13)", async () => {
+    await choosePhoto();
+    save();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByLabelText(DESCRIPTION)),
+    );
+    expect(screen.queryByRole("group", { name: /Revisa/ })).toBeNull();
+  });
+
+  it("refuses a generic description before uploading", async () => {
+    await choosePhoto();
+    describePhoto("Foto");
     save();
 
     expect(await screen.findByText(/demasiado genérica/)).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("refuses a source URL that is not https", async () => {
+    await choosePhoto();
+    describePhoto();
+    fireEvent.change(screen.getByLabelText(/Dirección de origen/), {
+      target: { value: "http://example.org/x" },
+    });
+    save();
+
+    expect(await screen.findByText(/tiene que empezar con https/)).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  // UI-4: the photo is reduced as soon as it is chosen, and shown that way.
+  it("shows the reduced photo with its final size and the GPS note", async () => {
+    await choosePhoto();
+
+    expect(resizeToJpeg).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(/2400 × 1600 px/)).toBeTruthy();
+    expect(screen.getByText(/datos de ubicación \(GPS\)/)).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Cambiar foto" }));
+    expect(screen.getByLabelText(/Elige una foto/)).toBeTruthy();
+  });
+
   // AC-E3-1: what is sent is the reduced JPEG, the fields and the sha.
-  it("sends the reduced photo with every field and the sha", async () => {
+  it("sends the photo, the description, the team's credit and the sha", async () => {
     fetchMock.mockResolvedValue(
       Response.json(
         {
@@ -106,7 +189,8 @@ describe("Agregar foto", () => {
         { status: 201 },
       ),
     );
-    fillForm();
+    await choosePhoto();
+    describePhoto();
     save();
 
     expect(
@@ -118,19 +202,54 @@ describe("Agregar foto", () => {
     expect(init.method).toBe("POST");
     const body = init.body as FormData;
     expect(body.get("sha")).toBe(SHA);
-    expect(body.get("alt")).toBe(
-      fields["Descripción (para quien no ve la foto)"],
-    );
-    expect(body.get("author")).toBe(fields.Autor);
+    expect(body.get("alt")).toBe(ALT);
+    expect(body.get("author")).toBe("Living Langs Peru");
+    expect(body.get("license")).toBe("Foto del equipo");
+    expect(body.get("url")).toBe("");
     expect((body.get("photo") as File).type).toBe("image/jpeg");
     expect(refresh).toHaveBeenCalledTimes(1);
     expect(
       screen.getByRole("link", { name: "Ver la galería" }).getAttribute("href"),
     ).toBe("/ashaninka#galeria");
+    // The panel closes once the photo is saved.
+    expect(screen.queryByRole("heading", { name: "Agregar foto" })).toBeNull();
   });
 
-  // AC-E3-5
-  it("explains a conflict and keeps what the editor typed", async () => {
+  // UI-6
+  it("fills the license from a suggestion", async () => {
+    fireEvent.click(screen.getByRole("button", { name: "CC BY-SA 4.0" }));
+
+    const license = screen.getByLabelText("Licencia") as HTMLInputElement;
+    expect(license.value).toBe("CC BY-SA 4.0");
+    expect(document.activeElement).toBe(license);
+    expect(
+      screen
+        .getByRole("button", { name: "CC BY-SA 4.0" })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+  });
+
+  // UI-7: the caption and credit as the public gallery shows them.
+  it("previews the credit without a link until there is a valid URL", async () => {
+    await choosePhoto();
+    const preview = screen.getByRole("region", {
+      name: "Así se verá en la galería",
+    });
+    expect(preview.textContent).toContain(
+      "Living Langs Peru · Foto del equipo",
+    );
+    expect(preview.querySelector("a")).toBeNull();
+
+    fireEvent.change(screen.getByLabelText(/Dirección de origen/), {
+      target: { value: "https://commons.wikimedia.org/wiki/File:X.jpg" },
+    });
+    expect(preview.querySelector("a")?.getAttribute("href")).toBe(
+      "https://commons.wikimedia.org/wiki/File:X.jpg",
+    );
+  });
+
+  // AC-E3-5, UI-12
+  it("explains a conflict, offers a reload and keeps what the editor typed", async () => {
     fetchMock.mockResolvedValue(
       Response.json(
         {
@@ -140,16 +259,20 @@ describe("Agregar foto", () => {
         { status: 409 },
       ),
     );
-    fillForm();
+    await choosePhoto();
+    describePhoto();
     save();
 
-    expect((await screen.findByRole("alert")).textContent).toBe(
-      "Alguien guardó antes. Recarga y vuelve a intentar.",
-    );
-    expect((screen.getByLabelText("Autor") as HTMLInputElement).value).toBe(
-      fields.Autor,
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "Alguien guardó un cambio mientras editabas.",
     );
     expect(refresh).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Recargar la lista" }));
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(
+      (screen.getByLabelText(DESCRIPTION) as HTMLTextAreaElement).value,
+    ).toBe(ALT);
+    expect(screen.getByText(/Se guardará así/)).toBeTruthy();
   });
 
   it("shows the server's field problems next to each field", async () => {
@@ -158,12 +281,13 @@ describe("Agregar foto", () => {
         {
           error: "photo_invalid",
           message: "Revisa la foto y los campos marcados.",
-          fields: { license: "Escribe la licencia de la foto." },
+          fields: { license: "La licencia puede tener hasta 120 caracteres." },
         },
         { status: 400 },
       ),
     );
-    fillForm();
+    await choosePhoto();
+    describePhoto();
     save();
 
     await waitFor(() =>
@@ -176,11 +300,17 @@ describe("Agregar foto", () => {
     );
   });
 
-  it("says so when the photo cannot be reduced, without uploading", async () => {
+  it("says so as soon as the photo cannot be reduced, without uploading", async () => {
     resizeToJpeg.mockResolvedValue({ ok: false, problem: "unreadable" });
-    fillForm();
-    save();
+    fireEvent.change(screen.getByLabelText(/Elige una foto/), {
+      target: { files: [new File(["x"], "raro.jpg", { type: "image/jpeg" })] },
+    });
 
+    expect((await screen.findByRole("alert")).textContent).toBe(
+      "No pudimos leer la foto. Prueba con otra.",
+    );
+    describePhoto();
+    save();
     expect((await screen.findByRole("alert")).textContent).toBe(
       "No pudimos leer la foto. Prueba con otra.",
     );
@@ -189,16 +319,20 @@ describe("Agregar foto", () => {
 
   it("keeps the form usable when the network fails", async () => {
     fetchMock.mockRejectedValue(new TypeError("fetch failed"));
-    fillForm();
+    await choosePhoto();
+    describePhoto();
     save();
 
-    expect((await screen.findByRole("alert")).textContent).toBe(
-      "No pudimos guardar la foto. Intenta de nuevo.",
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "No hay conexión.",
     );
     expect(
       screen
         .getByRole("button", { name: "Guardar foto" })
         .hasAttribute("disabled"),
     ).toBe(false);
+    expect(
+      (screen.getByLabelText(DESCRIPTION) as HTMLTextAreaElement).value,
+    ).toBe(ALT);
   });
 });

@@ -141,8 +141,10 @@ src/lib/peoples/validate.ts                # ya existe: se reusa, no se copia
 
 ### 6.2 Flujo de «Agregar»
 
-1. El editor elige la imagen y llena: **descripción** (alt), **pie** (opcional), **autor**,
-   **licencia** y **URL de origen**. Los obligatorios no dejan enviar si están vacíos.
+1. El editor elige la imagen y llena la **descripción** (alt). **Autor** y **licencia** vienen
+   prellenados con el crédito del equipo («Living Langs Peru» · «Foto del equipo») y se pueden
+   cambiar; si quedan vacíos, se usa ese mismo crédito. El **pie** y la **URL de origen** son
+   opcionales. Solo la foto y la descripción son obligatorias (cambio del 2026-11-18, ver nota).
 2. El navegador acepta JPEG, PNG o WebP, la reduce a ≤ 2400 px y la recodifica a JPEG.
 3. `POST /api/admin/fotos` con la imagen, los datos y el `sha` leído.
 4. El servidor: comprueba credenciales → lee medidas con `image-size` → genera el nombre
@@ -154,22 +156,30 @@ src/lib/peoples/validate.ts                # ya existe: se reusa, no se copia
 
 - Imagen recibida por el servidor: JPEG, ≤ 3 MB, lado mayor ≤ 2400 px. Lo demás → `photo_invalid`.
 - Galería: como máximo 24 fotos (`gallery_full`).
-- Textos: descripción 10–300 caracteres, pie ≤ 200, autor y licencia ≤ 120, URL `https://`.
+- Textos: descripción 10–300 caracteres, pie ≤ 200, autor y licencia ≤ 120. La URL de origen es
+  **opcional**; si viene, tiene que ser `https://`. Sin URL, el JSON no lleva la clave `url` y la
+  galería muestra «Autor · Licencia» como texto, sin enlace.
+
+> **Nota (2026-11-18).** La persona del proyecto pidió pedir pocos datos: «algunas fotos no tienen
+> dirección de origen». Desde ese día solo la foto y la descripción son obligatorias; autor y
+> licencia tienen el crédito del equipo por defecto, y `PhotoCredit.url` es opcional en todo el sitio
+> (`src/lib/peoples/types.ts`, `validatePeople`, `photo-gallery.tsx`). La interfaz se describe en
+> [docs/edicion-fotos-ui.md](../docs/edicion-fotos-ui.md).
 
 ### 6.4 Criterios de aceptación
 
-| ID       | Criterio                                                                                                                                           |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AC-E3-1  | Agregar una foto de 8 MB (12 MP) produce **un solo commit** con un JPEG ≤ 2400 px y < 3 MB en `public/peoples/ashaninka/` y su entrada en el JSON. |
-| AC-E3-2  | El JPEG guardado no tiene metadatos EXIF (ni GPS).                                                                                                 |
-| AC-E3-3  | `width` y `height` del JSON son los del archivo guardado, aunque el navegador mande otros.                                                         |
-| AC-E3-4  | Sin descripción, autor, licencia o URL, o con una descripción genérica («foto»), el servidor responde `photo_invalid` y **no** hace commit.        |
-| AC-E3-5  | Con un `sha` viejo (alguien guardó antes), la respuesta es `version_conflict`, no hay commit y el editor ve el aviso de recargar.                  |
-| AC-E3-6  | Quitar una foto borra la entrada y el archivo en el mismo commit; `peoples:check` sigue pasando.                                                   |
-| AC-E3-7  | Ordenar con teclado (botones «Subir» / «Bajar») funciona y se guarda.                                                                              |
-| AC-E3-8  | Un JSON inválido en `main` (por un cambio manual) hace fallar `pnpm build`, y Vercel deja publicada la versión anterior.                           |
-| AC-E3-9  | Después de un guardado, `/ashaninka` muestra el cambio en el siguiente despliegue y sigue siendo `○` en `next build`.                              |
-| AC-E3-10 | Los logs registran la acción y el `sha` del commit, nunca el token ni las credenciales.                                                            |
+| ID       | Criterio                                                                                                                                                                                                                                                                                     |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-E3-1  | Agregar una foto de 8 MB (12 MP) produce **un solo commit** con un JPEG ≤ 2400 px y < 3 MB en `public/peoples/ashaninka/` y su entrada en el JSON.                                                                                                                                           |
+| AC-E3-2  | El JPEG guardado no tiene metadatos EXIF (ni GPS).                                                                                                                                                                                                                                           |
+| AC-E3-3  | `width` y `height` del JSON son los del archivo guardado, aunque el navegador mande otros.                                                                                                                                                                                                   |
+| AC-E3-4  | Sin descripción, con una descripción genérica («foto») o con una URL que no es `https://`, el servidor responde `photo_invalid` y **no** hace commit. Autor y licencia vacíos se guardan como «Living Langs Peru» · «Foto del equipo»; sin URL, el crédito se guarda sin `url` (2026-11-18). |
+| AC-E3-5  | Con un `sha` viejo (alguien guardó antes), la respuesta es `version_conflict`, no hay commit y el editor ve el aviso de recargar.                                                                                                                                                            |
+| AC-E3-6  | Quitar una foto borra la entrada y el archivo en el mismo commit; `peoples:check` sigue pasando.                                                                                                                                                                                             |
+| AC-E3-7  | Ordenar con teclado (botones «Subir» / «Bajar») funciona y se guarda.                                                                                                                                                                                                                        |
+| AC-E3-8  | Un JSON inválido en `main` (por un cambio manual) hace fallar `pnpm build`, y Vercel deja publicada la versión anterior.                                                                                                                                                                     |
+| AC-E3-9  | Después de un guardado, `/ashaninka` muestra el cambio en el siguiente despliegue y sigue siendo `○` en `next build`.                                                                                                                                                                        |
+| AC-E3-10 | Los logs registran la acción y el `sha` del commit, nunca el token ni las credenciales.                                                                                                                                                                                                      |
 
 ---
 
@@ -191,7 +201,7 @@ src/lib/peoples/validate.ts                # ya existe: se reusa, no se copia
 - **Unitarias:** `basic-auth` (correcto, incorrecto, ausente, variables vacías), `gallery` (cada
   acción y su validación), `github` con `fetch` simulado (commit atómico, conflicto por `sha`),
   `route.ts` (401, `photo_invalid`, `version_conflict`, éxito).
-- **Componente:** el formulario no envía con campos obligatorios vacíos; ordenar con teclado.
+- **Componente:** el formulario no envía sin foto o sin descripción; ordenar con teclado.
 - **E2E en CI:** `401` sin credenciales (AC-E1-1) y páginas públicas sin cambios (AC-E1-4). La API
   de GitHub no se llama desde CI.
 - **Manual en Preview** (`docs/edicion-fotos-pruebas.md`): agregar, editar, ordenar y quitar una

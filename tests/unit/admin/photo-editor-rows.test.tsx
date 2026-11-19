@@ -49,7 +49,9 @@ function sentMethod(): string | undefined {
 }
 
 function rows() {
-  return within(screen.getByRole("list")).getAllByRole("listitem");
+  return within(
+    screen.getByRole("list", { name: "Fotos de la galería" }),
+  ).getAllByRole("listitem");
 }
 
 beforeEach(() => {
@@ -126,11 +128,15 @@ describe("ordering (AC-E3-7)", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Bajar la foto 1" }));
 
-    expect((await screen.findByRole("alert")).textContent).toBe(
-      "Alguien guardó antes. Recarga y vuelve a intentar.",
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "Alguien guardó un cambio mientras editabas.",
     );
     expect(rows()[0].textContent).toContain(photos[0].alt);
     expect(refresh).not.toHaveBeenCalled();
+
+    // UI-12: reading the branch again is one tap away.
+    fireEvent.click(screen.getByRole("button", { name: "Recargar la lista" }));
+    expect(refresh).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -171,23 +177,79 @@ describe("editing", () => {
     expect(rows()[1].textContent).toContain("CC BY 4.0");
   });
 
-  it("does not send an edit with an empty author", async () => {
+  it("does not send an edit with a source URL that is not https", async () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Editar los datos de la foto 1" }),
     );
     const form = screen.getByRole("form", {
       name: "Editar los datos de la foto",
     });
-    fireEvent.change(within(form).getByLabelText("Autor"), {
-      target: { value: "" },
+    fireEvent.change(within(form).getByLabelText(/Dirección de origen/), {
+      target: { value: "http://example.org/x" },
     });
     fireEvent.click(
       within(form).getByRole("button", { name: "Guardar cambios" }),
     );
 
     expect(
-      await within(form).findByText("Escribe quién tomó la foto."),
+      await within(form).findByText(/tiene que empezar con https/),
     ).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  // 2026-11-18: author and license fall back to the team's credit.
+  it("sends the team's credit when author and license are emptied", async () => {
+    answerWith(photos, "Cambios guardados.");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Editar los datos de la foto 1" }),
+    );
+    const form = screen.getByRole("form", {
+      name: "Editar los datos de la foto",
+    });
+    for (const label of ["Autor", "Licencia"]) {
+      fireEvent.change(within(form).getByLabelText(label), {
+        target: { value: "" },
+      });
+    }
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Guardar cambios" }),
+    );
+
+    await screen.findByText("Cambios guardados.");
+    expect(sentBody()).toMatchObject({
+      author: "Living Langs Peru",
+      license: "Foto del equipo",
+    });
+  });
+
+  // UI-14
+  it("waits for a change before saving, and Escape cancels", async () => {
+    fireEvent.click(
+      screen.getByRole("button", { name: "Editar los datos de la foto 1" }),
+    );
+    const form = screen.getByRole("form", {
+      name: "Editar los datos de la foto",
+    });
+    expect(
+      within(form).getByRole("button", { name: "Sin cambios" }),
+    ).toHaveProperty("disabled", true);
+
+    fireEvent.change(within(form).getByLabelText("Licencia"), {
+      target: { value: "CC BY 4.0" },
+    });
+    expect(
+      within(form).getByRole("button", { name: "Guardar cambios" }),
+    ).toHaveProperty("disabled", false);
+
+    fireEvent.keyDown(within(form).getByLabelText("Licencia"), {
+      key: "Escape",
+    });
+    expect(screen.queryByRole("form")).toBeNull();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "Editar los datos de la foto 1" }),
+      ),
+    );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -202,12 +264,29 @@ describe("editing", () => {
   });
 });
 
+describe("row actions (UI-11)", () => {
+  it("names each control with the photo's position and keeps «Quitar» apart", () => {
+    const actions = screen.getByRole("group", {
+      name: "Acciones de la foto 2",
+    });
+    const buttons = within(actions).getAllByRole("button");
+    expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
+      "Subir la foto 2",
+      "Bajar la foto 2",
+      "Editar los datos de la foto 2",
+      "Quitar la foto 2",
+    ]);
+    // A spacer sits between «Editar» and «Quitar».
+    expect(buttons[3].previousElementSibling?.tagName).toBe("SPAN");
+  });
+});
+
 describe("removing (AC-E3-6)", () => {
   it("asks first, and the safe choice has the focus", () => {
     fireEvent.click(screen.getByRole("button", { name: "Quitar la foto 2" }));
 
     expect(
-      screen.getByText("¿Quitar la foto 2? También se borra el archivo."),
+      screen.getByText(/¿Quitar la foto 2 de la galería\? También se borra/),
     ).toBeTruthy();
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Cancelar" }),

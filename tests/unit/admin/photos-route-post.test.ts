@@ -164,12 +164,28 @@ describe("POST /api/admin/fotos", () => {
     expect(written.photos.at(-1)).not.toHaveProperty("caption");
   });
 
+  // 2026-11-18: only the photo and the description are required.
+  it("writes the team's credit and no url when they come empty", async () => {
+    const { fetchMock, calls } = fakeGitHub();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await post(
+      form({ fields: { ...validFields, author: "", license: " ", url: "" } }),
+    );
+
+    expect(response.status).toBe(201);
+    const blobs = calls.filter((call) => call.url.endsWith("/git/blobs"));
+    const written = JSON.parse(decodeBlob(blobs[1]).toString("utf8"));
+    expect(written.photos.at(-1).credit).toEqual({
+      author: "Living Langs Peru",
+      license: "Foto del equipo",
+    });
+  });
+
   // AC-E3-4
   it.each([
     ["no description", { ...validFields, alt: "" }],
     ["a generic description", { ...validFields, alt: "Foto" }],
-    ["no author", { ...validFields, author: "" }],
-    ["no license", { ...validFields, license: "" }],
     ["an http URL", { ...validFields, url: "http://example.org/x" }],
   ])("refuses %s without touching GitHub", async (_, fields) => {
     const { fetchMock } = fakeGitHub();

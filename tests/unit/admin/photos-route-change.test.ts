@@ -156,16 +156,39 @@ describe("PATCH edit", () => {
   });
 
   // AC-E3-4 for edits
-  it("refuses an empty license with the field marked", async () => {
+  it("refuses a source URL that is not https, with the field marked", async () => {
     const { fetchMock } = fakeGitHub();
     vi.stubGlobal("fetch", fetchMock);
 
-    const response = await patch({ ...edit, license: " " });
+    const response = await patch({ ...edit, url: "http://example.org/x" });
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(Object.keys(body.fields)).toEqual(["license"]);
+    expect(Object.keys(body.fields)).toEqual(["url"]);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  // 2026-11-18: author and license fall back to the team's credit, and the
+  // URL is optional: without one, the credit has no `url` key at all.
+  it("writes the team's credit and no url when they are left empty", async () => {
+    const { fetchMock, calls } = fakeGitHub();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await patch({
+      ...edit,
+      author: " ",
+      license: "",
+      url: "",
+    });
+
+    expect(response.status).toBe(200);
+    const written = writtenGallery(calls).photos.find(
+      (photo) => photo.src === edit.src,
+    );
+    expect(written?.credit).toEqual({
+      author: "Living Langs Peru",
+      license: "Foto del equipo",
+    });
   });
 
   it("answers 404 for a photo that is no longer there", async () => {

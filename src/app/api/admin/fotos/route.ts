@@ -26,6 +26,7 @@ import {
 } from "@/lib/admin/github";
 import { inspectPhoto } from "@/lib/admin/photo-file";
 import {
+  creditFrom,
   photoFieldProblems,
   type PhotoFieldProblems,
   type PhotoFields,
@@ -261,11 +262,8 @@ export async function POST(request: Request): Promise<Response> {
     height: inspection.height,
     alt: fields.alt,
     ...(fields.caption ? { caption: fields.caption } : {}),
-    credit: {
-      author: fields.author,
-      license: fields.license,
-      url: fields.url,
-    },
+    // Empty author or license become the team's credit; no url, no link.
+    credit: creditFrom(fields),
   };
 
   return save(access, baseSha, { type: "add", photo }, [
@@ -350,11 +348,7 @@ export async function PATCH(request: Request): Promise<Response> {
       src,
       alt: fields.alt,
       ...(fields.caption ? { caption: fields.caption } : {}),
-      credit: {
-        author: fields.author,
-        license: fields.license,
-        url: fields.url,
-      },
+      credit: creditFrom(fields),
     });
   }
 

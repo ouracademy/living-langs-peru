@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { photoFieldProblems, type PhotoFields } from "@/lib/admin/photo-fields";
+import {
+  creditFrom,
+  DEFAULT_CREDIT,
+  EMPTY_PHOTO_FIELDS,
+  photoFieldProblems,
+  type PhotoFields,
+  withCreditDefaults,
+} from "@/lib/admin/photo-fields";
 
 const valid: PhotoFields = {
   alt: "Tres mujeres asháninka tejen una cushma bajo un techo de palma.",
@@ -18,12 +25,17 @@ describe("photoFieldProblems", () => {
     ).toEqual({});
   });
 
-  // AC-E3-4: every required field, one at a time.
-  it.each(["alt", "author", "license", "url"] as const)(
-    "rejects an empty %s",
+  // 2026-11-18: the description is the one required text.
+  it("rejects an empty description", () => {
+    expect(Object.keys(photoFieldProblems({ ...valid, alt: "   " }))).toEqual([
+      "alt",
+    ]);
+  });
+
+  it.each(["author", "license", "url"] as const)(
+    "accepts an empty %s",
     (field) => {
-      const problems = photoFieldProblems({ ...valid, [field]: "   " });
-      expect(Object.keys(problems)).toEqual([field]);
+      expect(photoFieldProblems({ ...valid, [field]: "   " })).toEqual({});
     },
   );
 
@@ -53,7 +65,7 @@ describe("photoFieldProblems", () => {
     ).toMatch(/120/);
   });
 
-  it("only accepts https URLs", () => {
+  it("only accepts https URLs when there is one", () => {
     for (const url of [
       "http://commons.wikimedia.org/x",
       "javascript:alert(1)",
@@ -62,5 +74,36 @@ describe("photoFieldProblems", () => {
     ]) {
       expect(photoFieldProblems({ ...valid, url }).url).toBeDefined();
     }
+  });
+});
+
+describe("the team's credit (2026-11-18)", () => {
+  it("is what a new photo starts with", () => {
+    expect(EMPTY_PHOTO_FIELDS).toMatchObject({
+      author: "Living Langs Peru",
+      license: "Foto del equipo",
+      url: "",
+    });
+    expect(DEFAULT_CREDIT.author).toBe(EMPTY_PHOTO_FIELDS.author);
+  });
+
+  it("fills an empty author or license, and keeps what was typed", () => {
+    expect(
+      withCreditDefaults({ ...valid, author: " ", license: "" }),
+    ).toMatchObject({
+      author: "Living Langs Peru",
+      license: "Foto del equipo",
+    });
+    expect(withCreditDefaults({ ...valid, author: "  Ana  " }).author).toBe(
+      "Ana",
+    );
+  });
+
+  it("writes no url key when there is no source page", () => {
+    expect(creditFrom({ ...valid, url: "  " })).toEqual({
+      author: valid.author,
+      license: valid.license,
+    });
+    expect(creditFrom(valid).url).toBe(valid.url);
   });
 });

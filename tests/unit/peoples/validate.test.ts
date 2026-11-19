@@ -109,6 +109,29 @@ describe("validatePeople", () => {
     ).toMatch(/licencia|credit/i);
   });
 
+  // Since 2026-11-18 the source page is optional (a photo by the team has
+  // none), but a URL that is there must be https.
+  it("accepts a photo without a source URL and rejects one that is not https", () => {
+    const photo = {
+      src: "/peoples/ashaninka/x.jpg",
+      width: 800,
+      height: 600,
+      alt: "Una persona asháninka tejiendo",
+      credit: { author: "Living Langs Peru", license: "Foto del equipo" },
+    };
+
+    expect(validatePeople(broken((c) => c.photos.push(photo)))).toEqual([]);
+    for (const url of ["http://example.org/x", "", "example.org/x"]) {
+      expect(
+        problemsOf(
+          broken((c) =>
+            c.photos.push({ ...photo, credit: { ...photo.credit, url } }),
+          ),
+        ),
+      ).toMatch(/credit\.url.*https/);
+    }
+  });
+
   // AC-M3-3: an alt that says «foto» describes nothing to someone who cannot
   // see the image. The check is on the whole value, not a substring: a real
   // alt may legitimately open with «Fotografía antigua de …».

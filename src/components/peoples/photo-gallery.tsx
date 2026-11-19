@@ -2,6 +2,8 @@ import Image from "next/image";
 
 import type { Photo } from "@/lib/peoples";
 
+import { PhotoCaption } from "./photo-credit";
+
 type PhotoGalleryProps = {
   photos: Photo[];
 };
@@ -41,22 +43,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
                   className="h-auto w-full rounded-[20px] bg-[#FBEFD2]"
                 />
                 <figcaption className="mt-3 text-sm text-[#4A4130]">
-                  {photo.caption ? (
-                    <span className="block text-[#241D14]">
-                      {photo.caption}
-                    </span>
-                  ) : null}
-                  <span className="mt-1 block">
-                    {photo.credit.author} ·{" "}
-                    <a
-                      href={photo.credit.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold text-[#C7431C] underline underline-offset-2 hover:no-underline"
-                    >
-                      {photo.credit.license}
-                    </a>
-                  </span>
+                  <PhotoCaption caption={photo.caption} credit={photo.credit} />
                 </figcaption>
               </figure>
             </li>

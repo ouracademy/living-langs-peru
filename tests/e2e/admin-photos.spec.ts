@@ -106,18 +106,24 @@ test("the form sends a reduced JPEG with every field and the sha", async ({
     return Array.from(new Uint8Array(await blob.arrayBuffer()));
   });
 
-  await page.getByLabel("Foto (JPEG, PNG o WebP)").setInputFiles({
+  await page.getByRole("button", { name: "Agregar foto" }).click();
+  await page.getByLabel(/Elige una foto/).setInputFiles({
     name: "grande.png",
     mimeType: "image/png",
     buffer: Buffer.from(png),
   });
+  // UI-4: the photo is shown already reduced, with its final size.
+  await expect(
+    page.getByText(/2400 × 1800 px · [\d,]+ MB · JPEG/),
+  ).toBeVisible();
+  await expect(page.getByText(/datos de ubicación \(GPS\)/)).toBeVisible();
   await page
     .getByLabel("Descripción (para quien no ve la foto)")
     .fill("Un campo color tierra, usado solo para probar la subida.");
   await page.getByLabel("Autor").fill("PRUEBA e2e");
-  await page.getByLabel("Licencia").fill("CC0 1.0");
+  await page.getByLabel("Licencia", { exact: true }).fill("CC0 1.0");
   await page
-    .getByLabel("Dirección de origen (https://…)")
+    .getByLabel(/Dirección de origen/)
     .fill("https://example.org/prueba");
   await page.getByRole("button", { name: "Guardar foto" }).click();
 
@@ -184,6 +190,83 @@ test("a photo moves with the keyboard and keeps the focus", async ({
   await expect(
     page.getByRole("button", { name: "Bajar la foto 2" }),
   ).toBeFocused();
+
+  await context.close();
+});
+
+const editor = { username: "e2e-editor", password: "e2e-not-a-secret" };
+
+// UI-3: the drop zone is a real file input, so the keyboard opens the picker.
+test("the keyboard opens the photo picker", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({
+    baseURL,
+    httpCredentials: editor,
+  });
+  const page = await context.newPage();
+  await page.goto("/admin/fotos");
+  await page.getByRole("button", { name: "Agregar foto" }).click();
+
+  await page.getByLabel(/Elige una foto/).focus();
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    page.keyboard.press("Space"),
+  ]);
+  expect(chooser.isMultiple()).toBe(false);
+
+  await context.close();
+});
+
+// UI-16: on a 360 px phone nothing scrolls sideways and every button can be
+// hit with a thumb (44 × 44 px at least).
+test("the editor fits a phone and its buttons are big enough", async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    baseURL,
+    httpCredentials: editor,
+    viewport: { width: 360, height: 740 },
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  await page.goto("/admin/fotos");
+  await page.getByRole("button", { name: "Agregar foto" }).click();
+  await page.getByLabel(/Elige una foto/).setInputFiles({
+    name: "chica.png",
+    mimeType: "image/png",
+    // A 1×1 PNG: enough to show the preview and the rest of the form.
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+  });
+  await expect(page.getByText(/Se guardará así/)).toBeVisible();
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+
+  const small = await page
+    .getByRole("main")
+    .getByRole("button")
+    .evaluateAll((buttons) =>
+      buttons
+        .filter((button) => (button as HTMLElement).offsetParent !== null)
+        .map((button) => {
+          const box = button.getBoundingClientRect();
+          return {
+            name:
+              button.getAttribute("aria-label") ??
+              button.textContent?.trim() ??
+              "",
+            width: Math.round(box.width),
+            height: Math.round(box.height),
+          };
+        })
+        .filter((box) => box.width < 44 || box.height < 44),
+    );
+  expect(small).toEqual([]);
 
   await context.close();
 });

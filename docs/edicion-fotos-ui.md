@@ -1,11 +1,12 @@
 # Edición de fotos: propuesta de interfaz
 
-> Estado: **propuesta** · Fecha: 2026-11-18 · Spec: [specs/edicion-fotos.md](../specs/edicion-fotos.md)
+> Estado: **implementada** (UI-1 a UI-16, ver §8) · Fecha: 2026-11-18 · Spec: [specs/edicion-fotos.md](../specs/edicion-fotos.md)
 > · Plan: [tasks/edicion-fotos/](../tasks/edicion-fotos/) · Mockup: `edicion-fotos-mockup.html` (scratchpad
 > de la sesión; se puede copiar a `docs/` si el equipo lo quiere versionado)
 
-Esta propuesta mejora la pantalla `/admin/fotos` **sin cambiar el contrato** de la spec: mismos campos,
-mismas reglas, mismo commit por guardado. Cambia cómo se ve, en qué orden se hace cada cosa y qué
+Esta propuesta mejora la pantalla `/admin/fotos` con el mismo commit por guardado. Las reglas de los
+campos cambiaron el 2026-11-18 por pedido de la persona del proyecto (solo foto y descripción
+obligatorias; ver §8 y [specs/edicion-fotos.md](../specs/edicion-fotos.md) §6.3). Cambia cómo se ve, en qué orden se hace cada cosa y qué
 se le dice al editor mientras espera. Se implementa **después** de cerrar F2 y F3, encima de lo que
 ya funciona.
 
@@ -222,11 +223,61 @@ descarta el recorte) ni de arrastrar para ordenar (se ordena con botones, accesi
 
 ## 7. Riesgos y preguntas
 
-| #   | Riesgo o pregunta                                                                                                          | Propuesta                                                                                                                                            |
-| --- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | **«Foto del equipo» no tiene página de origen**, y la spec exige URL `https://` (AC-E3-4, `validatePeople`).               | Pregunta para el equipo. Mientras tanto la sugerencia rellena solo la licencia y la ayuda del campo URL dice qué poner. No se afloja la regla aquí.  |
-| R2  | **Fotos HEIC del iPhone.** iOS suele convertirlas a JPEG al elegirlas en un `<input>` que no acepta HEIC, pero no siempre. | Verificar en un iPhone real durante H3. Si llega HEIC, el mensaje de UI-3 dice «Esta foto está en formato HEIC: en el iPhone, compártela como JPEG». |
-| R3  | **UI-9 depende de que el 404 del archivo no quede en caché** en la CDN de Vercel.                                          | `cache: "no-store"` y un tope de 5 minutos; si la detección falla, el editor ve el aviso de demora, no un error.                                     |
-| R4  | **Conservar el formulario tras un conflicto** obliga a separar «recargar la lista» de «reiniciar el panel».                | Lo resuelve el estado del panel en `AddPhotoPanel`, independiente del de la lista.                                                                   |
-| R5  | **Partir el componente (UI-15) mientras F3 sigue abierto** puede chocar con el otro trabajo.                               | Empezar solo después de cerrar el checkpoint de F3.                                                                                                  |
-| R6  | **Cobertura del cambio (≥ 80 %)**: la parte de canvas y de arrastrar no corre en jsdom.                                    | La lógica pura (formato de tamaños, etapas, `usePublishWatch`) va en funciones con unit test; lo visual, en e2e.                                     |
+| #   | Riesgo o pregunta                                                                                                                                                                 | Propuesta                                                                                                                                            |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | ~~«Foto del equipo» no tiene página de origen~~ **Resuelto el 2026-11-18:** la URL de origen es opcional en todo el sitio. Sin ella, el crédito se muestra como texto sin enlace. | Hecho: `PhotoCredit.url?`, `validatePeople` (https si está), `PhotoCaption` compartido por la galería y la vista previa.                             |
+| R2  | **Fotos HEIC del iPhone.** iOS suele convertirlas a JPEG al elegirlas en un `<input>` que no acepta HEIC, pero no siempre.                                                        | Verificar en un iPhone real durante H3. Si llega HEIC, el mensaje de UI-3 dice «Esta foto está en formato HEIC: en el iPhone, compártela como JPEG». |
+| R3  | **UI-9 depende de que el 404 del archivo no quede en caché** en la CDN de Vercel.                                                                                                 | `cache: "no-store"` y un tope de 5 minutos; si la detección falla, el editor ve el aviso de demora, no un error.                                     |
+| R4  | **Conservar el formulario tras un conflicto** obliga a separar «recargar la lista» de «reiniciar el panel».                                                                       | Lo resuelve el estado del panel en `AddPhotoPanel`, independiente del de la lista.                                                                   |
+| R5  | **Partir el componente (UI-15) mientras F3 sigue abierto** puede chocar con el otro trabajo.                                                                                      | Empezar solo después de cerrar el checkpoint de F3.                                                                                                  |
+| R6  | **Cobertura del cambio (≥ 80 %)**: la parte de canvas y de arrastrar no corre en jsdom.                                                                                           | La lógica pura (formato de tamaños, etapas, `usePublishWatch`) va en funciones con unit test; lo visual, en e2e.                                     |
+
+---
+
+## 8. Estado de la implementación (2026-11-18)
+
+Implementado en `feat/edicion-fotos` sobre `eb24bec`, sin dependencias nuevas.
+
+| ID    | Estado | Dónde / cómo se prueba                                                                                                              |
+| ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| UI-1  | Hecho  | `gallery-header.tsx` · `editor-parts.test.tsx`, `photo-editor.test.tsx`                                                             |
+| UI-2  | Hecho  | `add-photo-panel.tsx` · `photo-editor.test.tsx` («the panel»)                                                                       |
+| UI-3  | Hecho  | `photo-dropzone.tsx` · `editor-parts.test.tsx` (soltar, input real) + e2e «the keyboard opens the photo picker»                     |
+| UI-4  | Hecho  | `photo-preview.tsx`, `use-prepared-photo.ts` · `photo-editor.test.tsx` + e2e (4000 × 3000 → «2400 × 1800 px»)                       |
+| UI-5  | Hecho  | `character-count.tsx` · `editor-parts.test.tsx`                                                                                     |
+| UI-6  | Hecho  | `license-suggestions.tsx` · `photo-editor.test.tsx`                                                                                 |
+| UI-7  | Hecho  | `gallery-card-preview.tsx` con `PhotoCaption` (el mismo componente de la galería pública) · `photo-editor.test.tsx`                 |
+| UI-8  | Hecho  | `save-progress.tsx` · `editor-parts.test.tsx`                                                                                       |
+| UI-9  | Hecho  | `src/lib/admin/publish-watch.ts` + `publish-notice.tsx` · `publish-watch.test.ts` (reloj simulado), `photo-editor-publish.test.tsx` |
+| UI-10 | Hecho  | `Thumbnail` en `photo-row-parts.tsx` · `photo-editor-publish.test.tsx`                                                              |
+| UI-11 | Hecho  | `photo-row.tsx`, `photo-row-parts.tsx` · `photo-editor-rows.test.tsx`                                                               |
+| UI-12 | Hecho  | `gallery-notice.tsx` (`SaveFailureNotice`) · `photo-editor.test.tsx`, `photo-editor-rows.test.tsx`                                  |
+| UI-13 | Hecho  | `error-summary.tsx`, `form-problems.ts` · `photo-editor.test.tsx`                                                                   |
+| UI-14 | Hecho  | `edit-photo-form.tsx` · `photo-editor-rows.test.tsx`                                                                                |
+| UI-15 | Hecho  | `photo-editor.tsx` pasó de 721 líneas a un contenedor y 21 módulos en `src/components/admin/`; ver desvío 1                         |
+| UI-16 | Hecho  | e2e «the editor fits a phone and its buttons are big enough» (360 px, sin scroll lateral, botones ≥ 44 × 44 px)                     |
+
+**Cambios de datos del 2026-11-18** (pedidos por la persona del proyecto, aplicados de punta a punta):
+solo la foto y la descripción son obligatorias; autor y licencia vienen prellenados con
+«Living Langs Peru» · «Foto del equipo» y vuelven a ese valor si quedan vacíos
+(`withCreditDefaults`, cliente y servidor); la URL de origen es opcional y, sin ella, el JSON no lleva
+`url` y la galería pública muestra la licencia como texto.
+
+**Desvíos respecto de la propuesta**
+
+1. **UI-15:** dos archivos pasan un poco de 200 líneas con imports y comentarios
+   (`add-photo-panel.tsx` ~227, `photo-editor.tsx` ~215). La lógica separable ya está en hooks
+   (`use-prepared-photo.ts`, `use-row-focus.ts`); partirlos más separaría estado que va junto.
+2. **Lista vacía (§3.2):** no repite el botón «Agregar foto»; el texto remite al de la cabecera.
+   Dos botones con el mismo nombre confunden a un lector de pantalla.
+3. **Foco tras guardar una foto:** va al aviso de publicación (`role="status"`), que dice el
+   resultado y lleva el enlace a la galería.
+4. **«Ya se ve en la web» (UI-9):** pregunta con `HEAD` al archivo nuevo. En local (`pnpm dev`) el
+   archivo nunca aparece, porque el commit va a GitHub y no a la carpeta local: a los 5 minutos se
+   ve el aviso de demora. Es lo esperado fuera de Vercel.
+5. **Peso en MB:** la coma decimal se escribe a mano (`describePhotoSize`), como hace
+   `formatCount`, porque el separador de `Intl` depende del ICU de cada máquina.
+
+**Sin verificar en este entorno:** Safari real (iPhone/macOS) y fotos HEIC (R2), lectores de
+pantalla reales (NVDA, VoiceOver), y la detección de publicación contra un despliegue real de
+Vercel (R3).
