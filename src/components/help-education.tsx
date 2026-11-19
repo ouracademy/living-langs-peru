@@ -1,31 +1,41 @@
 import Link from "next/link";
 import { BookOpen, FolderOpen, Gamepad2 } from "lucide-react";
 
-const educationI = [
+type EducationLink = { text: string; href: string };
+
+const educationI: {
+  title: string;
+  links: EducationLink[];
+  bgColor: string;
+  icon: typeof BookOpen;
+}[] = [
   {
     title: "Tutoriales",
-    description: "",
-    linkText: "Ver tutoriales →",
     // Placeholder: /tutoriales does not exist yet, and a dead link is better
     // than a 404.
-    href: "#",
+    links: [{ text: "Ver tutoriales →", href: "#" }],
     bgColor: "bg-[#6A3E8C]",
     icon: BookOpen,
   },
   {
     title: "Juegos",
-    description: "",
-    linkText: "Aprende jugando →",
-    href: "/juegos/completar-palabras/ashaninka",
+    // One link per game. The first keeps its wording: completar-palabras'
+    // AC-G4-16 finds it by «Aprende jugando».
+    links: [
+      {
+        text: "Aprende jugando →",
+        href: "/juegos/completar-palabras/ashaninka",
+      },
+      // The library, not a language: it is static and never needs Supabase.
+      { text: "Saltapalabras →", href: "/juegos/saltapalabras" },
+    ],
     bgColor: "bg-[#E4572E]",
     icon: Gamepad2,
   },
   {
     title: "Materiales y videos",
-    description: "",
-    linkText: "Explorar recursos →",
     // Placeholder, like the one above.
-    href: "#",
+    links: [{ text: "Explorar recursos →", href: "#" }],
     bgColor: "bg-[#1B98A0]",
     icon: FolderOpen,
   },
@@ -52,12 +62,18 @@ export function HelpEducation() {
               className={`flex min-h-[170px] flex-col justify-between rounded-3xl p-8 text-white ${item.bgColor}`}
             >
               <h3 className="text-2xl font-bold">{item.title}</h3>
-              <Link
-                href={item.href}
-                className="text-sm font-bold text-white underline"
-              >
-                {item.linkText}
-              </Link>
+              <ul className="flex flex-col gap-2">
+                {item.links.map((link) => (
+                  <li key={link.text}>
+                    <Link
+                      href={link.href}
+                      className="text-sm font-bold text-white underline"
+                    >
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>

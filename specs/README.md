@@ -12,6 +12,7 @@ diseño completo se lea de una sola vez.
 | [solicitudes.md](./solicitudes.md)               | Implementado | [tasks/solicitudes/](../tasks/solicitudes/)               | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad.   |
 | [edicion-fotos.md](./edicion-fotos.md)           | Borrador     | [tasks/edicion-fotos/](../tasks/edicion-fotos/)           | Formulario `/admin/fotos` con Basic Auth que sube fotos de la galería al repo.         |
 | [biblioteca-medios.md](./biblioteca-medios.md)   | Obsoleto     | —                                                         | Reemplazado por `edicion-fotos.md`. Login, Supabase Storage y edición sobre la página. |
+| [saltapalabras.md](./saltapalabras.md)           | Borrador     | [tasks/saltapalabras/](../tasks/saltapalabras/)           | Juego de vocabulario por paquetes, sin login; `/admin/juego` para publicar y audio.    |
 
 ## Dónde va cada cosa
 
