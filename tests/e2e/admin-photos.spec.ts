@@ -56,9 +56,10 @@ test("no public page links to the admin area", async ({ page }) => {
 });
 
 // AC-E3-1, AC-E3-2: the photo leaves the browser reduced and re-encoded.
-// The save is intercepted, so nothing reaches GitHub; the page reads the
-// gallery from tests/e2e/fake-github.mjs.
-test("the form sends a reduced JPEG with every field and the sha", async ({
+// The save is intercepted, so nothing is stored: the fake Supabase
+// (tests/e2e/fake-supabase.mjs) is shared by tests running in parallel. The
+// page reads the gallery from it: no row yet, so the repo's five photos.
+test("the form sends a reduced JPEG with every field and the version", async ({
   browser,
   baseURL,
 }) => {
@@ -82,7 +83,7 @@ test("the form sends a reduced JPEG with every field and the sha", async ({
       status: 201,
       json: {
         ok: true,
-        message: "Foto guardada. Se verá en la web en 1–2 minutos.",
+        message: "Foto guardada. Ya está en la galería.",
       },
     });
   });
@@ -128,7 +129,7 @@ test("the form sends a reduced JPEG with every field and the sha", async ({
   await page.getByRole("button", { name: "Guardar foto" }).click();
 
   await expect(
-    page.getByText(/Foto guardada\. Se verá en la web/),
+    page.getByText(/Foto guardada\. Ya está en la galería/),
   ).toBeVisible();
   expect(sent).toBeDefined();
   const photo = sent?.get("photo");
@@ -139,7 +140,9 @@ test("the form sends a reduced JPEG with every field and the sha", async ({
   expect(size.type).toBe("jpg");
   expect(Math.max(size.width, size.height)).toBe(2400);
   expect(bytes.length).toBeLessThan(3 * 1024 * 1024);
-  expect(sent?.get("sha")).toMatch(/^[0-9a-f]{40}$/);
+  // No row yet in the fake: the first save starts from version 0.
+  expect(sent?.get("version")).toBe("0");
+  expect(sent?.has("sha")).toBe(false);
   expect(sent?.get("author")).toBe("PRUEBA e2e");
   expect(sent?.get("license")).toBe("CC0 1.0");
 
@@ -174,9 +177,9 @@ test("a photo moves with the keyboard and keeps the focus", async ({
     await route.fulfill({
       json: {
         ok: true,
-        sha: "f".repeat(40),
+        version: 1,
         photos,
-        message: "Orden guardado. Se verá en la web en 1–2 minutos.",
+        message: "Orden guardado. Ya está en la galería.",
       },
     });
   });

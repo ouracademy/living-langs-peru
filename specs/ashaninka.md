@@ -510,6 +510,12 @@ Las fotos se **descargan al repo** (`public/peoples/ashaninka/`) y se sirven loc
 `images.remotePatterns`: enlazar en caliente a un host externo mete un punto de fallo y un rastreo de
 usuarios que esta página no necesita.
 
+_Nota (2026-11-18): desde esa fecha las fotos que sube el equipo en `/admin/fotos` van a Supabase
+Storage (bucket `gallery`) y se sirven con `next/image`, que las descarga en Vercel: el visitante
+no se conecta a Supabase. `next.config.ts` gana **un único** `remotePatterns`, acotado a
+`/storage/v1/object/public/gallery/**` del proyecto. Las 5 fotos originales siguen en `public/` y
+`ashaninka.json` es el respaldo. Ver [edicion-fotos.md](./edicion-fotos.md) §2 #15–#19._
+
 Dos grupos:
 
 **a) Wikimedia Commons.** Candidatas identificadas (la licencia de cada una **se verifica archivo por
@@ -552,6 +558,8 @@ rastrea y las clasifica en `docs/ashaninka-sources.md`:
   [edicion-fotos.md](./edicion-fotos.md) §6.3._
 - **AC-M3-3** Ninguna imagen tiene `alt` vacío, y ningún `alt` es genérico («imagen», «foto»).
 - **AC-M3-4** Todas las imágenes se sirven desde `public/`; `next.config.ts` no gana `remotePatterns`.
+  _Nota (2026-11-18): reemplazado por AC-E4-4 de [edicion-fotos.md](./edicion-fotos.md): las fotos
+  subidas por el equipo se sirven desde el bucket `gallery` de Supabase con un único `remotePatterns`._
 - **AC-M3-5** `docs/ashaninka-sources.md` tiene una fila por imagen usada, con su licencia y URL.
 - **AC-M3-6** Las 4 imágenes preexistentes de `public/` están clasificadas en ese documento, aunque el
   veredicto sea «procedencia no determinada».

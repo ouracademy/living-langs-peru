@@ -30,9 +30,9 @@ import { usePreparedPhoto } from "./use-prepared-photo";
 
 type AddPhotoPanelProps = {
   id: string;
-  sha: string;
-  /** The panel hands the preview URL over: the list shows it while publishing. */
-  onSaved: (answer: SaveAnswer, previewUrl: string) => void;
+  /** The gallery version the list was read at; the save sends it back. */
+  version: number;
+  onSaved: (answer: SaveAnswer) => void;
   onClose: () => void;
   onReload: () => void;
 };
@@ -58,11 +58,11 @@ function withPhotoProblem(
 /**
  * «Agregar foto», open above the list, not as a modal (UI-2): choose → see it
  * reduced → describe it → save. What the editor typed survives a conflict and
- * a reload of the list (UI-12): this state is not tied to the sha.
+ * a reload of the list (UI-12): this state is not tied to the version.
  */
 export function AddPhotoPanel({
   id,
-  sha,
+  version,
   onSaved,
   onClose,
   onReload,
@@ -76,7 +76,7 @@ export function AddPhotoPanel({
   const [failure, setFailure] = useState<SaveFailure | null>(null);
   // Set on a refused save; the effect moves the focus once it is rendered.
   const [focusRequest, setFocusRequest] = useState<FormProblems | null>(null);
-  const { prepared, choose, clear, handOver } = usePreparedPhoto((message) =>
+  const { prepared, choose, clear } = usePreparedPhoto((message) =>
     setProblems((current) => withPhotoProblem(current, message)),
   );
 
@@ -113,14 +113,13 @@ export function AddPhotoPanel({
     for (const [name, value] of Object.entries(withCreditDefaults(fields))) {
       body.set(name, value);
     }
-    body.set("sha", sha);
+    body.set("version", String(version));
     body.set("photo", prepared.photo.blob, "foto.jpg");
     const { ok, answer } = await sendToGallery("POST", body);
     setSaving(false);
 
     if (ok) {
-      handOver(prepared.previewUrl);
-      onSaved(answer, prepared.previewUrl);
+      onSaved(answer);
       return;
     }
     if (answer.fields) refuse(answer.fields);
@@ -195,7 +194,7 @@ export function AddPhotoPanel({
           </div>
         </div>
         <div role="status">
-          {saving ? <SaveProgress stage="saving" size={ready?.photo} /> : null}
+          {saving ? <SaveProgress size={ready?.photo} /> : null}
         </div>
         {failure ? (
           <SaveFailureNotice

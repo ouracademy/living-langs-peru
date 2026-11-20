@@ -18,7 +18,7 @@ vi.mock("@/components/admin/resize-image", async (importOriginal) => ({
 
 const { PhotoEditor } = await import("@/components/admin/photo-editor");
 
-const SHA = "a".repeat(40);
+const VERSION = 3;
 const DESCRIPTION = "Descripción (para quien no ve la foto)";
 const ALT = "Tres mujeres asháninka tejen una cushma bajo un techo de palma.";
 
@@ -58,7 +58,7 @@ beforeEach(() => {
       height: 1600,
     },
   });
-  render(<PhotoEditor photos={[]} sha={SHA} />);
+  render(<PhotoEditor photos={[]} version={VERSION} />);
 });
 
 afterEach(() => {
@@ -178,13 +178,13 @@ describe("Agregar foto", () => {
     expect(screen.getByLabelText(/Elige una foto/)).toBeTruthy();
   });
 
-  // AC-E3-1: what is sent is the reduced JPEG, the fields and the sha.
-  it("sends the photo, the description, the team's credit and the sha", async () => {
+  // AC-E3-1: what is sent is the reduced JPEG, the fields and the version.
+  it("sends the photo, the description, the team's credit and the version", async () => {
     fetchMock.mockResolvedValue(
       Response.json(
         {
           ok: true,
-          message: "Foto guardada. Se verá en la web en 1–2 minutos.",
+          message: "Foto guardada. Ya está en la galería.",
         },
         { status: 201 },
       ),
@@ -194,14 +194,14 @@ describe("Agregar foto", () => {
     save();
 
     expect(
-      await screen.findByText(/Foto guardada\. Se verá en la web/),
+      await screen.findByText(/Foto guardada\. Ya está en la galería/),
     ).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe("/api/admin/fotos");
     expect(init.method).toBe("POST");
     const body = init.body as FormData;
-    expect(body.get("sha")).toBe(SHA);
+    expect(body.get("version")).toBe(String(VERSION));
     expect(body.get("alt")).toBe(ALT);
     expect(body.get("author")).toBe("Living Langs Peru");
     expect(body.get("license")).toBe("Foto del equipo");

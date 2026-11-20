@@ -1,13 +1,22 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import AshaninkaPage from "@/app/ashaninka/page";
+// The gallery reads Supabase on the server; with no variables here it shows
+// the repo's photos (spec edicion-fotos #16), which is what this test checks.
+vi.mock("server-only", () => ({}));
 
-beforeEach(() => {
-  render(<AshaninkaPage />);
+const { default: AshaninkaPage } = await import("@/app/ashaninka/page");
+
+beforeEach(async () => {
+  vi.stubEnv("SUPABASE_URL", "");
+  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "");
+  render(await AshaninkaPage());
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllEnvs();
+});
 
 /** The footnote numbers in the order the citation marks appear in the page. */
 function citationNumbersInPageOrder(): number[] {

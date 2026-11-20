@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   RESIZE_MESSAGES,
@@ -16,18 +16,16 @@ export type Prepared =
 /**
  * The photo of «Agregar foto»: reduced as soon as it is chosen, so the editor
  * sees it as it will be saved (UI-4). Owns the preview's blob URL and releases
- * it, unless it was handed to the list to show while publishing (UI-10).
+ * it when the photo changes or the panel closes: a saved photo is served from
+ * the bucket right away, so the list never needs the local copy.
  */
 export function usePreparedPhoto(onProblem: (message: string | null) => void) {
   const [prepared, setPrepared] = useState<Prepared>({ kind: "none" });
-  const handedOver = useRef<string | null>(null);
   const previewUrl = prepared.kind === "ready" ? prepared.previewUrl : null;
 
   useEffect(
     () => () => {
-      if (previewUrl && handedOver.current !== previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
     },
     [previewUrl],
   );
@@ -52,8 +50,5 @@ export function usePreparedPhoto(onProblem: (message: string | null) => void) {
     prepared,
     choose,
     clear: () => setPrepared({ kind: "none" }),
-    handOver: (url: string) => {
-      handedOver.current = url;
-    },
   };
 }

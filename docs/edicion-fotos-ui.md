@@ -4,6 +4,13 @@
 > · Plan: [tasks/edicion-fotos/](../tasks/edicion-fotos/) · Mockup: `edicion-fotos-mockup.html` (scratchpad
 > de la sesión; se puede copiar a `docs/` si el equipo lo quiere versionado)
 
+> **Nota (2026-11-18, más tarde).** Las fotos pasaron de commits en GitHub a Supabase
+> ([specs/edicion-fotos.md](../specs/edicion-fotos.md), «Cambios del 2026-11-18»). Guardar publica,
+> así que **UI-8, UI-9 y UI-10 se simplificaron**: el progreso es «Foto preparada → Guardando y
+> publicando…», el aviso dice «Ya está en la galería» con el enlace (sin espera de 1–2 minutos ni
+> aviso de demora), y la lista no muestra una copia local «Publicando…». `PhotoEditor` recibe
+> `version: number` en vez de `sha`. La confirmación de «Quitar» avisa que no se puede deshacer.
+
 Esta propuesta mejora la pantalla `/admin/fotos` con el mismo commit por guardado. Las reglas de los
 campos cambiaron el 2026-11-18 por pedido de la persona del proyecto (solo foto y descripción
 obligatorias; ver §8 y [specs/edicion-fotos.md](../specs/edicion-fotos.md) §6.3). Cambia cómo se ve, en qué orden se hace cada cosa y qué

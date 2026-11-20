@@ -1,62 +1,52 @@
-import type { Photo } from "@/lib/peoples";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import {
-  type FetchLike,
-  type GitHubConfig,
-  type GitHubErrorCode,
-  readRepoFile,
-} from "./github";
+import { ashaninka, type Photo } from "@/lib/peoples";
+import { readGalleryRow } from "@/lib/peoples/gallery-store";
 
-/** The only gallery editable today (spec P3): the code takes the path, not the people. */
-export const GALLERY_FILE = "src/data/peoples/ashaninka.json";
+import { GALLERY_SLUG } from "./gallery";
 
 export type GalleryErrorCode =
-  GitHubErrorCode | "github_not_configured" | "gallery_unreadable";
+  "supabase_not_configured" | "gallery_unavailable";
 
 export type GallerySnapshot = {
   photos: Photo[];
-  /** Commit the photos were read at; a save sends it back (spec #11). */
-  sha: string;
+  /** Version the photos were read at; a save sends it back (spec #11). */
+  version: number;
 };
 
 export type GalleryResult =
   { ok: true; value: GallerySnapshot } | { ok: false; error: GalleryErrorCode };
 
-/** Spanish copy for each failure. Never the raw GitHub error. */
+/** Spanish copy for each failure. Never the raw Supabase error. */
 export const GALLERY_ERROR_MESSAGES: Record<GalleryErrorCode, string> = {
-  github_unauthorized:
-    "La edición no está disponible. Avisa al equipo técnico.",
-  github_not_configured:
-    "La edición no está disponible. Avisa al equipo técnico.",
-  github_unavailable:
+  supabase_not_configured:
+    "La edición no está disponible: falta configurar Supabase en este servidor. Avisa al equipo técnico.",
+  gallery_unavailable:
     "No pudimos leer la galería. Intenta de nuevo en unos minutos.",
-  gallery_unreadable: "No pudimos leer la galería. Avisa al equipo técnico.",
 };
 
-function photosOf(content: string): Photo[] | null {
-  try {
-    const data: unknown = JSON.parse(content);
-    if (typeof data !== "object" || data === null || !("photos" in data)) {
-      return null;
-    }
-    const photos = (data as { photos: unknown }).photos;
-    return Array.isArray(photos) ? (photos as Photo[]) : null;
-  } catch {
-    return null;
-  }
-}
+/** The repo's photos: what the gallery starts from before its first save. */
+export const STARTING_PHOTOS: Photo[] = ashaninka.photos;
 
+/**
+ * The gallery as stored right now, uncached (spec #10). With no row yet, the
+ * repo's photos at version 0: the first save creates the row from them.
+ */
 export async function readGallery(
-  config: GitHubConfig | null,
-  fetchImpl: FetchLike,
+  client: SupabaseClient | null,
 ): Promise<GalleryResult> {
-  if (!config) return { ok: false, error: "github_not_configured" };
-
-  const file = await readRepoFile(config, GALLERY_FILE, fetchImpl);
-  if (!file.ok) return file;
-
-  const photos = photosOf(file.value.content);
-  if (!photos) return { ok: false, error: "gallery_unreadable" };
-
-  return { ok: true, value: { photos, sha: file.value.commitSha } };
+  if (!client) return { ok: false, error: "supabase_not_configured" };
+  try {
+    const stored = await readGalleryRow(client, GALLERY_SLUG);
+    return {
+      ok: true,
+      value: stored ?? { photos: STARTING_PHOTOS, version: 0 },
+    };
+  } catch (error) {
+    console.error(
+      "admin/fotos: read failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
+    return { ok: false, error: "gallery_unavailable" };
+  }
 }

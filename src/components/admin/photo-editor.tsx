@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 import {
   MAX_GALLERY_PHOTOS,
@@ -20,52 +20,48 @@ import { useRowFocus } from "./use-row-focus";
 
 type PhotoEditorProps = {
   photos: Photo[];
-  /** Commit the list was read at; every save sends it back (spec #11). */
-  sha: string;
+  /** Version the list was read at; every save sends it back (spec #11). */
+  version: number;
 };
 
 /**
- * The gallery as it is on the branch, with add, edit, move and remove. Every
- * save answers with the list as committed and the new sha, so the editor sees
- * the change right away; `router.refresh()` then reads the branch again.
+ * The stored gallery, with add, edit, move and remove. Every save answers
+ * with the list as saved and the new version, so the editor sees the change
+ * right away; `router.refresh()` then reads the gallery again.
  */
-export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
+export function PhotoEditor({ photos, version }: PhotoEditorProps) {
   const router = useRouter();
   const panelId = useId();
-  const [gallery, setGallery] = useState({ photos, sha });
-  // Adopt the server's list when a refresh brings a newer commit.
-  const [readSha, setReadSha] = useState(sha);
-  if (sha !== readSha) {
-    setReadSha(sha);
-    setGallery({ photos, sha });
+  const [gallery, setGallery] = useState({ photos, version });
+  // Adopt the server's list when a refresh brings a newer version.
+  const [readVersion, setReadVersion] = useState(version);
+  if (version !== readVersion) {
+    setReadVersion(version);
+    setGallery({ photos, version });
   }
 
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice>({ kind: "none" });
   const [open, setOpen] = useState<{ src: string; mode: RowMode } | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
-  // The editor's own copy of photos saved in this visit, until they are live.
-  const [previews, setPreviews] = useState<Record<string, string>>({});
 
-  // Keys each «saved» notice, so a new save restarts its publish watch.
+  // Keys each «saved» notice, so a new save is announced again.
   const saves = useRef(0);
   const addRef = useRef<HTMLButtonElement>(null);
   const noticeRef = useRef<HTMLDivElement>(null);
   const { requestFocus, registerRow } = useRowFocus(noticeRef);
   const reload = () => router.refresh();
 
-  const releasePreviews = useCallback(() => {
-    setPreviews((current) => {
-      Object.values(current).forEach((url) => URL.revokeObjectURL(url));
-      return {};
-    });
-  }, []);
-
   function adopt(answer: SaveAnswer) {
-    if (answer.photos && answer.sha) {
-      setGallery({ photos: answer.photos, sha: answer.sha });
+    if (answer.photos && typeof answer.version === "number") {
+      setGallery({ photos: answer.photos, version: answer.version });
     }
     router.refresh();
+  }
+
+  function announce(message: string) {
+    saves.current += 1;
+    setNotice({ kind: "saved", id: saves.current, message });
   }
 
   async function change(
@@ -76,13 +72,11 @@ export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
     setNotice({ kind: "none" });
     const { ok, answer } = await sendToGallery(method, {
       ...body,
-      sha: gallery.sha,
+      version: gallery.version,
     });
     setPending(false);
     if (ok) {
-      const message = answer.message ?? "Guardado.";
-      saves.current += 1;
-      setNotice({ kind: "saved", id: saves.current, message, src: null });
+      announce(answer.message ?? "Guardado.");
       adopt(answer);
       return answer;
     }
@@ -123,21 +117,9 @@ export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
     return saved?.fields ?? {};
   }
 
-  function added(answer: SaveAnswer, previewUrl: string) {
+  function added(answer: SaveAnswer) {
     setPanelOpen(false);
-    const photo = answer.photo;
-    if (photo) {
-      setPreviews((current) => ({ ...current, [photo.src]: previewUrl }));
-    } else URL.revokeObjectURL(previewUrl);
-    saves.current += 1;
-    setNotice({
-      kind: "saved",
-      id: saves.current,
-      message:
-        answer.message ?? "Foto guardada. Se verá en la web en 1–2 minutos.",
-      src: photo?.src ?? null,
-      size: photo ? { width: photo.width, height: photo.height } : undefined,
-    });
+    announce(answer.message ?? "Foto guardada. Ya está en la galería.");
     requestFocus({ src: null, action: "add" });
     adopt(answer);
   }
@@ -161,7 +143,7 @@ export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
       {panelOpen ? (
         <AddPhotoPanel
           id={panelId}
-          sha={gallery.sha}
+          version={gallery.version}
           onSaved={added}
           onReload={reload}
           onClose={() => {
@@ -170,12 +152,7 @@ export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
           }}
         />
       ) : null}
-      <EditorNotice
-        notice={notice}
-        ref={noticeRef}
-        onReload={reload}
-        onPublished={releasePreviews}
-      />
+      <EditorNotice notice={notice} ref={noticeRef} onReload={reload} />
       {total === 0 ? (
         <p className="mt-6 rounded-[20px] bg-[#FBEFD2] px-5 py-8 text-center text-[#4A4130]">
           La galería no tiene fotos todavía. Pulsa «Agregar foto» para subir la
@@ -195,7 +172,6 @@ export function PhotoEditor({ photos, sha }: PhotoEditorProps) {
               total={total}
               pending={pending}
               mode={open?.src === photo.src ? open.mode : "view"}
-              localPreview={previews[photo.src]}
               onMove={(direction) => move(photo, direction)}
               onModeChange={(mode) =>
                 setOpen(mode === "view" ? null : { src: photo.src, mode })

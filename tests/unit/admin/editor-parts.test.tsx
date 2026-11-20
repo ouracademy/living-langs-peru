@@ -115,24 +115,21 @@ describe("PhotoDropzone (UI-3)", () => {
 });
 
 describe("SaveProgress (UI-8)", () => {
+  // Since the move to Supabase, saving publishes: no separate waiting step.
   it("says each step's state in words, not only with an icon", () => {
     const { rerender } = render(
-      <SaveProgress stage="saving" size={{ width: 2400, height: 1800 }} />,
+      <SaveProgress size={{ width: 2400, height: 1800 }} />,
     );
-    const steps = screen.getAllByRole("listitem").map((li) => li.textContent);
-    expect(steps).toEqual([
-      "Foto preparada (2400 × 1800 px) (hecho)",
-      "Guardando en el repositorio… (en curso)",
-      "Publicando en la web (suele tardar 1–2 min) (pendiente)",
-    ]);
-
-    rerender(<SaveProgress stage="publishing" />);
     expect(screen.getAllByRole("listitem").map((li) => li.textContent)).toEqual(
       [
-        "Cambio preparado (hecho)",
-        "Guardado en el repositorio (hecho)",
-        "Publicando en la web (suele tardar 1–2 min) (en curso)",
+        "Foto preparada (2400 × 1800 px) (hecho)",
+        "Guardando y publicando… (en curso)",
       ],
+    );
+
+    rerender(<SaveProgress />);
+    expect(screen.getAllByRole("listitem")[0].textContent).toBe(
+      "Cambio preparado (hecho)",
     );
   });
 });

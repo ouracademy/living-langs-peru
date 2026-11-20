@@ -1,15 +1,9 @@
-import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  applyAction,
-  commitMessageFor,
-  newPhotoName,
-  serializePeople,
-} from "@/lib/admin/gallery";
+import { applyAction, newPhotoName } from "@/lib/admin/gallery";
 import type { People, Photo } from "@/lib/peoples";
 
 // Git stores the file with LF; a Windows checkout may have CRLF on disk.
@@ -79,55 +73,6 @@ describe("applyAction add", () => {
     });
     expect(result).toMatchObject({ ok: false, error: "photo_invalid" });
   });
-});
-
-describe("serializePeople", () => {
-  // Decision #14: CI runs format:check on every push, the editor's included.
-  it("writes the current file back byte for byte", async () => {
-    expect(await serializePeople(people())).toBe(original);
-  });
-
-  it("formats an edited file the way Prettier would", async () => {
-    const result = applyAction(people(), { type: "add", photo: newPhoto });
-    if (!result.ok) throw new Error("expected a valid photo");
-
-    const written = await serializePeople(result.people);
-    const { format } = await import("prettier");
-    expect(written).toBe(await format(written, { parser: "json" }));
-    expect(written.endsWith("}\n")).toBe(true);
-  });
-});
-
-/** Runs the real commitlint CLI with the repository's config. */
-function commitlint(
-  message: string,
-): Promise<{ code: number; output: string }> {
-  const cli = join(process.cwd(), "node_modules/@commitlint/cli/cli.js");
-  return new Promise((resolve) => {
-    const child = spawn(process.execPath, [cli]);
-    let output = "";
-    child.stdout.on("data", (chunk) => (output += chunk));
-    child.stderr.on("data", (chunk) => (output += chunk));
-    child.on("close", (code) => resolve({ code: code ?? 1, output }));
-    child.stdin.end(message);
-  });
-}
-
-describe("commitMessageFor", () => {
-  // Commits made through the API never run the commit-msg hook (plan §3.11).
-  // Starting the CLI takes seconds under a loaded test run, hence the timeout.
-  it("passes the repository's commitlint config for every action", async () => {
-    expect(commitMessageFor("add")).toBe(
-      "chore: update ashaninka gallery (add photo)",
-    );
-
-    const runs = await Promise.all(
-      (["add", "edit", "move", "remove"] as const).map((action) =>
-        commitlint(commitMessageFor(action)),
-      ),
-    );
-    for (const run of runs) expect(run.code, run.output).toBe(0);
-  }, 60_000);
 });
 
 describe("newPhotoName", () => {
@@ -282,8 +227,9 @@ describe("applyAction move", () => {
 });
 
 describe("applyAction remove", () => {
-  // AC-E3-6: the entry goes, and the caller learns which file to delete.
-  it("removes the entry and names the file to delete", () => {
+  // AC-E3-6: the entry goes, and the caller learns which photo left, so it
+  // can delete its file if it is in the bucket (the route decides).
+  it("removes the entry and returns the removed photo", () => {
     const before = people();
     const target = before.photos[3];
 
@@ -293,19 +239,7 @@ describe("applyAction remove", () => {
     if (!result.ok) return;
     expect(result.people.photos).toHaveLength(before.photos.length - 1);
     expect(result.people.photos.some((p) => p.src === target.src)).toBe(false);
-    expect(result.deletedFile).toBe(`public${target.src}`);
-  });
-
-  it("never names a file outside the gallery folder", () => {
-    const before = people();
-    before.photos[0] = { ...before.photos[0], src: "/../../package.json" };
-
-    const result = applyAction(before, {
-      type: "remove",
-      src: "/../../package.json",
-    });
-
-    expect(result).toMatchObject({ ok: false, error: "photo_invalid" });
+    expect(result.removed).toEqual(target);
   });
 
   it("answers photo_not_found for an unknown src", () => {
@@ -315,15 +249,5 @@ describe("applyAction remove", () => {
         src: "/peoples/ashaninka/no-existe.jpg",
       }),
     ).toMatchObject({ ok: false, error: "photo_not_found" });
-  });
-});
-
-describe("commitMessageFor every action", () => {
-  it.each([
-    ["edit", "chore: update ashaninka gallery (edit photo)"],
-    ["move", "chore: update ashaninka gallery (move photo)"],
-    ["remove", "chore: update ashaninka gallery (remove photo)"],
-  ] as const)("%s", (action, message) => {
-    expect(commitMessageFor(action)).toBe(message);
   });
 });

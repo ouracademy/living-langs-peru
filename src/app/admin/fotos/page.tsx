@@ -7,7 +7,7 @@ import {
   GALLERY_ERROR_MESSAGES,
   readGallery,
 } from "@/lib/admin/gallery-source";
-import { readGitHubConfig } from "@/lib/admin/github";
+import { getOptionalSupabase } from "@/lib/supabase-optional";
 
 export const metadata: Metadata = {
   title: "Edición de fotos",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Reads the gallery from GitHub on every request (spec #10). Reading the
+ * Reads the gallery from Supabase on every request (spec #10). Reading the
  * request headers keeps the route dynamic; the proxy has already asked for the
  * password, and this checks it again rather than trusting the matcher.
  */
@@ -31,7 +31,7 @@ export default async function AdminPhotosPage() {
     );
   }
 
-  const gallery = await readGallery(readGitHubConfig(), fetch);
+  const gallery = await readGallery(getOptionalSupabase());
 
   return (
     <main className="mx-auto w-full max-w-[960px] flex-1 px-6 py-12">
@@ -39,11 +39,13 @@ export default async function AdminPhotosPage() {
         Fotos de la galería asháninka
       </h1>
       <p className="mt-3 text-[#4A4130]">
-        Los cambios tardan 1–2 minutos en verse en la web. Para salir, cierra el
-        navegador.
+        Cada cambio se publica al guardar. Para salir, cierra el navegador.
       </p>
       {gallery.ok ? (
-        <PhotoEditor photos={gallery.value.photos} sha={gallery.value.sha} />
+        <PhotoEditor
+          photos={gallery.value.photos}
+          version={gallery.value.version}
+        />
       ) : (
         // No form on failure: an empty list would invite overwriting the gallery.
         <p

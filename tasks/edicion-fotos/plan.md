@@ -44,6 +44,7 @@ falla cambia la decisión correspondiente del spec, no el plan entero.
 | F1   | E1, E2    | F0         | `/admin/fotos` pide usuario y contraseña; con ellos muestra las 5 fotos de `main`.           |
 | F2   | E3        | F1, H1, H2 | Desde Preview se agrega una foto «PRUEBA»: un solo commit en `main` y aparece en la web.     |
 | F3   | E3        | F2         | Editar, subir/bajar y quitar, cada uno con un commit.                                        |
+| F5   | E2–E4     | F1–F3      | Guardar va a Supabase: la foto se ve en `/ashaninka` en segundos, sin commit (2026-11-18).   |
 | F4   | todo      | F1–F3      | `pnpm check:full` en verde y la prueba manual registrada en `docs/edicion-fotos-pruebas.md`. |
 
 F1 no necesita el token de GitHub con permiso de escritura, pero sí **leer**; con el repo público
@@ -166,3 +167,36 @@ Al cerrar la feature, además: `pnpm check:full`, `pnpm build` con `/ashaninka` 
 
 El resto son archivos nuevos (spec §3.1). No se toca `src/data/peoples/ashaninka.json` a mano: el
 primer cambio a ese archivo lo hace la prueba de H3.
+
+## 8. F5 — De GitHub a Supabase (2026-11-18)
+
+**Por qué.** La persona del proyecto pidió que guardar se vea al instante y sin token de GitHub; el
+juego ya usa Supabase. Spec: «Cambios del 2026-11-18» en `specs/edicion-fotos.md`.
+
+**Decisiones de implementación.**
+
+1. **Una fila por galería** (`galleries.photos` jsonb) en vez de una fila por foto: `applyAction` y
+   `validatePeople` se reusan tal cual sobre la lista entera, y las cuatro acciones son un solo
+   camino. Desvío del encargo, que proponía `gallery_photos` con una fila por foto: esa opción
+   obliga a renumerar posiciones y a repartir la validación entre la base y la app.
+2. **`save_gallery` sin `security definer`**, como `publish_language_pack`: corre con los permisos de
+   quien llama, así que `service_role` necesita `select, insert, update` en `galleries` (lección de F0
+   del juego: con solo `select` falla con «permiso denegado»).
+3. **Sin script de migración.** Las 5 fotos se quedan en `public/`; la primera edición copia la lista
+   del JSON a la fila (`version` 0). Desvío del encargo, que pedía `gallery:migrate`: subir esos
+   archivos al bucket no mejora nada para el visitante y suma un paso manual.
+4. **Respaldo según la fase**: sin variables o sin fila → JSON; error en `next build` o `next dev` →
+   JSON; error en producción → la lectura lanza dentro de `unstable_cache` y Next sigue sirviendo la
+   última página buena (guía de ISR de Next 16). La fase se lee de `process.env.NEXT_PHASE` contra
+   `PHASE_PRODUCTION_BUILD` de `next/constants`.
+5. **Invalidación**: `revalidateTag("gallery:ashaninka", "max")`, sin `revalidatePath` (hallazgo F0
+   del juego). El cambio se ve, como tarde, en la segunda visita.
+
+**Riesgos.**
+
+| Riesgo                                                                                      | Mitigación                                                                                         |
+| ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `NEXT_PHASE` es una variable que pone Next al compilar, no una API documentada para páginas | Test unitario de las tres fases y un build con un Supabase que no responde (respaldo, `○`).        |
+| Plan gratis: sin copias y pausa a los 7 días                                                | Quitar dice «No se puede deshacer»; con la pausa, `/ashaninka` sigue con lo último bueno.          |
+| Archivos huérfanos si `save_gallery` falla después de subir                                 | Se borra lo subido; si el borrado también falla, queda un archivo sin uso y se registra el código. |
+| `next/image` no optimiza IPs locales (`dangerouslyAllowLocalIP`, Next 16)                   | El e2e usa el respaldo con fotos locales; las fotos del bucket se prueban a mano (T5.10).          |

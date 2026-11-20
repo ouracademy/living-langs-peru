@@ -4,9 +4,10 @@ import type { Photo } from "@/lib/peoples";
 /** What every save answers (see src/app/api/admin/fotos/route.ts). */
 export type SaveAnswer = {
   ok?: boolean;
-  sha?: string;
+  /** The gallery's version after the save; the next save sends it back. */
+  version?: number;
   photos?: Photo[];
-  /** The photo as committed, on «add». */
+  /** The photo as saved, on «add». */
   photo?: Photo;
   message?: string;
   error?: string;
@@ -16,7 +17,7 @@ export type SaveAnswer = {
 /** Same origin: the browser resends the Basic Auth credentials itself. */
 export async function sendToGallery(
   method: "POST" | "PATCH" | "DELETE",
-  body: FormData | Record<string, string>,
+  body: FormData | Record<string, string | number>,
 ): Promise<{ ok: boolean; answer: SaveAnswer }> {
   try {
     const response = await fetch("/api/admin/fotos", {

@@ -3,22 +3,31 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { DELETE, PATCH } from "@/app/api/admin/fotos/route";
 import type { Photo } from "@/lib/peoples";
 
 import {
-  BASE,
-  type Call,
   credentials,
-  decodeBlob,
-  fakeGitHub,
-  gallery,
-  NEW_COMMIT,
+  fakeGallerySupabase,
+  PUBLIC_BASE,
+  repoPhotos,
+  SECRET_KEY,
   stubAdminEnv,
-  TOKEN,
-} from "./fake-github-api";
+} from "./fake-gallery-supabase";
 
-const photos = JSON.parse(gallery).photos as Photo[];
+vi.mock("server-only", () => ({}));
+const revalidateTag = vi.fn();
+vi.mock("next/cache", () => ({
+  revalidateTag: (...args: unknown[]) => revalidateTag(...args),
+  unstable_cache: (fn: () => unknown) => fn,
+}));
+
+let fake = fakeGallerySupabase();
+let configured = true;
+vi.mock("@/lib/supabase-optional", () => ({
+  getOptionalSupabase: () => (configured ? fake.client : null),
+}));
+
+const { DELETE, PATCH } = await import("@/app/api/admin/fotos/route");
 
 function call(
   handler: typeof PATCH,
@@ -43,10 +52,17 @@ const patch = (body: unknown, authorization?: string | null) =>
 const remove = (body: unknown, authorization?: string | null) =>
   call(DELETE, "DELETE", body, authorization);
 
+/** A photo uploaded through /admin/fotos: its file is in the bucket. */
+const uploaded: Photo = {
+  ...repoPhotos[0],
+  src: `${PUBLIC_BASE}/ashaninka/2026-11-18-abc123.jpg`,
+};
+const stored = [repoPhotos[0], repoPhotos[1], uploaded];
+
 const edit = {
   action: "edit",
-  sha: BASE,
-  src: photos[1].src,
+  version: 2,
+  src: repoPhotos[1].src,
   alt: "Mujeres asháninka y yanesha sostienen un hilo en ronda sobre el pasto.",
   caption: "",
   author: "Centro de la Mujer Peruana Flora Tristán",
@@ -54,31 +70,20 @@ const edit = {
   url: "https://commons.wikimedia.org/wiki/File:Ejemplo.jpg",
 };
 
-/** The JSON the save committed. */
-function writtenGallery(calls: Call[]): { photos: Photo[] } {
-  const blobs = calls.filter((c) => c.url.endsWith("/git/blobs"));
-  return JSON.parse(decodeBlob(blobs.at(-1) as Call).toString("utf8"));
-}
-
-function treeOf(calls: Call[]) {
-  return calls.find((c) => c.url.endsWith("/git/trees"))?.body.tree as {
-    path: string;
-    sha: string | null;
-  }[];
-}
-
-let consoleError: ReturnType<typeof vi.spyOn>;
 let consoleInfo: ReturnType<typeof vi.spyOn>;
+let consoleError: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
-  stubAdminEnv();
+  stubAdminEnv(vi);
+  fake = fakeGallerySupabase({ row: { version: 2, photos: stored } });
+  configured = true;
+  revalidateTag.mockClear();
   consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
   consoleInfo = vi.spyOn(console, "info").mockImplementation(() => {});
 });
 
 afterEach(() => {
   vi.unstubAllEnvs();
-  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
 
@@ -86,238 +91,204 @@ describe("PATCH and DELETE /api/admin/fotos: access", () => {
   // AC-E1-3: called directly, without the proxy in front.
   it.each([
     ["PATCH", () => patch(edit, null)],
-    ["DELETE", () => remove({ sha: BASE, src: photos[0].src }, null)],
+    ["DELETE", () => remove({ version: 2, src: uploaded.src }, null)],
   ])("%s answers 401 without credentials", async (_, send) => {
-    const { fetchMock } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
+    const response = await send();
 
-    expect((await send()).status).toBe(401);
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(response.status).toBe(401);
+    expect(fake.reads).toHaveLength(0);
   });
 
-  it("answers 503 without a token", async () => {
-    vi.stubEnv("GITHUB_TOKEN", "");
-    vi.stubGlobal("fetch", fakeGitHub().fetchMock);
+  it("answers 503 when Supabase is not configured", async () => {
+    configured = false;
 
-    expect((await remove({ sha: BASE, src: photos[0].src })).status).toBe(503);
+    const response = await patch(edit);
+
+    expect(response.status).toBe(503);
+    expect((await response.json()).error).toBe("supabase_not_configured");
   });
 
   it.each([
     ["not JSON", "{"],
-    ["an array", "[]"],
-    ["no sha", { src: photos[0].src, action: "move", direction: "up" }],
-    ["an unknown action", { sha: BASE, src: photos[0].src, action: "rotar" }],
+    ["no version", { ...edit, version: undefined }],
+    ["an unknown action", { ...edit, action: "rotate" }],
     [
       "an unknown direction",
-      { sha: BASE, src: photos[2].src, action: "move", direction: "left" },
+      { action: "move", version: 2, src: uploaded.src, direction: "left" },
     ],
-  ])("refuses %s without writing", async (_, body) => {
-    const { fetchMock } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-
+  ])("refuses %s", async (_, body) => {
     const response = await patch(body);
 
     expect(response.status).toBe(400);
     expect((await response.json()).error).toBe("photo_invalid");
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fake.saves).toHaveLength(0);
   });
 });
 
 describe("PATCH edit", () => {
-  it("changes texts and credit in one commit, without touching the file", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-
+  it("changes texts and credit, without touching any file", async () => {
     const response = await patch(edit);
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body).toMatchObject({
       ok: true,
-      sha: NEW_COMMIT,
-      message: "Cambios guardados. Se verán en la web en 1–2 minutos.",
+      version: 3,
+      message: "Cambios guardados. Ya están en la galería.",
     });
-    expect(treeOf(calls).map((entry) => entry.path)).toEqual([
-      "src/data/peoples/ashaninka.json",
-    ]);
-    const after = writtenGallery(calls).photos[1];
-    expect(after).toEqual({
-      src: photos[1].src,
-      width: photos[1].width,
-      height: photos[1].height,
+    expect(body.photos[1]).toEqual({
+      src: repoPhotos[1].src,
+      width: repoPhotos[1].width,
+      height: repoPhotos[1].height,
       alt: edit.alt,
       credit: { author: edit.author, license: edit.license, url: edit.url },
     });
-    expect(body.photos[1]).toEqual(after);
-    expect(
-      calls.find((c) => c.method === "POST" && c.url.endsWith("/git/commits"))
-        ?.body.message,
-    ).toBe("chore: update ashaninka gallery (edit photo)");
+    expect(body.photos[0]).toEqual(repoPhotos[0]);
+    expect(fake.uploads).toHaveLength(0);
+    expect(fake.removals).toHaveLength(0);
+    expect(revalidateTag).toHaveBeenCalledWith("gallery:ashaninka", "max");
   });
 
   // AC-E3-4 for edits
   it("refuses a source URL that is not https, with the field marked", async () => {
-    const { fetchMock } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-
-    const response = await patch({ ...edit, url: "http://example.org/x" });
+    const response = await patch({ ...edit, url: "http://example.org" });
     const body = await response.json();
 
     expect(response.status).toBe(400);
     expect(Object.keys(body.fields)).toEqual(["url"]);
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fake.saves).toHaveLength(0);
   });
 
-  // 2026-11-18: author and license fall back to the team's credit, and the
-  // URL is optional: without one, the credit has no `url` key at all.
-  it("writes the team's credit and no url when they are left empty", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
+  it("saves the team's credit and no url when they are left empty", async () => {
+    const body = await (
+      await patch({ ...edit, author: "", license: "", url: "" })
+    ).json();
 
-    const response = await patch({
-      ...edit,
-      author: " ",
-      license: "",
-      url: "",
-    });
-
-    expect(response.status).toBe(200);
-    const written = writtenGallery(calls).photos.find(
-      (photo) => photo.src === edit.src,
-    );
-    expect(written?.credit).toEqual({
+    expect(body.photos[1].credit).toEqual({
       author: "Living Langs Peru",
       license: "Foto del equipo",
     });
   });
 
   it("answers 404 for a photo that is no longer there", async () => {
-    vi.stubGlobal("fetch", fakeGitHub().fetchMock);
-
-    const response = await patch({
-      ...edit,
-      src: "/peoples/ashaninka/no-existe.jpg",
-    });
+    const response = await patch({ ...edit, src: "/peoples/ashaninka/x.jpg" });
 
     expect(response.status).toBe(404);
-    expect(await response.json()).toEqual({
-      error: "photo_not_found",
-      message: "Esa foto ya no está en la galería. Recarga la página.",
-    });
+    expect((await response.json()).error).toBe("photo_not_found");
+    expect(fake.saves).toHaveLength(0);
   });
 
   // AC-E3-5
-  it("answers version_conflict when the branch moved", async () => {
-    const { fetchMock, calls } = fakeGitHub({ head: "f".repeat(40) });
-    vi.stubGlobal("fetch", fetchMock);
-
-    const response = await patch(edit);
+  it("answers version_conflict when someone saved since", async () => {
+    const response = await patch({ ...edit, version: 1 });
 
     expect(response.status).toBe(409);
-    expect(calls.some((c) => c.method !== "GET")).toBe(false);
+    expect((await response.json()).error).toBe("version_conflict");
+    expect(fake.stored()?.version).toBe(2);
   });
 });
 
 describe("PATCH move", () => {
   // AC-E3-7
-  it("swaps the photo with its neighbour in one commit", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
+  it("swaps the photo with its neighbour", async () => {
+    const body = await (
+      await patch({
+        action: "move",
+        version: 2,
+        src: repoPhotos[1].src,
+        direction: "up",
+      })
+    ).json();
 
-    const response = await patch({
-      action: "move",
-      sha: BASE,
-      src: photos[2].src,
-      direction: "up",
-    });
-
-    expect(response.status).toBe(200);
-    expect((await response.json()).message).toBe(
-      "Orden guardado. Se verá en la web en 1–2 minutos.",
-    );
-    expect(writtenGallery(calls).photos.map((p) => p.src)).toEqual([
-      photos[0].src,
-      photos[2].src,
-      photos[1].src,
-      ...photos.slice(3).map((p) => p.src),
+    expect(body.message).toBe("Orden guardado. Ya está en la galería.");
+    expect(body.photos.map((photo: Photo) => photo.src)).toEqual([
+      repoPhotos[1].src,
+      repoPhotos[0].src,
+      uploaded.src,
     ]);
   });
 
   it("explains why the first photo cannot go up", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-
     const response = await patch({
       action: "move",
-      sha: BASE,
-      src: photos[0].src,
+      version: 2,
+      src: repoPhotos[0].src,
       direction: "up",
     });
 
     expect(response.status).toBe(400);
     expect((await response.json()).message).toBe("Ya es la primera foto.");
-    expect(calls.some((c) => c.method !== "GET")).toBe(false);
   });
 });
 
 describe("DELETE", () => {
-  // AC-E3-6: entry and file go in the same commit.
-  it("removes the entry and deletes the file in one commit", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-    const target = photos[4];
-
-    const response = await remove({ sha: BASE, src: target.src });
+  // AC-E3-6: a photo uploaded to the bucket loses its file too.
+  it("removes an uploaded photo from the list and deletes its file", async () => {
+    const response = await remove({ version: 2, src: uploaded.src });
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body.message).toBe(
-      "Foto quitada. Se verá en la web en 1–2 minutos.",
-    );
-    expect(treeOf(calls)).toEqual([
-      expect.objectContaining({ path: "src/data/peoples/ashaninka.json" }),
-      expect.objectContaining({ path: `public${target.src}`, sha: null }),
+    expect(body.message).toBe("Foto quitada de la galería.");
+    expect(body.photos).toEqual([repoPhotos[0], repoPhotos[1]]);
+    expect(fake.removals).toEqual([
+      { bucket: "gallery", paths: ["ashaninka/2026-11-18-abc123.jpg"] },
     ]);
-    expect(writtenGallery(calls).photos).toHaveLength(photos.length - 1);
-    expect(calls.filter((c) => c.method === "PATCH")).toHaveLength(1);
-    expect(
-      calls.find((c) => c.method === "POST" && c.url.endsWith("/git/commits"))
-        ?.body.message,
-    ).toBe("chore: update ashaninka gallery (remove photo)");
+  });
+
+  // AC-E3-6: a photo of public/ only leaves the list.
+  it("removes a repo photo from the list without deleting any file", async () => {
+    const body = await (
+      await remove({ version: 2, src: repoPhotos[0].src })
+    ).json();
+
+    expect(body.photos).toEqual([repoPhotos[1], uploaded]);
+    expect(fake.removals).toHaveLength(0);
+  });
+
+  it("never deletes a file outside the gallery's folder", async () => {
+    const elsewhere: Photo = {
+      ...repoPhotos[0],
+      src: `${PUBLIC_BASE}/otra-galeria/2026-11-18-abc123.jpg`,
+    };
+    fake = fakeGallerySupabase({ row: { version: 2, photos: [elsewhere] } });
+
+    await remove({ version: 2, src: elsewhere.src });
+
+    expect(fake.removals).toHaveLength(0);
+  });
+
+  it("keeps the save even if deleting the file fails", async () => {
+    fake = fakeGallerySupabase({
+      row: { version: 2, photos: stored },
+      removeError: { code: "500" },
+    });
+
+    const response = await remove({ version: 2, src: uploaded.src });
+
+    expect(response.status).toBe(200);
+    expect(fake.stored()?.version).toBe(3);
+    expect(consoleError).toHaveBeenCalledWith("gallery: delete failed", "500");
   });
 
   it("answers 404 for an unknown photo and deletes nothing", async () => {
-    const { fetchMock, calls } = fakeGitHub();
-    vi.stubGlobal("fetch", fetchMock);
-
-    const response = await remove({
-      sha: BASE,
-      src: "/peoples/ashaninka/no-existe.jpg",
-    });
+    const response = await remove({ version: 2, src: "/no/existe.jpg" });
 
     expect(response.status).toBe(404);
-    expect(calls.some((c) => c.method !== "GET")).toBe(false);
+    expect(fake.removals).toHaveLength(0);
+    expect(fake.saves).toHaveLength(0);
   });
 
   it("answers 404 without a src", async () => {
-    vi.stubGlobal("fetch", fakeGitHub().fetchMock);
-
-    expect((await remove({ sha: BASE })).status).toBe(404);
+    expect((await remove({ version: 2 })).status).toBe(404);
   });
 
   // AC-E3-10
-  it("logs the action and the commit, never the token", async () => {
-    vi.stubGlobal("fetch", fakeGitHub().fetchMock);
+  it("logs the action and the version, never the key", async () => {
+    await remove({ version: 2, src: uploaded.src });
 
-    await remove({ sha: BASE, src: photos[4].src });
-
-    expect(consoleInfo).toHaveBeenCalledWith(
-      "admin/fotos: saved",
-      "remove",
-      NEW_COMMIT,
-    );
+    expect(consoleInfo).toHaveBeenCalledWith("admin/fotos: saved", "remove", 3);
     expect(
       JSON.stringify([consoleInfo.mock.calls, consoleError.mock.calls]),
-    ).not.toContain(TOKEN);
+    ).not.toContain(SECRET_KEY);
   });
 });

@@ -18,8 +18,8 @@ vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh }) }));
 
 const { PhotoEditor } = await import("@/components/admin/photo-editor");
 
-const SHA = "a".repeat(40);
-const NEXT_SHA = "b".repeat(40);
+const VERSION = 3;
+const NEXT_VERSION = 4;
 const photos = (
   JSON.parse(
     readFileSync(
@@ -31,10 +31,10 @@ const photos = (
 
 let fetchMock: ReturnType<typeof vi.fn>;
 
-/** Answers like the route: the list as committed and the new sha. */
+/** Answers like the route: the list as saved and the new version. */
 function answerWith(list: Photo[], message: string) {
   fetchMock.mockResolvedValueOnce(
-    Response.json({ ok: true, sha: NEXT_SHA, photos: list, message }),
+    Response.json({ ok: true, version: NEXT_VERSION, photos: list, message }),
   );
 }
 
@@ -57,7 +57,7 @@ function rows() {
 beforeEach(() => {
   fetchMock = vi.fn();
   vi.stubGlobal("fetch", fetchMock);
-  render(<PhotoEditor photos={photos} sha={SHA} />);
+  render(<PhotoEditor photos={photos} version={VERSION} />);
 });
 
 afterEach(() => {
@@ -79,7 +79,7 @@ describe("ordering (AC-E3-7)", () => {
   it("moves with the keyboard and keeps the focus on the moved photo", async () => {
     answerWith(
       [photos[1], photos[0], photos[2]],
-      "Orden guardado. Se verá en la web en 1–2 minutos.",
+      "Orden guardado. Ya está en la galería.",
     );
     const down = screen.getByRole("button", { name: "Bajar la foto 1" });
     down.focus();
@@ -92,7 +92,7 @@ describe("ordering (AC-E3-7)", () => {
       action: "move",
       src: photos[0].src,
       direction: "down",
-      sha: SHA,
+      version: VERSION,
     });
     expect(rows()[1].textContent).toContain(photos[0].alt);
     await waitFor(() =>
@@ -103,7 +103,7 @@ describe("ordering (AC-E3-7)", () => {
     expect(refresh).toHaveBeenCalledTimes(1);
   });
 
-  it("sends the new sha with the next save", async () => {
+  it("sends the new version with the next save", async () => {
     answerWith([photos[1], photos[0], photos[2]], "Orden guardado.");
     fireEvent.click(screen.getByRole("button", { name: "Bajar la foto 1" }));
     await screen.findByText("Orden guardado.");
@@ -112,7 +112,7 @@ describe("ordering (AC-E3-7)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Bajar la foto 2" }));
     await screen.findByText("Orden guardado otra vez.");
 
-    expect(sentBody().sha).toBe(NEXT_SHA);
+    expect(sentBody().version).toBe(NEXT_VERSION);
   });
 
   // AC-E3-5
@@ -157,7 +157,7 @@ describe("editing", () => {
     };
     answerWith(
       [photos[0], edited, photos[2]],
-      "Cambios guardados. Se verán en la web en 1–2 minutos.",
+      "Cambios guardados. Ya están en la galería.",
     );
     fireEvent.change(license, { target: { value: "CC BY 4.0" } });
     fireEvent.click(
@@ -171,7 +171,7 @@ describe("editing", () => {
       src: photos[1].src,
       license: "CC BY 4.0",
       author: photos[1].credit.author,
-      sha: SHA,
+      version: VERSION,
     });
     expect(screen.queryByRole("form")).toBeNull();
     expect(rows()[1].textContent).toContain("CC BY 4.0");
@@ -286,7 +286,9 @@ describe("removing (AC-E3-6)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Quitar la foto 2" }));
 
     expect(
-      screen.getByText(/¿Quitar la foto 2 de la galería\? También se borra/),
+      screen.getByText(
+        /¿Quitar la foto 2 de la galería\? Si la subió el equipo, también se borra el archivo\. No se puede deshacer\./,
+      ),
     ).toBeTruthy();
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Cancelar" }),
@@ -295,18 +297,15 @@ describe("removing (AC-E3-6)", () => {
   });
 
   it("removes after confirming", async () => {
-    answerWith(
-      [photos[0], photos[2]],
-      "Foto quitada. Se verá en la web en 1–2 minutos.",
-    );
+    answerWith([photos[0], photos[2]], "Foto quitada de la galería.");
     fireEvent.click(screen.getByRole("button", { name: "Quitar la foto 2" }));
     fireEvent.click(screen.getByRole("button", { name: "Sí, quitar" }));
 
     expect(await screen.findByText(/Foto quitada/)).toBeTruthy();
     expect(sentMethod()).toBe("DELETE");
-    expect(sentBody()).toEqual({ src: photos[1].src, sha: SHA });
+    expect(sentBody()).toEqual({ src: photos[1].src, version: VERSION });
     expect(rows()).toHaveLength(2);
-    expect(screen.queryByText(/También se borra el archivo/)).toBeNull();
+    expect(screen.queryByText(/No se puede deshacer/)).toBeNull();
   });
 
   it("keeps the photo when the editor cancels", () => {

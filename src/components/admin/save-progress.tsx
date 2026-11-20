@@ -1,9 +1,6 @@
 import { Check, Circle, LoaderCircle } from "lucide-react";
 
-export type SaveStage = "saving" | "publishing";
-
 type SaveProgressProps = {
-  stage: SaveStage;
   /** Final size of the prepared photo, when there is one (add only). */
   size?: { width: number; height: number };
 };
@@ -23,10 +20,11 @@ const STATE_WORDS: Record<StepState, string> = {
 };
 
 /**
- * The three steps of a save, each with an icon and words, never color alone
- * (UI-8). The parent wraps it in the `role="status"` region.
+ * The steps of a save in progress, each with an icon and words, never color
+ * alone (UI-8). Saving publishes, so there is no separate «publishing» step
+ * since the move to Supabase. The parent wraps it in the `role="status"` region.
  */
-export function SaveProgress({ stage, size }: SaveProgressProps) {
+export function SaveProgress({ size }: SaveProgressProps) {
   const steps: { label: string; state: StepState }[] = [
     {
       label: size
@@ -34,17 +32,7 @@ export function SaveProgress({ stage, size }: SaveProgressProps) {
         : "Cambio preparado",
       state: "done",
     },
-    {
-      label:
-        stage === "saving"
-          ? "Guardando en el repositorio…"
-          : "Guardado en el repositorio",
-      state: stage === "saving" ? "doing" : "done",
-    },
-    {
-      label: "Publicando en la web (suele tardar 1–2 min)",
-      state: stage === "saving" ? "todo" : "doing",
-    },
+    { label: "Guardando y publicando…", state: "doing" },
   ];
 
   return (
@@ -62,7 +50,7 @@ export function SaveProgress({ stage, size }: SaveProgressProps) {
             />
             <span>
               {step.label}
-              <span className="sr-only"> ({STATE_WORDS[step.state]})</span>
+              <span className="sr-only">{` (${STATE_WORDS[step.state]})`}</span>
             </span>
           </li>
         );

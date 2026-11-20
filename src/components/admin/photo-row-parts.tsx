@@ -11,45 +11,20 @@ const FOCUS =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C7431C]";
 
 /**
- * The photo as published, or the editor's own copy while Vercel deploys it
- * (UI-10). A saved photo is not in this deployment's `public/` yet: without a
- * local copy it shows «Pendiente de publicar» instead of a broken image.
+ * The photo as stored: in the bucket, or in `public/` for the original ones.
+ * Saving publishes (spec #15), so there is no «publishing» copy since UI-10
+ * was simplified; a file that does not load says so instead of a broken image.
  */
-export function Thumbnail({
-  photo,
-  localPreview,
-}: {
-  photo: Photo;
-  localPreview?: string;
-}) {
+export function Thumbnail({ photo }: { photo: Photo }) {
   const [missing, setMissing] = useState(false);
   const box = "h-[120px] w-[160px] shrink-0 rounded-xl bg-[#FBEFD2]";
-
-  if (localPreview) {
-    return (
-      <div className="relative shrink-0">
-        <Image
-          src={localPreview}
-          unoptimized
-          width={photo.width}
-          height={photo.height}
-          // The description is right next to it as text.
-          alt=""
-          className={`${box} object-cover`}
-        />
-        <span className="absolute top-2 left-2 rounded-full bg-[#241D14] px-2 py-0.5 text-xs font-bold text-white">
-          Publicando…
-        </span>
-      </div>
-    );
-  }
 
   if (missing) {
     return (
       <div
         className={`${box} flex items-center justify-center px-3 text-center text-xs text-[#4A4130]`}
       >
-        Pendiente de publicar
+        No pudimos cargar la foto
       </div>
     );
   }
@@ -170,8 +145,8 @@ export function RemoveConfirmation({
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-xl bg-[#FBEFD2] p-3 text-sm text-[#241D14]">
       <span>
-        ¿Quitar la foto {position} de la galería? También se borra el archivo.
-        Si fue un error, el equipo técnico puede recuperarla.
+        ¿Quitar la foto {position} de la galería? Si la subió el equipo, también
+        se borra el archivo. No se puede deshacer.
       </span>
       <button
         type="button"

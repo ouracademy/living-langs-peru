@@ -1,23 +1,16 @@
-import * as babel from "prettier/plugins/babel";
-import * as estree from "prettier/plugins/estree";
-import { format } from "prettier/standalone";
-
 import type { People, Photo, PhotoCredit } from "@/lib/peoples";
 import { validatePeople } from "@/lib/peoples/validate";
 
 import { MAX_GALLERY_PHOTOS } from "./photo-fields";
 
 /**
- * What a save does to the people file, as pure functions: the route reads the
- * file from GitHub, applies one action, validates the whole result and only
- * then commits (spec #9). Nothing here touches the network.
+ * What a save does to the gallery, as pure functions: the route reads the
+ * stored list, applies one action, validates the whole result and only then
+ * saves it (spec #9). Nothing here touches the network.
  */
 
-/** Where gallery photos live, as `Photo.src` writes it (under `public/`). */
-export const GALLERY_PHOTO_DIR = "/peoples/ashaninka";
-
-/** A file this feature is allowed to delete: one level inside the folder. */
-const DELETABLE_SRC = /^\/peoples\/ashaninka\/[A-Za-z0-9][A-Za-z0-9._-]*$/;
+/** The only gallery editable today (spec P3). */
+export const GALLERY_SLUG = "ashaninka";
 
 export type GalleryAction =
   | { type: "add"; photo: Photo }
@@ -41,8 +34,8 @@ export type ApplyResult =
   | {
       ok: true;
       people: People;
-      /** Repository path of the file to delete in the same commit (remove). */
-      deletedFile?: string;
+      /** The photo taken out (remove): the route deletes its file if it has one. */
+      removed?: Photo;
     }
   | { ok: false; error: GalleryActionError; problems: string[] };
 
@@ -52,18 +45,14 @@ function failure(error: GalleryActionError, problem: string): ApplyResult {
 
 const NOT_FOUND = "Esa foto ya no está en la galería.";
 
-function next(
-  people: People,
-  photos: Photo[],
-  deletedFile?: string,
-): ApplyResult {
+function next(people: People, photos: Photo[], removed?: Photo): ApplyResult {
   const candidate: People = { ...people, photos };
-  // The whole file, not just the photo touched: the same rules as peoples:check.
+  // The whole people, not just the photo touched: the same rules as peoples:check.
   const problems = validatePeople(candidate);
   if (problems.length > 0)
     return { ok: false, error: "photo_invalid", problems };
-  return deletedFile
-    ? { ok: true, people: candidate, deletedFile }
+  return removed
+    ? { ok: true, people: candidate, removed }
     : { ok: true, people: candidate };
 }
 
@@ -125,57 +114,25 @@ export function applyAction(
       ];
       return next(people, reordered);
     }
-    case "remove": {
-      // Never let a crafted src turn «remove» into deleting another file.
-      if (!DELETABLE_SRC.test(target.src)) {
-        return failure(
-          "photo_invalid",
-          "Esa foto no está en la carpeta de la galería.",
-        );
-      }
+    case "remove":
       return next(
         people,
         photos.filter((_, i) => i !== index),
-        `public${target.src}`,
+        target,
       );
-    }
   }
-}
-
-/**
- * The file exactly as Prettier would leave it (decision #14), so the editor's
- * commit keeps `format:check` green. Indenting first matters: Prettier keeps an
- * object expanded when its source is, which is how the repository writes them.
- */
-export async function serializePeople(people: People): Promise<string> {
-  return format(JSON.stringify(people, null, 2), {
-    parser: "json",
-    plugins: [babel, estree],
-  });
 }
 
 const SUFFIX = /^[a-z0-9]{6}$/;
 
 /**
  * `<yyyy-mm-dd>-<6 random characters>.jpg` (spec §6.2). The editor's file
- * name never reaches the repository; the caller supplies the random part so
- * this stays pure.
+ * name never reaches the bucket; the caller supplies the random part so this
+ * stays pure.
  */
 export function newPhotoName(now: Date, suffix: string): string {
   if (!SUFFIX.test(suffix)) {
     throw new RangeError("suffix must be 6 characters of [a-z0-9]");
   }
   return `${now.toISOString().slice(0, 10)}-${suffix}.jpg`;
-}
-
-const ACTION_LABELS: Record<GalleryActionType, string> = {
-  add: "add photo",
-  edit: "edit photo",
-  move: "move photo",
-  remove: "remove photo",
-};
-
-/** Conventional Commits, checked against commitlint in a test (plan §3.11). */
-export function commitMessageFor(action: GalleryActionType): string {
-  return `chore: update ashaninka gallery (${ACTION_LABELS[action]})`;
 }

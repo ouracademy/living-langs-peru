@@ -7,6 +7,10 @@
 // /admin/juego (F2) also publishes, lists and reads versions; the state lives
 // in memory and starts with the fixture published as version 1.
 //
+// The photo gallery (tasks/edicion-fotos F5) reads and saves `galleries` and
+// uploads, serves and deletes files of the `gallery` bucket. It starts with no
+// row, so /ashaninka shows the repo's photos (the fallback).
+//
 // Pack fixtures use words marked PRUEBA, never real language (spec §13).
 
 import { readFileSync } from "node:fs";
@@ -58,13 +62,41 @@ function project(url, row) {
   return Object.fromEntries(columns.map((column) => [column, row[column]]));
 }
 
-function readBody(request) {
+function readBytes(request) {
   return new Promise((resolve) => {
-    let text = "";
-    request.on("data", (chunk) => (text += chunk));
-    request.on("end", () => resolve(text));
+    const chunks = [];
+    request.on("data", (chunk) => chunks.push(chunk));
+    request.on("end", () => resolve(Buffer.concat(chunks)));
   });
 }
+
+async function readBody(request) {
+  return (await readBytes(request)).toString("utf8");
+}
+
+/** slug → { version, photos }. */
+const galleries = new Map();
+/** bucket path → { bytes, type }. */
+const galleryFiles = new Map();
+
+/** Same checks and errors as save_gallery (docs/edicion-fotos-schema.sql). */
+function saveGallery({ p_slug, p_photos, p_expected_version }) {
+  if (!Array.isArray(p_photos) || p_photos.length > 24) {
+    return { status: 400, body: { code: "22023", message: "bad photos" } };
+  }
+  const found = galleries.get(p_slug)?.version ?? 0;
+  if (p_expected_version !== found) {
+    return {
+      status: 409,
+      body: { code: "40001", message: "version conflict" },
+    };
+  }
+  galleries.set(p_slug, { version: found + 1, photos: p_photos });
+  return { status: 200, body: found + 1 };
+}
+
+const BUCKET_OBJECT = "/storage/v1/object/gallery/";
+const BUCKET_PUBLIC = "/storage/v1/object/public/gallery/";
 
 /** Same checks and errors as publish_language_pack (docs/saltapalabras-schema.sql). */
 function publish({ p_language, p_pack, p_expected_version, p_note }) {
@@ -127,6 +159,53 @@ http
     ) {
       const answer = publish(JSON.parse(await readBody(request)));
       return json(response, answer.status, answer.body);
+    }
+
+    if (request.method === "GET" && url.pathname === "/rest/v1/galleries") {
+      const row = galleries.get(equals(url, "slug"));
+      return json(response, 200, row ? [project(url, row)] : []);
+    }
+
+    if (
+      request.method === "POST" &&
+      url.pathname === "/rest/v1/rpc/save_gallery"
+    ) {
+      const answer = saveGallery(JSON.parse(await readBody(request)));
+      return json(response, answer.status, answer.body);
+    }
+
+    if (request.method === "POST" && url.pathname.startsWith(BUCKET_OBJECT)) {
+      const path = decodeURIComponent(url.pathname.slice(BUCKET_OBJECT.length));
+      if (galleryFiles.has(path)) {
+        return json(response, 409, { statusCode: "409", error: "Duplicate" });
+      }
+      galleryFiles.set(path, {
+        bytes: await readBytes(request),
+        type: request.headers["content-type"] ?? "image/jpeg",
+      });
+      return json(response, 200, { Id: path, Key: `gallery/${path}` });
+    }
+
+    if (
+      request.method === "DELETE" &&
+      url.pathname === "/storage/v1/object/gallery"
+    ) {
+      const { prefixes = [] } = JSON.parse(await readBody(request));
+      const removed = prefixes.filter((path) => galleryFiles.delete(path));
+      return json(
+        response,
+        200,
+        removed.map((name) => ({ name })),
+      );
+    }
+
+    if (request.method === "GET" && url.pathname.startsWith(BUCKET_PUBLIC)) {
+      const file = galleryFiles.get(
+        decodeURIComponent(url.pathname.slice(BUCKET_PUBLIC.length)),
+      );
+      if (!file) return json(response, 404, { message: "Object not found" });
+      response.writeHead(200, { "content-type": file.type });
+      return response.end(file.bytes);
     }
 
     return json(response, 404, { message: "not in the fake" });

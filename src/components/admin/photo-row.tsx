@@ -23,7 +23,6 @@ type PhotoRowProps = {
   total: number;
   pending: boolean;
   mode: RowMode;
-  localPreview?: string;
   ref?: Ref<HTMLLIElement>;
   onMove: (direction: "up" | "down") => void;
   onModeChange: (mode: RowMode) => void;
@@ -43,7 +42,6 @@ export function PhotoRow({
   total,
   pending,
   mode,
-  localPreview,
   ref,
   onMove,
   onModeChange,
@@ -64,7 +62,7 @@ export function PhotoRow({
           {position}
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:gap-4">
-          <Thumbnail photo={photo} localPreview={localPreview} />
+          <Thumbnail photo={photo} />
           <PhotoDetails photo={photo} />
         </div>
       </div>

@@ -1,22 +1,26 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import {
+  credentials,
+  fakeGallerySupabase,
+  repoPhotos,
+  stubAdminEnv,
+} from "./fake-gallery-supabase";
 
 const requestHeaders = vi.fn(async () => new Headers());
 vi.mock("next/headers", () => ({ headers: requestHeaders }));
 // The editor refreshes the route after a save; there is no app router here.
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+vi.mock("server-only", () => ({}));
+
+let fake: ReturnType<typeof fakeGallerySupabase> | null = null;
+vi.mock("@/lib/supabase-optional", () => ({
+  getOptionalSupabase: () => fake?.client ?? null,
+}));
 
 const { default: AdminPhotosPage, metadata } =
   await import("@/app/admin/fotos/page");
-
-const gallery = readFileSync(
-  join(process.cwd(), "src/data/peoples/ashaninka.json"),
-  "utf8",
-);
-const credentials = `Basic ${Buffer.from("editora:clave-de-prueba").toString("base64")}`;
 
 function withAuthorization(value: string | null) {
   requestHeaders.mockResolvedValue(
@@ -24,25 +28,15 @@ function withAuthorization(value: string | null) {
   );
 }
 
-function githubAnswering(file: string) {
-  return vi.fn(async (input: string | URL | Request) =>
-    String(input).includes("/git/ref/heads/")
-      ? Response.json({ object: { sha: "c".repeat(40) } })
-      : new Response(file),
-  );
-}
-
 beforeEach(() => {
-  vi.stubEnv("ADMIN_USER", "editora");
-  vi.stubEnv("ADMIN_PASSWORD", "clave-de-prueba");
-  vi.stubEnv("GITHUB_REPOSITORY", "ouracademy/living-langs-peru");
+  stubAdminEnv(vi);
+  fake = fakeGallerySupabase();
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterEach(() => {
   cleanup();
   vi.unstubAllEnvs();
-  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
 
@@ -54,43 +48,48 @@ describe("/admin/fotos", () => {
 
   it("shows nothing of the gallery without valid credentials", async () => {
     withAuthorization(null);
-    const fetchMock = githubAnswering(gallery);
-    vi.stubGlobal("fetch", fetchMock);
 
     render(await AdminPhotosPage());
 
     expect(
       screen.getByRole("heading", { name: "Acceso restringido" }),
     ).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fake?.reads).toHaveLength(0);
   });
 
-  // AC-E2-1
-  it("lists the five photos of the branch in order, with their credit", async () => {
+  // AC-E2-1: before the first save, the repo's five photos.
+  it("lists the repo's five photos in order when there is no row yet", async () => {
     withAuthorization(credentials);
-    vi.stubGlobal("fetch", githubAnswering(gallery));
 
     render(await AdminPhotosPage());
 
     const items = screen.getAllByRole("listitem");
     expect(items).toHaveLength(5);
-    const photos = JSON.parse(gallery).photos as { alt: string }[];
-    photos.forEach((photo, index) => {
+    repoPhotos.forEach((photo, index) => {
       expect(items[index].textContent).toContain(photo.alt);
     });
-    expect(screen.getByText(/tardan 1–2 minutos/)).toBeTruthy();
+    expect(screen.getByText(/se publica al guardar/)).toBeTruthy();
     expect(screen.getByText(/cierra el navegador/)).toBeTruthy();
   });
 
-  // AC-E2-2
-  it("shows the error and no list when GitHub cannot be read", async () => {
+  // AC-E2-1
+  it("lists the stored photos in their order", async () => {
     withAuthorization(credentials);
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => {
-        throw new TypeError("fetch failed");
-      }),
-    );
+    fake = fakeGallerySupabase({
+      row: { version: 2, photos: [repoPhotos[3], repoPhotos[1]] },
+    });
+
+    render(await AdminPhotosPage());
+
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(2);
+    expect(items[0].textContent).toContain(repoPhotos[3].alt);
+  });
+
+  // AC-E2-2
+  it("shows the error and no list when Supabase cannot be read", async () => {
+    withAuthorization(credentials);
+    fake = fakeGallerySupabase({ readError: { code: "08006" } });
 
     render(await AdminPhotosPage());
 
@@ -98,5 +97,17 @@ describe("/admin/fotos", () => {
       "No pudimos leer la galería",
     );
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+  });
+
+  // AC-E2-2
+  it("says Supabase is missing when it is not configured", async () => {
+    withAuthorization(credentials);
+    fake = null;
+
+    render(await AdminPhotosPage());
+
+    expect(screen.getByRole("alert").textContent).toContain(
+      "falta configurar Supabase",
+    );
   });
 });

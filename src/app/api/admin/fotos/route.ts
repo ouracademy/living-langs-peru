@@ -1,29 +1,21 @@
 import { randomBytes } from "node:crypto";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { revalidateTag } from "next/cache";
+
 import { adminAuthResponse } from "@/lib/admin/basic-auth";
 import {
   applyAction,
-  commitMessageFor,
-  GALLERY_PHOTO_DIR,
+  GALLERY_SLUG,
   type GalleryAction,
   type GalleryActionError,
   newPhotoName,
-  serializePeople,
 } from "@/lib/admin/gallery";
 import {
   GALLERY_ERROR_MESSAGES,
-  GALLERY_FILE,
   type GalleryErrorCode,
   readGallery,
 } from "@/lib/admin/gallery-source";
-import {
-  commitFiles,
-  type CommitFile,
-  type GitHubConfig,
-  readBranchSha,
-  readGitHubConfig,
-  readRepoFileAt,
-} from "@/lib/admin/github";
 import { inspectPhoto } from "@/lib/admin/photo-file";
 import {
   creditFrom,
@@ -32,31 +24,35 @@ import {
   type PhotoFields,
   trimFields,
 } from "@/lib/admin/photo-fields";
-import type { People, Photo } from "@/lib/peoples";
+import { ashaninka, type Photo } from "@/lib/peoples";
+import { galleryTag } from "@/lib/peoples/gallery-photos";
+import {
+  deleteGalleryPhoto,
+  saveGalleryRow,
+  uploadGalleryPhoto,
+} from "@/lib/peoples/gallery-store";
+import {
+  galleryObjectPath,
+  galleryObjectPathOf,
+  galleryPublicBase,
+} from "@/lib/peoples/gallery-url";
+import { getOptionalSupabase } from "@/lib/supabase-optional";
 
 const NO_STORE = { "Cache-Control": "no-store" };
 
 const STATUS: Record<GalleryErrorCode, number> = {
-  github_not_configured: 503,
-  github_unauthorized: 502,
-  github_unavailable: 502,
-  gallery_unreadable: 502,
+  supabase_not_configured: 503,
+  gallery_unavailable: 502,
 };
 
-/**
- * The gallery as it is on the branch right now, not as the running deployment
- * built it: an editor sees their last save even while Vercel is still
- * publishing (spec #10).
- */
+/** The gallery as stored right now, uncached (spec #10). */
 export async function GET(request: Request): Promise<Response> {
   // Checked again here on purpose: the proxy matcher is not the only barrier.
   const denied = adminAuthResponse(request.headers.get("authorization"));
   if (denied) return denied;
 
-  const result = await readGallery(readGitHubConfig(), fetch);
+  const result = await readGallery(getOptionalSupabase());
   if (!result.ok) {
-    // The code only: never the token, the URL or the GitHub message.
-    console.error("admin/fotos: read failed", result.error);
     return Response.json(
       { error: result.error, message: GALLERY_ERROR_MESSAGES[result.error] },
       { status: STATUS[result.error], headers: NO_STORE },
@@ -78,6 +74,8 @@ const SAVE_STATUS: Record<SaveErrorCode, number> = {
 
 const SAVE_MESSAGES: Record<SaveErrorCode, string> = {
   ...GALLERY_ERROR_MESSAGES,
+  gallery_unavailable:
+    "No pudimos guardar en este momento. Intenta de nuevo en unos minutos.",
   photo_invalid: "Revisa la foto y los campos marcados.",
   gallery_full:
     "La galería ya tiene 24 fotos. Quita una antes de agregar otra.",
@@ -86,10 +84,10 @@ const SAVE_MESSAGES: Record<SaveErrorCode, string> = {
 };
 
 const SAVED_MESSAGES: Record<GalleryAction["type"], string> = {
-  add: "Foto guardada. Se verá en la web en 1–2 minutos.",
-  edit: "Cambios guardados. Se verán en la web en 1–2 minutos.",
-  move: "Orden guardado. Se verá en la web en 1–2 minutos.",
-  remove: "Foto quitada. Se verá en la web en 1–2 minutos.",
+  add: "Foto guardada. Ya está en la galería.",
+  edit: "Cambios guardados. Ya están en la galería.",
+  move: "Orden guardado. Ya está en la galería.",
+  remove: "Foto quitada de la galería.",
 };
 
 function failure(
@@ -102,7 +100,6 @@ function failure(
   );
 }
 
-const SHA = /^[0-9a-f]{40}$/;
 const SUFFIX_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 function randomSuffix(): string {
@@ -112,92 +109,103 @@ function randomSuffix(): string {
   ).join("");
 }
 
-function parsePeople(content: string): People | null {
-  try {
-    const data: unknown = JSON.parse(content);
-    return typeof data === "object" &&
-      data !== null &&
-      Array.isArray((data as { photos?: unknown }).photos)
-      ? (data as People)
-      : null;
-  } catch {
-    return null;
-  }
+const MISSING_VERSION = "Falta la versión de la galería. Recarga la página.";
+
+/** `version` as the editor read it: a whole number, 0 before the first save. */
+function parseVersion(value: unknown): number | null {
+  const text =
+    typeof value === "number" ? String(value) : (value as string | null);
+  if (typeof text !== "string" || !/^\d{1,9}$/.test(text)) return null;
+  return Number(text);
 }
 
-const MISSING_SHA = "Falta la versión de la galería. Recarga la página.";
-
-/** Auth and the write configuration, shared by every saving method. */
-function writeAccess(request: Request): Response | GitHubConfig {
+/** Auth and the server client, shared by every saving method. */
+function writeAccess(request: Request): Response | SupabaseClient {
   // Checked again here on purpose: the proxy matcher is not the only barrier.
   const denied = adminAuthResponse(request.headers.get("authorization"));
   if (denied) return denied;
 
-  const config = readGitHubConfig();
-  // Writing needs the token; without it the save could never land.
-  if (!config?.token) return failure("github_not_configured");
-  return config;
+  const client = getOptionalSupabase();
+  if (!client) return failure("supabase_not_configured");
+  return client;
 }
 
+type Upload = { path: string; bytes: Uint8Array };
+
 /**
- * The one way a save happens, whatever the action: check the branch did not
- * move, read the file at the commit the editor saw, apply the action, validate
- * the whole file (spec #9), then one commit with every file involved.
+ * The one way a save happens, whatever the action (spec #3): check the
+ * version the editor saw, apply the action, validate the whole list (spec #9),
+ * upload the new file if there is one, save the list, and only then delete a
+ * removed file. A failed save deletes what it uploaded.
  */
 async function save(
-  config: GitHubConfig,
-  baseSha: string,
+  client: SupabaseClient,
+  expectedVersion: number,
   action: GalleryAction,
-  extraFiles: CommitFile[] = [],
+  upload?: Upload,
 ): Promise<Response> {
-  // Cheap early answer; the ref update without force is the real guard.
-  const head = await readBranchSha(config, fetch);
-  if (!head.ok) return failure(head.error);
-  if (head.value !== baseSha) return failure("version_conflict");
-
-  const current = await readRepoFileAt(config, GALLERY_FILE, baseSha, fetch);
+  const current = await readGallery(client);
   if (!current.ok) return failure(current.error);
-  const people = parsePeople(current.value);
-  if (!people) return failure("gallery_unreadable");
+  // Cheap early answer; save_gallery's version check is the real guard.
+  if (current.value.version !== expectedVersion) {
+    return failure("version_conflict");
+  }
 
-  const applied = applyAction(people, action);
+  const applied = applyAction(
+    { ...ashaninka, photos: current.value.photos },
+    action,
+  );
   if (!applied.ok) {
-    // Moving past an end and an out-of-folder src have readable messages;
-    // anything else from validatePeople is technical, so the generic one goes.
+    // Moving past an end has a readable message; anything else from
+    // validatePeople is technical, so the generic one goes.
     const readable =
-      applied.error === "photo_invalid" &&
-      (action.type === "move" || action.type === "remove");
+      applied.error === "photo_invalid" && action.type === "move";
     return failure(
       applied.error,
       readable ? { message: applied.problems[0] } : {},
     );
   }
 
-  const committed = await commitFiles(
-    config,
-    {
-      baseSha,
-      files: [
-        ...extraFiles,
-        { path: GALLERY_FILE, content: await serializePeople(applied.people) },
-      ],
-      deletions: applied.deletedFile ? [applied.deletedFile] : [],
-      message: commitMessageFor(action.type),
-    },
-    fetch,
-  );
-  if (!committed.ok) {
-    console.error("admin/fotos: save failed", action.type, committed.error);
-    return failure(committed.error);
+  if (
+    upload &&
+    !(await uploadGalleryPhoto(client, upload.path, upload.bytes))
+  ) {
+    return failure("gallery_unavailable");
   }
 
-  // Action and commit only (AC-E3-10): no token, no credentials, no texts.
-  console.info("admin/fotos: saved", action.type, committed.value);
+  const saved = await saveGalleryRow(
+    client,
+    GALLERY_SLUG,
+    applied.people.photos,
+    expectedVersion,
+  );
+  if (!saved.ok) {
+    if (upload) await deleteGalleryPhoto(client, upload.path);
+    return failure(saved.error);
+  }
+
+  // A photo in public/ only leaves the list; one in the bucket loses its file
+  // too (spec #18). Never anything outside this gallery's folder.
+  const removedPath = applied.removed
+    ? galleryObjectPathOf(
+        applied.removed.src,
+        GALLERY_SLUG,
+        process.env.SUPABASE_URL,
+      )
+    : null;
+  if (removedPath) await deleteGalleryPhoto(client, removedPath);
+
+  // "max", never revalidatePath: the last good page survives a failed
+  // regeneration (spec #15).
+  revalidateTag(galleryTag(GALLERY_SLUG), "max");
+
+  // Action and version only (AC-E3-10): no key, no credentials, no texts.
+  console.info("admin/fotos: saved", action.type, saved.version);
   return Response.json(
     {
       ok: true,
-      sha: committed.value,
-      // The list as committed, so the editor can show it before Vercel deploys.
+      version: saved.version,
+      // The list as saved, so the editor shows it right away.
       photos: applied.people.photos,
       ...(action.type === "add" ? { photo: action.photo } : {}),
       message: SAVED_MESSAGES[action.type],
@@ -228,9 +236,9 @@ export async function POST(request: Request): Promise<Response> {
     });
   }
 
-  const baseSha = text(form, "sha");
-  if (!SHA.test(baseSha)) {
-    return failure("photo_invalid", { message: MISSING_SHA });
+  const expectedVersion = parseVersion(form.get("version"));
+  if (expectedVersion === null) {
+    return failure("photo_invalid", { message: MISSING_VERSION });
   }
 
   const fields: PhotoFields = trimFields({
@@ -255,8 +263,15 @@ export async function POST(request: Request): Promise<Response> {
     return failure("photo_invalid", { message: inspection.message });
   }
 
+  const base = galleryPublicBase(process.env.SUPABASE_URL);
+  if (!base) return failure("supabase_not_configured");
+  const path = galleryObjectPath(
+    GALLERY_SLUG,
+    newPhotoName(new Date(), randomSuffix()),
+  );
+
   const photo: Photo = {
-    src: `${GALLERY_PHOTO_DIR}/${newPhotoName(new Date(), randomSuffix())}`,
+    src: `${base}/${path}`,
     // From the bytes, never from the form (decision #7, AC-E3-3).
     width: inspection.width,
     height: inspection.height,
@@ -266,9 +281,7 @@ export async function POST(request: Request): Promise<Response> {
     credit: creditFrom(fields),
   };
 
-  return save(access, baseSha, { type: "add", photo }, [
-    { path: `public${photo.src}`, content: bytes },
-  ]);
+  return save(access, expectedVersion, { type: "add", photo }, { path, bytes });
 }
 
 type JsonBody = Record<string, unknown>;
@@ -289,22 +302,22 @@ function string(body: JsonBody, name: string): string {
   return typeof value === "string" ? value : "";
 }
 
-/** The `sha` and `src` every change to an existing photo carries. */
+/** The `version` and `src` every change to an existing photo carries. */
 function target(
   body: JsonBody | null,
-): { baseSha: string; src: string } | Response {
+): { expectedVersion: number; src: string } | Response {
   if (!body) {
     return failure("photo_invalid", {
       message: "No pudimos leer el pedido. Intenta de nuevo.",
     });
   }
-  const baseSha = string(body, "sha");
-  if (!SHA.test(baseSha)) {
-    return failure("photo_invalid", { message: MISSING_SHA });
+  const expectedVersion = parseVersion(body.version);
+  if (expectedVersion === null) {
+    return failure("photo_invalid", { message: MISSING_VERSION });
   }
   const src = string(body, "src");
   if (!src) return failure("photo_not_found");
-  return { baseSha, src };
+  return { expectedVersion, src };
 }
 
 /**
@@ -318,7 +331,7 @@ export async function PATCH(request: Request): Promise<Response> {
   const body = await readJson(request);
   const found = target(body);
   if (found instanceof Response) return found;
-  const { baseSha, src } = found;
+  const { expectedVersion, src } = found;
   const action = string(body as JsonBody, "action");
 
   if (action === "move") {
@@ -328,7 +341,7 @@ export async function PATCH(request: Request): Promise<Response> {
         message: "No entendimos hacia dónde mover la foto.",
       });
     }
-    return save(access, baseSha, { type: "move", src, direction });
+    return save(access, expectedVersion, { type: "move", src, direction });
   }
 
   if (action === "edit") {
@@ -343,7 +356,7 @@ export async function PATCH(request: Request): Promise<Response> {
     if (Object.keys(problems).length > 0) {
       return failure("photo_invalid", { fields: problems });
     }
-    return save(access, baseSha, {
+    return save(access, expectedVersion, {
       type: "edit",
       src,
       alt: fields.alt,
@@ -357,7 +370,7 @@ export async function PATCH(request: Request): Promise<Response> {
   });
 }
 
-/** Removes a photo: its entry and its file, in the same commit (AC-E3-6). */
+/** Removes a photo from the list, and its file if it is in the bucket. */
 export async function DELETE(request: Request): Promise<Response> {
   const access = writeAccess(request);
   if (access instanceof Response) return access;
@@ -365,5 +378,8 @@ export async function DELETE(request: Request): Promise<Response> {
   const found = target(await readJson(request));
   if (found instanceof Response) return found;
 
-  return save(access, found.baseSha, { type: "remove", src: found.src });
+  return save(access, found.expectedVersion, {
+    type: "remove",
+    src: found.src,
+  });
 }
