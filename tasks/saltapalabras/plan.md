@@ -225,6 +225,27 @@ clave de e2e. Sin dependencias. Complementa a AC-SP4-13, que mira las peticiones
 - «Probar» reusa los componentes de `word-jump/` con un modo `preview` que muestra también los ítems
   sin verificar, marcados. Nunca pasa por `playableThemes` y nunca escribe progreso.
 
+### 3.8b Editor mínimo (SP6b, 2026-11-20)
+
+- **Lógica pura** en `src/lib/language-packs/edit-pack.ts`: `updateItem`, `verifyTheme`,
+  `addItem`, `removeItem` y `checkItemFields` (palabra y traducción no vacías, emoji corto).
+  Ninguna toca React ni el storage; devuelven un paquete nuevo, así el editor solo llama a
+  `setDraft` del store que ya existe (T2.6). Un cambio de palabra, traducción, emoji o
+  verificada se aplica a **todas** las apariciones de la misma palabra (`normalizeWord`), no del
+  `id`: al importar, `cleanPack` da un `id` distinto a la misma palabra en cada tema
+  (spec §9.5 E2).
+- **Una palabra nueva** entra sin `id` y pasa por `cleanPack`, que asigna uno sin tocar los
+  existentes (spec §4.2). Así no hay una segunda regla de ids.
+- **UI** en `src/components/admin/pack-admin/`: `pack-editor.tsx` (tema, búsqueda, filtros, lista),
+  `editor-row.tsx` (fila con casilla y edición en línea), `add-item-form.tsx` y
+  `verify-theme.tsx` (acción masiva con confirmación). Reemplaza la lista de solo lectura
+  `pack-items.tsx`.
+- **Enlaces de los avisos** (E4): el editor escucha `hashchange` y el hash inicial; si apunta a un
+  ítem de otro tema o oculto por un filtro, cambia de tema, quita los filtros y lleva el foco a la
+  fila. Los enlaces de `pack-issues.tsx` no cambian.
+- **Riesgo:** un tema de 169 palabras con campos por fila. Por eso la edición se abre por fila
+  (E5): la lista son textos y una casilla; los campos existen solo en la fila abierta.
+
 ### 3.9 Audio (SP8)
 
 - `<audio preload="none">` con `src` asignado recién al pulsar el botón, para no depender de que cada

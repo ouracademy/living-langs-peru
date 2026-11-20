@@ -157,4 +157,67 @@ test.describe.serial("/admin/juego, end to end", () => {
 
     await expectPublicVersion(page, 5);
   });
+
+  // AC-SP6b-1, AC-SP6b-2, AC-SP6b-3, AC-SP6b-8, AC-SP6b-9. The edits are
+  // discarded, not published: the game tests in parallel must keep seeing the
+  // fixture. Publishing an edited pack is the same flow as above.
+  test("edit the published pack in the page: emoji, verification, reload, try", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 360, height: 800 });
+    await page.goto("/admin/juego");
+
+    await page
+      .getByRole("button", { name: "Editar el paquete publicado" })
+      .click();
+    await expect(page.getByText(/Copiamos el paquete publicado/)).toBeVisible();
+    await expect(page.getByLabel("Tema", { exact: true })).toHaveValue(
+      "tema-prueba",
+    );
+
+    // Keyboard only: open the row, change the emoji, save with Enter.
+    await page.getByRole("button", { name: "Editar «PRUEBA uno»" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByLabel("Palabra", { exact: true })).toBeFocused();
+    await page.getByLabel("Dibujo (emoji)").fill("🍐");
+    await page.keyboard.press("Enter");
+    const status = page.locator("main").getByRole("status").last();
+    await expect(status).toContainText("Cambios en «PRUEBA uno» guardados");
+    await expect(
+      page.getByRole("button", { name: "Editar «PRUEBA uno»" }),
+    ).toBeFocused();
+
+    // Unverify another word.
+    await page
+      .getByRole("checkbox", { name: "Verificada: PRUEBA dos" })
+      .click();
+    await expect(status).toContainText("«PRUEBA dos» marcada sin verificar");
+
+    // No horizontal scroll at 360 px.
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+
+    // The edits survive a reload (AC-SP6-13) and «Probar» plays them.
+    await page.reload();
+    await expect(page.getByText("🍐").first()).toBeVisible();
+    await expect(
+      page.getByRole("checkbox", { name: "Verificada: PRUEBA dos" }),
+    ).not.toBeChecked();
+    await page.getByRole("button", { name: "Probar" }).click();
+    await expect(
+      page.getByText(/Vista previa: puede tener errores/),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Cerrar la prueba" }).click();
+
+    await page.getByRole("button", { name: "Descartar" }).click();
+    await page.getByRole("button", { name: "Sí, descartar" }).click();
+    await expect(
+      page.getByRole("button", { name: "Editar el paquete publicado" }),
+    ).toBeVisible();
+  });
 });

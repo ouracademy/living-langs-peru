@@ -1,6 +1,6 @@
 # Saltapalabras
 
-> Estado: **borrador** · Fecha: 2026-11-17 (revisado el mismo día, ver «Cambios del 2026-11-17») ·
+> Estado: **borrador** · Fecha: 2026-11-17 (revisado el mismo día y el 2026-11-20, ver «Cambios del …») ·
 > Rama: `worktree-saltapalabras-spec`
 > Rama base: `main` · Plan: [tasks/saltapalabras/](../tasks/saltapalabras/plan.md) · Índice:
 > [specs/README.md](./README.md)
@@ -25,6 +25,18 @@ edición esporádica**:
 | **Edición en `/admin/juego`:** importar el JSON de un paquete, probarlo, publicarlo, ver historial, restaurar y subir audio por ítem. Reemplaza SP6.                               | Edición esporádica: no justifica un editor web.                                                                                                 |
 | **Audio en Supabase Storage**, bucket público `audio`; el navegador del jugador lo descarga directo de la URL pública. La subida pasa por el servidor.                             | Decisión de la persona del proyecto: el archivo no pasa por Vercel al reproducirse.                                                             |
 | **Descartados** el editor web, las propuestas con diff y roles, y la grabación en el navegador (§12).                                                                              | Mismo motivo: pocos meses, edición esporádica. Se conservan descritos para retomarlos.                                                          |
+
+### Cambios del 2026-11-20
+
+Tras publicar el primer paquete, la persona del proyecto pidió **poder corregirlo desde la página**,
+sin descargar ni editar JSON. Se agrega un **editor mínimo** (SP6b, §9.5) sobre el paquete en
+preparación que ya existía (vive solo en el navegador):
+
+| Qué cambió                                                                                                                                                      | Por qué                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **SP6b: editar palabras en `/admin/juego`** (emoji, traducción, verificada; corregir la palabra; agregar y quitar de un tema; «Marcar todas como verificadas»). | Un editor no técnico no debe tocar JSON para cambiar un emoji o desmarcar una palabra.                                    |
+| **No se recupera** lo demás del editor web descartado: borradores en la nube, propuestas, diff, roles.                                                          | Sigue siendo un proyecto de pocos meses: el paquete en preparación vive en el navegador y se publica con el flujo de SP6. |
+| §9.3: la verificación también se marca en el editor, no solo en el JSON.                                                                                        | Consecuencia directa de SP6b.                                                                                             |
 
 ---
 
@@ -58,7 +70,8 @@ mismo Basic Auth que el resto de `/admin` (decisión #16).
 - No muestra a quien juega ninguna palabra sin verificar (decisión #4).
 - No reemplaza al diccionario ni al juego de completar palabras, y no los modifica.
 - No hay racha, XP, logros, tabla de posiciones ni nada social entre usuarios.
-- No hay editor web de paquetes, propuestas, roles ni grabación en el navegador (descartados, §12).
+- No hay editor web completo de paquetes, propuestas, roles ni grabación en el navegador
+  (descartados, §12). Sí hay un **editor mínimo** de palabras en `/admin/juego` (SP6b, §9.5).
 - No hay cuentas individuales para el equipo: un usuario y contraseña compartidos (Basic Auth).
 - No hay Realtime: un paquete nuevo se ve en la siguiente carga tras publicar (decisión #9).
 
@@ -104,18 +117,20 @@ tareas lo fija el plan, cortando vertical. SP7 (propuestas) quedó descartada (�
 SP1 pack-format ──┬──> SP2 round-engine ──┐
                   │                       ├──> SP4 game-page ──────────────┐
                   └──> SP3 pack-library ──┴──────────────> SP6 pack-admin ─┴──> SP8 audio
-                                           SP5 admin-access ─┘
+                                           SP5 admin-access ─┘        │
+                                                                      └──> SP6b pack-editor
 ```
 
-| id  | Módulo         | Entrega                                                                                              | Depende de    | Verificable por                         |
-| --- | -------------- | ---------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------- |
-| SP1 | `pack-format`  | Tipos y esquema Zod del paquete, `cleanPack`, `validatePack`, `playableThemes`.                      | —             | Vitest                                  |
-| SP2 | `round-engine` | Generación de preguntas por modo, distractores, reducer de la ronda, estadísticas por ítem.          | SP1           | Vitest                                  |
-| SP3 | `pack-library` | Tablas `language_packs` y `pack_versions`, función de publicación, lectura cacheada en el servidor.  | SP1           | Pruebas SQL + Vitest (cliente simulado) |
-| SP4 | `game-page`    | Rutas públicas, canvas, controles, accesibilidad, progreso local. Sin login.                         | SP1, SP2, SP3 | Playwright                              |
-| SP5 | `admin-access` | El Basic Auth de `/admin` de `edicion-fotos.md` (E1). Si ya existe, esta capacidad es solo reusarlo. | —             | Vitest + Playwright                     |
-| SP6 | `pack-admin`   | `/admin/juego`: importar, validar, probar, publicar, exportar, historial y restaurar.                | SP1, SP3, SP5 | Vitest + Playwright                     |
-| SP8 | `audio`        | Subir audio por ítem desde `/admin/juego`, bucket público, reproducir y activar la ronda «escuchar». | SP4, SP6      | Vitest + Playwright + SQL               |
+| id   | Módulo         | Entrega                                                                                              | Depende de    | Verificable por                         |
+| ---- | -------------- | ---------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------- |
+| SP1  | `pack-format`  | Tipos y esquema Zod del paquete, `cleanPack`, `validatePack`, `playableThemes`.                      | —             | Vitest                                  |
+| SP2  | `round-engine` | Generación de preguntas por modo, distractores, reducer de la ronda, estadísticas por ítem.          | SP1           | Vitest                                  |
+| SP3  | `pack-library` | Tablas `language_packs` y `pack_versions`, función de publicación, lectura cacheada en el servidor.  | SP1           | Pruebas SQL + Vitest (cliente simulado) |
+| SP4  | `game-page`    | Rutas públicas, canvas, controles, accesibilidad, progreso local. Sin login.                         | SP1, SP2, SP3 | Playwright                              |
+| SP5  | `admin-access` | El Basic Auth de `/admin` de `edicion-fotos.md` (E1). Si ya existe, esta capacidad es solo reusarlo. | —             | Vitest + Playwright                     |
+| SP6  | `pack-admin`   | `/admin/juego`: importar, validar, probar, publicar, exportar, historial y restaurar.                | SP1, SP3, SP5 | Vitest + Playwright                     |
+| SP6b | `pack-editor`  | Editor mínimo en `/admin/juego`: emoji, traducción, verificada, palabra, agregar y quitar (§9.5).    | SP6           | Vitest + Playwright                     |
+| SP8  | `audio`        | Subir audio por ítem desde `/admin/juego`, bucket público, reproducir y activar la ronda «escuchar». | SP4, SP6      | Vitest + Playwright + SQL               |
 
 **Fases verticales** (cada una termina con algo usable de punta a punta):
 
@@ -123,6 +138,7 @@ SP1 pack-format ──┬──> SP2 round-engine ──┐
 | ---- | ----------- | --------------------------------------------------------------------------------------------------------------- |
 | F1   | SP1–SP4     | Jugar sin login un paquete publicado (cargado con la función SQL desde el SQL Editor por el equipo).            |
 | F2   | SP5–SP6     | Una persona del equipo entra a `/admin/juego`, importa un paquete, lo prueba y lo publica; el juego lo muestra. |
+| F2b  | SP6b        | Corregir el paquete publicado desde `/admin/juego` (sin JSON) y publicarlo como versión nueva.                  |
 | F3   | SP8         | Adjuntar grabaciones a los ítems desde `/admin/juego` y jugar «escuchar».                                       |
 
 ---
@@ -632,8 +648,9 @@ el historial con «Restaurar».
 ### 9.3 Quién verifica
 
 Marcar `verified: true` es afirmar que la palabra, la traducción, la fuente y (si hay) el audio se
-comprobaron con un hablante o con la fuente citada. Se hace en el JSON antes de importarlo, o se
-revisa en «Probar». La nota de publicación dice quién lo comprobó.
+comprobaron con un hablante o con la fuente citada. Se hace en el JSON antes de importarlo o, desde
+el 2026-11-20, en el editor (§9.5), y se revisa en «Probar». La nota de publicación dice quién lo
+comprobó.
 
 ### 9.4 Criterios de aceptación
 
@@ -657,6 +674,47 @@ revisa en «Probar». La nota de publicación dice quién lo comprobó.
 - **AC-SP6-12** _(nuevo)_ Publicar sin nota no se permite.
 - **AC-SP6-13** _(nuevo)_ Cerrar y reabrir la pestaña de `/admin/juego` recupera el paquete en
   preparación desde `localStorage`, y «Descartar» lo borra.
+
+### 9.5 SP6b — `pack-editor`: editor mínimo (2026-11-20)
+
+Edita **el paquete en preparación** de §9.1, no la base: cada cambio se guarda en el navegador y
+llega al público solo al **publicar** con el flujo de siempre (nota, versión esperada, conflicto,
+historial). «Partir del publicado» pasa a llamarse **«Editar el paquete publicado»**.
+
+**Decisiones**
+
+| #   | Decisión                       | Elección                                                                                                                                                                                                                                                                                                                                                 |
+| --- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E1  | **Qué se edita**               | Por palabra: **emoji**, **traducción**, **verificada** y la **palabra** misma. Además: **agregar** una palabra a un tema y **quitarla** de un tema. Nada se genera: todo lo escribe la persona.                                                                                                                                                          |
+| E2  | **Una palabra, un dato**       | Una palabra puede estar en varios temas, y `cleanPack` le da un `id` distinto en cada uno (los `id` son únicos en todo el paquete). Por eso emoji, traducción, palabra y verificada se cambian **en todos los temas donde está la misma palabra** (escrita igual, tras `normalizeWord`); lo que es por tema es solo estar o no estar (agregar y quitar). |
+| E3  | **`id` estable**               | Corregir la palabra conserva su `id` (spec §4.1): el progreso de quien juega no se pierde. Una palabra nueva recibe su `id` de `cleanPack`.                                                                                                                                                                                                              |
+| E4  | **Un tema a la vez**           | Se elige el tema y se ve su lista, con búsqueda (palabra o traducción) y filtros «Sin verificar» y «Sin dibujo». Un aviso de §4.3 lleva al tema y a la palabra, quitando los filtros que la oculten.                                                                                                                                                     |
+| E5  | **Editar en la fila**          | «Editar» abre los campos en la misma fila con «Guardar» y «Cancelar»; «Verificada» es una casilla que se guarda al marcarla. Así cada cambio es una sola escritura en el navegador, no una por tecla.                                                                                                                                                    |
+| E6  | **Acción masiva**              | «Marcar todas las de este tema como verificadas», con confirmación que dice cuántas cambian y que también quedan verificadas en los otros temas donde están (E2).                                                                                                                                                                                        |
+| E7  | **Validación en vivo**         | Tras cada cambio corre `validatePack`; los errores siguen bloqueando publicar y los avisos enlazan a la fila (E4). Una palabra o traducción vacía no se guarda: se explica en el campo.                                                                                                                                                                  |
+| E8  | **Fuente de lo agregado**      | Una palabra nueva elige su fuente entre las del paquete. Sin fuente no se juega (§4.2) y se avisa: el editor no la bloquea, pero no se publica como jugable.                                                                                                                                                                                             |
+| E9  | **No toca los datos del repo** | El editor cambia el paquete, no `src/data/word-jump/ashaninka-pictures.json` ni el diccionario.                                                                                                                                                                                                                                                          |
+
+**Criterios de aceptación**
+
+- **AC-SP6b-1** Sin paquete en preparación y con uno publicado, «Editar el paquete publicado» lo
+  copia y muestra el editor con el primer tema elegido.
+- **AC-SP6b-2** Cambiar el emoji de una palabra lo cambia en todos los temas donde está la misma
+  palabra; la traducción, la palabra y «verificada» igual. Ningún `id` cambia.
+- **AC-SP6b-3** Desmarcar «Verificada» deja la palabra fuera de «Probar» como jugable (marcada
+  «⚠ Sin verificar») y suma uno al conteo de sin verificar.
+- **AC-SP6b-4** «Marcar todas las de este tema como verificadas» pide confirmación con el número de
+  palabras, y al confirmar no queda ninguna sin verificar en ese tema.
+- **AC-SP6b-5** Guardar una palabra o traducción vacía no cambia nada y muestra el error junto al
+  campo.
+- **AC-SP6b-6** Agregar una palabra con traducción y fuente la deja en el tema elegido con un `id`
+  nuevo; quitarla de un tema no la quita de los demás.
+- **AC-SP6b-7** Buscar y filtrar («Sin verificar», «Sin dibujo») reduce la lista; un enlace de aviso
+  lleva a su palabra aunque un filtro la ocultara.
+- **AC-SP6b-8** Los cambios sobreviven a recargar la página (AC-SP6-13) y se publican con el flujo
+  de SP6: tras publicar, el juego los muestra (AC-SP6-11).
+- **AC-SP6b-9** Todo el editor se usa con teclado; cada campo tiene `<label>`; los objetivos miden
+  al menos 44 × 44 px; a 360 px de ancho no hay scroll horizontal.
 
 ---
 
@@ -713,7 +771,8 @@ src/app/api/admin/juego/[lengua]/audio/route.ts      SP8
 
 src/lib/language-packs/              SP1, SP3 — sin React
 ├── types.ts  schema.ts  clean.ts  validate.ts  playable.ts  graphemes.ts
-└── library.ts                       SP3  server-only: lectura cacheada y publicación
+├── library.ts                       SP3  server-only: lectura cacheada y publicación
+└── edit-pack.ts                     SP6b editor mínimo: cambios puros sobre el paquete
 src/lib/word-jump/                   SP2 — sin React
 ├── constants.ts  questions.ts  round.ts  stats.ts
 └── progress.ts  progress-store.ts   SP4  localStorage
@@ -722,6 +781,7 @@ src/proxy.ts  src/lib/admin/basic-auth.ts   SP5  de edicion-fotos.md (se reusa o
 
 src/components/word-jump/            SP4  canvas, ronda, feedback, resumen (también para «Probar»)
 src/components/admin/pack-admin/     SP6, SP8  importar, validar, publicar, historial, audio
+                                     SP6b pack-editor, editor-row, item-fields, add-item-form, verify-theme
 
 docs/saltapalabras-schema.sql        SP3, SP8 (un bloque por capacidad)
 docs/saltapalabras-pruebas.md        verificación manual contra Supabase real, como solicitudes-pruebas.md
@@ -802,16 +862,16 @@ Diseñado en el primer borrador de este spec y descartado por la persona del pro
 dura pocos meses y la edición es esporádica. Se deja descrito para retomarlo si el proyecto se
 extiende; el primer borrador está en el historial de la rama.
 
-| Qué                                                                 | Capacidad original | Motivo                                                                                                    |
-| ------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| Cuentas del equipo con Supabase Auth y enlace mágico                | SP5                | Necesita SMTP propio y gestión de cuentas; el Basic Auth de `/admin` alcanza para pocas personas.         |
-| `profiles` y roles `contributor` / `editor` / `admin`               | SP5                | Sin cuentas no hay roles; se compensa con historial, nota obligatoria y «Restaurar» (§9.2).               |
-| Navegador hablando directo con Supabase (clave pública + RLS + RPC) | SP3                | Una sola forma de acceso (servidor), igual que `solicitudes`; permite la caché que sobrevive a una pausa. |
-| Editor web de paquetes con borradores en la nube                    | SP6                | Edición esporádica: el JSON se arma fuera del sitio y se importa.                                         |
-| «Probar mi borrador» en la página pública                           | SP4                | El juego es libre de login; la vista previa vive solo en `/admin/juego`.                                  |
-| Propuestas, diff campo por campo, aceptar / rechazar                | SP7                | Sin roles no hay quién proponga y quién apruebe; la revisión se hace fuera del sitio antes de importar.   |
-| Grabación en el navegador (MediaRecorder, 8 s)                      | SP8                | Los hablantes graban con su teléfono y el equipo sube el archivo.                                         |
-| Carpeta por usuario en el bucket `audio`                            | SP8                | Sin usuarios; el servidor es el único que escribe.                                                        |
+| Qué                                                                 | Capacidad original | Motivo                                                                                                                                                                                     |
+| ------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cuentas del equipo con Supabase Auth y enlace mágico                | SP5                | Necesita SMTP propio y gestión de cuentas; el Basic Auth de `/admin` alcanza para pocas personas.                                                                                          |
+| `profiles` y roles `contributor` / `editor` / `admin`               | SP5                | Sin cuentas no hay roles; se compensa con historial, nota obligatoria y «Restaurar» (§9.2).                                                                                                |
+| Navegador hablando directo con Supabase (clave pública + RLS + RPC) | SP3                | Una sola forma de acceso (servidor), igual que `solicitudes`; permite la caché que sobrevive a una pausa.                                                                                  |
+| Editor web de paquetes con borradores en la nube                    | SP6                | Edición esporádica: el JSON se arma fuera del sitio y se importa. _El 2026-11-20 se retomó solo un editor mínimo sobre el paquete en preparación (SP6b, §9.5), sin borradores en la nube._ |
+| «Probar mi borrador» en la página pública                           | SP4                | El juego es libre de login; la vista previa vive solo en `/admin/juego`.                                                                                                                   |
+| Propuestas, diff campo por campo, aceptar / rechazar                | SP7                | Sin roles no hay quién proponga y quién apruebe; la revisión se hace fuera del sitio antes de importar.                                                                                    |
+| Grabación en el navegador (MediaRecorder, 8 s)                      | SP8                | Los hablantes graban con su teléfono y el equipo sube el archivo.                                                                                                                          |
+| Carpeta por usuario en el bucket `audio`                            | SP8                | Sin usuarios; el servidor es el único que escribe.                                                                                                                                         |
 
 ---
 

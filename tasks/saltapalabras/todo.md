@@ -130,6 +130,19 @@ corregido.
 
 ---
 
+## F2b — Editor mínimo (SP6b, 2026-11-20)
+
+- [x] **T2b.1** (M) `src/lib/language-packs/edit-pack.ts` puro: `updateItem` (en todos los temas donde está la misma palabra), `verifyTheme`, `addItem` (sin `id`, lo asigna `cleanPack`), `removeItem` (solo de ese tema) y `checkItemFields`. **Tests primero** `[AC-SP6b-2, AC-SP6b-4, AC-SP6b-5, AC-SP6b-6]` — **Hecho 2026-11-20.** `edit-pack.ts` suma `filterItems` (búsqueda sin tildes ni mayúsculas) y `anchorTarget` (de un enlace de aviso a su tema e ítem). 17 tests en `tests/unit/language-packs/edit-pack.test.ts`. **Desvío:** «la misma palabra» se reconoce por `normalizeWord`, no por `id`, porque `cleanPack` da un `id` distinto a la misma palabra en cada tema (spec §9.5 E2 corregida).
+- [x] **T2b.2** (M) `pack-editor.tsx` + `editor-row.tsx`: elegir tema, búsqueda, filtros «Sin verificar» y «Sin dibujo», casilla «Verificada», edición en la fila con foco que vuelve a «Editar». Reemplaza `pack-items.tsx` `[AC-SP6b-1, AC-SP6b-2, AC-SP6b-3, AC-SP6b-7, AC-SP6b-9]` — **Hecho 2026-11-20.** Además `item-fields.tsx` (los tres campos con su error, compartidos con agregar). `pack-items.tsx` borrado. 14 tests de componente en `tests/unit/admin/pack-editor.test.tsx`. El foco al abrir y cerrar se maneja con una ref, sin `setState` dentro de efectos.
+- [x] **T2b.3** (S) `verify-theme.tsx` (confirmación con el número) y `add-item-form.tsx` (palabra, traducción, emoji, fuente) `[AC-SP6b-4, AC-SP6b-6]` — **Hecho 2026-11-20.** Tras «Sí, marcar» y tras «Sí, quitar» el foco va al título del tema (el botón queda deshabilitado o la fila desaparece).
+- [x] **T2b.4** (S) Los enlaces de avisos llevan al tema y a la fila aunque un filtro la oculte; «Partir del publicado» pasa a «Editar el paquete publicado» `[AC-SP6b-1, AC-SP6b-7]` — **Hecho 2026-11-20.** El editor lee el hash al abrir y escucha `hashchange`. Limitación: volver a pulsar el mismo enlace no dispara `hashchange`; si el ítem está visible, el salto nativo del navegador alcanza.
+- [x] **T2b.5** (M) e2e contra el Supabase falso: editar el emoji, desmarcar, marcar todo el tema, agregar y quitar, recargar (persiste), probar y publicar; teclado y 360 px `[AC-SP6b-1 … AC-SP6b-9]` — **Hecho 2026-11-20, con desvío:** el e2e edita el emoji con teclado, desmarca, comprueba 360 px sin scroll horizontal, recarga (persiste), prueba y **descarta**; **no publica lo editado**, porque los e2e del juego corren en paralelo y deben seguir viendo el fixture. Publicar un paquete editado es el mismo flujo ya cubierto en ese archivo; «marcar todo», agregar y quitar quedan en los tests de componente.
+
+> **⛔ Checkpoint 2b** — se corrige el paquete publicado sin tocar JSON y se publica como versión
+> nueva; el juego la muestra.
+
+---
+
 ## H4 · H5 — Bucket y consentimiento (humano)
 
 - [ ] **H4.1** Crear el bucket público `audio` con límite de 2 MB y los tipos MIME de spec §6.1. Pegar el bloque SP8 del SQL y anotar la fecha.

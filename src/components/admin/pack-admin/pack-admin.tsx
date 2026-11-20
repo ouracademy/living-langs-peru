@@ -25,9 +25,9 @@ import {
   subscribeDrafts,
 } from "./draft-store";
 import { formatPublishedAt } from "./format";
-import { PackIssues } from "./pack-issues";
-import { PackItems } from "./pack-items";
 import { downloadText } from "./pack-api";
+import { PackEditor } from "./pack-editor";
+import { PackIssues } from "./pack-issues";
 import { PublishForm } from "./publish-form";
 import { dangerButton, panel, primaryButton, secondaryButton } from "./styles";
 import { VersionHistory } from "./version-history";
@@ -200,7 +200,7 @@ export function PackAdmin({
             }
             className={secondaryButton}
           >
-            Partir del publicado
+            Editar el paquete publicado
           </button>
         ) : null}
         {draft ? (
@@ -298,12 +298,15 @@ export function PackAdmin({
             onPublished={published}
           />
 
-          <h4 className="mt-8 text-lg font-bold">Palabras del paquete</h4>
-          <PackItems pack={draft} />
+          <h4 className="mt-8 text-lg font-bold">Editar palabras</h4>
+          <PackEditor
+            pack={draft}
+            onChange={(next) => setDraft(language, next)}
+          />
         </>
       ) : (
         <p className="mt-4 text-[#4A4130]">
-          Importa un archivo o parte del publicado para empezar.
+          Importa un archivo o edita el paquete publicado para empezar.
         </p>
       )}
 

@@ -153,7 +153,7 @@ describe("/admin/juego · importing", () => {
     renderAdmin(CURRENT);
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Partir del publicado" }),
+      screen.getByRole("button", { name: "Editar el paquete publicado" }),
     );
 
     expect(screen.getByText(/Copiamos el paquete publicado/)).toBeTruthy();
@@ -191,7 +191,7 @@ describe("/admin/juego · checking and publishing", () => {
     });
     renderAdmin(CURRENT);
     fireEvent.click(
-      screen.getByRole("button", { name: "Partir del publicado" }),
+      screen.getByRole("button", { name: "Editar el paquete publicado" }),
     );
     const publishButton = screen.getByRole("button", {
       name: "Publicar",
@@ -231,7 +231,7 @@ describe("/admin/juego · checking and publishing", () => {
     );
     renderAdmin(CURRENT);
     fireEvent.click(
-      screen.getByRole("button", { name: "Partir del publicado" }),
+      screen.getByRole("button", { name: "Editar el paquete publicado" }),
     );
     fireEvent.change(screen.getByLabelText(/Nota de publicación/), {
       target: { value: "Revisado por PRUEBA" },
@@ -260,7 +260,7 @@ describe("/admin/juego · checking and publishing", () => {
     });
     renderAdmin(CURRENT);
     fireEvent.click(
-      screen.getByRole("button", { name: "Partir del publicado" }),
+      screen.getByRole("button", { name: "Editar el paquete publicado" }),
     );
     fireEvent.change(screen.getByLabelText(/Nota de publicación/), {
       target: { value: "Revisado por PRUEBA" },
