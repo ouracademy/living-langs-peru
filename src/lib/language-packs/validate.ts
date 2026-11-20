@@ -42,12 +42,12 @@ export type ValidateOptions = {
   language?: string;
 };
 
-/** Modes whose questions show the item's emoji. */
-const USES_EMOJI: ReadonlySet<GameMode> = new Set([
-  "pic2word",
-  "word2pic",
-  "first",
-]);
+/**
+ * Modes that cannot ask about an item without its emoji. `first` is not one of
+ * them: without a picture it shows the meaning instead (questions.ts `hint`),
+ * so a missing emoji there is not worth a warning per word.
+ */
+const USES_EMOJI: ReadonlySet<GameMode> = new Set(["pic2word", "word2pic"]);
 
 const MODE_NAMES: Record<GameMode, string> = {
   pic2word: "dibujo → palabra",

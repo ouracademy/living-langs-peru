@@ -36,6 +36,7 @@ yarn-error.log*
 # Saltapalabras pack drafts (pnpm pack:draft): reviewed and published at
 # /admin/juego, the database keeps the history, never the repo.
 paquete-*-borrador.json
+paquete-*-verificado.json
 
 # vercel
 .vercel

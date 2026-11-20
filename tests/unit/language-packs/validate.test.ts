@@ -171,6 +171,22 @@ describe("validatePack", () => {
     ]);
   });
 
+  it("does not warn about a missing picture in the first-letter mode", () => {
+    const pack = testPack({
+      themes: [
+        testTheme({
+          id: "tema-inicial",
+          mode: "first",
+          items: [testItem({ id: "inicial-sin-dibujo", emoji: undefined })],
+        }),
+      ],
+    });
+
+    const { warnings } = validatePack(pack, { audioBaseUrl });
+
+    expect(warnings.map((issue) => issue.code)).not.toContain("missing_emoji");
+  });
+
   it("writes every message in Spanish and every code in English", () => {
     const pack = testPack({
       themes: [testTheme({ items: [testItem({ sourceId: "no-existe" })] })],

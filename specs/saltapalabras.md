@@ -240,13 +240,13 @@ Todas puras, sin React ni `window`, en `src/lib/language-packs/`.
 **Mínimos por modo**, contados sobre los ítems **verificados** (si no se cumplen, el tema es un
 aviso en `/admin/juego` y no aparece al jugar):
 
-| Modo       | La pregunta muestra            | Opciones          | Mínimo para jugar                                                  |
-| ---------- | ------------------------------ | ----------------- | ------------------------------------------------------------------ |
-| `pic2word` | emoji                          | 3 palabras        | 3 ítems con emoji y palabras distintas                             |
-| `listen`   | botón de audio                 | 3 palabras        | 3 ítems **con audio** y palabras distintas                         |
-| `word2pic` | palabra (+ audio si hay)       | 3 emojis          | 3 ítems con emojis distintos                                       |
-| `first`    | emoji + palabra sin su inicial | 3 grafemas        | 1 ítem cuya inicial esté en `graphemes`, y 3 grafemas en la lengua |
-| `vowel`    | palabra con una vocal tapada   | las vocales (≤ 4) | 1 ítem con al menos una vocal de `vowels` (tras `vowelVariants`)   |
+| Modo       | La pregunta muestra                                            | Opciones          | Mínimo para jugar                                                                                       |
+| ---------- | -------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------- |
+| `pic2word` | emoji                                                          | 3 palabras        | 3 ítems con emoji y palabras distintas                                                                  |
+| `listen`   | botón de audio                                                 | 3 palabras        | 3 ítems **con audio** y palabras distintas                                                              |
+| `word2pic` | palabra (+ audio si hay)                                       | 3 emojis          | 3 ítems con emojis distintos                                                                            |
+| `first`    | emoji (o su significado, si no tiene) + palabra sin su inicial | 3 grafemas        | 1 ítem cuya inicial esté en `graphemes`, y 3 grafemas en la lengua. Sin emoji no hay aviso (2026-11-20) |
+| `vowel`    | palabra con una vocal tapada                                   | las vocales (≤ 4) | 1 ítem con al menos una vocal de `vowels` (tras `vowelVariants`)                                        |
 
 **Avisos** (no bloquean): ítem sin emoji en un modo que lo usa, inicial fuera de `graphemes`, palabra
 sin vocal en modo `vowel`, ítem sin verificar, tema por debajo del mínimo.
