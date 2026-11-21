@@ -197,4 +197,35 @@ describe("validatePack", () => {
     expect(issue.code).toMatch(/^[a-z_]+$/);
     expect(issue.message).toMatch(/fuente/);
   });
+
+  // AC-SP4c-8
+  it("accepts a pack without a voice block, or with a valid one", () => {
+    const base = testPack();
+    expect(validatePack(base, { audioBaseUrl }).errors).toEqual([]);
+    const withVoice = testPack({
+      language: {
+        ...base.language,
+        tts: { lang: "es-PE", quality: "approx", replace: [["'", ""]] },
+      },
+    });
+    expect(validatePack(withVoice, { audioBaseUrl }).errors).toEqual([]);
+  });
+
+  it("refuses a voice block with a bad language or an empty replacement", () => {
+    const base = testPack();
+    const bad = testPack({
+      language: {
+        ...base.language,
+        tts: {
+          lang: "castellano peruano",
+          quality: "approx",
+          replace: [["", "x"]],
+        },
+      },
+    });
+    const codes = validatePack(bad, { audioBaseUrl }).errors.map(
+      (issue) => issue.code,
+    );
+    expect(codes).toEqual(["invalid_tts", "invalid_tts"]);
+  });
 });

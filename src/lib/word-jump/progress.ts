@@ -13,11 +13,32 @@ export const STORAGE_KEY = "living-langs:word-jump:v1";
 
 const VERSION = 1;
 
+export type WordJumpSettings = {
+  sound: boolean;
+  /**
+   * «Voz aproximada» (spec §7.7). Optional so progress saved before
+   * 2026-11-21 stays valid; missing reads as on.
+   */
+  voice?: boolean;
+  /** «Decir la palabra al acercarse» (spec §7.7). Missing reads as on. */
+  announce?: boolean;
+};
+
 export type WordJumpProgress = {
   version: typeof VERSION;
   languages: Record<string, LanguageProgress>;
-  settings: { sound: boolean };
+  settings: WordJumpSettings;
 };
+
+/** A setting the player can turn on and off, with its default (on). */
+export type ToggleSetting = keyof WordJumpSettings;
+
+export function settingOn(
+  settings: WordJumpSettings,
+  key: ToggleSetting,
+): boolean {
+  return settings[key] ?? true;
+}
 
 export function emptyProgress(): WordJumpProgress {
   return { version: VERSION, languages: {}, settings: { sound: true } };
@@ -60,8 +81,14 @@ function isProgress(value: unknown): value is WordJumpProgress {
     Object.values(candidate.languages).every(isLanguageProgress) &&
     typeof settings === "object" &&
     settings !== null &&
-    typeof settings.sound === "boolean"
+    typeof settings.sound === "boolean" &&
+    isOptionalFlag(settings.voice) &&
+    isOptionalFlag(settings.announce)
   );
+}
+
+function isOptionalFlag(value: unknown): boolean {
+  return value === undefined || typeof value === "boolean";
 }
 
 export { canPersist, defaultStorage };

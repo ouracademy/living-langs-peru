@@ -19,6 +19,8 @@ export type PublicPack = {
     | "title"
     | "translationLabel"
     | "praise"
+    // The browser voice while an item has no recording (spec §7.7).
+    | "tts"
     // The letter modes (first, vowel) build their questions from these.
     | "graphemes"
     | "vowels"
@@ -53,6 +55,7 @@ function toPublicPack(
     title,
     translationLabel,
     praise,
+    tts,
     graphemes,
     vowels,
     vowelVariants,
@@ -69,6 +72,7 @@ function toPublicPack(
       graphemes,
       vowels,
       ...(praise ? { praise } : {}),
+      ...(tts ? { tts } : {}),
       ...(vowelVariants ? { vowelVariants } : {}),
       ...(confusable ? { confusable } : {}),
     },

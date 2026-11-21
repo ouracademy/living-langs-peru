@@ -9,12 +9,14 @@
  */
 import { jumpPoint, type Point } from "@/lib/word-jump/jump";
 import type { LevelState } from "@/lib/word-jump/platformer/game";
+import { isRunning, stepFootsteps } from "@/lib/word-jump/platformer/footsteps";
 import {
   type LevelLayout,
   VIEW_WIDTH,
   cameraX,
   cloudHit,
   passedDoor,
+  reachedClouds,
   standUnderX,
 } from "@/lib/word-jump/platformer/level";
 import {
@@ -48,6 +50,10 @@ export type ControllerOptions = {
   onHit: (option: number) => void;
   onPassDoor: () => void;
   onJump: () => void;
+  /** Pip reached the clouds of an open challenge: say its word (§7.7). */
+  onApproach?: (challenge: number) => void;
+  /** A footstep, at a fixed rhythm while running on the ground (§7.7). */
+  onStep?: () => void;
 };
 
 export type Key = keyof Input;
@@ -90,6 +96,10 @@ export function createController(
   let lastTime = 0;
   /** The challenge whose door was already reported as passed. */
   let passedFor = -1;
+  /** The challenge whose clouds were already reported as reached. */
+  let approachedFor = -1;
+  /** Time since the last footstep; null while not running. */
+  let stepElapsed: number | null = null;
 
   function draw(time = now()) {
     const canvas = getCanvas();
@@ -123,12 +133,22 @@ export function createController(
   }
 
   function tick(dt: number, time: number) {
-    const { layout, level, paused, onHit, onPassDoor, onJump } = getOptions();
+    const {
+      layout,
+      level,
+      paused,
+      onHit,
+      onPassDoor,
+      onJump,
+      onApproach,
+      onStep,
+    } = getOptions();
     if (paused || level.status !== "playing") return;
     const challenge = layout.challenges[level.index];
     if (!challenge) return;
 
     if (buttonJump) {
+      stepElapsed = null;
       const t = (time - buttonJump.start) / BUTTON_JUMP_MS;
       if (t < 1) {
         const point = jumpPoint(buttonJump.from, buttonJump.to, t, "land");
@@ -164,6 +184,21 @@ export function createController(
       onHit(hit);
     }
     body = after;
+
+    const steps = stepFootsteps(stepElapsed, dt, isRunning(body));
+    stepElapsed = steps.elapsed;
+    if (steps.step) onStep?.();
+
+    // Once per challenge, and only while it is still open: an answer jump
+    // that lands past this point must not repeat the word after «¡Correcto!».
+    if (
+      !solved &&
+      approachedFor !== level.index &&
+      reachedClouds(body, challenge)
+    ) {
+      approachedFor = level.index;
+      onApproach?.(level.index);
+    }
 
     if (solved && passedFor !== level.index && passedDoor(body, challenge)) {
       passedFor = level.index;

@@ -1,6 +1,6 @@
 # Saltapalabras
 
-> Estado: **borrador** · Fecha: 2026-11-17 (revisado el mismo día y el 2026-11-20, ver «Cambios del …») ·
+> Estado: **borrador** · Fecha: 2026-11-17 (revisado el mismo día, el 2026-11-20 y el 2026-11-21, ver «Cambios del …») ·
 > Rama: `worktree-saltapalabras-spec`
 > Rama base: `main` · Plan: [tasks/saltapalabras/](../tasks/saltapalabras/plan.md) · Índice:
 > [specs/README.md](./README.md)
@@ -66,6 +66,24 @@ plataformas fijas de §7.2:
 | Solo teclado de movimiento o botones táctiles.                                | Además, las opciones como `<button>` y teclas 1/2/3, que hacen saltar a Pip a esa nube (§7.6).                                                            |
 | Estética de los clásicos de 8 y 16 bits.                                      | Arte original dibujado en código; nada que imite a un juego concreto (ni sus personajes, objetos, paleta o tipografía).                                   |
 
+### Cambios del 2026-11-21
+
+La persona del proyecto probó el nivel de plataformas y decidió: **«las palabras deben sonar»**. Hoy
+no hay grabaciones de hablantes (F3 no tiene contenido), así que sin voz el juego quedaba mudo. Se
+agrega la capacidad **SP4c `speech`** (§7.7):
+
+| Qué cambió                                                                                                                                                                                                                                                                 | Por qué                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Reescribe #6.** La **grabación** del ítem (`item.audio`) suena siempre que exista. Si no hay, se usa la **voz del navegador** (`speechSynthesis`, voz `es-PE` o cualquier `es-*`) **como provisional**, con un aviso visible y un interruptor «Voz aproximada: sí / no». | Decisión de la persona del proyecto. El riesgo (pronunciación castellana de una lengua originaria) se hace visible, no se esconde. |
+| **La palabra suena** al acercarse Pip a las nubes (una vez por reto, con ajuste «Decir la palabra al acercarse»), al acertar y con 🔊, que ahora está siempre en la barra de pista.                                                                                        | Así lo describe el juego de referencia (§10 de la referencia).                                                                     |
+| **`language.tts` opcional en el paquete** (`lang`, `quality: "approx" \| "off"`, `replace`): `off` apaga la voz sintética para una lengua. Sin el bloque: `approx` con `es-PE`.                                                                                            | Una lengua con hablantes que pidan no usar la voz aproximada la puede apagar sin tocar código.                                     |
+| **Pasos al caminar:** un efecto corto de Web Audio mientras Pip corre por el suelo.                                                                                                                                                                                        | «Cuando camina no suena»: el nivel se sentía mudo.                                                                                 |
+| La ruta definitiva **sigue siendo F3** (grabaciones de hablantes): en cuanto un ítem tiene `audio`, la voz aproximada deja de usarse para él.                                                                                                                              | La voz del navegador es un parche hasta tener grabaciones, no la meta.                                                             |
+
+La fila «Voz del navegador» de la tabla de diferencias de arriba queda así: la referencia usaba la voz
+del navegador como única voz; aquí es **provisional**, detrás de la grabación, con aviso e
+interruptor.
+
 ---
 
 ## 1. Objetivo
@@ -94,7 +112,9 @@ mismo Basic Auth que el resto de `/admin` (decisión #16).
 
 - Quien juega **nunca** inicia sesión ni crea cuenta. Ninguna ruta pública del juego pide, ofrece ni
   enlaza un ingreso. Su progreso vive solo en su navegador.
-- No genera contenido con IA, ni tiene un botón para hacerlo. No hay voz sintética (decisión #6).
+- No genera contenido con IA, ni tiene un botón para hacerlo. La voz sintética del navegador es solo
+  provisional, detrás de la grabación, con aviso e interruptor (decisión #6, reescrita el
+  2026-11-21).
 - No muestra a quien juega ninguna palabra sin verificar (decisión #4).
 - No reemplaza al diccionario ni al juego de completar palabras, y no los modifica.
 - No hay racha, XP, logros, tabla de posiciones ni nada social entre usuarios.
@@ -111,33 +131,33 @@ Las decisiones 1, 2, 4 y la 16 las cerró la persona del proyecto el 2026-11-17;
 la 17 a 20 se rehicieron el mismo día (ver «Cambios del 2026-11-17»). El resto se deriva de ellas y
 del repo, y se puede discutir en la revisión de este spec.
 
-| #   | Decisión                                      | Elección                                                                                                                                                                                                                                                                                                                                                      |
-| --- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Stack**                                     | **Next.js**, dentro de este repo y con [CONSTRAINTS.md](../CONSTRAINTS.md). Lógica en `src/lib/`, UI en componentes TS. Nada del `index.html` de referencia se copia: se reimplementa.                                                                                                                                                                        |
-| 2   | **Alcance**                                   | Juego completo con sus cinco modos, administración mínima de paquetes y audio. Un solo spec con mapa de capacidades (§3) y orden vertical: primero se juega, después se administra.                                                                                                                                                                           |
-| 3   | **Supabase, solo desde el servidor**          | **El mismo proyecto que `solicitudes`**, con el **mismo patrón**: solo el servidor de Next habla con la base, con la `service_role` (`src/lib/supabase-admin.ts`). El navegador **nunca** habla con Supabase para leer o escribir datos. Tablas con RLS activado **sin políticas**, `revoke all` y `grant` mínimo a `service_role`. `solicitudes` no se toca. |
-| 4   | **Solo contenido verificado**                 | El juego **solo muestra ítems con `verified: true`**. Lo no verificado puede estar en un paquete importado, pero nunca llega a quien juega. Lo marca la persona del equipo que lo comprobó con un hablante o con la fuente (§9.3).                                                                                                                            |
-| 5   | **Lenguas**                                   | Un paquete existe solo para una lengua de `src/lib/languages.ts`. **Aimara** se agrega allí cuando haya una fuente citada (§14, pregunta 1). **Uro** queda sin paquete: no tiene hablantes ni alfabeto oficial ([docs/uro-language-sources.md](../docs/uro-language-sources.md)).                                                                             |
-| 6   | **Sin voz sintética**                         | La referencia usaba TTS es-PE «aproximado». Se descarta: enseñaría una pronunciación española de una lengua originaria. **El sonido es solo grabación de hablante.** La ronda «escuchar» solo usa ítems con audio.                                                                                                                                            |
-| 7   | **Sin paquete incluido en el código**         | No hay contenido de lengua en el bundle. Si **nunca** se pudo leer un paquete (por ejemplo, sin variables de entorno), la página dice que el juego no está disponible y ofrece el otro juego. Si se leyó alguna vez, se sigue sirviendo el último paquete bueno aunque Supabase falle (#8). Un respaldo inventado sería peor que no tener juego.              |
-| 8   | **Lectura en el servidor, con caché**         | El paquete publicado se lee en el servidor con `unstable_cache` (etiqueta `word-jump-pack:<lengua>`, `revalidate: 3600`). La página del juego se genera en la **primera visita** y queda en caché (ISR): **el build no llama a Supabase**. Si una revalidación falla, Next sigue sirviendo lo último que se generó bien. Detalle en §6.4.                     |
-| 9   | **Sin Realtime**                              | Cambiar el paquete a mitad de una ronda rompe la ronda. Un paquete publicado se ve en la siguiente carga de la página.                                                                                                                                                                                                                                        |
-| 10  | **Canvas decorativo, controles reales**       | El salto se dibuja en un `<canvas>` con `aria-hidden`. Las opciones son `<button>` reales. El juego se puede jugar entero sin ver el canvas, con teclado y con lector de pantalla.                                                                                                                                                                            |
-| 11  | **Sin vidas**                                 | Es un juego para todas las edades: fallar no termina la ronda. El ítem fallado vuelve al final de la cola, **como máximo dos veces**. A la tercera se muestra la respuesta y se sigue. Así la ronda siempre termina (§5.4).                                                                                                                                   |
-| 12  | **Paquete en `jsonb`**                        | Igual que la referencia: el paquete es la unidad que se importa, versiona, exporta y valida. Una vista `pack_words` cubre las consultas por palabra.                                                                                                                                                                                                          |
-| 13  | **Nombres**                                   | La URL pública es `/juegos/saltapalabras/…` y la interna `/admin/juego` (español). En el código el juego se llama `word-jump` (`check:language` marca «palabra»). Tablas, columnas y claves JSON en inglés.                                                                                                                                                   |
-| 14  | **Sin dependencias nuevas**                   | `@supabase/supabase-js` y `zod` ya están. Sin motor de juegos, sin `@supabase/ssr`, sin librería de auth: el acceso interno es el Basic Auth de `edicion-fotos.md`.                                                                                                                                                                                           |
-| 15  | **Publicar sin pisar a nadie**                | Concurrencia optimista por versión: publicar dice qué versión esperaba encontrar; si alguien publicó antes, no se pisa y se avisa (§6.2).                                                                                                                                                                                                                     |
-| 16  | **Cuentas: ninguna**                          | Quien juega no tiene cuenta ni login. El acceso interno no son cuentas sino el usuario y contraseña compartidos de `/admin`, que solo se entregan a **personas adultas del equipo**. No hay datos de menores ni de nadie más.                                                                                                                                 |
-| 17  | **Acceso interno = `/admin` (Basic Auth)**    | Se reusa sin cambios el acceso de [edicion-fotos.md](./edicion-fotos.md): mismo `src/proxy.ts` (`/admin/:path*`, `/api/admin/:path*`), mismas `ADMIN_USER` / `ADMIN_PASSWORD`, mismo `src/lib/admin/basic-auth.ts`, y cada Route Handler vuelve a comprobar las credenciales. Quien llegue primero al código lo crea; el otro lo reusa.                       |
-| 18  | **Juego libre de login**                      | Ninguna ruta de `/juegos/saltapalabras/**` responde 401, muestra un formulario de ingreso ni enlaza a `/admin`. La vista previa de un paquete sin publicar vive **solo** dentro de `/admin/juego`.                                                                                                                                                            |
-| 19  | **Audio público en Supabase Storage**         | Bucket público `audio`. El navegador del jugador descarga cada archivo **directo de la URL pública de Supabase** al pulsar el botón de sonido (`preload="none"`). La subida la hace el servidor desde `/admin/juego`; el navegador nunca escribe en el bucket.                                                                                                |
-| 20  | **Publicar con una función SQL**              | Publicar escribe dos cosas a la vez: la versión nueva en `language_packs` y su fila en `pack_versions`. `supabase-js` no tiene transacciones, así que una función SQL `publish_language_pack` (ejecutable **solo** por `service_role`) hace las dos escrituras y la comprobación de versión en una sola transacción. Es lo más simple que es atómico.         |
-| 21  | **Juego de plataformas** (2026-11-20)         | Un nivel por partida: un reto por palabra, cada reto con sus nubes de respuesta y una puerta de madera que solo se abre al acertar; meta con resumen al final. La lógica (física, choques, estado del nivel, puntos, trazado con semilla) es pura en `src/lib/word-jump/platformer/`; el canvas solo dibuja. Detalle en §7.6.                                 |
-| 22  | **Fallar tacha la nube** (2026-11-20)         | En el juego, una respuesta incorrecta tacha esa nube y el reto sigue; la palabra cuenta como fallada para el progreso. Reemplaza el reencolado de #11 **en el juego**; `round.ts` conserva su reducer, que ya no usa la página.                                                                                                                               |
-| 23  | **Sonido sin voz** (2026-11-20)               | Efectos de sonido con Web Audio, creados en código al primer gesto de la persona, silenciables (`settings.sound`). El 🔊 de la pista reproduce **solo** `item.audio` (#6, #19).                                                                                                                                                                               |
-| 24  | **Arte original** (2026-11-20)                | Pip (un zorrito) y todo lo demás se dibujan con formas en el canvas. Ningún recurso, personaje, objeto, paleta ni tipografía de otro juego.                                                                                                                                                                                                                   |
-| 25  | **El canvas no es la única vía** (2026-11-20) | Cada opción es también un `<button>` (y tecla 1/2/3) que hace saltar a Pip a esa nube y responde. Pista, opciones, resultado y resumen están en el DOM. Con `prefers-reduced-motion`, sin animación de salto ni de puerta.                                                                                                                                    |
+| #   | Decisión                                          | Elección                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Stack**                                         | **Next.js**, dentro de este repo y con [CONSTRAINTS.md](../CONSTRAINTS.md). Lógica en `src/lib/`, UI en componentes TS. Nada del `index.html` de referencia se copia: se reimplementa.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 2   | **Alcance**                                       | Juego completo con sus cinco modos, administración mínima de paquetes y audio. Un solo spec con mapa de capacidades (§3) y orden vertical: primero se juega, después se administra.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 3   | **Supabase, solo desde el servidor**              | **El mismo proyecto que `solicitudes`**, con el **mismo patrón**: solo el servidor de Next habla con la base, con la `service_role` (`src/lib/supabase-admin.ts`). El navegador **nunca** habla con Supabase para leer o escribir datos. Tablas con RLS activado **sin políticas**, `revoke all` y `grant` mínimo a `service_role`. `solicitudes` no se toca.                                                                                                                                                                                                                                                       |
+| 4   | **Solo contenido verificado**                     | El juego **solo muestra ítems con `verified: true`**. Lo no verificado puede estar en un paquete importado, pero nunca llega a quien juega. Lo marca la persona del equipo que lo comprobó con un hablante o con la fuente (§9.3).                                                                                                                                                                                                                                                                                                                                                                                  |
+| 5   | **Lenguas**                                       | Un paquete existe solo para una lengua de `src/lib/languages.ts`. **Aimara** se agrega allí cuando haya una fuente citada (§14, pregunta 1). **Uro** queda sin paquete: no tiene hablantes ni alfabeto oficial ([docs/uro-language-sources.md](../docs/uro-language-sources.md)).                                                                                                                                                                                                                                                                                                                                   |
+| 6   | **Grabación primero; voz aproximada provisional** | _(Reescrita el 2026-11-21 por la persona del proyecto: «las palabras deben sonar».)_ Si el ítem tiene `audio` (grabación de hablante), suena la grabación, siempre. Si no, la voz del navegador (`speechSynthesis`, voz `es-PE` o `es-*`) **como provisional**, con aviso visible «Pronunciación aproximada» e interruptor «Voz aproximada: sí / no» (§7.7). `language.tts.quality = "off"` la apaga para una lengua. Antes decía «sin voz sintética»: el riesgo de enseñar una pronunciación castellana sigue en pie, por eso el aviso; la meta sigue siendo F3. La ronda «escuchar» solo usa ítems con grabación. |
+| 7   | **Sin paquete incluido en el código**             | No hay contenido de lengua en el bundle. Si **nunca** se pudo leer un paquete (por ejemplo, sin variables de entorno), la página dice que el juego no está disponible y ofrece el otro juego. Si se leyó alguna vez, se sigue sirviendo el último paquete bueno aunque Supabase falle (#8). Un respaldo inventado sería peor que no tener juego.                                                                                                                                                                                                                                                                    |
+| 8   | **Lectura en el servidor, con caché**             | El paquete publicado se lee en el servidor con `unstable_cache` (etiqueta `word-jump-pack:<lengua>`, `revalidate: 3600`). La página del juego se genera en la **primera visita** y queda en caché (ISR): **el build no llama a Supabase**. Si una revalidación falla, Next sigue sirviendo lo último que se generó bien. Detalle en §6.4.                                                                                                                                                                                                                                                                           |
+| 9   | **Sin Realtime**                                  | Cambiar el paquete a mitad de una ronda rompe la ronda. Un paquete publicado se ve en la siguiente carga de la página.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 10  | **Canvas decorativo, controles reales**           | El salto se dibuja en un `<canvas>` con `aria-hidden`. Las opciones son `<button>` reales. El juego se puede jugar entero sin ver el canvas, con teclado y con lector de pantalla.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 11  | **Sin vidas**                                     | Es un juego para todas las edades: fallar no termina la ronda. El ítem fallado vuelve al final de la cola, **como máximo dos veces**. A la tercera se muestra la respuesta y se sigue. Así la ronda siempre termina (§5.4).                                                                                                                                                                                                                                                                                                                                                                                         |
+| 12  | **Paquete en `jsonb`**                            | Igual que la referencia: el paquete es la unidad que se importa, versiona, exporta y valida. Una vista `pack_words` cubre las consultas por palabra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| 13  | **Nombres**                                       | La URL pública es `/juegos/saltapalabras/…` y la interna `/admin/juego` (español). En el código el juego se llama `word-jump` (`check:language` marca «palabra»). Tablas, columnas y claves JSON en inglés.                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 14  | **Sin dependencias nuevas**                       | `@supabase/supabase-js` y `zod` ya están. Sin motor de juegos, sin `@supabase/ssr`, sin librería de auth: el acceso interno es el Basic Auth de `edicion-fotos.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 15  | **Publicar sin pisar a nadie**                    | Concurrencia optimista por versión: publicar dice qué versión esperaba encontrar; si alguien publicó antes, no se pisa y se avisa (§6.2).                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| 16  | **Cuentas: ninguna**                              | Quien juega no tiene cuenta ni login. El acceso interno no son cuentas sino el usuario y contraseña compartidos de `/admin`, que solo se entregan a **personas adultas del equipo**. No hay datos de menores ni de nadie más.                                                                                                                                                                                                                                                                                                                                                                                       |
+| 17  | **Acceso interno = `/admin` (Basic Auth)**        | Se reusa sin cambios el acceso de [edicion-fotos.md](./edicion-fotos.md): mismo `src/proxy.ts` (`/admin/:path*`, `/api/admin/:path*`), mismas `ADMIN_USER` / `ADMIN_PASSWORD`, mismo `src/lib/admin/basic-auth.ts`, y cada Route Handler vuelve a comprobar las credenciales. Quien llegue primero al código lo crea; el otro lo reusa.                                                                                                                                                                                                                                                                             |
+| 18  | **Juego libre de login**                          | Ninguna ruta de `/juegos/saltapalabras/**` responde 401, muestra un formulario de ingreso ni enlaza a `/admin`. La vista previa de un paquete sin publicar vive **solo** dentro de `/admin/juego`.                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 19  | **Audio público en Supabase Storage**             | Bucket público `audio`. El navegador del jugador descarga cada archivo **directo de la URL pública de Supabase** al pulsar el botón de sonido (`preload="none"`). La subida la hace el servidor desde `/admin/juego`; el navegador nunca escribe en el bucket.                                                                                                                                                                                                                                                                                                                                                      |
+| 20  | **Publicar con una función SQL**                  | Publicar escribe dos cosas a la vez: la versión nueva en `language_packs` y su fila en `pack_versions`. `supabase-js` no tiene transacciones, así que una función SQL `publish_language_pack` (ejecutable **solo** por `service_role`) hace las dos escrituras y la comprobación de versión en una sola transacción. Es lo más simple que es atómico.                                                                                                                                                                                                                                                               |
+| 21  | **Juego de plataformas** (2026-11-20)             | Un nivel por partida: un reto por palabra, cada reto con sus nubes de respuesta y una puerta de madera que solo se abre al acertar; meta con resumen al final. La lógica (física, choques, estado del nivel, puntos, trazado con semilla) es pura en `src/lib/word-jump/platformer/`; el canvas solo dibuja. Detalle en §7.6.                                                                                                                                                                                                                                                                                       |
+| 22  | **Fallar tacha la nube** (2026-11-20)             | En el juego, una respuesta incorrecta tacha esa nube y el reto sigue; la palabra cuenta como fallada para el progreso. Reemplaza el reencolado de #11 **en el juego**; `round.ts` conserva su reducer, que ya no usa la página.                                                                                                                                                                                                                                                                                                                                                                                     |
+| 23  | **Sonido sin voz** (2026-11-20)                   | Efectos de sonido con Web Audio, creados en código al primer gesto de la persona, silenciables (`settings.sound`). El 🔊 de la pista reproduce **solo** `item.audio` (#6, #19).                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 24  | **Arte original** (2026-11-20)                    | Pip (un zorrito) y todo lo demás se dibujan con formas en el canvas. Ningún recurso, personaje, objeto, paleta ni tipografía de otro juego.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 25  | **El canvas no es la única vía** (2026-11-20)     | Cada opción es también un `<button>` (y tecla 1/2/3) que hace saltar a Pip a esa nube y responde. Pista, opciones, resultado y resumen están en el DOM. Con `prefers-reduced-motion`, sin animación de salto ni de puerta.                                                                                                                                                                                                                                                                                                                                                                                          |
 
 ---
 
@@ -220,6 +240,18 @@ export type LanguagePack = {
     translationLabel: string;
     /** Short phrases in the language, reviewed as part of publishing. */
     praise?: { correct?: string; wrong?: string; win?: string };
+    /**
+     * The browser voice used while an item has no recording (decision #6,
+     * 2026-11-21). Absent: { lang: "es-PE", quality: "approx" }.
+     */
+    tts?: {
+      /** BCP 47 tag of the voice to ask the browser for: "es-PE". */
+      lang: string;
+      /** "off" never speaks with a synthetic voice for this language. */
+      quality: "approx" | "off";
+      /** Text replacements applied before speaking: [["'", ""]]. */
+      replace?: [string, string][];
+    };
   };
   sources: PackSource[];
   themes: Theme[];
@@ -289,6 +321,8 @@ Todas puras, sin React ni `window`, en `src/lib/language-packs/`.
 - `audio` que no empieza por `audioBaseUrl` (URL `https` del bucket `audio` del proyecto).
 - Dos ítems del mismo tema con la misma `word` normalizada.
 - El paquete serializado pesa 2 MB o más.
+- `language.tts` con `lang` vacío o que no es una etiqueta de idioma (`es`, `es-PE`), `quality`
+  distinto de `approx` u `off`, o un `replace` cuyo texto a buscar está vacío (2026-11-21).
 
 **Mínimos por modo**, contados sobre los ítems **verificados** (si no se cumplen, el tema es un
 aviso en `/admin/juego` y no aparece al jugar):
@@ -632,8 +666,8 @@ nivel, la **meta** con el trofeo.
   esa nube y responde al instante. Con `prefers-reduced-motion`, Pip aparece bajo la nube sin
   animar.
 - **Pista arriba:** el dibujo (nombrado por su traducción), la palabra o la palabra con hueco, como
-  en §5.2. **🔊 solo si el ítem tiene grabación** (`item.audio`); se reproduce al pulsar, nunca solo
-  (AC-SP8-5).
+  en §5.2. _(Cambiado el 2026-11-21, ver §7.7.)_ El 🔊 está siempre en la barra de pista y la
+  palabra también suena sola al acercarse y al acertar.
 - **Sonido:** efectos generados con Web Audio (salto, acierto, error, puerta, meta), creados al primer
   gesto, con un botón «Sonido: sí / no» que guarda `settings.sound`.
 - **Menú:** pausa con «Seguir jugando», «Elegir otro tema» y el sonido.
@@ -653,7 +687,7 @@ caracoles (+2 al pisarlos), vidas con corazones; caer o tocar un caracol quita u
 inicio del reto; sin vidas, termina la partida en el resumen. F5c: ajustes por partida
 (Principiante / Intermedio / Avanzado: palabras 5/8/12/15, vidas infinitas/3/5, caracoles, huecos,
 velocidad, mostrar la traducción) guardados en `settings`, y personajes a elegir (zorrito por
-defecto). «Decir la palabra al acercarse» entra en F5c y solo con grabación.
+defecto). «Decir la palabra al acercarse» se adelantó a §7.7 (2026-11-21).
 
 **Criterios de aceptación (F5a).**
 
@@ -669,14 +703,72 @@ defecto). «Decir la palabra al acercarse» entra en F5c y solo con grabación.
   primera, los puntos y las palabras falladas; «Repasar las falladas» abre un nivel solo con ellas.
 - **AC-SP4b-6** El salto sube más si se mantiene la tecla, y se puede saltar un instante después de
   dejar el suelo (margen de salto), comprobado en la física pura.
-- **AC-SP4b-7** El 🔊 aparece solo si el ítem tiene `audio` y no suena sin una pulsación; nunca se usa
-  `speechSynthesis`.
+- **AC-SP4b-7** _(modificado el 2026-11-21, reemplazado por AC-SP4c-1 a AC-SP4c-6)_ Antes decía: el
+  🔊 aparece solo si el ítem tiene `audio` y nunca se usa `speechSynthesis`.
 - **AC-SP4b-8** Los efectos de sonido se pueden apagar con un botón y la elección se recuerda al
   recargar.
 - **AC-SP4b-9** A 360 px de ancho no hay scroll horizontal y los controles táctiles miden al menos
   44 × 44 px.
 - **AC-SP4b-10** El JS que la ruta del juego agrega es solo el del juego: ninguna otra ruta lo
   descarga, y la página sigue siendo ISR como en AC-SP4-1.
+
+### 7.7 SP4c — `speech`: las palabras suenan (2026-11-21)
+
+Decisión #6 reescrita: **grabación primero, voz del navegador como provisional.**
+
+**Qué suena.** Siempre la palabra del reto en la lengua (`challenge.item.word`): en `pic2word` es la
+respuesta; en `word2pic` y `listen`, la palabra que se muestra o se oye; en `first` y `vowel`, la
+palabra completa. Se elige así (`planSpeech`, puro):
+
+1. Sonido general apagado (`settings.sound = false`) → no suena nada.
+2. El ítem tiene `audio` → la **grabación** (`Audio`), aunque la voz aproximada esté apagada.
+3. `language.tts.quality = "off"` o la persona apagó «Voz aproximada» → no suena; el 🔊 queda
+   deshabilitado con la razón.
+4. Si no, la **voz del navegador**: `speechSynthesis` con la voz cuyo idioma coincide con
+   `tts.lang` (por defecto `es-PE`), si no hay, cualquier `es-*`; el texto pasa antes por
+   `tts.replace`. Sin `speechSynthesis` o sin ninguna voz `es`, no suena y el aviso lo explica.
+
+**Cuándo suena.** Al **acercarse** Pip a las nubes de un reto (una sola vez por reto; ajuste «Decir
+la palabra al acercarse: sí / no», por defecto sí), al **acertar** (después del efecto) y al pulsar
+**🔊**. Antes de hablar se cancela la voz anterior; al salir del nivel, también. Nada suena antes
+del primer gesto de la persona en el nivel (tecla, toque o clic): al acercarse sin gesto previo,
+simplemente no suena, sin error.
+
+**Aviso.** Cuando lo que sonaría es la voz aproximada, junto a la pista se lee: «Pronunciación
+aproximada: aún no tenemos la grabación de un hablante». Sin voz disponible: «Este navegador no
+tiene una voz en castellano: la palabra no suena hasta que tengamos la grabación de un hablante».
+
+**Ajustes** en el Menú, guardados en `settings` del navegador junto al sonido: «Voz aproximada: sí /
+no» (`voice`, por defecto sí) y «Decir la palabra al acercarse: sí / no» (`announce`, por defecto
+sí). Un progreso guardado antes del 2026-11-21 (sin esas claves) se lee con los dos en sí.
+
+**Pasos.** Mientras Pip corre por el suelo suena un paso corto (Web Audio, como los demás efectos)
+a ritmo fijo; nada en el aire ni parado. Respeta el sonido general.
+
+**Arquitectura.** La lógica es pura en `src/lib/word-jump/speech.ts` (qué texto, qué plan, qué
+voz, `replace`) y `src/lib/word-jump/platformer/` (cuándo se llega a las nubes, ritmo de pasos). El
+acceso a `speechSynthesis` y `Audio` va en un módulo cliente pequeño e inyectable
+(`src/components/word-jump/word-speaker.ts`).
+
+**Criterios de aceptación.**
+
+- **AC-SP4c-1** Con un ítem con `audio`, el 🔊, el acercamiento y el acierto reproducen la grabación
+  con `Audio` y nunca llaman a `speechSynthesis.speak`.
+- **AC-SP4c-2** Con un ítem sin `audio`, se llama a `speechSynthesis.speak` con la palabra (tras
+  `tts.replace`) y una voz `es-PE` si existe, si no `es-*`; y se ve el aviso «Pronunciación
+  aproximada».
+- **AC-SP4c-3** La palabra suena una sola vez al acercarse Pip a las nubes de cada reto, y otra al
+  acertar; con «Decir la palabra al acercarse: no», al acercarse no suena.
+- **AC-SP4c-4** Con «Voz aproximada: no» o `tts.quality = "off"`, nunca se llama a
+  `speechSynthesis.speak`; el 🔊 queda deshabilitado con la razón si no hay grabación. Las dos
+  elecciones del Menú se recuerdan al recargar.
+- **AC-SP4c-5** Sin `speechSynthesis` o sin voz `es`, no hay error: el aviso explica que la palabra
+  no suena y el juego sigue.
+- **AC-SP4c-6** Con «Sonido: no» no suena nada (ni grabación, ni voz, ni pasos), y nada suena antes
+  del primer gesto en el nivel.
+- **AC-SP4c-7** Al correr por el suelo suena un paso a ritmo fijo; en el aire o parado, no.
+- **AC-SP4c-8** Un paquete con `language.tts` inválido (sin `lang`, `quality` desconocida, `replace`
+  vacío) no se puede publicar; sin el bloque, publica y suena con `es-PE`.
 
 ---
 
@@ -843,8 +935,8 @@ historial). «Partir del publicado» pasa a llamarse **«Editar el paquete publi
   encontrarlos).
 - Un audio entra al juego solo cuando se publica el paquete con ese ítem verificado: la verificación
   cubre palabra **y** pronunciación.
-- En el juego, el audio usa `preload="none"` y suena al tocar el botón de sonido, nunca solo. Con
-  `settings.sound = false`, no suena nada.
+- En el juego, el audio no se precarga y suena con 🔊, al acercarse y al acertar (§7.7, desde el
+  2026-11-21), nunca antes del primer gesto en el nivel. Con `settings.sound = false`, no suena nada.
 - `next.config.ts` no cambia por esto: `<audio>` no pasa por `next/image` ni necesita
   `remotePatterns`.
 
@@ -856,12 +948,15 @@ historial). «Partir del publicado» pasa a llamarse **«Editar el paquete publi
 - **AC-SP8-3** _(eliminado el 2026-11-17)_: corte de la grabación a los 8 s; ya no se graba en el
   navegador.
 - **AC-SP8-4** Con un tema `listen` con 3 ítems verificados con audio, la ronda «escuchar» se juega.
-- **AC-SP8-5** El audio nunca se reproduce sin una acción de la persona.
+- **AC-SP8-5** _(modificado el 2026-11-21)_ El audio nunca se reproduce antes del primer gesto de la
+  persona en el nivel (antes: «sin una acción de la persona»; ahora también suena al acercarse y al
+  acertar, §7.7).
 - **AC-SP8-6** _(eliminado el 2026-11-17)_: permiso de micrófono; ya no se graba.
 - **AC-SP8-7** _(nuevo)_ Sin credenciales, `POST /api/admin/juego/[lengua]/audio` responde `401` y no
   sube nada.
-- **AC-SP8-8** _(nuevo)_ Hasta que quien juega pulsa el botón de sonido, su navegador no hace ninguna
-  petición al dominio de Supabase.
+- **AC-SP8-8** _(modificado el 2026-11-21)_ Hasta el primer gesto de quien juega en el nivel, su
+  navegador no hace ninguna petición al dominio de Supabase; después, solo pide la grabación del
+  reto al acercarse, al acertar o con 🔊.
 - **AC-SP8-9** _(nuevo)_ La URL devuelta empieza por la URL pública del bucket `audio` y pasa
   AC-SP1-7.
 
@@ -1011,7 +1106,12 @@ extiende; el primer borrador está en el historial de la rama.
   completar palabras.
 - Cambiar `help-education.tsx` o crear `/juegos` (§14, pregunta 5).
 - Agregar una lengua a `languages.ts`.
-- Habilitar Realtime, voz sintética o cualquier envío de datos a terceros.
+- Habilitar Realtime o cualquier envío de datos a terceros.
+- Usar voz sintética de otra forma que la de §7.7: **solo como provisional**, detrás de la grabación,
+  con el aviso «Pronunciación aproximada» y el interruptor (2026-11-21). Nunca un servicio de voz en
+  la nube: solo `speechSynthesis` del navegador, que no sale del dispositivo por nuestra parte.
+- Agregar reglas de pronunciación (`tts.replace`) para una lengua originaria sin que las proponga
+  una persona hablante o la fuente citada.
 - Activar Cache Components (`cacheComponents`) en `next.config.ts`.
 - **Agregar cualquier forma de login, cuenta o registro para quien juega.** Revierte la decisión #18
   y reabre el tratamiento de datos de menores (Ley 29733).

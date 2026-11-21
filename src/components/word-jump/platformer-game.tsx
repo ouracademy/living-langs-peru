@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import type { PackItem, Theme } from "@/lib/language-packs/types";
+import type { PackItem, PackTts, Theme } from "@/lib/language-packs/types";
 import {
   type LevelState,
   advance,
@@ -19,6 +19,7 @@ import {
 } from "@/lib/word-jump/platformer/game";
 import { buildLayout } from "@/lib/word-jump/platformer/level";
 import type { RoundContext } from "@/lib/word-jump/round";
+import { type SpeechPlan, planSpeech } from "@/lib/word-jump/speech";
 
 import {
   type ControllerOptions,
@@ -28,6 +29,15 @@ import {
 } from "./platformer-controller";
 import { Prompt, QUESTION_TITLES, buttonClass } from "./question-parts";
 import { type SoundEffects, createSoundEffects } from "./sound-effects";
+import {
+  type VoiceStatus,
+  type WordSpeaker,
+  createWordSpeaker,
+  readVoiceStatus,
+} from "./word-speaker";
+
+/** The level's own switches, besides the sound (spec §7.7). */
+export type SpeechSetting = "voice" | "announce";
 
 type PlatformerGameProps = {
   theme: Theme;
@@ -39,9 +49,37 @@ type PlatformerGameProps = {
   sourceTitles: Map<string, string>;
   sound: boolean;
   onToggleSound: () => void;
+  /** The browser voice used while a word has no recording. */
+  tts: PackTts;
+  /** «Voz aproximada» and «Decir la palabra al acercarse». */
+  speech: Record<SpeechSetting, boolean>;
+  onToggleSpeech: (setting: SpeechSetting) => void;
   onFinish: (level: LevelState) => void;
   onExit: () => void;
 };
+
+/** How long after the «correct» effect the word is said (spec §7.7). */
+const SAY_AFTER_CORRECT_MS = 450;
+
+/** Why 🔊 cannot sound right now, said next to it. */
+function silentReason(
+  plan: SpeechPlan,
+  voiceStatus: VoiceStatus,
+): string | null {
+  if (plan.kind === "none") {
+    if (plan.reason === "sound_off") return "sonido apagado";
+    if (plan.reason === "voice_off") return "voz aproximada apagada";
+    if (plan.reason === "tts_off") return "sin grabación todavía";
+    return "sin palabra";
+  }
+  if (
+    plan.kind === "voice" &&
+    (voiceStatus === "unsupported" || voiceStatus === "missing")
+  ) {
+    return "sin voz en este navegador";
+  }
+  return null;
+}
 
 const MOVE_KEYS: Record<string, Key> = {
   ArrowLeft: "left",
@@ -113,11 +151,19 @@ export function PlatformerGame({
   sourceTitles,
   sound,
   onToggleSound,
+  tts,
+  speech,
+  onToggleSpeech,
   onFinish,
   onExit,
 }: PlatformerGameProps) {
   const [level, setLevel] = useState(() => createLevel(items, context, seed));
   const [menuOpen, setMenuOpen] = useState(false);
+  // Read when the level opens (only ever on the client: a level starts with a
+  // click), and again when the browser lists its voices.
+  const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() =>
+    readVoiceStatus(tts.lang),
+  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
@@ -125,6 +171,14 @@ export function PlatformerGame({
   // Created after mount: they hold the canvas and the audio context.
   const controllerRef = useRef<PlatformerController | null>(null);
   const effectsRef = useRef<SoundEffects | null>(null);
+  const speakerRef = useRef<WordSpeaker | null>(null);
+  // What saying a word means with the latest settings; set after render.
+  const planFor = useCallback(
+    (item: PackItem) => planSpeech({ item, tts, sound, voice: speech.voice }),
+    [tts, sound, speech.voice],
+  );
+  const sayRef = useRef<(item: PackItem) => void>(() => undefined);
+  const announceRef = useRef(speech.announce);
 
   const optionCounts = level.challenges
     .map((challenge) => challenge.question.options.length)
@@ -143,6 +197,14 @@ export function PlatformerGame({
     [],
   );
   const onJump = useCallback(() => effectsRef.current?.play("jump"), []);
+  const onStep = useCallback(() => effectsRef.current?.play("step"), []);
+  // The word of the challenge Pip just reached (AC-SP4c-3). Read from a ref:
+  // a state updater may run twice and would say the word twice.
+  const levelRef = useRef(level);
+  const onApproach = useCallback((index: number) => {
+    const item = levelRef.current.challenges[index]?.item;
+    if (item && announceRef.current) sayRef.current(item);
+  }, []);
 
   const options = useRef<ControllerOptions>({
     layout,
@@ -151,6 +213,8 @@ export function PlatformerGame({
     onHit,
     onPassDoor,
     onJump,
+    onApproach,
+    onStep,
   });
 
   // Mount: the controller (loop, body, keys), the sound and a sharp canvas.
@@ -160,8 +224,12 @@ export function PlatformerGame({
       () => canvasRef.current,
     );
     const effects = createSoundEffects(() => soundOn.current);
+    const speaker = createWordSpeaker(undefined, () =>
+      setVoiceStatus(speaker.voiceStatus(tts.lang)),
+    );
     controllerRef.current = controller;
     effectsRef.current = effects;
+    speakerRef.current = speaker;
 
     const canvas = canvasRef.current;
     if (canvas) {
@@ -179,6 +247,7 @@ export function PlatformerGame({
       if (options.current.paused) return;
       event.preventDefault();
       effects.unlock();
+      speaker.unlock();
       controller.setKey(key, down);
     }
     const keyDown = (event: KeyboardEvent) => onKey(event, true);
@@ -193,10 +262,14 @@ export function PlatformerGame({
       window.removeEventListener("keyup", keyUp);
       window.removeEventListener("blur", blur);
       controller.dispose();
+      // Leaving the level stops any word still sounding (§7.7).
+      speaker.dispose();
       controllerRef.current = null;
       effectsRef.current = null;
+      speakerRef.current = null;
     };
-  }, []);
+    // The voice language is the pack's: fixed for the life of a level.
+  }, [tts.lang]);
 
   // The controller reads the latest props through this ref, set after render.
   useEffect(() => {
@@ -207,34 +280,59 @@ export function PlatformerGame({
       onHit,
       onPassDoor,
       onJump,
+      onApproach,
+      onStep,
     };
+    levelRef.current = level;
     soundOn.current = sound;
+    announceRef.current = speech.announce;
+    sayRef.current = (item) => speakerRef.current?.speak(planFor(item));
     if (menuOpen) controllerRef.current?.releaseAll();
     controllerRef.current?.draw();
-  }, [layout, level, menuOpen, onHit, onPassDoor, onJump, sound]);
+  }, [
+    layout,
+    level,
+    menuOpen,
+    onHit,
+    onPassDoor,
+    onJump,
+    onApproach,
+    onStep,
+    sound,
+    speech.announce,
+    planFor,
+  ]);
 
   const challenge = level.challenges[level.index];
   const question = challenge?.question;
   const solved = challenge?.solved ?? false;
   const last = level.last;
 
-  // Sound, burst and focus follow each answer.
+  // Sound, burst and focus follow each answer; the word follows a right one.
+  // Focus moves for screen readers but never scrolls: a jump that hits a
+  // cloud must not drag the page away from the level.
   useEffect(() => {
     if (!last) return;
     if (last.kind === "correct") {
       effectsRef.current?.play("correct");
       effectsRef.current?.play("door");
       controllerRef.current?.celebrate(last.challenge, last.option);
-      nextRef.current?.focus();
-    } else {
-      effectsRef.current?.play("wrong");
-      titleRef.current?.focus();
+      nextRef.current?.focus({ preventScroll: true });
+      const item = levelRef.current.challenges[last.challenge]?.item;
+      if (!item) return;
+      const timer = window.setTimeout(
+        () => sayRef.current(item),
+        SAY_AFTER_CORRECT_MS,
+      );
+      return () => window.clearTimeout(timer);
     }
+    effectsRef.current?.play("wrong");
+    titleRef.current?.focus({ preventScroll: true });
   }, [last]);
 
-  // A new challenge: focus goes back to its question.
+  // A new challenge: focus goes back to its question, without scrolling.
   useEffect(() => {
-    titleRef.current?.focus();
+    titleRef.current?.focus({ preventScroll: true });
   }, [level.index]);
 
   // Reported once: the parent saves the progress and shows the finish.
@@ -249,6 +347,7 @@ export function PlatformerGame({
   const answerWith = useCallback(
     (option: number) => {
       effectsRef.current?.unlock();
+      speakerRef.current?.unlock();
       const current = level.challenges[level.index];
       if (
         level.status !== "playing" ||
@@ -288,7 +387,10 @@ export function PlatformerGame({
   }, [layout, level.index]);
 
   const press = useCallback((key: Key, down: boolean) => {
-    if (down) effectsRef.current?.unlock();
+    if (down) {
+      effectsRef.current?.unlock();
+      speakerRef.current?.unlock();
+    }
     controllerRef.current?.setKey(key, down);
   }, []);
 
@@ -298,7 +400,13 @@ export function PlatformerGame({
   const source = challenge.item.sourceId
     ? sourceTitles.get(challenge.item.sourceId)
     : undefined;
-  const audio = challenge.item.audio;
+  const plan = planFor(challenge.item);
+  const silent = silentReason(plan, voiceStatus);
+  const approximate =
+    plan.kind === "voice" &&
+    voiceStatus !== "unsupported" &&
+    voiceStatus !== "missing";
+  const noVoice = plan.kind === "voice" && !approximate;
 
   return (
     <section aria-labelledby="nivel" className="mt-6">
@@ -353,6 +461,22 @@ export function PlatformerGame({
           </button>
           <button
             type="button"
+            aria-pressed={speech.voice}
+            onClick={() => onToggleSpeech("voice")}
+            className={`${buttonClass} bg-[#FFF7E8] px-4 text-[#241D14] hover:bg-[#F6E3B4]`}
+          >
+            Voz aproximada: {speech.voice ? "sí" : "no"}
+          </button>
+          <button
+            type="button"
+            aria-pressed={speech.announce}
+            onClick={() => onToggleSpeech("announce")}
+            className={`${buttonClass} bg-[#FFF7E8] px-4 text-[#241D14] hover:bg-[#F6E3B4]`}
+          >
+            Decir la palabra al acercarse: {speech.announce ? "sí" : "no"}
+          </button>
+          <button
+            type="button"
             onClick={onExit}
             className={`${buttonClass} border-2 border-[#241D14] text-[#241D14]`}
           >
@@ -370,18 +494,30 @@ export function PlatformerGame({
         >
           {QUESTION_TITLES[question.mode]}
         </h3>
-        {audio ? (
-          <button
-            type="button"
-            disabled={!sound}
-            onClick={() => {
-              void new Audio(audio).play();
-            }}
-            className={`${buttonClass} bg-[#6A3E8C] px-4 text-white disabled:opacity-60`}
-          >
-            <span aria-hidden="true">🔊</span> Escuchar la palabra
-            {sound ? "" : " (sonido apagado)"}
-          </button>
+        <button
+          type="button"
+          disabled={silent !== null}
+          onClick={() => {
+            effectsRef.current?.unlock();
+            speakerRef.current?.unlock();
+            sayRef.current(challenge.item);
+          }}
+          className={`${buttonClass} bg-[#6A3E8C] px-4 text-white disabled:opacity-60`}
+        >
+          <span aria-hidden="true">🔊</span> Escuchar la palabra
+          {silent ? ` (${silent})` : ""}
+        </button>
+        {approximate ? (
+          <p className="max-w-[36ch] text-sm text-[#4A4130]">
+            Pronunciación aproximada: aún no tenemos la grabación de un
+            hablante.
+          </p>
+        ) : null}
+        {noVoice ? (
+          <p className="max-w-[40ch] text-sm text-[#4A4130]">
+            Este navegador no tiene una voz en castellano: la palabra no suena
+            hasta que tengamos la grabación de un hablante.
+          </p>
         ) : null}
       </div>
 

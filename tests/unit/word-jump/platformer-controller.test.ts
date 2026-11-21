@@ -148,4 +148,67 @@ describe("the level controller", () => {
 
     expect(options.onPassDoor).toHaveBeenCalledTimes(1);
   });
+
+  // AC-SP4c-3: the word is said once when Pip reaches the clouds.
+  it("reports reaching the clouds once per open challenge", () => {
+    const frames = fakeFrames();
+    reducedMotion(false);
+    const { controller, options } = setUp();
+    options.onApproach = vi.fn();
+
+    controller.setKey("right", true);
+    frames.run(40);
+    controller.setKey("right", false);
+    controller.setKey("left", true);
+    frames.run(20);
+    controller.setKey("left", false);
+    controller.setKey("right", true);
+    frames.run(20);
+
+    expect(options.onApproach).toHaveBeenCalledTimes(1);
+    expect(options.onApproach).toHaveBeenCalledWith(0);
+    controller.dispose();
+  });
+
+  it("does not report the clouds of a challenge already solved", () => {
+    const frames = fakeFrames();
+    reducedMotion(false);
+    const { controller, options } = setUp();
+    options.onApproach = vi.fn();
+    options.level = {
+      ...options.level,
+      challenges: options.level.challenges.map((challenge, index) =>
+        index === 0 ? { ...challenge, solved: true } : challenge,
+      ),
+    };
+
+    controller.setKey("right", true);
+    frames.run(40);
+
+    expect(options.onApproach).not.toHaveBeenCalled();
+    controller.dispose();
+  });
+
+  // AC-SP4c-7
+  it("steps at a fixed rhythm while running, and not while standing", () => {
+    const frames = fakeFrames();
+    reducedMotion(false);
+    const { controller, options } = setUp();
+    options.onStep = vi.fn();
+
+    controller.setKey("right", true);
+    frames.run(33); // about half a second of running: a step now and then
+    const steps = (options.onStep as ReturnType<typeof vi.fn>).mock.calls
+      .length;
+    expect(steps).toBeGreaterThanOrEqual(2);
+    expect(steps).toBeLessThanOrEqual(3);
+
+    controller.setKey("right", false);
+    frames.run(30);
+    const afterStop = (options.onStep as ReturnType<typeof vi.fn>).mock.calls
+      .length;
+    // Slowing down may still land one step; standing still adds none.
+    expect(afterStop - steps).toBeLessThanOrEqual(1);
+    controller.dispose();
+  });
 });

@@ -290,6 +290,34 @@ punta antes de sumar obstáculos (F5b) y ajustes (F5c).
 - **e2e:** los recorridos de §F1a/F1b se adaptan (meta en vez de «¡Ronda terminada!», «Seguir» tras
   acertar, error que tacha). Uno nuevo mueve a Pip con el teclado y salta a la nube correcta.
 
+### 3.12 Las palabras suenan (SP4c, 2026-11-21)
+
+Spec §7.7 y decisión #6 reescrita. Una fase, **F5s**, que termina con la palabra sonando al
+acercarse, al acertar y con 🔊, y con pasos al caminar.
+
+- **Lógica pura**, tests primero:
+  - `src/lib/word-jump/speech.ts`: `ttsOf(language)` (el bloque o `{ lang: "es-PE", quality:
+"approx" }`), `applyReplacements`, `pickVoice(voces, lang)` (coincidencia exacta sin distinguir
+    `-`/`_` ni mayúsculas, luego mismo idioma base `es`), y `planSpeech({ item, tts, sound, voice })`
+    → `recording` | `voice` | `none` con la razón (`sound_off`, `voice_off`, `tts_off`).
+  - `platformer/level.ts`: `approachX(challenge)`, el punto antes de la primera nube donde se
+    «llega» al reto.
+  - `platformer/footsteps.ts`: `stepFootsteps(elapsed, dt, running)` → nuevo acumulado y si toca
+    un paso, a ritmo fijo.
+- **Cliente:** `src/components/word-jump/word-speaker.ts`, inyectable (`speechSynthesis`,
+  `SpeechSynthesisUtterance`, `Audio` vienen de un `env` que en producción es `window`): carga las
+  voces (también tras `voiceschanged`), `unlock()` en el primer gesto, `speak(plan)` cancela lo
+  anterior, nunca lanza; `cancel()` al desmontar. Un `play()` de `Audio` rechazado por el navegador
+  se informa como «no sonó», no como error.
+- **Controlador:** `onApproach(reto)` una vez por reto al pasar `approachX`; `onStep()` según
+  `stepFootsteps` mientras Pip está en el suelo y corre.
+- **Ajustes:** `settings.voice` y `settings.announce` opcionales en `progress.ts` (por defecto sí, un
+  progreso viejo sigue válido) y `saveSetting` en `progress-store.ts`.
+- **e2e:** `page.addInitScript` reemplaza `speechSynthesis`, `SpeechSynthesisUtterance` y `Audio`
+  por dobles que anotan lo que se pidió; se comprueba el texto al acercarse, al acertar y con 🔊, y
+  que un ítem con grabación usa `Audio` y no la voz (sin pedir nada a Supabase: el doble de `Audio`
+  no descarga).
+
 ## 4. Riesgos
 
 | Riesgo                                                                                                                        | Prob. | Impacto | Mitigación                                                                                                                                                                        |

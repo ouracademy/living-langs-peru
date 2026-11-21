@@ -15,6 +15,7 @@ export type IssueCode =
   | "audio_outside_bucket"
   | "duplicate_word"
   | "pack_too_large"
+  | "invalid_tts"
   // Warnings: they explain what stays out of the game.
   | "missing_emoji"
   | "initial_not_in_graphemes"
@@ -72,6 +73,29 @@ function insideBucket(url: string, audioBaseUrl: string): boolean {
   return base.startsWith("https://") && url.startsWith(base);
 }
 
+/** A language tag the browser can match a voice against: es, es-PE, es-419. */
+const LANGUAGE_TAG = /^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*$/;
+
+/** The optional browser-voice block (spec §4.3, §7.7). */
+function ttsErrors(tts: LanguagePack["language"]["tts"]): Issue[] {
+  if (!tts) return [];
+  const errors: Issue[] = [];
+
+  if (!LANGUAGE_TAG.test(tts.lang.trim())) {
+    errors.push({
+      code: "invalid_tts",
+      message: `La voz «${tts.lang}» no es un idioma válido. Usa algo como «es-PE».`,
+    });
+  }
+  if ((tts.replace ?? []).some(([from]) => from === "")) {
+    errors.push({
+      code: "invalid_tts",
+      message: "Una sustitución de la voz no dice qué texto reemplazar.",
+    });
+  }
+  return errors;
+}
+
 function packErrors(pack: LanguagePack, options: ValidateOptions): Issue[] {
   const errors: Issue[] = [];
   const { slug } = pack.language;
@@ -88,6 +112,8 @@ function packErrors(pack: LanguagePack, options: ValidateOptions): Issue[] {
       message: `El paquete es de «${slug}», pero estás editando «${options.language}».`,
     });
   }
+
+  errors.push(...ttsErrors(pack.language.tts));
 
   const bytes = new TextEncoder().encode(JSON.stringify(pack)).length;
   if (bytes >= MAX_PACK_BYTES) {

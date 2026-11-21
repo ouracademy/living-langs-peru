@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import { GAME_MODES, PACK_SCHEMA, type LanguagePack } from "./types.ts";
+import {
+  GAME_MODES,
+  PACK_SCHEMA,
+  TTS_QUALITIES,
+  type LanguagePack,
+} from "./types.ts";
 
 const itemSchema = z.object({
   // Optional on input: cleanPack gives an id to items that have none.
@@ -57,6 +62,13 @@ const packSchema = z.object({
         correct: z.string().optional(),
         wrong: z.string().optional(),
         win: z.string().optional(),
+      })
+      .optional(),
+    tts: z
+      .object({
+        lang: z.string(),
+        quality: z.enum(TTS_QUALITIES),
+        replace: z.array(z.tuple([z.string(), z.string()])).optional(),
       })
       .optional(),
   }),

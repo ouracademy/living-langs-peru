@@ -4,6 +4,21 @@ import { parsePack } from "@/lib/language-packs/schema";
 
 import { testPack } from "./fixtures";
 
+describe("parsePack: the voice block (AC-SP4c-8)", () => {
+  it("keeps a voice block and rejects an unknown quality", () => {
+    const base = testPack();
+    const tts = { lang: "es-PE", quality: "off" as const };
+    const kept = parsePack({ ...base, language: { ...base.language, tts } });
+    expect(kept.ok && kept.pack.language.tts).toEqual(tts);
+
+    const unknown = parsePack({
+      ...base,
+      language: { ...base.language, tts: { lang: "es-PE", quality: "native" } },
+    });
+    expect(unknown.ok).toBe(false);
+  });
+});
+
 describe("parsePack", () => {
   // AC-SP1-1
   it("accepts a valid pack", () => {

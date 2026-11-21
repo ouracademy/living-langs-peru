@@ -186,7 +186,18 @@ corregido.
 
 - [ ] **T5c.1** (M) Ajustes por partida (Principiante / Intermedio / Avanzado y cada opción) guardados en `settings`, validados al leer.
 - [ ] **T5c.2** (M) Personajes a elegir, dibujados en código (zorrito por defecto).
-- [ ] **T5c.3** (S) «Decir la palabra al acercarse», solo con grabación.
+- [ ] **T5c.3** (S) ~~«Decir la palabra al acercarse», solo con grabación.~~ Adelantada y reemplazada por F5s (2026-11-21).
+
+## F5s — Las palabras suenan (SP4c, 2026-11-21)
+
+- [x] **T5s.1** (S) Spec §7.7, decisión #6 reescrita, `language.tts` en el esquema y la validación `[AC-SP4c-8]` — Hecho: un `quality` desconocido lo rechaza `parsePack`; `lang` inválido o `replace` vacío dan el error `invalid_tts` de `validatePack`.
+- [x] **T5s.2** (M) `speech.ts` puro con tests primero: `ttsOf`, `applyReplacements`, `pickVoice`, `planSpeech` `[AC-SP4c-1, AC-SP4c-2, AC-SP4c-4, AC-SP4c-6]`
+- [x] **T5s.3** (S) `approachX` y `stepFootsteps` puros con tests `[AC-SP4c-3, AC-SP4c-7]` — Hecho: `approachX` y `reachedClouds` en `level.ts`; `footsteps.ts` nuevo. Con el trazado actual las nubes están cerca del inicio, así que la palabra suena casi al empezar a caminar.
+- [x] **T5s.4** (M) `word-speaker.ts` inyectable con tests: voces, `voiceschanged`, gesto, cancelar, `Audio` rechazado `[AC-SP4c-1, AC-SP4c-2, AC-SP4c-5, AC-SP4c-6]` — Hecho: lee `speechSynthesis`, `SpeechSynthesisUtterance` y `Audio` de `globalThis`; `readVoiceStatus` da el estado del primer render sin `setState` en un efecto.
+- [x] **T5s.5** (M) Juego: hablar al acercarse, al acertar y con 🔊; aviso «Pronunciación aproximada»; Menú con «Voz aproximada» y «Decir la palabra al acercarse» guardados; pasos al correr `[AC-SP4c-2 a AC-SP4c-7]` — Hecho: `settings.voice` y `settings.announce` opcionales (un progreso viejo sigue válido), `saveSetting` en `progress-store.ts`. Al acercarse no repite la palabra en un reto ya resuelto. El 🔊 siempre está; deshabilitado con la razón cuando no puede sonar.
+- [x] **T5s.6** (M) e2e con dobles de `speechSynthesis` y `Audio` `[AC-SP4c-1 a AC-SP4c-3]` — Hecho: 3 recorridos (acercarse una vez y nada antes de un gesto; acertar y 🔊 con aviso; «Voz aproximada: no» recordada). **Desvío:** la grabación (AC-SP4c-1) no se prueba en e2e: el fixture compartido lo publica el e2e de `/admin/juego`, y la validación exige audios en el bucket `https` mientras el Supabase falso es `http`. Queda cubierta en `platformer-game.test.tsx` y `word-speaker.test.ts`.
+
+> **⛔ Checkpoint 5s** — la palabra suena al acercarse, al acertar y con 🔊; con grabación, la grabación; con la voz o el sonido apagados, nada.
 
 ---
 

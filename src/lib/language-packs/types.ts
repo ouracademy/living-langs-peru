@@ -42,9 +42,25 @@ export type LanguagePack = {
     translationLabel: string;
     /** Short phrases in the language, reviewed as part of publishing. */
     praise?: { correct?: string; wrong?: string; win?: string };
+    /**
+     * The browser voice used while an item has no recording (spec §7.7,
+     * decision #6 as of 2026-11-21). Absent: es-PE, approximate.
+     */
+    tts?: PackTts;
   };
   sources: PackSource[];
   themes: Theme[];
+};
+
+export const TTS_QUALITIES = ["approx", "off"] as const;
+
+export type PackTts = {
+  /** BCP 47 tag of the voice asked from the browser: "es-PE". */
+  lang: string;
+  /** "off" never speaks with a synthetic voice for this language. */
+  quality: (typeof TTS_QUALITIES)[number];
+  /** Text replacements applied before speaking: [["'", ""]]. */
+  replace?: [string, string][];
 };
 
 export type PackSource = {

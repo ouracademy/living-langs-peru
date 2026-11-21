@@ -357,3 +357,146 @@ test.describe("Saltapalabras in the home page", () => {
     ).toBeVisible();
   });
 });
+
+type Said = { kind: "voice"; text: string; lang: string } | { kind: "audio" };
+
+/**
+ * Replaces the browser voice and Audio with doubles that write down what was
+ * asked (spec §7.7): headless Chromium has no voice to listen to.
+ */
+async function recordSpeech(page: Page) {
+  await page.addInitScript(() => {
+    const said: unknown[] = [];
+    (window as unknown as { __said: unknown[] }).__said = said;
+    class Utterance {
+      lang = "";
+      voice: unknown = null;
+      constructor(public text: string) {}
+    }
+    Object.defineProperty(window, "SpeechSynthesisUtterance", {
+      configurable: true,
+      value: Utterance,
+    });
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: {
+        getVoices: () => [{ lang: "es-PE", name: "Prueba" }],
+        speak: (utterance: Utterance) =>
+          said.push({
+            kind: "voice",
+            text: utterance.text,
+            lang: utterance.lang,
+          }),
+        cancel: () => undefined,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      },
+    });
+    Object.defineProperty(window, "Audio", {
+      configurable: true,
+      value: class {
+        constructor() {
+          said.push({ kind: "audio" });
+        }
+        play() {
+          return Promise.resolve();
+        }
+        pause() {}
+      },
+    });
+  });
+}
+
+const said = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __said: Said[] }).__said);
+
+/** The word of the pic2word challenge on screen, from its picture's name. */
+async function currentWord(page: Page): Promise<string> {
+  const label = await page
+    .locator("main")
+    .getByRole("img")
+    .getAttribute("aria-label");
+  return allItems.find((each) => each.translation === label)?.word ?? "";
+}
+
+test.describe("Saltapalabras, the words sound", () => {
+  // AC-SP4c-2, AC-SP4c-3, AC-SP4c-6
+  test("the word sounds when Pip reaches the clouds, once, and not before a gesture", async ({
+    page,
+  }) => {
+    await recordSpeech(page);
+    await play(page, /Tema de prueba/);
+    const word = await currentWord(page);
+
+    await page.waitForTimeout(600);
+    expect(await said(page)).toEqual([]);
+
+    await page.keyboard.down("ArrowRight");
+    await page.waitForTimeout(400);
+    await page.keyboard.up("ArrowRight");
+    await expect
+      .poll(() => said(page))
+      .toEqual([{ kind: "voice", text: word, lang: "es-PE" }]);
+
+    await page.keyboard.down("ArrowLeft");
+    await page.waitForTimeout(300);
+    await page.keyboard.up("ArrowLeft");
+    await page.keyboard.down("ArrowRight");
+    await page.waitForTimeout(300);
+    await page.keyboard.up("ArrowRight");
+    expect(await said(page)).toHaveLength(1);
+  });
+
+  // AC-SP4c-2, AC-SP4c-3
+  test("the word sounds after a right answer and on 🔊, with the notice", async ({
+    page,
+  }) => {
+    await recordSpeech(page);
+    await play(page, /Tema de prueba/);
+    const word = await currentWord(page);
+    await expect(page.getByText(/Pronunciación aproximada/)).toBeVisible();
+
+    await page.getByRole("button", { name: /Escuchar la palabra/ }).click();
+    await expect
+      .poll(() => said(page))
+      .toEqual([{ kind: "voice", text: word, lang: "es-PE" }]);
+
+    await page.keyboard.press(await rightKey(page));
+    await expect(page.getByRole("status")).toContainText("¡Correcto!");
+    await expect.poll(async () => (await said(page)).length).toBe(2);
+    expect((await said(page))[1]).toEqual({
+      kind: "voice",
+      text: word,
+      lang: "es-PE",
+    });
+    // No word of this theme has a recording: Audio is never asked for.
+    expect((await said(page)).some((entry) => entry.kind === "audio")).toBe(
+      false,
+    );
+  });
+
+  // AC-SP4c-4
+  test("with «Voz aproximada: no» nothing is spoken, and it is remembered", async ({
+    page,
+  }) => {
+    await recordSpeech(page);
+    await play(page, /Tema de prueba/);
+    await page.getByRole("button", { name: /Menú/ }).click();
+    await page.getByRole("button", { name: /Voz aproximada: sí/ }).click();
+    await page.getByRole("button", { name: "Seguir jugando" }).click();
+
+    await expect(
+      page.getByRole("button", { name: /Escuchar la palabra/ }),
+    ).toBeDisabled();
+    await page.keyboard.press(await rightKey(page));
+    await expect(page.getByRole("status")).toContainText("¡Correcto!");
+    await page.waitForTimeout(700);
+    expect(await said(page)).toEqual([]);
+
+    await play(page, /Tema de prueba/);
+    await page.getByRole("button", { name: /Menú/ }).click();
+    await expect(
+      page.getByRole("button", { name: /Voz aproximada: no/ }),
+    ).toBeVisible();
+  });
+});

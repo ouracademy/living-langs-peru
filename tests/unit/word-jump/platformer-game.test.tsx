@@ -36,6 +36,26 @@ function rightOption(): HTMLElement {
   return screen.getByRole("button", { name: item?.word });
 }
 
+/** A browser voice double: what was asked to be said, in order. */
+function stubVoice(voices = [{ lang: "es-PE", name: "Perú" }]) {
+  const spoken: { text: string; lang: string }[] = [];
+  class Utterance {
+    lang = "";
+    voice: unknown = null;
+    constructor(public text: string) {}
+  }
+  vi.stubGlobal("SpeechSynthesisUtterance", Utterance);
+  vi.stubGlobal("speechSynthesis", {
+    getVoices: () => voices,
+    speak: (utterance: Utterance) =>
+      spoken.push({ text: utterance.text, lang: utterance.lang }),
+    cancel: () => undefined,
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+  });
+  return spoken;
+}
+
 function wrongOption(): HTMLElement {
   const right = rightOption();
   return options().find(
@@ -116,6 +136,22 @@ describe("the platform level", () => {
     expect(screen.getByRole("img").getAttribute("aria-label")).toBe(missed);
   });
 
+  it("moves the focus after each answer without scrolling the page", () => {
+    const focus = vi.spyOn(HTMLElement.prototype, "focus");
+    render(<WordJumpGame pack={publicPack()} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+    focus.mockClear();
+
+    fireEvent.click(wrongOption());
+    fireEvent.click(rightOption());
+    fireEvent.click(screen.getByRole("button", { name: "Seguir" }));
+
+    expect(focus).toHaveBeenCalled();
+    for (const [options] of focus.mock.calls) {
+      expect(options).toEqual({ preventScroll: true });
+    }
+  });
+
   it("pauses with the menu, and leaves the level from it", () => {
     render(<WordJumpGame pack={publicPack()} />);
     fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
@@ -158,11 +194,16 @@ describe("the platform level", () => {
     expect(screen.getByRole("button", { name: /Sonido: no/ })).toBeTruthy();
   });
 
-  // AC-SP4b-7
-  it("offers the recording only when the word has one, and plays it on a press", () => {
+  // AC-SP4c-1 (replaces AC-SP4b-7)
+  it("plays the recording on 🔊 when the word has one, never the voice", () => {
+    const spoken = stubVoice();
     const play = vi.fn(() => Promise.resolve());
-    const audio = vi.fn(function (this: { play: typeof play }) {
+    const audio = vi.fn(function (this: {
+      play: typeof play;
+      pause: () => void;
+    }) {
       this.play = play;
+      this.pause = () => undefined;
     });
     vi.stubGlobal("Audio", audio);
     const url = "https://example.invalid/audio/prueba.mp3";
@@ -177,19 +218,109 @@ describe("the platform level", () => {
     render(<WordJumpGame pack={publicPack(pack)} />);
     fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
     expect(audio).not.toHaveBeenCalled();
+    expect(screen.queryByText(/Pronunciación aproximada/)).toBeNull();
 
     fireEvent.click(
       screen.getByRole("button", { name: /Escuchar la palabra/ }),
     );
     expect(audio).toHaveBeenCalledWith(url);
     expect(play).toHaveBeenCalledTimes(1);
+    expect(spoken).toEqual([]);
+  });
 
-    cleanup();
+  // AC-SP4c-2
+  it("says a word without a recording with the browser voice, and says so", () => {
+    const spoken = stubVoice();
+
     render(<WordJumpGame pack={publicPack()} />);
     fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
-    expect(
-      screen.queryByRole("button", { name: /Escuchar la palabra/ }),
-    ).toBeNull();
+    expect(screen.getByText(/Pronunciación aproximada/)).toBeTruthy();
+
+    const word = rightOption().textContent;
+    fireEvent.click(
+      screen.getByRole("button", { name: /Escuchar la palabra/ }),
+    );
+    expect(spoken).toEqual([{ text: word, lang: "es-PE" }]);
+  });
+
+  // AC-SP4c-3: the word also sounds after a right answer.
+  it("says the word after a right answer", async () => {
+    const spoken = stubVoice();
+
+    render(<WordJumpGame pack={publicPack()} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+    const right = rightOption();
+    const word = right.textContent;
+    fireEvent.click(right);
+
+    await vi.waitFor(() =>
+      expect(spoken).toEqual([{ text: word, lang: "es-PE" }]),
+    );
+  });
+
+  // AC-SP4c-4
+  it("turns the approximate voice off from the menu, and remembers it", () => {
+    const spoken = stubVoice();
+
+    render(<WordJumpGame pack={publicPack()} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Menú/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Voz aproximada: sí/ }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Decir la palabra al acercarse: sí/,
+      }),
+    );
+
+    const listen = screen.getByRole("button", { name: /Escuchar la palabra/ });
+    expect(listen.textContent).toContain("voz aproximada apagada");
+    expect(listen.hasAttribute("disabled")).toBe(true);
+    fireEvent.click(listen);
+    expect(spoken).toEqual([]);
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
+    expect(saved.settings).toMatchObject({ voice: false, announce: false });
+  });
+
+  // AC-SP4c-5
+  it("explains, without failing, when the browser has no Spanish voice", () => {
+    render(<WordJumpGame pack={publicPack()} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+
+    expect(screen.getByText(/no tiene una voz en castellano/)).toBeTruthy();
+    const listen = screen.getByRole("button", { name: /Escuchar la palabra/ });
+    expect(listen.textContent).toContain("sin voz en este navegador");
+    expect(listen.hasAttribute("disabled")).toBe(true);
+  });
+
+  // AC-SP4c-6
+  it("says nothing with the sound off, not even after a right answer", async () => {
+    const spoken = stubVoice();
+
+    render(<WordJumpGame pack={publicPack()} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Sonido: sí/ }));
+
+    const listen = screen.getByRole("button", { name: /Escuchar la palabra/ });
+    expect(listen.textContent).toContain("sonido apagado");
+    fireEvent.click(rightOption());
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    expect(spoken).toEqual([]);
+  });
+
+  it("uses the pack's own voice block, and stays silent when it is off", () => {
+    const spoken = stubVoice([{ lang: "es-MX", name: "México" }]);
+    const pack = testPack();
+    const off = testPack({
+      language: { ...pack.language, tts: { lang: "es-PE", quality: "off" } },
+    });
+
+    render(<WordJumpGame pack={publicPack(off)} />);
+    fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
+    const listen = screen.getByRole("button", { name: /Escuchar la palabra/ });
+    expect(listen.textContent).toContain("sin grabación todavía");
+    expect(screen.queryByText(/Pronunciación aproximada/)).toBeNull();
+    expect(spoken).toEqual([]);
   });
 
   // AC-SP6-10 through the level: the preview marks what is not verified.

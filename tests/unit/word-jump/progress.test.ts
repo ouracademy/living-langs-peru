@@ -5,6 +5,7 @@ import {
   emptyProgress,
   readProgress,
   recordLanguageRound,
+  settingOn,
   writeProgress,
 } from "@/lib/word-jump/progress";
 import {
@@ -156,6 +157,38 @@ describe("word-jump progress store", () => {
     expect(getSnapshot().progress.settings.sound).toBe(false);
     expect(readProgress().languages.ashaninka["item-uno"].seen).toBe(1);
     expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  // AC-SP4c-4: the voice switches are kept like the sound.
+  it("keeps the voice switches, on by default and for older progress", async () => {
+    const { saveSetting } = await import("@/lib/word-jump/progress-store");
+
+    // Progress saved before 2026-11-21 had no voice switches.
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...emptyProgress(), settings: { sound: true } }),
+    );
+    const before = readProgress().settings;
+    expect(settingOn(before, "voice")).toBe(true);
+    expect(settingOn(before, "announce")).toBe(true);
+
+    saveSetting("voice", false);
+    saveSetting("announce", false);
+    const after = readProgress().settings;
+    expect(settingOn(after, "voice")).toBe(false);
+    expect(settingOn(after, "announce")).toBe(false);
+    expect(after.sound).toBe(true);
+  });
+
+  it("throws away a voice switch that is not true or false", () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        ...emptyProgress(),
+        settings: { sound: false, voice: "sí" },
+      }),
+    );
+    expect(readProgress()).toEqual(emptyProgress());
   });
 
   it("says when the browser will not keep anything", () => {

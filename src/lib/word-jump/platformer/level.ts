@@ -111,6 +111,26 @@ export function passedDoor(body: Body, challenge: ChallengeLayout): boolean {
   return body.x > challenge.doorX + DOOR_WIDTH;
 }
 
+/** How far before the first cloud Pip «reaches» a challenge (spec §7.7). */
+export const APPROACH_DISTANCE = 100;
+
+/**
+ * Where the word of a challenge is said: some way before its first cloud,
+ * past where Pip appears, so walking in always crosses it.
+ */
+export function approachX(challenge: ChallengeLayout): number {
+  const firstCloud = challenge.clouds[0]?.x ?? challenge.doorX;
+  return Math.max(
+    challenge.spawnX + 1,
+    firstCloud - APPROACH_DISTANCE - BODY_WIDTH,
+  );
+}
+
+/** Whether `body` has reached the clouds of `challenge`. */
+export function reachedClouds(body: Body, challenge: ChallengeLayout): boolean {
+  return body.x >= approachX(challenge);
+}
+
 /** Left edge of the view: the player a third in, never past the level. */
 export function cameraX(
   playerX: number,

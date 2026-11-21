@@ -6,6 +6,7 @@
 import type { RoundOutcome } from "./round.ts";
 import {
   STORAGE_KEY,
+  type ToggleSetting,
   type WordJumpProgress,
   canPersist,
   defaultStorage,
@@ -92,8 +93,13 @@ export function saveRound(
 
 /** The sound effects switch (spec §7.6, AC-SP4b-8), kept with the progress. */
 export function saveSound(on: boolean): void {
+  saveSetting("sound", on);
+}
+
+/** Any of the level's switches: sound, voice, saying the word on approach. */
+export function saveSetting(key: ToggleSetting, on: boolean): void {
   const current = readProgress();
-  persist({ ...current, settings: { ...current.settings, sound: on } });
+  persist({ ...current, settings: { ...current.settings, [key]: on } });
 }
 
 function persist(updated: WordJumpProgress): void {

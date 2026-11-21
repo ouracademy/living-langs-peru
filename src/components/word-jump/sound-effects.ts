@@ -1,15 +1,28 @@
 /**
  * Sound effects made in code with Web Audio (spec §7.6, decision #23): no
- * files, no dependency and no voice — `speechSynthesis` is never used
- * (decision #6). The context is created on the first gesture, as browsers
- * require, and nothing plays while the player has sound turned off.
+ * files and no dependency. Words are said elsewhere (word-speaker.ts, §7.7).
+ * The context is created on the first gesture, as browsers require, and
+ * nothing plays while the player has sound turned off.
  */
 
-export type SoundEffect = "jump" | "correct" | "wrong" | "door" | "finish";
+export type SoundEffect =
+  "jump" | "correct" | "wrong" | "door" | "finish" | "step";
 
 type Note = { frequency: number; at: number; length: number };
 
-const SHAPES: Record<SoundEffect, { wave: OscillatorType; notes: Note[] }> = {
+/** Loudness of a note at its start; a step is quieter than the rest. */
+const DEFAULT_GAIN = 0.08;
+
+const SHAPES: Record<
+  SoundEffect,
+  { wave: OscillatorType; notes: Note[]; gain?: number }
+> = {
+  step: {
+    // A short low tap, soft enough to sound every quarter second (AC-SP4c-7).
+    wave: "triangle",
+    gain: 0.035,
+    notes: [{ frequency: 140, at: 0, length: 0.05 }],
+  },
   jump: {
     wave: "square",
     notes: [{ frequency: 520, at: 0, length: 0.09 }],
@@ -77,7 +90,7 @@ export function createSoundEffects(isOn: () => boolean): SoundEffects {
 
   function play(effect: SoundEffect) {
     if (!isOn() || !context || context.state !== "running") return;
-    const { wave, notes } = SHAPES[effect];
+    const { wave, notes, gain: level = DEFAULT_GAIN } = SHAPES[effect];
     const start = context.currentTime;
 
     for (const note of notes) {
@@ -85,7 +98,7 @@ export function createSoundEffects(isOn: () => boolean): SoundEffects {
       const gain = context.createGain();
       oscillator.type = wave;
       oscillator.frequency.value = note.frequency;
-      gain.gain.setValueAtTime(0.08, start + note.at);
+      gain.gain.setValueAtTime(level, start + note.at);
       gain.gain.exponentialRampToValueAtTime(
         0.0001,
         start + note.at + note.length,

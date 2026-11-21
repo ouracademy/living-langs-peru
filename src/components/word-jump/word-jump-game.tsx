@@ -9,17 +9,20 @@ import {
   levelOutcomes,
   missedItems,
 } from "@/lib/word-jump/platformer/game";
+import { settingOn } from "@/lib/word-jump/progress";
 import {
   getServerSnapshot,
   getSnapshot,
   saveRound,
+  saveSetting,
   saveSound,
   subscribe,
 } from "@/lib/word-jump/progress-store";
 import { type RoundContext, buildRound } from "@/lib/word-jump/round";
+import { ttsOf } from "@/lib/word-jump/speech";
 import type { LanguageProgress } from "@/lib/word-jump/stats";
 
-import { PlatformerGame } from "./platformer-game";
+import { PlatformerGame, type SpeechSetting } from "./platformer-game";
 import { buttonClass } from "./question-parts";
 
 type WordJumpGameProps = {
@@ -61,6 +64,14 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
   const lang = pack.language.isoCode;
   const slug = pack.language.slug;
   const sound = progress.settings.sound;
+  const voice = settingOn(progress.settings, "voice");
+  const announce = settingOn(progress.settings, "announce");
+  const speech = useMemo(() => ({ voice, announce }), [voice, announce]);
+  const tts = useMemo(() => ttsOf(pack.language), [pack.language]);
+  const toggleSpeech = useCallback(
+    (setting: SpeechSetting) => saveSetting(setting, !speech[setting]),
+    [speech],
+  );
   // A preview never counts: it plays content that is not published.
   const seen = preview
     ? NO_PROGRESS
@@ -251,6 +262,9 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
         sourceTitles={sourceTitles}
         sound={sound}
         onToggleSound={() => saveSound(!sound)}
+        tts={tts}
+        speech={speech}
+        onToggleSpeech={toggleSpeech}
         onFinish={finish}
         onExit={backToThemes}
       />
