@@ -3,9 +3,57 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 
+/** Why a component may not call useEffect, and what to do instead. */
+const USE_EFFECT_MESSAGE =
+  "No uses useEffect en app/ ni en components/. Usa un Server Component para cargar datos, un handler (onClick, onSubmit…) para reaccionar a una acción, o un hook propio en src/lib/hooks/ si de verdad hace falta sincronizar con algo externo.";
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // Quality bar (CONSTRAINTS.md). Existing violations are baselined in
+  // eslint-suppressions.json; only new ones fail. Never raise these numbers.
+  {
+    // Same files eslint-config-next registers the react-hooks plugin for.
+    files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
+    rules: {
+      complexity: ["error", 15],
+      "max-depth": ["error", 4],
+      "react-hooks/rules-of-hooks": "error",
+    },
+  },
+  // useEffect lives only in src/lib/hooks/: components ask for data on the
+  // server or react in handlers.
+  {
+    files: ["src/app/**/*.{ts,tsx}", "src/components/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react",
+              importNames: ["useEffect"],
+              message: USE_EFFECT_MESSAGE,
+            },
+          ],
+        },
+      ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "MemberExpression[object.name='React'][property.name='useEffect']",
+          message: USE_EFFECT_MESSAGE,
+        },
+      ],
+    },
+  },
+  // CommonJS files (tool configs such as .dependency-cruiser.cjs) load modules
+  // with require: that is the module system, not a style choice.
+  {
+    files: ["**/*.cjs"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
   // Disable stylistic rules that conflict with Prettier. Keep this last.
   eslintConfigPrettier,
   // Override default ignores of eslint-config-next.

@@ -2,6 +2,15 @@
 # globally, so Prettier failing on it would only ever fail on a laptop.
 .claude/settings.local.json
 
+# Baselines written by ESLint (--suppress-all / --prune-suppressions) and
+# dependency-cruiser (depcruise-baseline) in their own format; they rewrite
+# them on every prune, so formatting them would only churn.
+eslint-suppressions.json
+.dependency-cruiser-known-violations.json
+
+# Other git worktrees (other branches).
+.claude/worktrees
+
 .next
 coverage
 node_modules

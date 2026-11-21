@@ -1,0 +1,160 @@
+{
+  "scripts/check-language-policy.ts": {
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/app/juegos/saltapalabras/[lengua]/error.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/add-photo-panel.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/edit-photo-form.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/pack-admin/add-item-form.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/pack-admin/editor-row.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/pack-admin/pack-admin.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/pack-admin/pack-editor.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/pack-admin/verify-theme.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/use-prepared-photo.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/admin/use-row-focus.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/dictionary/use-debounced.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/game/feedback-panel.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/game/word-game.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/support-request-form.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/card.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/dialog.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/dropdown-menu.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/input.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/label.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/select.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/sheet.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/snackbar.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/textarea.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/components/word-jump/draw-platformer.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/word-jump/platformer-controller.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/word-jump/platformer-game.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/lib/dictionary/validate.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/language-packs/validate.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/peoples/validate.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "tests/e2e/fake-supabase.mjs": {
+    "complexity": {
+      "count": 1
+    }
+  }
+}
