@@ -24,10 +24,16 @@ const argumentOf = (flag: string): string | undefined => {
 const minimum = Number(argumentOf("--min") ?? 80);
 const warnOnly = process.argv.includes("--warn");
 
+// A long-lived branch easily diffs past Node's 1 MB default: the call would
+// throw, the catch below would answer null, and the check would pass having
+// measured nothing.
+const GIT_OUTPUT_LIMIT = 256 * 1024 * 1024;
+
 const git = (args: string[]): string | null => {
   try {
     return execFileSync("git", args, {
       encoding: "utf8",
+      maxBuffer: GIT_OUTPUT_LIMIT,
       stdio: ["ignore", "pipe", "ignore"],
     });
   } catch {
@@ -57,12 +63,13 @@ if (!existsSync(LCOV)) {
   process.exit(2);
 }
 
-// Added line numbers per file, from the unified-0 hunk headers.
+// Added line numbers per file, from the unified-0 hunk headers. Only src/ is
+// measured (MEASURED), so only src/ is diffed.
 const changed = new Map<string, Set<number>>();
 let file = "";
-for (const line of (
-  git(["diff", "--unified=0", "--diff-filter=d", mergeBase, "--"]) ?? ""
-).split("\n")) {
+const diff =
+  git(["diff", "--unified=0", "--diff-filter=d", mergeBase, "--", "src"]) ?? "";
+for (const line of diff.split("\n")) {
   if (line.startsWith("+++ ")) {
     file = line.slice(6);
     continue;
