@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Other git worktrees made by Claude Code (other branches). Without this,
+# `git status` is never clean and the Stop hook always runs.
+/.claude/worktrees/
+
 # dependencies
 /node_modules
 /.pnp
