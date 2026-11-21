@@ -11,14 +11,22 @@ este archivo.
 
 | Cuándo                 | Comando           | Qué corre                                                    | Presupuesto |
 | ---------------------- | ----------------- | ------------------------------------------------------------ | ----------- |
-| Después de editar      | `pnpm check:fast` | Tipos, lint, piso, política de idioma                        | ~15 s       |
+| Después de editar      | `pnpm check:fast` | Tipos, lint, arquitectura, piso, política de idioma          | ~20 s       |
 | Al terminar una tarea  | `pnpm check:task` | Lo anterior + datos del diccionario + unit tests + cobertura | ~60 s       |
 | Antes de un PR / en CI | `pnpm check:full` | Lo anterior + formato + secretos + dependencias + e2e        | minutos     |
 
-Hay tres puntos donde esto se dispara solo: el hook `PostToolUse` de `.claude/` formatea el archivo
-recién editado, el hook `pre-push` de husky corre `check:fast` antes de que algo salga de la laptop,
-y el workflow `.github/workflows/ci.yml` corre todo en cada push y en cada PR. El `pre-push` se
-puede saltear con `git push --no-verify` cuando hace falta; CI no.
+Hay cuatro puntos donde esto se dispara solo:
+
+- **Hooks de Claude Code** (`.claude/settings.json`): después de cada `Edit`/`Write`,
+  `format-on-edit.sh` formatea y `post-edit.sh` corre ESLint sobre ese archivo (`src/` o `app/`,
+  `.ts`/`.tsx`, < 2 s); si falla, sale con `exit 2` y el agente tiene que corregir. Antes de terminar
+  un turno con cambios sin commitear, `stop-check.sh` corre tipos, `eslint .` y `pnpm check:arch`;
+  si algo falla, `exit 2` y el agente sigue trabajando con el informe delante.
+- El hook `pre-push` de husky corre `check:fast` antes de que algo salga de la laptop.
+- El workflow `.github/workflows/ci.yml` corre todo en cada push y en cada PR, incluidos los mismos
+  tres comandos del hook de cierre: lo que el hook deja pasar lo frena CI.
+
+El `pre-push` se puede saltear con `git push --no-verify` cuando hace falta; CI no.
 
 Todo lo que mide un cambio lo mide **contra el merge base**, no contra todo el repo: la cobertura de
 las líneas que tocaste es un número que el cambio puede mover; la del proyecto entero es heredada.
@@ -78,6 +86,9 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 | --------------------- | -------------------------------------------- | -------------------------------------------------- | ---------------- |
 | Tipos                 | Cero errores                                 | `pnpm typecheck`                                   | cada edición, CI |
 | Lint                  | Cero errores, cero warnings                  | `pnpm lint`                                        | cada edición, CI |
+| Complejidad           | ≤ 15 por función, anidamiento ≤ 4            | `pnpm lint` (`complexity`, `max-depth`)            | cada edición, CI |
+| `useEffect`           | Prohibido en `src/app/` y `src/components/`  | `pnpm lint` (`no-restricted-imports`)              | cada edición, CI |
+| Arquitectura          | Cero violaciones nuevas                      | `pnpm check:arch` (dependency-cruiser)             | cierre, CI       |
 | Formato               | Prettier limpio                              | `pnpm format:check` (+ hook `PostToolUse`)         | al editar, CI    |
 | Piso                  | Cero hallazgos                               | `pnpm check:floor`                                 | cada edición, CI |
 | Idioma                | Cero hallazgos                               | `pnpm check:language`                              | cada edición, CI |
@@ -91,6 +102,15 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 
 Las razones de cada número:
 
+- **Complejidad ≤ 15 y anidamiento ≤ 4.** Una función más compleja no se entiende ni se testea
+  entera. La salida es partirla en piezas con nombre, nunca subir el número.
+- **`useEffect` solo en `src/lib/hooks/`.** Casi siempre hay algo mejor: un Server Component para
+  cargar datos, un handler para reaccionar a una acción. Cuando de verdad hay que sincronizar con
+  algo externo, se escribe un hook con nombre en `src/lib/hooks/`, donde se testea solo.
+- **Arquitectura.** `.dependency-cruiser.cjs`: sin ciclos de imports; un archivo `"use client"` no
+  importa `src/server/` ni `src/db/`; `src/lib/` y `src/components/` no importan `src/app/`; todo
+  módulo de `src/server/` importa `server-only`. dependency-cruiser corre en Node 22, 24 o ≥ 26:
+  `scripts/check-arch.sh` usa el Node de `.nvmrc` (vía fnm o nvm) si el activo es otro.
 - **Cero warnings de lint.** Eran 13, todas en `src/components/header.tsx` (imports sin usar).
   El número era un trinquete que solo bajaba, y el 2026-09-12 llegó a cero: se borraron los tres
   imports muertos (`Image`, `Button`, `User`) y desapareció el resto. Ahora que está en cero, un
@@ -136,6 +156,26 @@ deberían empeorar. Tolerancia 0,5 % para absorber el ruido de un archivo que se
 
 La cobertura del proyecto es baja porque incluye todos los componentes de marketing, que no tienen
 tests y hoy no los necesitan. Por eso lo que se exige es la cobertura del cambio, no esta.
+
+## Líneas base (solo bajan)
+
+Las reglas de complejidad, `useEffect` y arquitectura se activaron el 2026-11-21 sobre código que ya
+las incumplía. Esas violaciones viejas quedaron registradas para que **solo fallen las nuevas**; no se
+arreglaron en bloque ni se bajó ninguna regla.
+
+| Archivo                                     | Qué guarda                         | Al activar | Dirección |
+| ------------------------------------------- | ---------------------------------- | ---------- | --------- |
+| `eslint-suppressions.json`                  | Supresiones de ESLint, por archivo | 32         | solo baja |
+| `.dependency-cruiser-known-violations.json` | Violaciones de arquitectura        | 1          | solo baja |
+
+Al activar: 23 `useEffect` en componentes, 8 funciones con complejidad > 15, 1 anidamiento > 4, y 1
+ciclo (`src/lib/word-jump/round.ts` ↔ `stats.ts`, código que el juego ya no usa).
+
+- **Nunca se agrega una entrada a mano** para que un cambio pase. Una violación nueva se corrige.
+- Al arreglar una violación vieja, se poda: `pnpm lint --prune-suppressions` o
+  `depcruise-baseline` (dependency-cruiser) sobre el estado nuevo. ESLint falla si quedan
+  supresiones sin usar, así que el número no puede quedar inflado.
+- Si una regla no tiene sentido en un caso concreto, se discute con el equipo; no se esquiva.
 
 ## Excepciones
 

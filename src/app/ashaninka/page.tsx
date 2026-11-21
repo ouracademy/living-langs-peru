@@ -9,6 +9,7 @@ import { RelatedLinks } from "@/components/peoples/related-links";
 import { TerritoryMap } from "@/components/peoples/territory-map";
 import { Timeline } from "@/components/peoples/timeline";
 import { buildFootnotes } from "@/lib/peoples/footnotes";
+import { getGalleryPhotos } from "@/lib/peoples/gallery-photos";
 import { TERRITORY_SECTION_ID } from "@/lib/peoples/territory";
 import { ashaninka } from "@/lib/peoples";
 
@@ -22,7 +23,11 @@ export const metadata: Metadata = {
 /** The dictionary of the people's language, one click from the page. */
 const DICTIONARY_HREF = "/diccionario/ashaninka";
 
-export default function AshaninkaPage() {
+export default async function AshaninkaPage() {
+  // The stored gallery, or the repo's photos when Supabase is not set up
+  // (spec edicion-fotos #15, #16). Cached: the page stays static.
+  const photos = await getGalleryPhotos("ashaninka", ashaninka.photos);
+
   // Numbering is derived once, here, and passed down: the order the sections
   // appear in below is the order `buildFootnotes` walks.
   const footnotes = buildFootnotes(ashaninka);
@@ -62,7 +67,7 @@ export default function AshaninkaPage() {
         </PeopleSection>
       ))}
       <Timeline events={ashaninka.timeline} footnotes={footnotes} />
-      <PhotoGallery photos={ashaninka.photos} />
+      <PhotoGallery photos={photos} />
       <RelatedLinks dictionaryHref={DICTIONARY_HREF} sources={readingSources} />
       <Footnotes footnotes={footnotes} updatedAt={ashaninka.updatedAt} />
     </main>

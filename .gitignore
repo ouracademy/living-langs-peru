@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Other git worktrees made by Claude Code (other branches). Without this,
+# `git status` is never clean and the Stop hook always runs.
+/.claude/worktrees/
+
 # dependencies
 /node_modules
 /.pnp
@@ -32,6 +36,11 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+
+# Saltapalabras pack drafts (pnpm pack:draft): reviewed and published at
+# /admin/juego, the database keeps the history, never the repo.
+paquete-*-borrador.json
+paquete-*-verificado.json
 
 # vercel
 .vercel

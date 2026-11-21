@@ -75,8 +75,12 @@ export type PhotoCredit = {
   author: string;
   /** «CC BY-SA 4.0», «Dominio público». Never empty: no credit, no photo. */
   license: string;
-  /** Page of the file in its home repository. */
-  url: string;
+  /**
+   * Page of the file in its home repository, when it has one (`https://`).
+   * Optional since 2026-11-18: a photo taken by the team has no such page,
+   * and the credit is then shown as text, without a link.
+   */
+  url?: string;
 };
 
 export type Photo = {

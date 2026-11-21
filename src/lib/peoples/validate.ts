@@ -68,13 +68,34 @@ function normalise(value: string): string {
     .toLowerCase();
 }
 
+/**
+ * True when an alt names the medium instead of describing it. Exported so the
+ * photo form (/admin/fotos) applies this exact rule, not a copy of it.
+ */
+export function isGenericAlt(alt: string): boolean {
+  return GENERIC_ALTS.has(normalise(alt));
+}
+
+/**
+ * True for an absolute `https://` URL with a host. Exported so the photo form
+ * (/admin/fotos) applies this exact rule, not a copy of it.
+ */
+export function isHttpsUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 function photoProblems(photo: Photo, index: number): string[] {
   const where = `photos[${index}] (${photo.src})`;
   const problems: string[] = [];
 
   if (!photo.alt?.trim()) {
     problems.push(`${where}: alt vacío. Una imagen sin alt no es publicable.`);
-  } else if (GENERIC_ALTS.has(normalise(photo.alt))) {
+  } else if (isGenericAlt(photo.alt)) {
     problems.push(
       `${where}: alt genérico («${photo.alt.trim()}»). Describe la imagen para quien no la ve.`,
     );
@@ -88,12 +109,18 @@ function photoProblems(photo: Photo, index: number): string[] {
     }
   }
 
-  for (const field of ["author", "license", "url"] as const) {
+  for (const field of ["author", "license"] as const) {
     if (!photo.credit?.[field]?.trim()) {
-      problems.push(
-        `${where}: falta credit.${field} (autor · licencia · URL).`,
-      );
+      problems.push(`${where}: falta credit.${field} (autor · licencia).`);
     }
+  }
+
+  // Optional, but a link the reader cannot follow safely is worse than none.
+  const url = photo.credit?.url;
+  if (url !== undefined && !isHttpsUrl(url)) {
+    problems.push(
+      `${where}: credit.url tiene que ser una dirección https:// (o no estar).`,
+    );
   }
 
   return problems;

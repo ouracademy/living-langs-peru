@@ -51,8 +51,19 @@ jobs:
       - name: tipos
         run: pnpm typecheck
 
+      # Existing violations are baselined in eslint-suppressions.json, which
+      # ESLint reads on its own: only new ones fail, and a fixed one has to be
+      # pruned from the file. Same command as the Stop hook.
       - name: lint
         run: pnpm lint
+
+      # dependency-cruiser: no cycles, "use client" files never import
+      # src/server/ or src/db/, src/lib/ and src/components/ never import
+      # src/app/, src/server/ always imports server-only. Known violations
+      # live in .dependency-cruiser-known-violations.json. Same command as the
+      # Stop hook.
+      - name: arquitectura
+        run: pnpm check:arch
 
       - name: formato
         run: pnpm format:check

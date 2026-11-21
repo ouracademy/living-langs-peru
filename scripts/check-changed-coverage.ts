@@ -7,7 +7,8 @@
 //          [--base <ref>] [--min <percent>] [--warn]
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { relative, resolve } from "node:path";
+
+import { toRepoPath } from "./lib/repo-path.ts";
 
 const LCOV = "coverage/lcov.info";
 // Only product code counts. Tests, type declarations and data are excluded:
@@ -23,10 +24,16 @@ const argumentOf = (flag: string): string | undefined => {
 const minimum = Number(argumentOf("--min") ?? 80);
 const warnOnly = process.argv.includes("--warn");
 
+// A long-lived branch easily diffs past Node's 1 MB default: the call would
+// throw, the catch below would answer null, and the check would pass having
+// measured nothing.
+const GIT_OUTPUT_LIMIT = 256 * 1024 * 1024;
+
 const git = (args: string[]): string | null => {
   try {
     return execFileSync("git", args, {
       encoding: "utf8",
+      maxBuffer: GIT_OUTPUT_LIMIT,
       stdio: ["ignore", "pipe", "ignore"],
     });
   } catch {
@@ -56,12 +63,13 @@ if (!existsSync(LCOV)) {
   process.exit(2);
 }
 
-// Added line numbers per file, from the unified-0 hunk headers.
+// Added line numbers per file, from the unified-0 hunk headers. Only src/ is
+// measured (MEASURED), so only src/ is diffed.
 const changed = new Map<string, Set<number>>();
 let file = "";
-for (const line of (
-  git(["diff", "--unified=0", "--diff-filter=d", mergeBase, "--"]) ?? ""
-).split("\n")) {
+const diff =
+  git(["diff", "--unified=0", "--diff-filter=d", mergeBase, "--", "src"]) ?? "";
+for (const line of diff.split("\n")) {
   if (line.startsWith("+++ ")) {
     file = line.slice(6);
     continue;
@@ -88,7 +96,7 @@ const hits = new Map<string, Map<number, number>>();
 let record = "";
 for (const line of readFileSync(LCOV, "utf8").split("\n")) {
   if (line.startsWith("SF:")) {
-    record = relative(process.cwd(), resolve(line.slice(3).trim()));
+    record = toRepoPath(line.slice(3).trim());
     hits.set(record, new Map());
   } else if (line.startsWith("DA:")) {
     const [lineNumber, count] = line.slice(3).split(",").map(Number);

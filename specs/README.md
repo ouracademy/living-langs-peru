@@ -4,12 +4,15 @@ Un archivo por **feature**, no por módulo. Una feature que se compone de varias
 verificables por separado declara su mapa de capacidades dentro de su propio archivo, para que el
 diseño completo se lea de una sola vez.
 
-| Spec                                             | Estado       | Plan                                                      | Alcance                                                                              |
-| ------------------------------------------------ | ------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| [diccionario.md](./diccionario.md)               | Aprobado     | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                             |
-| [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local.           |
-| [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes.           |
-| [solicitudes.md](./solicitudes.md)               | Implementado | [tasks/solicitudes/](../tasks/solicitudes/)               | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad. |
+| Spec                                             | Estado       | Plan                                                      | Alcance                                                                                |
+| ------------------------------------------------ | ------------ | --------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [diccionario.md](./diccionario.md)               | Aprobado     | [tasks/diccionario/](../tasks/diccionario/)               | Página de diccionario, API, selector de lengua, fuentes.                               |
+| [completar-palabras.md](./completar-palabras.md) | Implementado | [tasks/completar-palabras/](../tasks/completar-palabras/) | Juego de completar la palabra faltante en una oración, con progreso local.             |
+| [ashaninka.md](./ashaninka.md)                   | Aprobado     | [tasks/ashaninka/](../tasks/ashaninka/)                   | Página del pueblo Asháninka: historia, territorio, cifras, fotos, fuentes.             |
+| [solicitudes.md](./solicitudes.md)               | Implementado | [tasks/solicitudes/](../tasks/solicitudes/)               | Modal y formulario de «Crear cuenta» / «Donar», API, tabla y política de privacidad.   |
+| [edicion-fotos.md](./edicion-fotos.md)           | Borrador     | [tasks/edicion-fotos/](../tasks/edicion-fotos/)           | Formulario `/admin/fotos` con Basic Auth que sube fotos de la galería al repo.         |
+| [biblioteca-medios.md](./biblioteca-medios.md)   | Obsoleto     | —                                                         | Reemplazado por `edicion-fotos.md`. Login, Supabase Storage y edición sobre la página. |
+| [saltapalabras.md](./saltapalabras.md)           | Borrador     | [tasks/saltapalabras/](../tasks/saltapalabras/)           | Juego de vocabulario por paquetes, sin login; `/admin/juego` para publicar y audio.    |
 
 ## Dónde va cada cosa
 
