@@ -260,6 +260,36 @@ local (Docker o instalación) con _stubs_ de los roles `anon`, `authenticated` y
 fecha y el resultado se anotan en `docs/saltapalabras-pruebas.md`. Llevarlo a CI es la pregunta 3 del
 spec: no se toca `.github/workflows/` sin respuesta.
 
+### 3.11 Plataformas (SP4b, 2026-11-20)
+
+Spec §7.6 y decisiones #21–#25. Tres fases verticales; **F5a** termina con un nivel jugable de punta a
+punta antes de sumar obstáculos (F5b) y ajustes (F5c).
+
+- **Lógica pura** en `src/lib/word-jump/platformer/`, con tests primero:
+  - `physics.ts`: cuerpo (`x`, `y`, `vx`, `vy`, `onGround`, tiempo desde que dejó el suelo), entrada
+    (izquierda, derecha, salto mantenido, salto recién pulsado), paso de tiempo `stepBody` con
+    gravedad, salto variable (soltar antes corta la subida), margen de salto (`COYOTE_MS`) y choque
+    con el suelo y con bloqueos verticales (la puerta cerrada). Unidades del mundo: 360 de alto.
+  - `level.ts`: `buildLayout(questions)` → posiciones de cada reto (inicio, nubes, puerta) y de la
+    meta; `cloudHit(antes, después, nube)` (la cabeza cruza el borde inferior de la nube subiendo,
+    con solape horizontal); `cameraX`.
+  - `game.ts`: estado del nivel (retos con su pregunta, opciones tachadas, resuelto, fallos), `answer`
+    (acierto / error / ya tachada / ignorado), puntos, `advance`, `levelOutcomes` (mismo
+    `RoundOutcome` de `round.ts`, para no tocar el progreso) y `missedItems` para «Repasar».
+- **Componentes** (`src/components/word-jump/`): `platformer-view.tsx` (DOM: barra superior, pista,
+  opciones, estado, «Seguir», controles táctiles, menú), `platformer-canvas.tsx` (bucle con
+  `requestAnimationFrame` que **se detiene** cuando nada se mueve; el cuerpo vive en un `ref`, no en
+  el estado de React), `draw-platformer.ts` (solo pinta: cielo, sol, colinas, suelo, nubes, puerta,
+  meta, Pip) y `sound-effects.ts` (Web Audio, `AudioContext` creado al primer gesto).
+- **Responder** siempre pasa por `answer` de `game.ts`: la física (choque con la nube) y los botones
+  (1/2/3) despachan la misma acción. El botón además lleva a Pip bajo esa nube con un salto animado
+  (`jumpPoint` de `jump.ts`), o sin animar con `prefers-reduced-motion`.
+- **Lo que deja de usarse:** `round-view.tsx` y `jump-canvas.tsx` se reemplazan. El reducer de
+  `round.ts` (`createRound`, `answerQuestion`, `nextQuestion`) queda con sus tests pero ya no lo usa
+  la página; `buildRound` y `RoundOutcome` sí. Se puede borrar en una limpieza aparte.
+- **e2e:** los recorridos de §F1a/F1b se adaptan (meta en vez de «¡Ronda terminada!», «Seguir» tras
+  acertar, error que tacha). Uno nuevo mueve a Pip con el teclado y salta a la nube correcta.
+
 ## 4. Riesgos
 
 | Riesgo                                                                                                                        | Prob. | Impacto | Mitigación                                                                                                                                                                        |

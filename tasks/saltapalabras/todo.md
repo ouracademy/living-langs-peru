@@ -162,6 +162,34 @@ corregido.
 
 ---
 
+## F5a — Nivel de plataformas de punta a punta (SP4b, 2026-11-20)
+
+- [x] **T5a.1** (M) `platformer/physics.ts` con tests primero: gravedad, correr, salto variable, margen de salto, suelo y bloqueo por la puerta `[AC-SP4b-6]` — Hecho: `stepBody` corta los cuadros largos (32 ms por paso, 250 ms por cuadro) para no atravesar la puerta.
+- [x] **T5a.2** (M) `platformer/level.ts` con tests: trazado de retos, nubes (3 o 4), puertas y meta; choque cabeza–nube; cámara `[AC-SP4b-1, AC-SP4b-2]` — Hecho: en la física la puerta es un muro de alto infinito (`DOOR_HEIGHT` es solo dibujo); las nubes de los retos siguientes se dibujan en blanco, sin texto.
+- [x] **T5a.3** (M) `platformer/game.ts` con tests: responder, tachar, puntos 10/5, avanzar, meta, resultado para el progreso, falladas `[AC-SP4b-2, AC-SP4b-3, AC-SP4b-5]` — Hecho: `levelOutcomes` devuelve el mismo `RoundOutcome` de `round.ts` (`revealed` siempre false), así `stats.ts` no cambia.
+- [x] **T5a.4** (L) Componentes: vista DOM, canvas con bucle que se detiene en reposo, dibujo original, controles de teclado y táctiles, «Seguir», menú `[AC-SP4b-1, AC-SP4b-4, AC-SP4b-9, AC-SP4-5, AC-SP4-6]` — Hecho: `platformer-game.tsx` (DOM), `platformer-controller.ts` (bucle, cuerpo y teclas, fuera del estado de React) y `draw-platformer.ts`. Desvíos: los controles táctiles van fuera del orden de tabulación y con `aria-hidden` (el teclado tiene las flechas y cada respuesta es un botón); el menú es un panel con `aria-expanded`, no un diálogo modal.
+- [x] **T5a.5** (S) Efectos de sonido con Web Audio y botón de sonido guardado en `settings.sound`; 🔊 solo con grabación `[AC-SP4b-7, AC-SP4b-8]` — Hecho: `sound-effects.ts` y `saveSound` en `progress-store.ts`. El 🔊 de la grabación se deshabilita con el sonido apagado.
+- [x] **T5a.6** (M) Meta con resumen, puntos y «Repasar las falladas» `[AC-SP4b-5, AC-SP4-2]` — Hecho: «¡Llegaste a la meta!», puntos y «Repasar las falladas».
+- [x] **T5a.7** (M) Tests de componente y e2e adaptados y nuevos (incluido saltar con el teclado a la nube correcta y 360 px) `[AC-SP4-2, AC-SP4-4, AC-SP4-5, AC-SP4-6, AC-SP4b-*]` — Hecho: tests de componente nuevos (`platformer-game.test.tsx`, `platformer-controller.test.ts`) y adaptados; e2e adaptados y 3 nuevos (salto con el teclado, 360 px, ninguna otra página descarga el juego).
+- [x] **T5a.8** (S) Medir el JS extra de la ruta y confirmar ISR `[AC-SP4b-10, AC-SP4-1]` — Hecho: el chunk del juego pesa 10,9 KB gzip (29,5 KB sin comprimir) y solo lo descarga la ruta del juego; `/juegos/saltapalabras/[lengua]` sigue ISR.
+
+> **⛔ Checkpoint 5a** — un nivel completo se juega con física y con botones, se llega a la meta y el progreso se guarda.
+
+## F5b — Obstáculos y vidas (SP4b)
+
+- [ ] **T5b.1** (M) Huecos en el suelo y plataformas elevadas en `level.ts` / `physics.ts`, con semilla.
+- [ ] **T5b.2** (M) Caracoles que van y vienen: tocarlo quita una vida, pisarlo lo elimina y da +2.
+- [ ] **T5b.3** (M) Vidas con corazones; caer o tocar un caracol devuelve al inicio del reto; sin vidas, meta con resumen.
+- [ ] **T5b.4** (S) Con botones / 1-2-3 nunca se cae ni se choca: la vía accesible no pierde vidas.
+
+## F5c — Ajustes y personajes (SP4b)
+
+- [ ] **T5c.1** (M) Ajustes por partida (Principiante / Intermedio / Avanzado y cada opción) guardados en `settings`, validados al leer.
+- [ ] **T5c.2** (M) Personajes a elegir, dibujados en código (zorrito por defecto).
+- [ ] **T5c.3** (S) «Decir la palabra al acercarse», solo con grabación.
+
+---
+
 ## F4 — Cierre
 
 - [ ] **T4.1** (M) `docs/saltapalabras-pruebas.md`: checklist manual contra Supabase real (sin publicar paquetes de prueba), prueba de AC-SP3-11 pausando el proyecto o cortando la red del servidor, cómo reactivar Supabase (H6), entrega de la contraseña de `/admin` solo a personas adultas del equipo `[AC-SP3-11]`

@@ -31,6 +31,13 @@ function options() {
     .filter((button) => button.hasAttribute("aria-keyshortcuts"));
 }
 
+/** Index of the right option of a pic2word question, from the clue's name. */
+function rightIndex(): number {
+  const label = screen.getByRole("img").getAttribute("aria-label");
+  const item = testTheme().items.find((each) => each.translation === label);
+  return options().findIndex((button) => button.textContent === item?.word);
+}
+
 beforeEach(() => {
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
   localStorage.clear();
@@ -52,11 +59,17 @@ describe("WordJumpGame with the keyboard (AC-SP4-5)", () => {
       options().map((button) => button.getAttribute("aria-keyshortcuts")),
     ).toEqual(["1", "2", "3"]);
 
-    fireEvent.keyDown(window, { key: "2" });
+    // A wrong key crosses that option out and keeps the focus on the question.
+    const right = rightIndex();
+    const wrong = right === 0 ? 1 : 0;
+    fireEvent.keyDown(window, { key: String(wrong + 1) });
+    expect(screen.getByRole("status").textContent).toContain("No es esa");
+    expect(document.activeElement?.tagName).toBe("H3");
+    expect(options()[wrong].hasAttribute("disabled")).toBe(true);
 
-    expect(screen.getByRole("status").textContent).toMatch(
-      /¡Correcto!|No es esa/,
-    );
+    fireEvent.keyDown(window, { key: String(right + 1) });
+
+    expect(screen.getByRole("status").textContent).toContain("¡Correcto!");
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Seguir" }),
     );
@@ -141,8 +154,13 @@ describe("WordJumpGame progress (AC-SP4-7)", () => {
         fireEvent.click(next);
         continue;
       }
-      if (screen.queryByRole("heading", { name: "¡Ronda terminada!" })) return;
-      fireEvent.click(options()[0]);
+      if (screen.queryByRole("heading", { name: "¡Llegaste a la meta!" })) {
+        return;
+      }
+      // The first option still open: a crossed one is disabled.
+      fireEvent.click(
+        options().find((button) => !button.hasAttribute("disabled"))!,
+      );
     }
   }
 
@@ -169,7 +187,7 @@ describe("WordJumpGame progress (AC-SP4-7)", () => {
     startTheme();
     playWholeRound();
     expect(
-      screen.getByRole("heading", { name: "¡Ronda terminada!" }),
+      screen.getByRole("heading", { name: "¡Llegaste a la meta!" }),
     ).toBeTruthy();
   });
 });

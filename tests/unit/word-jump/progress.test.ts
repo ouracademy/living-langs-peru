@@ -141,6 +141,23 @@ describe("word-jump progress store", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
+  // AC-SP4b-8
+  it("keeps the sound switch with the progress, and tells subscribers", async () => {
+    const { saveSound, subscribe } =
+      await import("@/lib/word-jump/progress-store");
+    const listener = vi.fn();
+    const unsubscribe = subscribe(listener);
+    saveRound("ashaninka", [outcome("item-uno")]);
+
+    expect(getSnapshot().progress.settings.sound).toBe(true);
+    saveSound(false);
+    unsubscribe();
+
+    expect(getSnapshot().progress.settings.sound).toBe(false);
+    expect(readProgress().languages.ashaninka["item-uno"].seen).toBe(1);
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+
   it("says when the browser will not keep anything", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new DOMException("full", "QuotaExceededError");

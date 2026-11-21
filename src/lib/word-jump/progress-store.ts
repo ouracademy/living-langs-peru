@@ -85,13 +85,18 @@ export function saveRound(
   outcomes: RoundOutcome[],
   now: Date = new Date(),
 ): void {
-  const updated = recordLanguageRound(
-    readProgress(),
-    language,
-    outcomes,
-    now.toISOString(),
+  persist(
+    recordLanguageRound(readProgress(), language, outcomes, now.toISOString()),
   );
+}
 
+/** The sound effects switch (spec §7.6, AC-SP4b-8), kept with the progress. */
+export function saveSound(on: boolean): void {
+  const current = readProgress();
+  persist({ ...current, settings: { ...current.settings, sound: on } });
+}
+
+function persist(updated: WordJumpProgress): void {
   if (!writeProgress(updated)) {
     // Nothing was kept; the start screen says so and the game goes on.
     writable = false;

@@ -196,3 +196,117 @@ El schema completo está en `pip-lang-pack.schema.json`. Campos clave:
   - aceptar crea v1, publicar crea v2, el conflicto se detecta y restaurar crea v3;
   - `anon` lee la biblioteca y no puede ejecutar las RPC.
 - **`index.html`:** probado en un navegador automático con un mock de supabase-js: un learner edita, sube audio y propone; el admin acepta; aparece el conflicto de versión, se publica igual; `anon` ve el formulario de login y la biblioteca. **No probado** contra un proyecto Supabase real.
+
+---
+
+## 10. Descripción del juego de plataformas (2026-11-20)
+
+> **Referencia, no contrato.** Texto que la persona del proyecto entregó el 2026-11-20, con una
+> captura del prototipo, copiado tal cual. Donde difiere de
+> [specs/saltapalabras.md](../specs/saltapalabras.md), manda la spec (ver allí «Cambios del
+> 2026-11-20 (plataformas)», que lista cada diferencia).
+
+**Saltapalabras — Descripción del juego** · 20 nov 2026
+
+Saltapalabras es un juego de plataformas 2D de desplazamiento lateral, al estilo de los clásicos de 8 y 16 bits, en el que se aprende vocabulario saltando hacia la palabra correcta. El motor no está atado a ninguna lengua: cada idioma es un paquete JSON que define sus palabras, su alfabeto, sus vocales y su voz. Nació para promover las lenguas originarias del Perú (aimara, asháninka, uro), pero sirve igual para el inglés o el español. Es para todas las edades y se juega en el navegador, en computadora o celular.
+
+### Cómo se juega
+
+Cada partida es un nivel que corre de izquierda a derecha, dividido en retos (5 a 15, según los ajustes). En cada reto pasa esto:
+
+1. Arriba de la pantalla aparece la pista: un dibujo, una palabra, un sonido o una palabra con una letra escondida.
+2. El personaje avanza; al acercarse a las nubes, el juego dice la palabra en voz alta (si está activado).
+3. Tres nubes flotan sobre el camino, cada una con una opción. El jugador salta y la toca con la cabeza.
+4. Si acierta, la nube estalla en estrellas, suena la palabra y se abre la puerta que bloquea el paso. Si falla, la nube queda tachada y puede intentar con otra.
+5. Al final del nivel está la meta con el trofeo y un resumen de las palabras: cuáles acertó a la primera y cuáles falló, con un botón para repasar solo esas.
+
+Entre reto y reto hay obstáculos de plataformas: huecos que saltar, plataformas elevadas y caracoles que se esquivan o se pisan.
+
+### Modos de juego
+
+Cada tema del paquete elige uno de estos cinco modos. Todos usan las mismas tres nubes; cambia qué se muestra como pista y qué llevan las nubes.
+
+| Modo (mode)                 | Pista arriba                            | Opciones en las nubes              | Qué entrena                |
+| --------------------------- | --------------------------------------- | ---------------------------------- | -------------------------- |
+| Dibujo a palabra (pic2word) | Emoji del objeto                        | 3 palabras en la lengua            | Vocabulario y lectura      |
+| Escuchar y elegir (listen)  | Solo el sonido                          | 3 palabras escritas                | Oído y ortografía          |
+| Palabra a dibujo (word2pic) | La palabra escrita                      | 3 emojis                           | Comprensión lectora        |
+| Letra inicial (first)       | Emoji + palabra sin su inicio (\_iyara) | 3 grafías parecidas (ch, chh, ch') | Alfabeto y sonidos propios |
+| Falta la vocal (vowel)      | Emoji + palabra con hueco (an\_)        | Las vocales de la lengua           | Vocales y escritura        |
+
+Los modos de letras usan el alfabeto del paquete. Así, en aimara solo aparecen a, i, u, y los distractores son las grafías que de verdad se confunden en esa lengua.
+
+### Elementos del juego
+
+Todo el arte es original y se dibuja en código: no usa personajes ni objetos de otros juegos.
+
+| Elemento                | Qué es                                                                                      | Cómo funciona                                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Personaje               | Pip, un zorrito; también se puede elegir conejo, panda, gato, rana, robot, unicornio o dino | Corre, salta (salto más alto si se mantiene el botón) y tiene un margen de salto al borde de las plataformas |
+| Nubes de respuesta      | 3 nubes blancas con una opción cada una                                                     | Se tocan saltando; la correcta estalla, la incorrecta queda gris y tachada                                   |
+| Puerta de madera        | Barrera con candado al final de cada reto                                                   | Se abre solo al acertar; obliga a responder antes de avanzar                                                 |
+| Caracoles               | Obstáculo que va y viene                                                                    | Tocarlo quita una vida; pisarlo lo elimina y da +2 puntos                                                    |
+| Huecos                  | Caídas entre tramos de suelo                                                                | Caer quita una vida y devuelve al inicio del reto                                                            |
+| Plataformas             | Tablones elevados                                                                           | Se puede subir desde abajo y pararse encima                                                                  |
+| Vidas                   | Corazones (3, 5 o infinitas)                                                                | Sin vidas termina la partida y se muestra el resumen                                                         |
+| Puntos                  | Estrellas                                                                                   | +10 si acierta a la primera, +5 si acierta después de fallar, +2 por caracol                                 |
+| Meta                    | Banderola FINISH con trofeo                                                                 | Se cruza tras el último reto; muestra las palabras aprendidas                                                |
+| Pista y botón de sonido | Barra superior con la pista y 🔊                                                            | Repite la palabra cuando se quiera                                                                           |
+
+Se juega con teclado (flechas o A/D para moverse, espacio o flecha arriba para saltar) o con botones táctiles en el celular.
+
+### Una lengua = un paquete JSON
+
+El motor no sabe ninguna lengua: todo lo que cambia entre idiomas vive en el paquete (schema: pip-lang-pack/1). Con cargar un JSON aparece la lengua nueva, con sus temas, sus modos y su ficha en la portada.
+
+| Bloque          | Campos                                               | Para qué sirve en el juego                                                         |
+| --------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| language        | code, name, title                                    | Identidad y título de la portada; el mismo code reemplaza la versión anterior      |
+| language.about  | region, family, speakers, notes                      | Ficha “Sobre la lengua” en la portada                                              |
+| language        | vowels, vowelVariants                                | Opciones del modo Falta la vocal                                                   |
+| language        | graphemes, confusable                                | Grafías del alfabeto (incluidas ch, ts, q'…) y distractores del modo Letra inicial |
+| language.tts    | lang, quality (native, approx, off), replace         | Voz del navegador y reglas para aproximar la pronunciación                         |
+| language.praise | correct, wrong, win                                  | Frases al acertar, fallar y ganar, en la lengua que se quiera                      |
+| source          | name, url, notes, reviewedBy                         | Fuente del vocabulario y quién lo revisó; se muestra en la portada                 |
+| themes[]        | id, name, nameNative, icon, mode, items              | Cada tema es un nivel elegible con su modo de juego                                |
+| items[]         | word, translation, emoji, audio, sourceRef, verified | La palabra, su dibujo, su grabación real y si un hablante la verificó              |
+
+El texto original trae un ejemplo mínimo de paquete aimara con tres palabras sin verificar. **No se copia aquí a propósito:** son palabras en una lengua originaria que nadie de este proyecto verificó, y la spec (§13) prohíbe sembrarlas en el repo.
+
+Al cargarlo, el juego valida el paquete y dice qué falta: errores que impiden jugar (por ejemplo, un tema con menos de 3 palabras) y avisos (una palabra sin emoji o con una inicial que no está en el alfabeto). Los paquetes se pueden preparar con IA a partir de un documento oficial; entran como borrador con verified: false hasta que un hablante los revise.
+
+### Ajustes y niveles
+
+La dificultad no depende de la lengua: se ajusta por partida y se guarda por persona.
+
+| Ajuste                        | Opciones        | 🌱 Principiante | 🌿 Intermedio | 🌳 Avanzado |
+| ----------------------------- | --------------- | --------------- | ------------- | ----------- |
+| Palabras por partida          | 5, 8, 12, 15    | 5               | 8             | 12          |
+| Vidas                         | 3, 5, infinitas | Infinitas       | 3             | 3           |
+| Caracoles                     | Sí / No         | No              | Sí            | Sí          |
+| Huecos                        | Sí / No         | No              | Sí            | Sí          |
+| Velocidad                     | Normal / Lenta  | Lenta           | Normal        | Normal      |
+| Decir la palabra al acercarse | Sí / No         | Sí              | Sí            | No          |
+| Mostrar la traducción         | Sí / No         | Sí              | Sí            | No          |
+
+El progreso registra, por palabra, cuántas veces salió, cuántas se acertó a la primera y cuántos errores tuvo. Con eso arma el repaso de las palabras difíciles.
+
+### Comunidad, edición y guardado
+
+Cualquiera puede editar una lengua desde la propia página, sin tocar el JSON: datos de la lengua, temas, palabras, emojis, traducciones y grabaciones de pronunciación. Lo que cambia es quién publica.
+
+| Qué                                         | Dónde se guarda                                 | Quién lo ve o lo cambia                                                                |
+| ------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Progreso y ajustes                          | Cuenta de la persona, con copia en el navegador | Solo esa persona                                                                       |
+| Borradores (ediciones y JSON cargados)      | Espacio privado de la persona                   | Solo esa persona, hasta que proponga o publique                                        |
+| Biblioteca (versión oficial de cada lengua) | Base compartida, con historial de versiones     | La ve cualquiera; solo los editores publican                                           |
+| Propuestas de cambio                        | Buzón compartido                                | Quien la envía y los editores, que ven qué palabras se añadieron, quitaron o cambiaron |
+| Grabaciones de pronunciación                | Almacenamiento de audio                         | Las escucha cualquiera; cada quien sube a su carpeta                                   |
+| Archivo .json                               | Dispositivo de la persona                       | Respaldo o para enviarlo por correo o WhatsApp                                         |
+
+Cada publicación crea una versión nueva (v1, v2…) y guarda la anterior. Si dos editores publican a la vez, el juego avisa del conflicto en lugar de pisar los cambios. Sin cuenta se puede jugar y editar, pero todo queda solo en ese navegador.
+
+**Captura del prototipo (descrita):** cielo con degradado lila a rosa, sol pálido, colinas verdes y
+suelo de tierra; arriba a la izquierda tres corazones, al centro la pista (🐟 «(pez)» y un botón 🔊),
+a la derecha «⭐ 0 · 1/8»; un zorrito naranja a la izquierda sobre el suelo, nubes blancas con
+opciones flotando más adelante y un botón «Menú» abajo a la derecha.

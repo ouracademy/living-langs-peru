@@ -91,7 +91,7 @@ test.describe("Saltapalabras", () => {
     }
 
     await expect(
-      page.getByRole("heading", { name: "¡Ronda terminada!" }),
+      page.getByRole("heading", { name: "¡Llegaste a la meta!" }),
     ).toBeVisible();
     await expect(
       page.getByText("Acertaste a la primera 4 de 4."),
@@ -120,6 +120,19 @@ const allItems = (
 async function play(page: Page, theme: RegExp) {
   await page.goto("/juegos/saltapalabras/ashaninka");
   await page.getByRole("button", { name: theme }).click();
+}
+
+/** The key (1, 2, 3) of the right option of a pic2word challenge. */
+async function rightKey(page: Page): Promise<string> {
+  const label = await page
+    .locator("main")
+    .getByRole("img")
+    .getAttribute("aria-label");
+  const word = allItems.find((each) => each.translation === label)?.word;
+  const names = await page
+    .locator("main button[aria-keyshortcuts]")
+    .allTextContents();
+  return String(names.indexOf(word ?? "") + 1);
 }
 
 async function expectRightAndGoOn(page: Page) {
@@ -213,21 +226,26 @@ test.describe("Saltapalabras, the modes without audio", () => {
     await page.getByRole("button", { name: /Tema de prueba/ }).focus();
     await page.keyboard.press("Enter");
 
+    const next = page.getByRole("button", { name: "Seguir" });
     for (let step = 0; step < 30; step++) {
       if (
         await page
-          .getByRole("heading", { name: "¡Ronda terminada!" })
+          .getByRole("heading", { name: "¡Llegaste a la meta!" })
           .isVisible()
       ) {
         break;
       }
-      await page.keyboard.press("1");
-      await expect(page.getByRole("button", { name: "Seguir" })).toBeFocused();
+      // 1, then 2, then 3: a wrong key crosses its option out (AC-SP4-4).
+      for (const key of ["1", "2", "3"]) {
+        await page.keyboard.press(key);
+        if (await next.isVisible()) break;
+      }
+      await expect(next).toBeFocused();
       await page.keyboard.press("Enter");
     }
 
     await expect(
-      page.getByRole("heading", { name: "¡Ronda terminada!" }),
+      page.getByRole("heading", { name: "¡Llegaste a la meta!" }),
     ).toBeVisible();
 
     await page.reload();
@@ -249,7 +267,7 @@ test.describe("Saltapalabras, the modes without audio", () => {
       const before = await page.evaluate(
         () => (window as unknown as { frames_: number }).frames_,
       );
-      await page.keyboard.press("1");
+      await page.keyboard.press(await rightKey(page));
       await expect(page.getByRole("button", { name: "Seguir" })).toBeFocused();
       await page.waitForTimeout(300);
       return (
@@ -262,6 +280,63 @@ test.describe("Saltapalabras, the modes without audio", () => {
     expect(await framesAfterAnswer()).toBeGreaterThan(0);
     await page.emulateMedia({ reducedMotion: "reduce" });
     expect(await framesAfterAnswer()).toBe(0);
+  });
+});
+
+test.describe("Saltapalabras, the platform level", () => {
+  // AC-SP4b-2 with physics: run under the first cloud and jump into it.
+  test("Pip runs and jumps with the keyboard, and a cloud answers", async ({
+    page,
+  }) => {
+    await play(page, /Tema de prueba/);
+    await expect(page.getByLabel("Puntos: 0. Reto 1 de 4.")).toBeVisible();
+
+    await page.keyboard.down("ArrowRight");
+    await page.waitForTimeout(820);
+    await page.keyboard.up("ArrowRight");
+    await page.keyboard.down("ArrowUp");
+    await page.waitForTimeout(450);
+    await page.keyboard.up("ArrowUp");
+
+    await expect(page.getByRole("status")).toContainText(
+      /¡Correcto!|No es esa/,
+    );
+  });
+
+  // AC-SP4b-9
+  test("fits a 360 px phone, with touch controls of 44 px or more", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await play(page, /Tema de prueba/);
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+
+    for (const symbol of ["◀", "▶", "⤒"]) {
+      const box = await page
+        .locator("button", { hasText: symbol })
+        .boundingBox();
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  // AC-SP4b-10: the game's code is downloaded by the game route only.
+  test("no other page downloads the game", async ({ page }) => {
+    const scripts: Promise<string>[] = [];
+    page.on("response", (response) => {
+      if (response.url().endsWith(".js")) scripts.push(response.text());
+    });
+
+    await page.goto("/");
+    await page.goto("/juegos/completar-palabras/ashaninka");
+    const bodies = await Promise.all(scripts);
+    expect(bodies.some((body) => body.includes("Repasar las falladas"))).toBe(
+      false,
+    );
   });
 });
 

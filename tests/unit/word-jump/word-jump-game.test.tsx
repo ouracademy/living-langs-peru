@@ -72,19 +72,28 @@ describe("WordJumpGame", () => {
     expect(screen.queryByRole("button", { name: "Seguir" })).toBeNull();
   });
 
-  // AC-SP4-4
-  it("shows the right answer after a miss and says it will come back", () => {
+  // AC-SP4-4, AC-SP4b-3 (modified 2026-11-20: a miss crosses the option out)
+  it("crosses a wrong option out and lets another be tried", () => {
     render(<WordJumpGame pack={publicPack()} />);
     fireEvent.click(screen.getByRole("button", { name: /Tema de prueba/ }));
     const right = answerButton();
-    const wrong = optionButtons().find((button) => button !== right);
+    const wrong = optionButtons().find((button) => button !== right)!;
+    const wrongWord = wrong.textContent ?? "";
 
-    fireEvent.click(wrong!);
+    fireEvent.click(wrong);
 
+    expect(screen.getByRole("status").textContent).toContain("No es esa");
+    const crossed = screen.getByRole("button", {
+      name: `${wrongWord} (tachada)`,
+    });
+    expect(crossed.hasAttribute("disabled")).toBe(true);
+    expect(screen.queryByRole("button", { name: "Seguir" })).toBeNull();
+
+    fireEvent.click(answerButton());
     const status = screen.getByRole("status").textContent ?? "";
-    expect(status).toContain("No es esa");
-    expect(status).toContain(right.textContent ?? "");
-    expect(status).toContain("volverá");
+    expect(status).toContain("¡Correcto!");
+    expect(status).toContain("Fuente de prueba");
+    expect(screen.getByLabelText(/^Puntos: 5\./)).toBeTruthy();
   });
 
   it("reaches the summary and can start again", () => {
@@ -97,9 +106,14 @@ describe("WordJumpGame", () => {
     }
 
     expect(
-      screen.getByRole("heading", { name: "¡Ronda terminada!" }),
+      screen.getByRole("heading", { name: "¡Llegaste a la meta!" }),
     ).toBeTruthy();
     expect(screen.getByText("Acertaste a la primera 4 de 4.")).toBeTruthy();
+    expect(screen.getByText("40")).toBeTruthy();
+    // Nothing missed, nothing to review.
+    expect(
+      screen.queryByRole("button", { name: "Repasar las falladas" }),
+    ).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Elegir otro tema" }));
     expect(screen.getByRole("heading", { name: "Elige un tema" })).toBeTruthy();
   });

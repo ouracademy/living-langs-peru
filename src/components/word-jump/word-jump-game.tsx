@@ -2,26 +2,25 @@
 
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 
-import type { GameMode, Theme } from "@/lib/language-packs/types";
+import type { GameMode, PackItem, Theme } from "@/lib/language-packs/types";
 import type { PublicPack } from "@/lib/word-jump/game-state";
+import {
+  type LevelState,
+  levelOutcomes,
+  missedItems,
+} from "@/lib/word-jump/platformer/game";
 import {
   getServerSnapshot,
   getSnapshot,
   saveRound,
+  saveSound,
   subscribe,
 } from "@/lib/word-jump/progress-store";
-import {
-  type RoundContext,
-  type RoundState,
-  answerQuestion,
-  buildRound,
-  createRound,
-  nextQuestion,
-  roundOutcomes,
-} from "@/lib/word-jump/round";
+import { type RoundContext, buildRound } from "@/lib/word-jump/round";
 import type { LanguageProgress } from "@/lib/word-jump/stats";
 
-import { RoundView, buttonClass } from "./round-view";
+import { PlatformerGame } from "./platformer-game";
+import { buttonClass } from "./question-parts";
 
 type WordJumpGameProps = {
   /** Already filtered by `playableThemes` on the server. */
@@ -44,15 +43,16 @@ const MODE_NAMES: Record<GameMode, string> = {
 /** Stable identity for a language never played: no fresh object per render. */
 const NO_PROGRESS: LanguageProgress = Object.freeze({});
 
+type Play = { theme: Theme; items: PackItem[]; seed: number };
+
 /**
- * Owns the round and switches between the start, round and summary screens.
- * The round is built on the client, when the player asks for it: shuffling
- * during render would not match the cached HTML. Progress lives only in this
- * browser (spec §7.4).
+ * Owns the choice of theme, the level and its finish. The level is built on
+ * the client, when the player asks for it: shuffling during render would not
+ * match the cached HTML. Progress lives only in this browser (spec §7.4).
  */
 export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
-  const [theme, setTheme] = useState<Theme | null>(null);
-  const [round, setRound] = useState<RoundState | null>(null);
+  const [play, setPlay] = useState<Play | null>(null);
+  const [finished, setFinished] = useState<LevelState | null>(null);
   const { progress, storageAvailable } = useSyncExternalStore(
     subscribe,
     getSnapshot,
@@ -60,6 +60,7 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
   );
   const lang = pack.language.isoCode;
   const slug = pack.language.slug;
+  const sound = progress.settings.sound;
   // A preview never counts: it plays content that is not published.
   const seen = preview
     ? NO_PROGRESS
@@ -67,8 +68,10 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
 
   const context: RoundContext | null = useMemo(
     () =>
-      theme ? { theme, playable: pack.themes, rules: pack.language } : null,
-    [theme, pack.themes, pack.language],
+      play
+        ? { theme: play.theme, playable: pack.themes, rules: pack.language }
+        : null,
+    [play, pack.themes, pack.language],
   );
 
   const sourceTitles = useMemo(
@@ -77,39 +80,33 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
   );
 
   // Only ever called from a click: the seed is taken when the player asks for
-  // a round, never during render.
+  // a level, never during render.
   const start = useCallback(
-    (chosen: Theme) => {
+    (theme: Theme, only?: PackItem[]) => {
       const seed = Date.now();
-      setTheme(chosen);
-      setRound(
-        createRound(
-          buildRound(chosen.items, seen, seed),
-          { theme: chosen, playable: pack.themes, rules: pack.language },
-          seed,
-        ),
-      );
+      setFinished(null);
+      setPlay({
+        theme,
+        items: only ?? buildRound(theme.items, seen, seed),
+        seed,
+      });
     },
-    [pack.themes, pack.language, seen],
+    [seen],
   );
 
-  const answer = useCallback(
-    (index: number) =>
-      setRound((current) =>
-        current ? answerQuestion(current, index) : current,
-      ),
-    [],
+  const finish = useCallback(
+    (level: LevelState) => {
+      // Written once, when the level ends (spec §7.4), and never in a preview.
+      if (!preview) saveRound(slug, levelOutcomes(level));
+      setFinished(level);
+    },
+    [preview, slug],
   );
 
-  const next = useCallback(() => {
-    if (!round || !context) return;
-    const after = nextQuestion(round, context);
-    // Written once, when the round ends (spec §7.4), and never in a preview.
-    if (after.status === "finished" && !preview) {
-      saveRound(slug, roundOutcomes(after));
-    }
-    setRound(after);
-  }, [round, context, slug, preview]);
+  const backToThemes = useCallback(() => {
+    setPlay(null);
+    setFinished(null);
+  }, []);
 
   const previewNotice = preview ? (
     <p
@@ -122,7 +119,7 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
     </p>
   ) : null;
 
-  if (!theme || !round || !context) {
+  if (!play || !context) {
     return (
       <section aria-labelledby="temas" className="mt-8">
         {previewNotice}
@@ -170,29 +167,32 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
           // Said once, plainly: the game still works.
           <p className="mt-4 text-sm text-[#4A4130]">
             Tu navegador no nos deja guardar el progreso, así que no vamos a
-            recordar tus rondas. El juego funciona igual.
+            recordar tus partidas. El juego funciona igual.
           </p>
         )}
       </section>
     );
   }
 
-  if (round.status === "finished") {
-    const outcomes = roundOutcomes(round);
+  if (finished) {
+    const outcomes = levelOutcomes(finished);
     const firstTry = outcomes.filter((outcome) => outcome.correctFirstTry);
-    const toReview = round.items.filter((item) =>
-      outcomes.some(
-        (outcome) => outcome.itemId === item.id && !outcome.correctFirstTry,
-      ),
-    );
+    const toReview = missedItems(finished);
 
     return (
-      <section aria-labelledby="resumen" className="mt-8">
-        <h2 id="resumen" className="text-xl font-bold">
-          ¡Ronda terminada!
+      <section aria-labelledby="meta" className="mt-8">
+        <p aria-hidden="true" className="text-5xl">
+          🏆
+        </p>
+        <h2 id="meta" className="mt-2 text-xl font-bold">
+          ¡Llegaste a la meta!
         </h2>
         <p className="mt-3">
-          Acertaste a la primera {firstTry.length} de {round.total}.
+          Acertaste a la primera {firstTry.length} de {outcomes.length}.
+        </p>
+        <p className="mt-1">
+          Puntos: <strong>{finished.score}</strong>{" "}
+          <span aria-hidden="true">⭐</span>
         </p>
         {toReview.length > 0 ? (
           <>
@@ -210,19 +210,25 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
           </>
         ) : null}
         <div className="mt-8 flex flex-wrap gap-3">
+          {toReview.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => start(play.theme, toReview)}
+              className={`${buttonClass} bg-[#1B98A0] text-white hover:bg-[#157A80]`}
+            >
+              Repasar las falladas
+            </button>
+          ) : null}
           <button
             type="button"
-            onClick={() => start(theme)}
+            onClick={() => start(play.theme)}
             className={`${buttonClass} bg-[#E4572E] text-white hover:bg-[#C7431C]`}
           >
-            Otra ronda
+            Otra partida
           </button>
           <button
             type="button"
-            onClick={() => {
-              setTheme(null);
-              setRound(null);
-            }}
+            onClick={backToThemes}
             className={`${buttonClass} border-2 border-[#241D14] text-[#241D14]`}
           >
             Elegir otro tema
@@ -235,13 +241,18 @@ export function WordJumpGame({ pack, preview = false }: WordJumpGameProps) {
   return (
     <>
       {previewNotice}
-      <RoundView
-        round={round}
-        theme={theme}
+      <PlatformerGame
+        key={play.seed}
+        theme={play.theme}
+        items={play.items}
+        context={context}
+        seed={play.seed}
         lang={lang}
         sourceTitles={sourceTitles}
-        onAnswer={answer}
-        onNext={next}
+        sound={sound}
+        onToggleSound={() => saveSound(!sound)}
+        onFinish={finish}
+        onExit={backToThemes}
       />
     </>
   );

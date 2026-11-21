@@ -38,6 +38,34 @@ preparación que ya existía (vive solo en el navegador):
 | **No se recupera** lo demás del editor web descartado: borradores en la nube, propuestas, diff, roles.                                                          | Sigue siendo un proyecto de pocos meses: el paquete en preparación vive en el navegador y se publica con el flujo de SP6. |
 | §9.3: la verificación también se marca en el editor, no solo en el JSON.                                                                                        | Consecuencia directa de SP6b.                                                                                             |
 
+### Cambios del 2026-11-20 (plataformas)
+
+La persona del proyecto pidió que el juego sea el **juego de plataformas 2D de desplazamiento
+lateral** del prototipo original, con sonido. Su descripción está en
+[docs/saltapalabras-referencia.md §10](../docs/saltapalabras-referencia.md) (referencia, no
+contrato). Se agrega la capacidad **SP4b `platformer`** (§7.6), que reemplaza la ronda con
+plataformas fijas de §7.2:
+
+| Qué cambió                                                                                                                                                                                                            | Por qué                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Nivel de plataformas:** Pip corre de izquierda a derecha, salta y toca con la cabeza la nube con la respuesta; la correcta abre la **puerta de madera** del reto; al final, la meta con trofeo y resumen.           | Pedido de la persona del proyecto: es el juego que originó la idea.                                         |
+| **Fallar ya no reencola** (reemplaza #11 en el juego): la nube queda tachada y se prueba otra en el mismo reto. Con tres nubes, el reto siempre se resuelve.                                                          | Así lo hace el juego de referencia; el reto no termina sin la respuesta correcta, y nadie se queda trabado. |
+| **Puntos** (+10 a la primera, +5 tras fallar). **Vidas, caracoles, huecos, plataformas, personajes y ajustes por partida** llegan en fases siguientes (F5b, F5c).                                                     | Corte vertical: primero un nivel jugable de punta a punta.                                                  |
+| **Efectos de sonido** generados en código (Web Audio), con botón de silencio.                                                                                                                                         | «Con sonido», sin archivos ni dependencias, y sin voz sintética.                                            |
+| **El canvas pasa a ser el campo de juego** (reemplaza #10 en lo que toca), pero **los botones siguen siendo controles reales**: el juego se juega entero con 1/2/3 o con un lector de pantalla, sin precisión motora. | Accesibilidad obligatoria (§7.3): un juego de saltos no puede dejar fuera a quien no puede saltar a tiempo. |
+
+**Diferencias con la referencia que se mantienen a propósito** (manda esta spec):
+
+| La referencia dice                                                            | Aquí                                                                                                                                                      |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Voz del navegador (`language.tts`, calidad «approx»).                         | **Sin voz sintética** (#6). El 🔊 reproduce solo la grabación del ítem; sin grabación, no hay botón. «Decir la palabra al acercarse», solo con grabación. |
+| Cuentas, progreso en la nube, borradores, propuestas, edición por cualquiera. | **Sin login** (#16, #18). Progreso y ajustes solo en el navegador; la edición es `/admin/juego`.                                                          |
+| Esquema `pip-lang-pack/1` (`language.code`, `source`, `tts`).                 | Esquema propio `language-pack/1` (§4.1). Lo que falte se agrega a este esquema con su validación.                                                         |
+| Paquetes preparados con IA como borrador.                                     | Nunca se generan palabras con IA (§13).                                                                                                                   |
+| Se juegan ítems `verified: false` hasta que un hablante los revise.           | Solo ítems verificados (#4, `playableThemes`).                                                                                                            |
+| Solo teclado de movimiento o botones táctiles.                                | Además, las opciones como `<button>` y teclas 1/2/3, que hacen saltar a Pip a esa nube (§7.6).                                                            |
+| Estética de los clásicos de 8 y 16 bits.                                      | Arte original dibujado en código; nada que imite a un juego concreto (ni sus personajes, objetos, paleta o tipografía).                                   |
+
 ---
 
 ## 1. Objetivo
@@ -83,28 +111,33 @@ Las decisiones 1, 2, 4 y la 16 las cerró la persona del proyecto el 2026-11-17;
 la 17 a 20 se rehicieron el mismo día (ver «Cambios del 2026-11-17»). El resto se deriva de ellas y
 del repo, y se puede discutir en la revisión de este spec.
 
-| #   | Decisión                                   | Elección                                                                                                                                                                                                                                                                                                                                                      |
-| --- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Stack**                                  | **Next.js**, dentro de este repo y con [CONSTRAINTS.md](../CONSTRAINTS.md). Lógica en `src/lib/`, UI en componentes TS. Nada del `index.html` de referencia se copia: se reimplementa.                                                                                                                                                                        |
-| 2   | **Alcance**                                | Juego completo con sus cinco modos, administración mínima de paquetes y audio. Un solo spec con mapa de capacidades (§3) y orden vertical: primero se juega, después se administra.                                                                                                                                                                           |
-| 3   | **Supabase, solo desde el servidor**       | **El mismo proyecto que `solicitudes`**, con el **mismo patrón**: solo el servidor de Next habla con la base, con la `service_role` (`src/lib/supabase-admin.ts`). El navegador **nunca** habla con Supabase para leer o escribir datos. Tablas con RLS activado **sin políticas**, `revoke all` y `grant` mínimo a `service_role`. `solicitudes` no se toca. |
-| 4   | **Solo contenido verificado**              | El juego **solo muestra ítems con `verified: true`**. Lo no verificado puede estar en un paquete importado, pero nunca llega a quien juega. Lo marca la persona del equipo que lo comprobó con un hablante o con la fuente (§9.3).                                                                                                                            |
-| 5   | **Lenguas**                                | Un paquete existe solo para una lengua de `src/lib/languages.ts`. **Aimara** se agrega allí cuando haya una fuente citada (§14, pregunta 1). **Uro** queda sin paquete: no tiene hablantes ni alfabeto oficial ([docs/uro-language-sources.md](../docs/uro-language-sources.md)).                                                                             |
-| 6   | **Sin voz sintética**                      | La referencia usaba TTS es-PE «aproximado». Se descarta: enseñaría una pronunciación española de una lengua originaria. **El sonido es solo grabación de hablante.** La ronda «escuchar» solo usa ítems con audio.                                                                                                                                            |
-| 7   | **Sin paquete incluido en el código**      | No hay contenido de lengua en el bundle. Si **nunca** se pudo leer un paquete (por ejemplo, sin variables de entorno), la página dice que el juego no está disponible y ofrece el otro juego. Si se leyó alguna vez, se sigue sirviendo el último paquete bueno aunque Supabase falle (#8). Un respaldo inventado sería peor que no tener juego.              |
-| 8   | **Lectura en el servidor, con caché**      | El paquete publicado se lee en el servidor con `unstable_cache` (etiqueta `word-jump-pack:<lengua>`, `revalidate: 3600`). La página del juego se genera en la **primera visita** y queda en caché (ISR): **el build no llama a Supabase**. Si una revalidación falla, Next sigue sirviendo lo último que se generó bien. Detalle en §6.4.                     |
-| 9   | **Sin Realtime**                           | Cambiar el paquete a mitad de una ronda rompe la ronda. Un paquete publicado se ve en la siguiente carga de la página.                                                                                                                                                                                                                                        |
-| 10  | **Canvas decorativo, controles reales**    | El salto se dibuja en un `<canvas>` con `aria-hidden`. Las opciones son `<button>` reales. El juego se puede jugar entero sin ver el canvas, con teclado y con lector de pantalla.                                                                                                                                                                            |
-| 11  | **Sin vidas**                              | Es un juego para todas las edades: fallar no termina la ronda. El ítem fallado vuelve al final de la cola, **como máximo dos veces**. A la tercera se muestra la respuesta y se sigue. Así la ronda siempre termina (§5.4).                                                                                                                                   |
-| 12  | **Paquete en `jsonb`**                     | Igual que la referencia: el paquete es la unidad que se importa, versiona, exporta y valida. Una vista `pack_words` cubre las consultas por palabra.                                                                                                                                                                                                          |
-| 13  | **Nombres**                                | La URL pública es `/juegos/saltapalabras/…` y la interna `/admin/juego` (español). En el código el juego se llama `word-jump` (`check:language` marca «palabra»). Tablas, columnas y claves JSON en inglés.                                                                                                                                                   |
-| 14  | **Sin dependencias nuevas**                | `@supabase/supabase-js` y `zod` ya están. Sin motor de juegos, sin `@supabase/ssr`, sin librería de auth: el acceso interno es el Basic Auth de `edicion-fotos.md`.                                                                                                                                                                                           |
-| 15  | **Publicar sin pisar a nadie**             | Concurrencia optimista por versión: publicar dice qué versión esperaba encontrar; si alguien publicó antes, no se pisa y se avisa (§6.2).                                                                                                                                                                                                                     |
-| 16  | **Cuentas: ninguna**                       | Quien juega no tiene cuenta ni login. El acceso interno no son cuentas sino el usuario y contraseña compartidos de `/admin`, que solo se entregan a **personas adultas del equipo**. No hay datos de menores ni de nadie más.                                                                                                                                 |
-| 17  | **Acceso interno = `/admin` (Basic Auth)** | Se reusa sin cambios el acceso de [edicion-fotos.md](./edicion-fotos.md): mismo `src/proxy.ts` (`/admin/:path*`, `/api/admin/:path*`), mismas `ADMIN_USER` / `ADMIN_PASSWORD`, mismo `src/lib/admin/basic-auth.ts`, y cada Route Handler vuelve a comprobar las credenciales. Quien llegue primero al código lo crea; el otro lo reusa.                       |
-| 18  | **Juego libre de login**                   | Ninguna ruta de `/juegos/saltapalabras/**` responde 401, muestra un formulario de ingreso ni enlaza a `/admin`. La vista previa de un paquete sin publicar vive **solo** dentro de `/admin/juego`.                                                                                                                                                            |
-| 19  | **Audio público en Supabase Storage**      | Bucket público `audio`. El navegador del jugador descarga cada archivo **directo de la URL pública de Supabase** al pulsar el botón de sonido (`preload="none"`). La subida la hace el servidor desde `/admin/juego`; el navegador nunca escribe en el bucket.                                                                                                |
-| 20  | **Publicar con una función SQL**           | Publicar escribe dos cosas a la vez: la versión nueva en `language_packs` y su fila en `pack_versions`. `supabase-js` no tiene transacciones, así que una función SQL `publish_language_pack` (ejecutable **solo** por `service_role`) hace las dos escrituras y la comprobación de versión en una sola transacción. Es lo más simple que es atómico.         |
+| #   | Decisión                                      | Elección                                                                                                                                                                                                                                                                                                                                                      |
+| --- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Stack**                                     | **Next.js**, dentro de este repo y con [CONSTRAINTS.md](../CONSTRAINTS.md). Lógica en `src/lib/`, UI en componentes TS. Nada del `index.html` de referencia se copia: se reimplementa.                                                                                                                                                                        |
+| 2   | **Alcance**                                   | Juego completo con sus cinco modos, administración mínima de paquetes y audio. Un solo spec con mapa de capacidades (§3) y orden vertical: primero se juega, después se administra.                                                                                                                                                                           |
+| 3   | **Supabase, solo desde el servidor**          | **El mismo proyecto que `solicitudes`**, con el **mismo patrón**: solo el servidor de Next habla con la base, con la `service_role` (`src/lib/supabase-admin.ts`). El navegador **nunca** habla con Supabase para leer o escribir datos. Tablas con RLS activado **sin políticas**, `revoke all` y `grant` mínimo a `service_role`. `solicitudes` no se toca. |
+| 4   | **Solo contenido verificado**                 | El juego **solo muestra ítems con `verified: true`**. Lo no verificado puede estar en un paquete importado, pero nunca llega a quien juega. Lo marca la persona del equipo que lo comprobó con un hablante o con la fuente (§9.3).                                                                                                                            |
+| 5   | **Lenguas**                                   | Un paquete existe solo para una lengua de `src/lib/languages.ts`. **Aimara** se agrega allí cuando haya una fuente citada (§14, pregunta 1). **Uro** queda sin paquete: no tiene hablantes ni alfabeto oficial ([docs/uro-language-sources.md](../docs/uro-language-sources.md)).                                                                             |
+| 6   | **Sin voz sintética**                         | La referencia usaba TTS es-PE «aproximado». Se descarta: enseñaría una pronunciación española de una lengua originaria. **El sonido es solo grabación de hablante.** La ronda «escuchar» solo usa ítems con audio.                                                                                                                                            |
+| 7   | **Sin paquete incluido en el código**         | No hay contenido de lengua en el bundle. Si **nunca** se pudo leer un paquete (por ejemplo, sin variables de entorno), la página dice que el juego no está disponible y ofrece el otro juego. Si se leyó alguna vez, se sigue sirviendo el último paquete bueno aunque Supabase falle (#8). Un respaldo inventado sería peor que no tener juego.              |
+| 8   | **Lectura en el servidor, con caché**         | El paquete publicado se lee en el servidor con `unstable_cache` (etiqueta `word-jump-pack:<lengua>`, `revalidate: 3600`). La página del juego se genera en la **primera visita** y queda en caché (ISR): **el build no llama a Supabase**. Si una revalidación falla, Next sigue sirviendo lo último que se generó bien. Detalle en §6.4.                     |
+| 9   | **Sin Realtime**                              | Cambiar el paquete a mitad de una ronda rompe la ronda. Un paquete publicado se ve en la siguiente carga de la página.                                                                                                                                                                                                                                        |
+| 10  | **Canvas decorativo, controles reales**       | El salto se dibuja en un `<canvas>` con `aria-hidden`. Las opciones son `<button>` reales. El juego se puede jugar entero sin ver el canvas, con teclado y con lector de pantalla.                                                                                                                                                                            |
+| 11  | **Sin vidas**                                 | Es un juego para todas las edades: fallar no termina la ronda. El ítem fallado vuelve al final de la cola, **como máximo dos veces**. A la tercera se muestra la respuesta y se sigue. Así la ronda siempre termina (§5.4).                                                                                                                                   |
+| 12  | **Paquete en `jsonb`**                        | Igual que la referencia: el paquete es la unidad que se importa, versiona, exporta y valida. Una vista `pack_words` cubre las consultas por palabra.                                                                                                                                                                                                          |
+| 13  | **Nombres**                                   | La URL pública es `/juegos/saltapalabras/…` y la interna `/admin/juego` (español). En el código el juego se llama `word-jump` (`check:language` marca «palabra»). Tablas, columnas y claves JSON en inglés.                                                                                                                                                   |
+| 14  | **Sin dependencias nuevas**                   | `@supabase/supabase-js` y `zod` ya están. Sin motor de juegos, sin `@supabase/ssr`, sin librería de auth: el acceso interno es el Basic Auth de `edicion-fotos.md`.                                                                                                                                                                                           |
+| 15  | **Publicar sin pisar a nadie**                | Concurrencia optimista por versión: publicar dice qué versión esperaba encontrar; si alguien publicó antes, no se pisa y se avisa (§6.2).                                                                                                                                                                                                                     |
+| 16  | **Cuentas: ninguna**                          | Quien juega no tiene cuenta ni login. El acceso interno no son cuentas sino el usuario y contraseña compartidos de `/admin`, que solo se entregan a **personas adultas del equipo**. No hay datos de menores ni de nadie más.                                                                                                                                 |
+| 17  | **Acceso interno = `/admin` (Basic Auth)**    | Se reusa sin cambios el acceso de [edicion-fotos.md](./edicion-fotos.md): mismo `src/proxy.ts` (`/admin/:path*`, `/api/admin/:path*`), mismas `ADMIN_USER` / `ADMIN_PASSWORD`, mismo `src/lib/admin/basic-auth.ts`, y cada Route Handler vuelve a comprobar las credenciales. Quien llegue primero al código lo crea; el otro lo reusa.                       |
+| 18  | **Juego libre de login**                      | Ninguna ruta de `/juegos/saltapalabras/**` responde 401, muestra un formulario de ingreso ni enlaza a `/admin`. La vista previa de un paquete sin publicar vive **solo** dentro de `/admin/juego`.                                                                                                                                                            |
+| 19  | **Audio público en Supabase Storage**         | Bucket público `audio`. El navegador del jugador descarga cada archivo **directo de la URL pública de Supabase** al pulsar el botón de sonido (`preload="none"`). La subida la hace el servidor desde `/admin/juego`; el navegador nunca escribe en el bucket.                                                                                                |
+| 20  | **Publicar con una función SQL**              | Publicar escribe dos cosas a la vez: la versión nueva en `language_packs` y su fila en `pack_versions`. `supabase-js` no tiene transacciones, así que una función SQL `publish_language_pack` (ejecutable **solo** por `service_role`) hace las dos escrituras y la comprobación de versión en una sola transacción. Es lo más simple que es atómico.         |
+| 21  | **Juego de plataformas** (2026-11-20)         | Un nivel por partida: un reto por palabra, cada reto con sus nubes de respuesta y una puerta de madera que solo se abre al acertar; meta con resumen al final. La lógica (física, choques, estado del nivel, puntos, trazado con semilla) es pura en `src/lib/word-jump/platformer/`; el canvas solo dibuja. Detalle en §7.6.                                 |
+| 22  | **Fallar tacha la nube** (2026-11-20)         | En el juego, una respuesta incorrecta tacha esa nube y el reto sigue; la palabra cuenta como fallada para el progreso. Reemplaza el reencolado de #11 **en el juego**; `round.ts` conserva su reducer, que ya no usa la página.                                                                                                                               |
+| 23  | **Sonido sin voz** (2026-11-20)               | Efectos de sonido con Web Audio, creados en código al primer gesto de la persona, silenciables (`settings.sound`). El 🔊 de la pista reproduce **solo** `item.audio` (#6, #19).                                                                                                                                                                               |
+| 24  | **Arte original** (2026-11-20)                | Pip (un zorrito) y todo lo demás se dibujan con formas en el canvas. Ningún recurso, personaje, objeto, paleta ni tipografía de otro juego.                                                                                                                                                                                                                   |
+| 25  | **El canvas no es la única vía** (2026-11-20) | Cada opción es también un `<button>` (y tecla 1/2/3) que hace saltar a Pip a esa nube y responde. Pista, opciones, resultado y resumen están en el DOM. Con `prefers-reduced-motion`, sin animación de salto ni de puerta.                                                                                                                                    |
 
 ---
 
@@ -121,25 +154,29 @@ SP1 pack-format ──┬──> SP2 round-engine ──┐
                                                                       └──> SP6b pack-editor
 ```
 
-| id   | Módulo         | Entrega                                                                                              | Depende de    | Verificable por                         |
-| ---- | -------------- | ---------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------- |
-| SP1  | `pack-format`  | Tipos y esquema Zod del paquete, `cleanPack`, `validatePack`, `playableThemes`.                      | —             | Vitest                                  |
-| SP2  | `round-engine` | Generación de preguntas por modo, distractores, reducer de la ronda, estadísticas por ítem.          | SP1           | Vitest                                  |
-| SP3  | `pack-library` | Tablas `language_packs` y `pack_versions`, función de publicación, lectura cacheada en el servidor.  | SP1           | Pruebas SQL + Vitest (cliente simulado) |
-| SP4  | `game-page`    | Rutas públicas, canvas, controles, accesibilidad, progreso local. Sin login.                         | SP1, SP2, SP3 | Playwright                              |
-| SP5  | `admin-access` | El Basic Auth de `/admin` de `edicion-fotos.md` (E1). Si ya existe, esta capacidad es solo reusarlo. | —             | Vitest + Playwright                     |
-| SP6  | `pack-admin`   | `/admin/juego`: importar, validar, probar, publicar, exportar, historial y restaurar.                | SP1, SP3, SP5 | Vitest + Playwright                     |
-| SP6b | `pack-editor`  | Editor mínimo en `/admin/juego`: emoji, traducción, verificada, palabra, agregar y quitar (§9.5).    | SP6           | Vitest + Playwright                     |
-| SP8  | `audio`        | Subir audio por ítem desde `/admin/juego`, bucket público, reproducir y activar la ronda «escuchar». | SP4, SP6      | Vitest + Playwright + SQL               |
+| id   | Módulo         | Entrega                                                                                                  | Depende de    | Verificable por                         |
+| ---- | -------------- | -------------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------- |
+| SP1  | `pack-format`  | Tipos y esquema Zod del paquete, `cleanPack`, `validatePack`, `playableThemes`.                          | —             | Vitest                                  |
+| SP2  | `round-engine` | Generación de preguntas por modo, distractores, reducer de la ronda, estadísticas por ítem.              | SP1           | Vitest                                  |
+| SP3  | `pack-library` | Tablas `language_packs` y `pack_versions`, función de publicación, lectura cacheada en el servidor.      | SP1           | Pruebas SQL + Vitest (cliente simulado) |
+| SP4  | `game-page`    | Rutas públicas, canvas, controles, accesibilidad, progreso local. Sin login.                             | SP1, SP2, SP3 | Playwright                              |
+| SP4b | `platformer`   | El nivel de plataformas (§7.6): física, nubes, puerta, meta, puntos, sonido; luego obstáculos y ajustes. | SP2, SP4      | Vitest (lógica pura) + Playwright       |
+| SP5  | `admin-access` | El Basic Auth de `/admin` de `edicion-fotos.md` (E1). Si ya existe, esta capacidad es solo reusarlo.     | —             | Vitest + Playwright                     |
+| SP6  | `pack-admin`   | `/admin/juego`: importar, validar, probar, publicar, exportar, historial y restaurar.                    | SP1, SP3, SP5 | Vitest + Playwright                     |
+| SP6b | `pack-editor`  | Editor mínimo en `/admin/juego`: emoji, traducción, verificada, palabra, agregar y quitar (§9.5).        | SP6           | Vitest + Playwright                     |
+| SP8  | `audio`        | Subir audio por ítem desde `/admin/juego`, bucket público, reproducir y activar la ronda «escuchar».     | SP4, SP6      | Vitest + Playwright + SQL               |
 
 **Fases verticales** (cada una termina con algo usable de punta a punta):
 
-| Fase | Capacidades | Qué se puede hacer al cerrar                                                                                    |
-| ---- | ----------- | --------------------------------------------------------------------------------------------------------------- |
-| F1   | SP1–SP4     | Jugar sin login un paquete publicado (cargado con la función SQL desde el SQL Editor por el equipo).            |
-| F2   | SP5–SP6     | Una persona del equipo entra a `/admin/juego`, importa un paquete, lo prueba y lo publica; el juego lo muestra. |
-| F2b  | SP6b        | Corregir el paquete publicado desde `/admin/juego` (sin JSON) y publicarlo como versión nueva.                  |
-| F3   | SP8         | Adjuntar grabaciones a los ítems desde `/admin/juego` y jugar «escuchar».                                       |
+| Fase | Capacidades | Qué se puede hacer al cerrar                                                                                      |
+| ---- | ----------- | ----------------------------------------------------------------------------------------------------------------- |
+| F1   | SP1–SP4     | Jugar sin login un paquete publicado (cargado con la función SQL desde el SQL Editor por el equipo).              |
+| F2   | SP5–SP6     | Una persona del equipo entra a `/admin/juego`, importa un paquete, lo prueba y lo publica; el juego lo muestra.   |
+| F2b  | SP6b        | Corregir el paquete publicado desde `/admin/juego` (sin JSON) y publicarlo como versión nueva.                    |
+| F3   | SP8         | Adjuntar grabaciones a los ítems desde `/admin/juego` y jugar «escuchar».                                         |
+| F5a  | SP4b        | Un nivel de plataformas de punta a punta: pista → correr → saltar a la nube → la puerta se abre → meta y resumen. |
+| F5b  | SP4b        | Obstáculos: huecos, plataformas elevadas, caracoles; vidas (corazones) y +2 por caracol.                          |
+| F5c  | SP4b        | Ajustes por partida (Principiante / Intermedio / Avanzado) y personajes a elegir.                                 |
 
 ---
 
@@ -512,9 +549,10 @@ ofrece ni enlaza un ingreso, ni a `/admin`. Sin query params: el tema y la ronda
 
 1. **Inicio de lengua** — título del paquete, temas jugables con icono y modo, versión publicada y
    fuentes.
-2. **Ronda** — arriba la barra de progreso. Al centro el canvas con el personaje y tres
-   plataformas, cada una con una opción. Debajo, los tres `<button>` con las mismas opciones (son el
-   control de verdad). Al elegir, el personaje salta; al acertar aterriza, al fallar rebota.
+2. **Ronda** — _(reemplazada el 2026-11-20 por el nivel de plataformas de §7.6)_ arriba la barra
+   de progreso. Al centro el canvas con el personaje y tres plataformas, cada una con una opción.
+   Debajo, los tres `<button>` con las mismas opciones (son el control de verdad). Al elegir, el
+   personaje salta; al acertar aterriza, al fallar rebota.
 3. **Feedback** — correcto o incorrecto con icono y texto, la palabra con su traducción y su fuente,
    el audio si hay, la frase de `praise` si está publicada, y «Seguir».
 4. **Resumen** — aciertos a la primera, palabras para repasar, «Otra ronda», «Elegir otro tema».
@@ -546,12 +584,16 @@ No guarda nada que identifique a nadie.
 - **AC-SP4-1** _(modificado)_ En la tabla de `pnpm build`, `/juegos/saltapalabras` es estática (`○`)
   y `/juegos/saltapalabras/[lengua]` no es dinámica (`ƒ`): se genera en la primera visita y queda en
   caché (ISR).
-- **AC-SP4-2** Con un paquete publicado (lectura de Supabase simulada), se elige un tema, se
-  juega una ronda entera y se llega al resumen.
+- **AC-SP4-2** _(modificado 2026-11-20)_ Con un paquete publicado (lectura de Supabase simulada), se
+  elige un tema, se juega el nivel entero y se llega a la meta con su resumen.
 - **AC-SP4-3** Un ítem `verified: false` del paquete publicado no aparece en ninguna pregunta.
-- **AC-SP4-4** Fallar muestra la respuesta correcta con su fuente, y el ítem reaparece después.
-- **AC-SP4-5** Ronda completa solo con teclado: Tab/1-2-3, Enter, foco en «Seguir».
-- **AC-SP4-6** Con `prefers-reduced-motion` no hay animación de salto.
+- **AC-SP4-4** _(modificado 2026-11-20)_ Fallar tacha esa opción, dice «No es esa» y deja probar
+  otra en el mismo reto; al acertar se muestra la palabra con su traducción y su fuente. (Antes: el
+  ítem volvía al final de la ronda.)
+- **AC-SP4-5** _(modificado 2026-11-20)_ Nivel completo solo con teclado: Tab/1-2-3, Enter, foco en
+  «Seguir» tras acertar.
+- **AC-SP4-6** _(modificado 2026-11-20)_ Con `prefers-reduced-motion`, responder con un botón o con
+  1/2/3 no anima el salto ni la puerta: no se pide ningún cuadro de animación.
 - **AC-SP4-7** Recargar tras una ronda conserva el progreso; con `localStorage` bloqueado, se juega
   igual.
 - **AC-SP4-8** _(modificado)_ Sin variables de Supabase, o si Supabase falla en la primera visita, la
@@ -565,6 +607,76 @@ No guarda nada que identifique a nadie.
   (e2e que recorre la biblioteca, una lengua con paquete, uro y una ronda completa).
 - **AC-SP4-13** _(nuevo)_ El navegador de quien juega no hace ninguna petición a la API REST de
   Supabase (`/rest/v1/*`, `/auth/v1/*`) en todo el recorrido de AC-SP4-12.
+
+### 7.6 SP4b — `platformer`: el nivel de plataformas (2026-11-20)
+
+Reemplaza la pantalla «Ronda» de §7.2. Inicio de lengua, resumen, progreso y accesibilidad (§7.3)
+siguen valiendo; el resumen pasa a ser la **meta**.
+
+**El nivel.** Una partida es un nivel que corre de izquierda a derecha con un **reto por palabra**
+(las de `buildRound`, §5.3). Cada reto tiene sus **nubes de respuesta** (una por opción: 3, o hasta
+4 en «vocal que falta») flotando sobre el camino y una **puerta de madera** al final. Al final del
+nivel, la **meta** con el trofeo.
+
+**Cómo se juega.**
+
+- Pip corre (← → o A/D), salta (espacio, ↑ o W; más alto si se mantiene; con un margen breve tras
+  dejar el suelo) y responde **tocando una nube con la cabeza**.
+- **Acierto:** la nube estalla en estrellas, la puerta se abre, suena el efecto y el `role="status"`
+  muestra «¡Correcto!» con la palabra, su traducción y su fuente. Se sigue caminando por la puerta o
+  con «Seguir».
+- **Error:** la nube queda gris y tachada (y su botón, deshabilitado y marcado «tachada»); se prueba
+  otra. Ningún error cuesta vidas en F5a.
+- **Puntos:** +10 por acierto a la primera, +5 por acierto tras fallar (`⭐ puntos · reto/total`).
+- **Botones = misma jugada:** cada opción es un `<button>` (y tecla 1/2/3) que hace saltar a Pip a
+  esa nube y responde al instante. Con `prefers-reduced-motion`, Pip aparece bajo la nube sin
+  animar.
+- **Pista arriba:** el dibujo (nombrado por su traducción), la palabra o la palabra con hueco, como
+  en §5.2. **🔊 solo si el ítem tiene grabación** (`item.audio`); se reproduce al pulsar, nunca solo
+  (AC-SP8-5).
+- **Sonido:** efectos generados con Web Audio (salto, acierto, error, puerta, meta), creados al primer
+  gesto, con un botón «Sonido: sí / no» que guarda `settings.sound`.
+- **Menú:** pausa con «Seguir jugando», «Elegir otro tema» y el sonido.
+- **Celular:** botones táctiles ◀ ▶ ⤒ de 44 px como mínimo; sin scroll horizontal a 360 px.
+- **Meta:** «¡Llegaste a la meta!», aciertos a la primera, puntos, palabras para repasar con
+  **«Repasar las falladas»** (un nivel nuevo solo con esas), «Otra partida» y «Elegir otro tema».
+
+**Arquitectura.** La lógica vive en `src/lib/word-jump/platformer/`, pura y con tests: `physics.ts`
+(cuerpo, gravedad, salto variable, margen de salto, choques con suelo y puerta), `level.ts` (trazado
+del nivel a partir de las preguntas, nubes, puertas, meta, cámara) y `game.ts` (estado del nivel:
+responder, tachar, puntos, avanzar, resultado para el progreso). `src/components/word-jump/` solo
+dibuja (canvas 2D + `requestAnimationFrame`, que **solo corre mientras algo se mueve**) y conecta el
+DOM. Sin dependencias nuevas.
+
+**Fases.** F5a: el nivel de punta a punta (lo de arriba). F5b: huecos, plataformas elevadas,
+caracoles (+2 al pisarlos), vidas con corazones; caer o tocar un caracol quita una vida y devuelve al
+inicio del reto; sin vidas, termina la partida en el resumen. F5c: ajustes por partida
+(Principiante / Intermedio / Avanzado: palabras 5/8/12/15, vidas infinitas/3/5, caracoles, huecos,
+velocidad, mostrar la traducción) guardados en `settings`, y personajes a elegir (zorrito por
+defecto). «Decir la palabra al acercarse» entra en F5c y solo con grabación.
+
+**Criterios de aceptación (F5a).**
+
+- **AC-SP4b-1** Elegir un tema abre el nivel: canvas con Pip, las nubes del primer reto y la pista
+  arriba; el `role="status"` y las opciones están en el DOM.
+- **AC-SP4b-2** Tocar la nube correcta con la cabeza (física) o pulsar su botón responde lo mismo:
+  «¡Correcto!», la puerta del reto se abre y suman 10 puntos.
+- **AC-SP4b-3** Una opción incorrecta queda tachada (botón deshabilitado, nombre accesible con
+  «tachada») y el reto sigue; acertar después suma 5.
+- **AC-SP4b-4** La puerta cerrada no deja pasar: Pip no avanza más allá hasta acertar. Con la puerta
+  abierta, caminar a través de ella (o «Seguir») lleva al reto siguiente.
+- **AC-SP4b-5** Tras el último reto, la meta muestra «¡Llegaste a la meta!», los aciertos a la
+  primera, los puntos y las palabras falladas; «Repasar las falladas» abre un nivel solo con ellas.
+- **AC-SP4b-6** El salto sube más si se mantiene la tecla, y se puede saltar un instante después de
+  dejar el suelo (margen de salto), comprobado en la física pura.
+- **AC-SP4b-7** El 🔊 aparece solo si el ítem tiene `audio` y no suena sin una pulsación; nunca se usa
+  `speechSynthesis`.
+- **AC-SP4b-8** Los efectos de sonido se pueden apagar con un botón y la elección se recuerda al
+  recargar.
+- **AC-SP4b-9** A 360 px de ancho no hay scroll horizontal y los controles táctiles miden al menos
+  44 × 44 px.
+- **AC-SP4b-10** El JS que la ruta del juego agrega es solo el del juego: ninguna otra ruta lo
+  descarga, y la página sigue siendo ISR como en AC-SP4-1.
 
 ---
 
