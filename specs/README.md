@@ -13,7 +13,7 @@ diseño completo se lea de una sola vez.
 | [edicion-fotos.md](./edicion-fotos.md)           | Borrador     | [tasks/edicion-fotos/](../tasks/edicion-fotos/)           | Formulario `/admin/fotos` con Basic Auth que sube fotos de la galería al repo.          |
 | [biblioteca-medios.md](./biblioteca-medios.md)   | Obsoleto     | —                                                         | Reemplazado por `edicion-fotos.md`. Login, Supabase Storage y edición sobre la página.  |
 | [saltapalabras.md](./saltapalabras.md)           | Borrador     | [tasks/saltapalabras/](../tasks/saltapalabras/)           | Juego de vocabulario por paquetes, sin login; `/admin/juego` para publicar y audio.     |
-| [gestor-lenguas.md](./gestor-lenguas.md)         | Borrador     | `tasks/gestor-lenguas/` (por escribir)                    | Paquete de lengua en JSON, `/admin/lenguas` para cargar y editar; el sitio sale de ahí. |
+| [gestor-lenguas.md](./gestor-lenguas.md)         | Borrador     | [tasks/gestor-lenguas/](../tasks/gestor-lenguas/)         | Paquete de lengua en JSON, `/admin/lenguas` para cargar y editar; el sitio sale de ahí. |
 
 ## Dónde va cada cosa
 

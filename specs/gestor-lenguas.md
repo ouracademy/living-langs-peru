@@ -1,7 +1,7 @@
 # Gestor de contenido de lenguas (diccionario y juegos de asháninka y uro, en JSON)
 
 > Estado: **borrador** · Fecha: 2026-11-21 (alcance acotado el mismo día) · Rama sugerida:
-> `integracion` · Plan: `tasks/gestor-lenguas/` (por escribir) · Índice:
+> `integracion` · Plan: [tasks/gestor-lenguas/](../tasks/gestor-lenguas/plan.md) · Índice:
 > [specs/README.md](./README.md)
 > Depende de: `/admin` con Basic Auth ([edicion-fotos.md](./edicion-fotos.md) E1) y de la lectura
 > cacheada de Supabase de [saltapalabras.md](./saltapalabras.md) §6.4.
