@@ -19,7 +19,22 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL, trace: "on-first-retry" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: /bundle-publish\.spec\.ts/,
+    },
+    // Publishing a uro bundle changes what /diccionario/uro and both uro games
+    // show, which other specs check while uro has no content. So it runs
+    // after them all, never in parallel (gestor-lenguas plan, F2).
+    {
+      name: "chromium-publish",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: /bundle-publish\.spec\.ts/,
+      dependencies: ["chromium"],
+    },
+  ],
   webServer: [
     {
       command: "node tests/e2e/fake-supabase.mjs",

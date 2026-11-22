@@ -74,4 +74,16 @@ describe("/admin", () => {
     });
     expect(link.getAttribute("href")).toBe("/admin/juego");
   });
+
+  // gestor-lenguas T2.3
+  it("links to the language content manager with valid credentials", async () => {
+    withAuthorization(credentials);
+
+    render(await AdminHomePage());
+
+    const link = screen.getByRole("link", {
+      name: /Contenido de las lenguas/,
+    });
+    expect(link.getAttribute("href")).toBe("/admin/lenguas");
+  });
 });

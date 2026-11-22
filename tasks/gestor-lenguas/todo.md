@@ -1,7 +1,8 @@
 # TODO — Gestor de contenido de lenguas
 
 > Plan: [plan.md](./plan.md) · Spec: [specs/gestor-lenguas.md](../../specs/gestor-lenguas.md)
-> Estado: **F1 hecha (2026-11-21)** en la rama `feat/gestor-lenguas`, sin commit. F2 en adelante, sin empezar.
+> Estado: **F1 hecha (2026-11-21)** y **F2 hecha (2026-11-22)** en la rama `feat/gestor-lenguas`.
+> F3 en adelante, sin empezar.
 
 Cada tarea cierra con `pnpm check:fast`; cada fase, con `pnpm check:task` y e2e completos.
 
@@ -43,10 +44,17 @@ tocan las líneas base ni los umbrales.
 
 ## F2 — Subir y publicar (L4)
 
-- [ ] **T2.1** Publicación en el servidor (`publish_language_bundle`) + Route Handlers protegidos
-- [ ] **T2.2** `/admin/lenguas` (lista) y `/admin/lenguas/[lengua]` con «Subir JSON», resumen de
-      diferencias, «Probar», «Publicar», historial `[AC-L4-1, AC-L4-2]`
-- [ ] **T2.3** Tarjeta en `/admin`
+- [x] **T2.1** Publicación en el servidor (`publish_language_bundle`) + Route Handlers protegidos
+      — `src/lib/language-bundles/{publishing,publish-request,admin-route}.ts` y
+      `/api/admin/lenguas/[lengua]` (GET, `publicar`, `restaurar`, `versiones`,
+      `versiones/[version]`). Cada handler vuelve a comprobar Basic Auth; publicar y restaurar
+      invalidan solo `language:<slug>` con `revalidateTag(…, "max")`.
+- [x] **T2.2** `/admin/lenguas` (lista) y `/admin/lenguas/[lengua]` con «Subir JSON», resumen de
+      diferencias, «Probar», «Publicar», historial `[AC-L4-1, AC-L4-2]` — `bundle-file.ts`
+      (importar, exportar, plantilla, `diffBundles`), `draft-storage.ts` y
+      `src/components/admin/bundle-admin/`. e2e: `bundle-admin.spec.ts` (sin publicar) y
+      `bundle-publish.spec.ts` (publica el uro; proyecto de Playwright que corre al final).
+- [x] **T2.3** Tarjeta en `/admin` («Contenido de las lenguas»; la de `/admin/juego` sigue hasta F4)
 
 ## F3 — Editar (L4)
 

@@ -111,3 +111,31 @@ Mientras dure, `src/data/bundles/ashaninka.json` se regenera con
 4. **La excepción del uro sale solo de las páginas públicas.** `src/lib/word-jump/availability.ts`
    sigue para `/admin/juego` y su ruta de publicación, que se retiran en F4.
 5. **«Versión 0»** no se muestra en Saltapalabras cuando el contenido viene del respaldo del repo.
+
+## 7. Resultado de F2 (2026-11-22)
+
+Hecho en `feat/gestor-lenguas`: `/admin/lenguas` y `/admin/lenguas/[lengua]` para subir un JSON,
+ver errores y avisos, «Probar» (diccionario y Saltapalabras con la copia de trabajo), publicar con
+nota y versión esperada, ver el historial, descargar y restaurar. No hace falta SQL nuevo: usa
+`publish_language_bundle` y las tablas de F1.
+
+**Cómo se comprobó:** AC-L4-1 con `tests/e2e/bundle-publish.spec.ts` (sube el paquete de prueba del
+uro, lo publica y espera ver sus palabras verificadas en `/diccionario/uro` y su tema en
+`/juegos/saltapalabras/uro`; la palabra sin verificar no aparece). AC-L4-2 con
+`tests/unit/admin/bundle-admin.test.tsx` y `tests/e2e/bundle-admin.spec.ts` (resumen de nuevas,
+cambiadas y que faltan; «Cancelar» no cambia nada; «Reemplazar» sí).
+
+**Desvíos:**
+
+1. **La prueba que publica corre en otro proyecto de Playwright** (`chromium-publish`, con
+   `dependencies: ["chromium"]`). Publicar el uro cambia lo que muestran sus páginas, y otros specs
+   comprueban que el uro no tiene contenido: así nunca corren a la vez.
+2. **El resumen de diferencias se compara contra la copia de trabajo, o contra lo publicado si no
+   hay copia.** Si no hay ninguna de las dos, el archivo se carga directo (no hay nada que pisar).
+3. **«Trabajar sobre lo publicado»** copia lo publicado a la copia de trabajo (equivale a «Editar el
+   paquete publicado» de `/admin/juego`).
+4. **Componentes duplicados de `/admin/juego`** (`draft-store`, formulario de publicar, historial,
+   API del navegador) en versión para paquetes de lengua: `/admin/juego` se retira en F4 y con él la
+   copia vieja. Estilos, formato de fechas y `downloadText` se importan de `pack-admin/`.
+5. **«Descargar plantilla»** genera en el navegador lo mismo que
+   `docs/gestor-lenguas/plantilla-uro.json` (un test lo compara), con la lengua de la página.

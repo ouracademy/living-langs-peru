@@ -41,6 +41,8 @@ const current = new Map([
 ]);
 /** slug → the published language bundle row; empty until F2 publishes. */
 const bundles = new Map();
+/** slug → every published bundle version, oldest first. */
+const bundleHistory = new Map();
 /** language → every version, oldest first. */
 const history = new Map([["ashaninka", [current.get("ashaninka")]]]);
 
@@ -100,6 +102,32 @@ function saveGallery({ p_slug, p_photos, p_expected_version }) {
 const BUCKET_OBJECT = "/storage/v1/object/gallery/";
 const BUCKET_PUBLIC = "/storage/v1/object/public/gallery/";
 
+/** Same checks and errors as publish_language_bundle (docs/gestor-lenguas-schema.sql). */
+function publishBundle({ p_slug, p_bundle, p_expected_version, p_note }) {
+  if (p_bundle?.language !== p_slug) {
+    return {
+      status: 400,
+      body: { code: "22023", message: "language mismatch" },
+    };
+  }
+  const found = bundles.get(p_slug)?.version ?? 0;
+  if (p_expected_version !== null && p_expected_version !== found) {
+    return {
+      status: 409,
+      body: { code: "40001", message: "version conflict" },
+    };
+  }
+  const row = {
+    version: found + 1,
+    bundle: p_bundle,
+    note: p_note,
+    published_at: new Date().toISOString(),
+  };
+  bundles.set(p_slug, row);
+  bundleHistory.set(p_slug, [...(bundleHistory.get(p_slug) ?? []), row]);
+  return { status: 200, body: row.version };
+}
+
 /** Same checks and errors as publish_language_pack (docs/saltapalabras-schema.sql). */
 function publish({ p_language, p_pack, p_expected_version, p_note }) {
   if (p_pack?.language?.slug !== p_language) {
@@ -149,6 +177,31 @@ http
     ) {
       const row = bundles.get(equals(url, "slug"));
       return json(response, 200, row ? [project(url, row)] : []);
+    }
+
+    if (
+      request.method === "GET" &&
+      url.pathname === "/rest/v1/bundle_versions"
+    ) {
+      const rows = bundleHistory.get(equals(url, "slug")) ?? [];
+      const version = equals(url, "version");
+      const chosen =
+        version === null
+          ? [...rows].reverse()
+          : rows.filter((row) => row.version === Number(version));
+      return json(
+        response,
+        200,
+        chosen.map((row) => project(url, row)),
+      );
+    }
+
+    if (
+      request.method === "POST" &&
+      url.pathname === "/rest/v1/rpc/publish_language_bundle"
+    ) {
+      const answer = publishBundle(JSON.parse(await readBody(request)));
+      return json(response, answer.status, answer.body);
     }
 
     if (request.method === "GET" && url.pathname === "/rest/v1/pack_versions") {
