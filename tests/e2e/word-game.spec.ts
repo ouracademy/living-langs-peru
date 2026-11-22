@@ -327,16 +327,18 @@ test.describe("saved progress", () => {
 });
 
 test.describe("languages", () => {
-  test("explains why uro has no game, without promising a date", async ({
+  test("says uro has no content yet, and offers a playable language", async ({
     page,
   }) => {
     await page.goto("/juegos/completar-palabras/uro");
 
-    // AC-G4-14
+    // AC-G4-14, AC-L3-3
     await expect(
       page.getByRole("heading", { name: /completar palabras en uro/i }),
     ).toBeVisible();
-    await expect(page.getByText(/no tiene hablantes desde/i)).toBeVisible();
+    await expect(
+      page.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: /completar palabras en asháninka/i }),
     ).toBeVisible();

@@ -39,6 +39,8 @@ const current = new Map([
     },
   ],
 ]);
+/** slug → the published language bundle row; empty until F2 publishes. */
+const bundles = new Map();
 /** language → every version, oldest first. */
 const history = new Map([["ashaninka", [current.get("ashaninka")]]]);
 
@@ -136,6 +138,16 @@ http
       url.pathname === "/rest/v1/language_packs"
     ) {
       const row = current.get(equals(url, "language"));
+      return json(response, 200, row ? [project(url, row)] : []);
+    }
+
+    // Language bundles (gestor-lenguas F1): none published, so the site
+    // shows the repo's bundle, as it does before anyone publishes one.
+    if (
+      request.method === "GET" &&
+      url.pathname === "/rest/v1/language_bundles"
+    ) {
+      const row = bundles.get(equals(url, "slug"));
       return json(response, 200, row ? [project(url, row)] : []);
     }
 

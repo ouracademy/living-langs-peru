@@ -1,25 +1,28 @@
 import { apiError } from "@/lib/dictionary/api";
-import { getDictionary, resolveWord } from "@/lib/dictionary";
+import { resolveWord } from "@/lib/dictionary";
+import { getDictionaryContent } from "@/lib/dictionary/content";
 
 type Context = { params: Promise<{ lengua: string; id: string }> };
 
+// No request data is read: prerendered, and regenerated with the bundle.
 export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function GET(
   _request: Request,
   { params }: Context,
 ): Promise<Response> {
   const { lengua: language, id } = await params;
-  const dictionary = getDictionary(language);
+  const content = await getDictionaryContent(language);
 
-  if (!dictionary) {
+  if (!content) {
     return apiError(
       "language_not_found",
       `No hay diccionario para «${language}».`,
     );
   }
 
-  const entry = resolveWord(dictionary.entries, id);
+  const entry = resolveWord(content.dictionary.entries, id);
 
   if (!entry) {
     return apiError("entry_not_found", `No existe la entrada «${id}».`);

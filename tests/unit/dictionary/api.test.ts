@@ -1,8 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// The routes read language bundles on the server. Without Supabase variables
+// (as here) they serve the repo's bundle, which must answer exactly as the
+// dictionary did before (AC-L3-1). "server-only" throws outside a server
+// bundle, which is what jsdom is.
+vi.mock("server-only", () => ({}));
 
 import { GET as getEntry } from "@/app/api/diccionario/[lengua]/[id]/route";
 import { GET as getLanguageEntries } from "@/app/api/diccionario/[lengua]/route";
 import { GET as getLanguages } from "@/app/api/diccionario/route";
+import { ASHANINKA_ALPHABET, getComparator } from "@/lib/dictionary/collation";
 
 const request = (url: string) => new Request(`http://localhost${url}`);
 const params = <T extends object>(value: T) => ({
@@ -41,8 +48,13 @@ describe("GET /api/diccionario/[lengua]", () => {
     expect(body.language).toBe("ashaninka");
     expect(body.entries.length).toBe(body.total);
 
+    // The bundle's alphabet, like the page (spec gestor-lenguas §6.2, #10).
+    // Before the bundles, the API sorted with Spanish collation instead.
     const words = body.entries.map((entry: { word: string }) => entry.word);
-    expect(words).toEqual([...words].sort(new Intl.Collator("es").compare));
+    expect(words).toEqual(
+      [...words].sort(getComparator([...ASHANINKA_ALPHABET])),
+    );
+    expect(words).not.toEqual([...words].sort(new Intl.Collator("es").compare));
   });
 
   // AC-M2-3

@@ -36,7 +36,9 @@ test.describe("dictionary page", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /diccionario uro/i }),
     ).toBeVisible();
-    await expect(page.getByText(/aún no tenemos/i)).toBeVisible();
+    await expect(
+      page.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeVisible();
     // And offers a way out, to a language that does have one.
     await expect(page.getByRole("link", { name: /Asháninka/ })).toBeVisible();
   });

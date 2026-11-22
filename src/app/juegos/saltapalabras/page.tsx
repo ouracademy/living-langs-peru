@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { languages } from "@/lib/languages";
-import {
-  LANGUAGES_WITHOUT_PACK,
-  hasNoPack,
-} from "@/lib/word-jump/availability";
 
 export const metadata: Metadata = {
   title: "Saltapalabras",
@@ -14,9 +10,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * The library (spec §6.4): built from src/lib/languages.ts only, never from
- * the database, so it is static and does not depend on Supabase. Each language
- * page says whether it has a pack.
+ * The library: built from src/lib/languages.ts only, never from the database,
+ * so it is static and does not depend on Supabase. Each language page says
+ * whether it has content (spec gestor-lenguas #7): both work the same way.
  */
 export default function WordJumpLibraryPage() {
   return (
@@ -28,30 +24,18 @@ export default function WordJumpLibraryPage() {
       </p>
 
       <ul className="mt-8 flex flex-col gap-4">
-        {languages.map((language) =>
-          hasNoPack(language.slug) ? (
-            <li
-              key={language.slug}
-              className="rounded-[20px] bg-[#FBEFD2] px-6 py-5"
+        {languages.map((language) => (
+          <li key={language.slug}>
+            <Link
+              href={`/juegos/saltapalabras/${language.slug}`}
+              className="block rounded-[20px] bg-[#FBEFD2] px-6 py-5 hover:bg-[#F6E3B4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C7431C]"
             >
-              <span className="block text-lg font-bold">{language.name}</span>
-              <span className="mt-1 block text-sm text-[#4A4130]">
-                Sin juego. {LANGUAGES_WITHOUT_PACK[language.slug]}
+              <span className="block text-lg font-bold">
+                Jugar en {language.name}
               </span>
-            </li>
-          ) : (
-            <li key={language.slug}>
-              <Link
-                href={`/juegos/saltapalabras/${language.slug}`}
-                className="block rounded-[20px] bg-[#FBEFD2] px-6 py-5 hover:bg-[#F6E3B4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C7431C]"
-              >
-                <span className="block text-lg font-bold">
-                  Jugar en {language.name}
-                </span>
-              </Link>
-            </li>
-          ),
-        )}
+            </Link>
+          </li>
+        ))}
       </ul>
     </main>
   );

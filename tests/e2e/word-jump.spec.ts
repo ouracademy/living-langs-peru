@@ -39,18 +39,22 @@ test.describe("Saltapalabras", () => {
     await expect(
       page.getByRole("link", { name: "Jugar en Asháninka" }),
     ).toBeVisible();
-    await expect(page.getByText(/no tiene hablantes/)).toBeVisible();
+    // Uro works like asháninka (spec gestor-lenguas #11).
+    await expect(
+      page.getByRole("link", { name: "Jugar en Uro" }),
+    ).toBeVisible();
     await expectNoLogin(page);
   });
 
-  // AC-SP4-9
-  test("uro answers 200 and explains why there is no game", async ({
-    page,
-  }) => {
+  // AC-L3-3 (replaces AC-SP4-9): uro answers 200 and, with nothing
+  // published, says there is no content yet.
+  test("uro answers 200 and says there is no content yet", async ({ page }) => {
     const response = await page.goto("/juegos/saltapalabras/uro");
 
     expect(response?.status()).toBe(200);
-    await expect(page.getByText(/no tiene hablantes/)).toBeVisible();
+    await expect(
+      page.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeVisible();
     await expectNoLogin(page);
   });
 

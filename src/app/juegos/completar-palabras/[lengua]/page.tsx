@@ -3,12 +3,11 @@ import { notFound } from "next/navigation";
 
 import { UnavailableGame } from "@/components/game/unavailable-game";
 import { WordGame } from "@/components/game/word-game";
+import { getLanguageCode } from "@/lib/dictionary";
 import {
-  getDictionary,
-  getLanguageCode,
-  getLanguagesWithDictionary,
-  getSources,
-} from "@/lib/dictionary";
+  getDictionaryContent,
+  getLanguagesWithContent,
+} from "@/lib/dictionary/content";
 import { buildItems } from "@/lib/game/items";
 import { getLanguage, languages } from "@/lib/languages";
 
@@ -16,6 +15,10 @@ type WordGamePageProps = {
   // The route segment is Spanish because the folder name *is* the public URL.
   params: Promise<{ lengua: string }>;
 };
+
+// Both languages are prerendered and regenerated when their bundle is
+// published (spec gestor-lenguas #1, #5), at most hourly otherwise.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   // Every known language, not just the playable ones: a language we know about
@@ -40,17 +43,19 @@ export async function generateMetadata({
 }
 
 /**
- * Languages that actually yield a pool. Derived from the data, so there is no
- * flag to keep in sync with reality.
+ * Languages that actually yield a pool. Derived from the content, so there is
+ * no flag to keep in sync with reality.
  */
-function playableLanguages() {
-  return getLanguagesWithDictionary()
-    .filter((language) => {
-      const dictionary = getDictionary(language.slug);
-
-      return dictionary !== null && buildItems(dictionary.entries).length > 0;
-    })
-    .map(({ slug, name }) => ({ slug, name }));
+async function playableLanguages() {
+  const withContent = await getLanguagesWithContent();
+  const pools = await Promise.all(
+    withContent.map(async ({ slug, name }) => {
+      const content = await getDictionaryContent(slug);
+      const items = content ? buildItems(content.dictionary.entries) : [];
+      return items.length > 0 ? [{ slug, name }] : [];
+    }),
+  );
+  return pools.flat();
 }
 
 export default async function WordGamePage({ params }: WordGamePageProps) {
@@ -63,10 +68,9 @@ export default async function WordGamePage({ params }: WordGamePageProps) {
     notFound();
   }
 
-  const dictionary = getDictionary(language);
-  // Availability is derived from the data: no pool, no game. There is no flag
-  // to keep in sync.
-  const items = dictionary ? buildItems(dictionary.entries) : [];
+  const content = await getDictionaryContent(language);
+  // Availability is derived from the content: no pool, no game.
+  const items = content ? buildItems(content.dictionary.entries) : [];
 
   return (
     <main className="mx-auto w-full max-w-[720px] flex-1 px-8 py-12">
@@ -74,18 +78,18 @@ export default async function WordGamePage({ params }: WordGamePageProps) {
         Completar palabras en {name}
       </h1>
 
-      {items.length === 0 ? (
+      {!content || items.length === 0 ? (
         <UnavailableGame
-          language={language}
           name={name}
-          playable={playableLanguages()}
+          reason={content ? "no-examples" : "no-content"}
+          playable={await playableLanguages()}
         />
       ) : (
         <WordGame
           items={items}
           language={language}
           languageCode={getLanguageCode(language) ?? ""}
-          sources={getSources()}
+          sources={content.sources}
         />
       )}
     </main>

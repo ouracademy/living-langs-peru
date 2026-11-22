@@ -35,15 +35,25 @@ const ALPHABETS: Record<string, readonly string[]> = {
   ashaninka: ASHANINKA_ALPHABET,
 };
 
-/** Letters outside the alphabet sort after every official letter. */
-const UNKNOWN_RANK = ASHANINKA_ALPHABET.length + 1;
+/**
+ * The alphabet to sort by: a language bundle's own list of graphemes (spec
+ * gestor-lenguas #10), or a language slug with a table here. The slug form
+ * stays until the fixed alphabet is retired (gestor-lenguas F4).
+ */
+export type AlphabetRef = string | readonly string[];
+
+function resolveAlphabet(ref?: AlphabetRef): readonly string[] | undefined {
+  if (ref === undefined) return undefined;
+  if (typeof ref !== "string") return ref.length > 0 ? ref : undefined;
+  return ALPHABETS[ref];
+}
 
 /**
  * Splits a word into alphabet letters, matching the longest first so "ts"
  * never comes back as "t" followed by "s".
  */
-export function tokenizeWord(word: string, language?: string): string[] {
-  const alphabet = language ? ALPHABETS[language] : undefined;
+export function tokenizeWord(word: string, language?: AlphabetRef): string[] {
+  const alphabet = resolveAlphabet(language);
   const text = normalize(word);
 
   if (!alphabet) return [...text];
@@ -65,10 +75,11 @@ export function tokenizeWord(word: string, language?: string): string[] {
 
 const spanish = new Intl.Collator("es", { sensitivity: "base" });
 
+/** Letters outside the alphabet sort after every letter of it. */
 function rank(letter: string, alphabet: readonly string[]): number {
   const index = alphabet.indexOf(letter);
 
-  return index === -1 ? UNKNOWN_RANK : index;
+  return index === -1 ? alphabet.length + 1 : index;
 }
 
 /**
@@ -76,17 +87,17 @@ function rank(letter: string, alphabet: readonly string[]): number {
  * Spanish collation for languages with no table of their own.
  */
 export function getComparator(
-  language?: string,
+  language?: AlphabetRef,
 ): (a: string, b: string) => number {
-  const alphabet = language ? ALPHABETS[language] : undefined;
+  const alphabet = resolveAlphabet(language);
 
   if (!alphabet) {
     return (a, b) => spanish.compare(a, b);
   }
 
   return (a, b) => {
-    const left = tokenizeWord(a, language);
-    const right = tokenizeWord(b, language);
+    const left = tokenizeWord(a, alphabet);
+    const right = tokenizeWord(b, alphabet);
 
     for (let at = 0; at < Math.min(left.length, right.length); at += 1) {
       const difference =
@@ -106,7 +117,10 @@ export function getComparator(
  * "chakopibenki" lands under "Ch" and not under "C". Returns null when the
  * word does not start with a letter.
  */
-export function getInitial(word: string, language?: string): string | null {
+export function getInitial(
+  word: string,
+  language?: AlphabetRef,
+): string | null {
   const [first] = tokenizeWord(word, language);
 
   if (!first || !/^\p{Letter}+$/u.test(first)) return null;

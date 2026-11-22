@@ -2,7 +2,7 @@ import { type LanguageSlug, languages } from "@/lib/languages";
 
 import { PLACEHOLDER_SOURCE_ID } from "./constants";
 import { dictionaries, sources } from "./registry";
-import { getComparator, getInitial } from "./collation";
+import { type AlphabetRef, getComparator, getInitial } from "./collation";
 import { normalize } from "./text";
 import type { Dictionary, Entry, Source } from "./types";
 
@@ -105,7 +105,7 @@ export type LetterGroup = {
  */
 export function groupByLetter(
   entries: Entry[],
-  language?: string,
+  language?: AlphabetRef,
 ): LetterGroup[] {
   const compare = getComparator(language);
   const byLetter = new Map<string, Entry[]>();
@@ -164,7 +164,7 @@ function rank(entry: Entry, query: string): number {
 export function searchEntries(
   entries: Entry[],
   query: string,
-  language?: string,
+  language?: AlphabetRef,
 ): Entry[] {
   const compare = getComparator(language);
   const wanted = normalize(query);
