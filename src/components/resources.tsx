@@ -6,25 +6,25 @@ const resources = [
     icon: BookMarked,
     color: "bg-[#E4572E]",
     title: "Diccionario",
-    text: "Palabras y significados en cada lengua.",
-    cta: "Buscar",
-    href: "/diccionario/ashaninka",
+    text: "Consulta los diccionarios de las dos lenguas.",
+    actions: [
+      { label: "Asháninka", href: "/diccionario/ashaninka" },
+      { label: "Uro", href: "/diccionario/uro" },
+    ],
   },
   {
     icon: Languages,
     color: "bg-[#1B98A0]",
     title: "Traductor",
     text: "Traduce frases entre español y cada lengua.",
-    cta: "Traducir",
-    href: "#",
+    actions: [{ label: "Traducir", href: "#" }],
   },
   {
     icon: Newspaper,
     color: "bg-[#F2B705]",
     title: "Noticias",
     text: "Hechos, reportajes y actualidad",
-    cta: "Leer más",
-    href: "#",
+    actions: [{ label: "Leer más", href: "#" }],
   },
   // {
   //   icon: Paperclip,
@@ -68,14 +68,19 @@ export default function Resources() {
                     {resource.text}
                   </p>
                 </div>
-                <div>
-                  <Link
-                    href={resource.href}
-                    className="border-b-2 border-[#F2B705] text-sm font-bold text-[#241D14] no-underline"
-                  >
-                    {resource.cta}
-                  </Link>
-                </div>
+                {resource.actions.length > 0 && (
+                  <div className="flex flex-wrap gap-x-5 gap-y-2">
+                    {resource.actions.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="border-b-2 border-[#F2B705] text-sm font-bold text-[#241D14] no-underline"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
