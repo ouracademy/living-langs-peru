@@ -30,10 +30,12 @@ import {
   sourceUsage,
   themesWithEntry,
   uniqueId,
+  unverifyEntries,
   updateAlphabetMaps,
   updateEntry,
   updateSource,
   updateTheme,
+  verificationTargets,
   verifyEntries,
 } from "@/lib/language-bundles/edit-bundle";
 import { parseBundle } from "@/lib/language-bundles/schema";
@@ -148,6 +150,38 @@ describe("entries", () => {
     });
     expect(bundle.entries[1].verified).toBe(false);
     expectValid(bundle);
+  });
+
+  it("takes the verification off the chosen words and forgets who checked", () => {
+    const base = testBundle({
+      entries: [
+        testEntry({ verified: true, verifiedBy: "Hablante de PRUEBA" }),
+        testEntry({ id: "otra", verified: true, verifiedBy: "PRUEBA" }),
+      ],
+      themes: [],
+    });
+    const bundle = unverifyEntries(base, ["prueba-uno"]);
+    expect(bundle.entries[0].verified).toBe(false);
+    expect(bundle.entries[0]).not.toHaveProperty("verifiedBy");
+    expect(bundle.entries[1]).toMatchObject({
+      verified: true,
+      verifiedBy: "PRUEBA",
+    });
+    expectValid(bundle);
+  });
+
+  it("splits the chosen words into what each bulk action would change", () => {
+    const base = testBundle({
+      entries: [
+        testEntry({ verified: true }),
+        testEntry({ id: "dos", verified: false }),
+        testEntry({ id: "tres", verified: false }),
+      ],
+      themes: [],
+    });
+    expect(
+      verificationTargets(base, ["tres", "prueba-uno", "no-existe"]),
+    ).toEqual({ toVerify: ["tres"], toUnverify: ["prueba-uno"] });
   });
 });
 

@@ -217,6 +217,89 @@ describe("Palabras", () => {
     expect(draft().entries[0].verifiedBy).toBe("Hablante de PRUEBA");
   });
 
+  // AC-L4-7
+  it("verifies only the selected words", () => {
+    openEditor(
+      testBundle({
+        entries: [
+          testEntry({ verified: false }),
+          testEntry({ id: "otra", word: "mesa", verified: false }),
+          testEntry({ id: "tercera", word: "zorro", verified: false }),
+        ],
+        themes: [],
+      }),
+    );
+    fireEvent.click(screen.getByLabelText("Seleccionar «mesa»"));
+    fireEvent.click(screen.getByLabelText("Seleccionar «zorro»"));
+    expect(screen.getByText(/2 seleccionadas/)).toBeTruthy();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Marcar las 2 sin verificar de la selección como verificadas",
+      }),
+    );
+    fireEvent.change(screen.getByLabelText("Quién o qué las verificó"), {
+      target: { value: "Hablante de PRUEBA" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Sí, marcar 2 como verificadas" }),
+    );
+
+    const verified = draft()
+      .entries.filter((entry) => entry.verified)
+      .map((entry) => entry.id);
+    expect(verified).toEqual(["otra", "tercera"]);
+    expect(screen.queryByText(/seleccionadas/)).toBeNull();
+  });
+
+  // AC-L4-7
+  it("takes the verification off the whole list, after asking", () => {
+    openEditor(
+      testBundle({
+        entries: [
+          testEntry({ verified: true, verifiedBy: "PRUEBA" }),
+          testEntry({ id: "otra", word: "mesa", verified: true }),
+          testEntry({ id: "tercera", word: "zorro", verified: false }),
+        ],
+        themes: [],
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Quitar la verificación a las 2 verificadas de esta lista",
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Sí, quitar la verificación a 2" }),
+    );
+
+    expect(draft().entries.some((entry) => entry.verified)).toBe(false);
+    expect(draft().entries[0]).not.toHaveProperty("verifiedBy");
+    expect(status()).toMatch(/2 palabras ya no están verificadas/);
+  });
+
+  it("selects the whole list and forgets the selection when the filter changes", () => {
+    openEditor(
+      testBundle({
+        entries: [
+          testEntry({ verified: true }),
+          testEntry({ id: "otra", word: "mesa", verified: false }),
+        ],
+        themes: [],
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Seleccionar las 2 de esta lista" }),
+    );
+    expect(screen.getByText(/2 seleccionadas/)).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Quitar la selección (2)" }),
+    ).toBeTruthy();
+
+    fireEvent.click(screen.getByLabelText("Solo sin verificar"));
+    expect(screen.queryByText(/seleccionadas/)).toBeNull();
+  });
+
   it("filters by search and by «sin verificar»", () => {
     openEditor(
       testBundle({

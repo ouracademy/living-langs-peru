@@ -5,7 +5,6 @@ import {
   emptyEntryFields,
   type EntryFilter,
   filterEntries,
-  verifyEntries,
 } from "@/lib/language-bundles/edit-bundle";
 import type { LanguageBundle } from "@/lib/language-bundles/types";
 
@@ -15,9 +14,9 @@ import {
   primaryButton,
   secondaryButton,
 } from "../bundle-admin/styles";
+import { BulkVerify } from "./bulk-verify";
 import { EntryForm } from "./entry-form";
 import { EntryRow } from "./entry-row";
-import { TextField } from "./fields";
 import type { EditorChange } from "./types";
 
 /** Rows shown at once; «Mostrar más» adds this many. */
@@ -75,65 +74,6 @@ function FilterBar({
   );
 }
 
-/** Verifying is a decision: it asks who checked, then asks to confirm. */
-function VerifyVisible({
-  bundle,
-  ids,
-  onChange,
-}: {
-  bundle: LanguageBundle;
-  ids: string[];
-  onChange: EditorChange;
-}) {
-  const [open, setOpen] = useState(false);
-  const [by, setBy] = useState("");
-  if (ids.length === 0) return null;
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className={secondaryButton}
-      >
-        Marcar las {ids.length} sin verificar de esta lista como verificadas
-      </button>
-    );
-  }
-  return (
-    <div className="flex flex-col gap-3 rounded-xl bg-white p-4">
-      <TextField
-        label="Quién o qué las verificó"
-        hint="Una persona hablante o la fuente oficial."
-        value={by}
-        onChange={setBy}
-      />
-      <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          disabled={!by.trim()}
-          onClick={() => {
-            onChange(
-              verifyEntries(bundle, ids, by),
-              `${ids.length} palabras marcadas como verificadas.`,
-            );
-            setOpen(false);
-          }}
-          className={primaryButton}
-        >
-          Sí, marcar {ids.length} como verificadas
-        </button>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className={secondaryButton}
-        >
-          Cancelar
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function AddEntry({
   bundle,
   lang,
@@ -180,11 +120,19 @@ export function EntriesPanel({
   limit,
   onLimit,
 }: EntriesPanelProps) {
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const visible = filterEntries(bundle, filter);
   const shown = visible.slice(0, limit);
-  const unverifiedIds = visible
-    .filter((entry) => !entry.verified)
-    .map((entry) => entry.id);
+  const visibleIds = visible.map((entry) => entry.id);
+  // Only what the list shows can be acted on: a removed word drops out.
+  const selectedIds = visibleIds.filter((id) => selected.has(id));
+
+  const toggle = (id: string, checked: boolean) => {
+    const next = new Set(selected);
+    if (checked) next.add(id);
+    else next.delete(id);
+    setSelected(next);
+  };
 
   return (
     <div className="flex flex-col gap-5">
@@ -194,12 +142,20 @@ export function EntriesPanel({
         onFilter={(next) => {
           onFilter(next);
           onLimit(ENTRY_PAGE);
+          setSelected(new Set());
         }}
       />
-      <p className="text-sm font-bold">
+      <p className="text-sm font-bold" aria-live="polite">
         {visible.length} de {bundle.entries.length} palabras
+        {selectedIds.length > 0 ? ` · ${selectedIds.length} seleccionadas` : ""}
       </p>
-      <VerifyVisible bundle={bundle} ids={unverifiedIds} onChange={onChange} />
+      <BulkVerify
+        bundle={bundle}
+        visibleIds={visibleIds}
+        selectedIds={selectedIds}
+        onSelect={(ids) => setSelected(new Set(ids))}
+        onChange={onChange}
+      />
       <ul className="flex flex-col gap-3">
         {shown.map((entry) => (
           <EntryRow
@@ -207,6 +163,8 @@ export function EntriesPanel({
             bundle={bundle}
             entry={entry}
             lang={lang}
+            selected={selected.has(entry.id)}
+            onSelect={(checked) => toggle(entry.id, checked)}
             onChange={onChange}
           />
         ))}

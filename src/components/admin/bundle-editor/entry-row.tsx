@@ -22,6 +22,9 @@ type EntryRowProps = {
   bundle: LanguageBundle;
   entry: BundleEntry;
   lang: string;
+  /** Chosen for «Marcar como verificadas» or «Quitar la verificación». */
+  selected: boolean;
+  onSelect: (checked: boolean) => void;
   onChange: EditorChange;
 };
 
@@ -73,7 +76,14 @@ function RemoveConfirm({
  * One word: what the dictionary shows, «Verificada», and «Editar» or «Quitar»
  * in place. The row is the anchor the error list links to.
  */
-export function EntryRow({ bundle, entry, lang, onChange }: EntryRowProps) {
+export function EntryRow({
+  bundle,
+  entry,
+  lang,
+  selected,
+  onSelect,
+  onChange,
+}: EntryRowProps) {
   const [mode, setMode] = useState<"view" | "edit" | "remove">("view");
   const source = bundle.sources.find((each) => each.id === entry.sourceId);
 
@@ -84,6 +94,15 @@ export function EntryRow({ bundle, entry, lang, onChange }: EntryRowProps) {
       className="rounded-[20px] border-2 border-[#E8DCC4] bg-white p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C7431C]"
     >
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <label className="flex size-11 shrink-0 cursor-pointer items-center justify-center">
+          <input
+            type="checkbox"
+            aria-label={`Seleccionar «${entry.word}»`}
+            checked={selected}
+            onChange={(event) => onSelect(event.target.checked)}
+            className="size-5"
+          />
+        </label>
         <span aria-hidden="true" className="w-8 text-2xl">
           {entry.emoji ?? "·"}
         </span>

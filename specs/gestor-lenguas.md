@@ -178,15 +178,15 @@ por el script de exportación.
 
 ## 5. L4 — `/admin/lenguas`
 
-| Pantalla                  | Qué hace                                                                                                                                                                              |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/admin/lenguas`          | Las dos lenguas, con versión publicada, entradas (verificadas / total), temas y fecha. Reemplaza la tarjeta de `/admin/juego` en `/admin`.                                            |
-| `/admin/lenguas/[lengua]` | Pestañas **Palabras**, **Juegos**, **Alfabeto**, **Fuentes**, **Publicar**. Arriba: «Subir JSON», «Descargar», «Probar» y el resumen de errores y avisos, que enlaza a cada problema. |
-| Palabras                  | Editor de SP6b generalizado: búsqueda, filtros (sin verificar, sin dibujo, fuera del alfabeto), editar, **agregar**, quitar, «marcar como verificadas» con quién verificó.            |
-| Juegos                    | Temas: nombre, icono, modo y qué entradas incluye (selector con búsqueda). Agregar y quitar temas.                                                                                    |
-| Alfabeto                  | Grafías en orden (agregar, quitar, reordenar), vocales, variantes, confusables y su fuente. Vista previa del orden con las palabras cargadas.                                         |
-| Fuentes                   | Lista editable. No se puede borrar una fuente que cita alguna entrada.                                                                                                                |
-| Publicar                  | Nota obligatoria, versión esperada, conflicto si alguien publicó antes, historial con descargar y restaurar.                                                                          |
+| Pantalla                  | Qué hace                                                                                                                                                                                                                                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/admin/lenguas`          | Las dos lenguas, con versión publicada, entradas (verificadas / total), temas y fecha. Reemplaza la tarjeta de `/admin/juego` en `/admin`.                                                                                                                                               |
+| `/admin/lenguas/[lengua]` | Pestañas **Palabras**, **Juegos**, **Alfabeto**, **Fuentes**, **Publicar**. Arriba: «Subir JSON», «Descargar», «Probar» y el resumen de errores y avisos, que enlaza a cada problema.                                                                                                    |
+| Palabras                  | Editor de SP6b generalizado: búsqueda, filtros (sin verificar, sin dibujo, fuera del alfabeto), editar, **agregar**, quitar, «marcar como verificadas» con quién verificó y «quitar la verificación», para las palabras **seleccionadas** o, sin selección, para toda la lista filtrada. |
+| Juegos                    | Temas: nombre, icono, modo y qué entradas incluye (selector con búsqueda). Agregar y quitar temas.                                                                                                                                                                                       |
+| Alfabeto                  | Grafías en orden (agregar, quitar, reordenar), vocales, variantes, confusables y su fuente. Vista previa del orden con las palabras cargadas.                                                                                                                                            |
+| Fuentes                   | Lista editable. No se puede borrar una fuente que cita alguna entrada.                                                                                                                                                                                                                   |
+| Publicar                  | Nota obligatoria, versión esperada, conflicto si alguien publicó antes, historial con descargar y restaurar.                                                                                                                                                                             |
 
 Usable a 360 px, objetivos ≥ 44 px, teclado completo.
 
@@ -225,23 +225,24 @@ diccionario filtra en memoria sobre el paquete cacheado.
 
 ## 7. Criterios de aceptación
 
-| ID      | Criterio                                                                                                                                             |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AC-L1-1 | `parseBundle` acepta un paquete válido y rechaza uno con `schema` distinto, un tema que referencia una entrada inexistente o una entrada sin fuente. |
-| AC-L1-2 | Una palabra con letras fuera del alfabeto da un aviso, no un error.                                                                                  |
-| AC-L1-3 | Los ejemplos y fixtures del formato usan palabras marcadas «PRUEBA».                                                                                 |
-| AC-L2-1 | Publicar con versión vieja da conflicto y no cambia nada; restaurar crea una versión nueva.                                                          |
-| AC-L2-2 | Si Supabase falla, la página sigue con la última versión buena; sin variables, el build usa el respaldo del repo.                                    |
-| AC-L3-1 | Con el asháninka servido desde su paquete, `/diccionario/ashaninka` y los dos juegos se ven igual que antes.                                         |
-| AC-L3-2 | Una entrada sin verificar no aparece en ninguna página pública ni en la API.                                                                         |
-| AC-L3-3 | Las rutas de las dos lenguas salen en la tabla de `next build` como prerenderizadas; sin paquete del uro, sus páginas dicen que no hay contenido.    |
-| AC-L4-1 | Subir un JSON válido del uro y publicarlo hace aparecer sus palabras verificadas en `/diccionario/uro` y su juego, sin desplegar.                    |
-| AC-L4-2 | Subir un JSON sobre una lengua con contenido muestra el resumen de diferencias y no reemplaza nada sin confirmar.                                    |
-| AC-L4-3 | Agregar una palabra y cambiar la traducción de otra desde «Palabras», y publicar, cambia el diccionario y los dos juegos.                            |
-| AC-L4-4 | Reordenar el alfabeto cambia el orden del diccionario en la vista previa y, tras publicar, en el sitio.                                              |
-| AC-L4-5 | No se puede borrar una fuente que alguna entrada cita.                                                                                               |
-| AC-L4-6 | Todo el admin de lenguas funciona con teclado y a 360 px sin scroll horizontal.                                                                      |
-| AC-L5-1 | Tras F4, el alfabeto y las palabras de ninguna de las dos lenguas están escritos en `src/lib/` ni `src/data/dictionary/`.                            |
+| ID      | Criterio                                                                                                                                                                                                                                                                      |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-L1-1 | `parseBundle` acepta un paquete válido y rechaza uno con `schema` distinto, un tema que referencia una entrada inexistente o una entrada sin fuente.                                                                                                                          |
+| AC-L1-2 | Una palabra con letras fuera del alfabeto da un aviso, no un error.                                                                                                                                                                                                           |
+| AC-L1-3 | Los ejemplos y fixtures del formato usan palabras marcadas «PRUEBA».                                                                                                                                                                                                          |
+| AC-L2-1 | Publicar con versión vieja da conflicto y no cambia nada; restaurar crea una versión nueva.                                                                                                                                                                                   |
+| AC-L2-2 | Si Supabase falla, la página sigue con la última versión buena; sin variables, el build usa el respaldo del repo.                                                                                                                                                             |
+| AC-L3-1 | Con el asháninka servido desde su paquete, `/diccionario/ashaninka` y los dos juegos se ven igual que antes.                                                                                                                                                                  |
+| AC-L3-2 | Una entrada sin verificar no aparece en ninguna página pública ni en la API.                                                                                                                                                                                                  |
+| AC-L3-3 | Las rutas de las dos lenguas salen en la tabla de `next build` como prerenderizadas; sin paquete del uro, sus páginas dicen que no hay contenido.                                                                                                                             |
+| AC-L4-1 | Subir un JSON válido del uro y publicarlo hace aparecer sus palabras verificadas en `/diccionario/uro` y su juego, sin desplegar.                                                                                                                                             |
+| AC-L4-2 | Subir un JSON sobre una lengua con contenido muestra el resumen de diferencias y no reemplaza nada sin confirmar.                                                                                                                                                             |
+| AC-L4-3 | Agregar una palabra y cambiar la traducción de otra desde «Palabras», y publicar, cambia el diccionario y los dos juegos.                                                                                                                                                     |
+| AC-L4-4 | Reordenar el alfabeto cambia el orden del diccionario en la vista previa y, tras publicar, en el sitio.                                                                                                                                                                       |
+| AC-L4-5 | No se puede borrar una fuente que alguna entrada cita.                                                                                                                                                                                                                        |
+| AC-L4-6 | Todo el admin de lenguas funciona con teclado y a 360 px sin scroll horizontal.                                                                                                                                                                                               |
+| AC-L4-7 | En «Palabras» se puede seleccionar palabras sueltas o toda la lista filtrada y marcarlas como verificadas (pide quién verificó) o quitarles la verificación (pide confirmar); sin selección, la acción es sobre toda la lista filtrada. Cambiar el filtro borra la selección. |
+| AC-L5-1 | Tras F4, el alfabeto y las palabras de ninguna de las dos lenguas están escritos en `src/lib/` ni `src/data/dictionary/`.                                                                                                                                                     |
 
 ---
 

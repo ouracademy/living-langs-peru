@@ -155,6 +155,35 @@ export function verifyEntries(
   };
 }
 
+/** «Quitar la verificación»: the words stop showing on the site and games. */
+export function unverifyEntries(
+  bundle: LanguageBundle,
+  ids: Iterable<string>,
+): LanguageBundle {
+  const chosen = new Set(ids);
+  return {
+    ...bundle,
+    entries: bundle.entries.map((entry) =>
+      chosen.has(entry.id)
+        ? tidyEntry({ ...entry, verified: false, verifiedBy: "" })
+        : entry,
+    ),
+  };
+}
+
+/** Of the chosen words, the ones each bulk action would actually change. */
+export function verificationTargets(
+  bundle: LanguageBundle,
+  ids: Iterable<string>,
+): { toVerify: string[]; toUnverify: string[] } {
+  const chosen = new Set(ids);
+  const picked = bundle.entries.filter((entry) => chosen.has(entry.id));
+  return {
+    toVerify: picked.filter((entry) => !entry.verified).map((e) => e.id),
+    toUnverify: picked.filter((entry) => entry.verified).map((e) => e.id),
+  };
+}
+
 /** Letters of a word that the alphabet does not have, normalised. */
 export function lettersOutsideAlphabet(
   word: string,
