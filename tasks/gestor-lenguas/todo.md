@@ -1,8 +1,8 @@
 # TODO — Gestor de contenido de lenguas
 
 > Plan: [plan.md](./plan.md) · Spec: [specs/gestor-lenguas.md](../../specs/gestor-lenguas.md)
-> Estado: **F1 hecha (2026-11-21)** y **F2 hecha (2026-11-22)** en la rama `feat/gestor-lenguas`.
-> F3 en adelante, sin empezar.
+> Estado: **F1 hecha (2026-11-21)**, **F2 y F3 hechas (2026-11-22)** en la rama
+> `feat/gestor-lenguas`. F4, sin empezar.
 
 Cada tarea cierra con `pnpm check:fast`; cada fase, con `pnpm check:task` y e2e completos.
 
@@ -58,11 +58,19 @@ tocan las líneas base ni los umbrales.
 
 ## F3 — Editar (L4)
 
-- [ ] **T3.1** Palabras: editor de SP6b generalizado `[AC-L4-3]`
-- [ ] **T3.2** Juegos: temas con selector de entradas
-- [ ] **T3.3** Alfabeto y vista previa del orden `[AC-L4-4]`
-- [ ] **T3.4** Fuentes `[AC-L4-5]`
-- [ ] **T3.5** Teclado y 360 px `[AC-L4-6]`
+- [x] **T3.1** Palabras: búsqueda, filtros (sin verificar, sin dibujo, fuera del alfabeto), editar
+      todos los campos, agregar, quitar, verificar por palabra y «las de esta lista» con quién
+      verificó `[AC-L4-3]` — lógica en `edit-bundle.ts`, UI en `bundle-editor/`. No reusa los
+      componentes de SP6b: aquel modelo guarda palabras dentro de cada tema; este, una sola lista
+      con temas que la referencian (ver plan §8)
+- [x] **T3.2** Juegos: temas (agregar, renombrar, icono, modo, quitar) con selector de entradas con
+      búsqueda; aviso «no se puede jugar» por tema
+- [x] **T3.3** Alfabeto: agregar, quitar, reordenar con teclado (el foco sigue a la letra), vocales,
+      variantes, confusables, fuente; vista previa del orden `[AC-L4-4]`
+- [x] **T3.4** Fuentes: editar, agregar; quitar una fuente citada se rechaza y dice quién la cita
+      `[AC-L4-5]`
+- [x] **T3.5** Teclado (pestañas WAI-ARIA, formularios, Escape) y 360 px; e2e de punta a punta que
+      edita, publica y ve el cambio `[AC-L4-6]`
 
 ## F4 — Retirar lo duplicado (L5)
 

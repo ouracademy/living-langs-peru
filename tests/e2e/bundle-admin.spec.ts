@@ -112,3 +112,37 @@ test("fits a 360 px phone without horizontal scrolling", async ({ page }) => {
   const upload44 = await page.getByText("Subir JSON").boundingBox();
   expect(upload44?.height ?? 0).toBeGreaterThanOrEqual(44);
 });
+
+// AC-L4-6 (F3): every tab of the editor fits a 360 px phone, and the tabs move
+// with the arrow keys.
+test("the editor fits a 360 px phone and its tabs work with the keyboard", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/admin/lenguas/uro");
+  await upload(page, fixtureText);
+  await expect(page.getByText(/Copia de trabajo: 4 palabras/)).toBeVisible();
+
+  const overflow = () =>
+    page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+
+  await page
+    .locator("#palabra-pruebauno")
+    .getByRole("button", { name: "Editar «pruebauno»" })
+    .click();
+  expect(await overflow()).toBeLessThanOrEqual(0);
+
+  await page.getByRole("tab", { name: "Palabras" }).focus();
+  for (const name of ["Juegos", "Alfabeto", "Fuentes"]) {
+    await page.keyboard.press("ArrowRight");
+    const tab = page.getByRole("tab", { name });
+    await expect(tab).toBeFocused();
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    expect(await overflow()).toBeLessThanOrEqual(0);
+  }
+
+  const tabBox = await page.getByRole("tab", { name: "Fuentes" }).boundingBox();
+  expect(tabBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+});

@@ -73,3 +73,54 @@ test("lists the published version on /admin/lenguas and in the history", async (
     page.getByRole("button", { name: "Descargar la versión 1" }),
   ).toBeVisible();
 });
+
+// AC-L4-3, AC-L4-4 (F3): edit the published uro in the interface — fix a
+// translation, add a verified word, move a letter with the keyboard — publish,
+// and see the new translation and the new order on the public dictionary.
+test("edits a word and the alphabet in the interface and publishes them", async ({
+  page,
+}) => {
+  await page.goto("/admin/lenguas/uro");
+  await page
+    .getByRole("button", { name: "Trabajar sobre lo publicado" })
+    .click();
+
+  const row = page.locator("#palabra-pruebauno");
+  await row.getByRole("button", { name: "Editar «pruebauno»" }).click();
+  await row.getByLabel("Traducciones").fill("PRUEBA uno editada");
+  await row.getByRole("button", { name: "Guardar" }).click();
+  await expect(page.getByRole("status")).toContainText("«pruebauno» guardada");
+
+  await page.getByRole("button", { name: "Agregar una palabra" }).click();
+  const added = page.getByRole("region", { name: "Palabra nueva" });
+  await added.getByLabel("Palabra", { exact: true }).fill("spruebacinco");
+  await added.getByLabel("Traducciones").fill("PRUEBA cinco");
+  await added.getByLabel("Verificada: puede aparecer en el sitio").check();
+  await added.getByLabel("Quién o qué la verificó").fill("e2e de PRUEBA");
+  await added.getByRole("button", { name: "Agregar", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "«spruebacinco» agregada",
+  );
+
+  // «s» goes before «p», with the keyboard: the focus follows the letter.
+  await page.getByRole("tab", { name: "Alfabeto" }).click();
+  await page.getByRole("button", { name: "Subir «s»" }).focus();
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("button", { name: "Subir «s»" })).toBeFocused();
+  const terms = page
+    .getByRole("region", { name: "Así ordena el diccionario" })
+    .getByRole("term");
+  await expect(terms).toHaveText(["S", "P"]);
+
+  await page.getByLabel(/Nota de publicación/).fill("Edición de PRUEBA e2e");
+  await page.getByRole("button", { name: "Publicar", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "Publicada la versión 2",
+  );
+
+  await expectEventually(page, "/diccionario/uro", /PRUEBA uno editada/);
+  const text = await page.locator("main").innerText();
+  expect(text.indexOf("spruebacinco")).toBeGreaterThanOrEqual(0);
+  expect(text.indexOf("spruebacinco")).toBeLessThan(text.indexOf("pruebauno"));
+});

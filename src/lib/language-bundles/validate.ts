@@ -1,11 +1,9 @@
 import { normalize } from "../dictionary/text.ts";
-import {
-  normalizeGrapheme,
-  tokenizeGraphemes,
-} from "../language-packs/graphemes.ts";
+import { normalizeGrapheme } from "../language-packs/graphemes.ts";
 import { playableThemes } from "../language-packs/playable.ts";
 
 import { bundleToPack } from "./adapters.ts";
+import { lettersOutsideAlphabet } from "./edit-bundle.ts";
 import type { BundleEntry, LanguageBundle } from "./types.ts";
 
 /** A serialized bundle this size or bigger is refused (spec decision #14). */
@@ -151,14 +149,11 @@ function letterWarnings(bundle: LanguageBundle): BundleIssue[] {
     }));
 
   for (const entry of bundle.entries) {
-    // Tokens keep the word's own spelling; compare them normalised.
-    const outside = tokenizeGraphemes(entry.word, graphemes)
-      .map(normalizeGrapheme)
-      .filter((token) => /\p{Letter}/u.test(token) && !known.has(token));
+    const outside = lettersOutsideAlphabet(entry.word, graphemes);
     if (outside.length > 0) {
       warnings.push({
         code: "letter_outside_alphabet",
-        message: `«${entry.word}» usa letras que no están en el alfabeto: ${[...new Set(outside)].join(", ")}.`,
+        message: `«${entry.word}» usa letras que no están en el alfabeto: ${outside.join(", ")}.`,
         entryId: entry.id,
       });
     }

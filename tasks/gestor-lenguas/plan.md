@@ -139,3 +139,49 @@ cambiadas y que faltan; «Cancelar» no cambia nada; «Reemplazar» sí).
    copia vieja. Estilos, formato de fechas y `downloadText` se importan de `pack-admin/`.
 5. **«Descargar plantilla»** genera en el navegador lo mismo que
    `docs/gestor-lenguas/plantilla-uro.json` (un test lo compara), con la lengua de la página.
+
+## 8. Resultado de F3 (2026-11-22)
+
+Hecho: T3.1 a T3.5. `pnpm check:task`: 105 archivos, 1144 tests, cobertura del cambio 98,2 %. E2E
+completos: 150 de 150 (dos nuevos: editar y publicar desde la interfaz; pestañas con teclado y 360
+px).
+
+**Diseño**
+
+- **Lógica pura** en `src/lib/language-bundles/edit-bundle.ts` (palabras, temas, alfabeto, fuentes,
+  formularios) y `editor-view.ts` (a qué pestaña y fila lleva cada error o aviso; vista previa del
+  orden alfabético). Todo resultado **sigue pasando `parseBundle`**, porque la copia de trabajo se
+  vuelve a leer con él al recargar: un test lo comprueba tras cada operación.
+- **UI** en `src/components/admin/bundle-editor/`: pestañas WAI-ARIA (flechas, Inicio, Fin), un panel
+  por pestaña y campos con etiqueta y error asociado (`fields.tsx`). La lista de errores y avisos
+  enlaza a la pestaña y a la fila (`goTo` en `bundle-admin.tsx`, con `flushSync` y foco).
+- «Empezar desde la plantilla» crea la copia de trabajo sin subir un archivo (útil para el uro).
+
+**Desvíos**
+
+1. **No se reusa el editor de SP6b** (`pack-admin/`, `edit-pack.ts`): allí cada tema guarda copias de
+   sus palabras y «la misma palabra» se reconoce por su escritura; aquí hay una lista única y los temas
+   la referencian por id (spec #3). Generalizarlo habría cambiado su modelo; se retira con
+   `/admin/juego` en F4. Se reusan los estilos (`pack-admin/styles.ts`) y `downloadText`.
+2. **Quitar una palabra** la saca también de los temas que la muestran, avisando cuáles. Si sería la
+   **única** palabra de un tema, no se quita: el esquema exige al menos una por tema.
+3. **Mínimos que el editor no deja romper** (el esquema los exige): una fuente, una letra, una vocal,
+   una palabra por tema.
+4. **Los nombres accesibles** de «Editar», «Quitar» y «Guardar el tema» van en `aria-label` (con la
+   palabra visible dentro), no en un `<span class="sr-only">` con espacio inicial: en jsdom ese
+   espacio se perdía (mismo hallazgo que SP6b).
+5. **`playwright.config.ts`**: el servidor de los e2e borra `.next/cache/fetch-cache` antes del build.
+   En local, la caché de datos sobrevive a `next build` y un uro publicado por una corrida anterior
+   volvía sin el Supabase falso: cuatro specs de «uro sin contenido» fallaban en la segunda corrida.
+   En CI no pasaba (checkout limpio).
+6. `validate.ts` usa `lettersOutsideAlphabet` de `edit-bundle.ts` en lugar de su copia.
+7. **Verificar**: por fila es una casilla; quién verificó se escribe en el formulario de la palabra.
+   «Marcar las de esta lista» exige quién verificó y una confirmación con el número.
+8. **Errores sin palabra** (`duplicate_id`, `unknown_source` del alfabeto) llevan a «Fuentes»; los de
+   tema, a «Juegos»; los del alfabeto, a «Alfabeto».
+9. **Quitar una letra** la quita también de las vocales y de las letras que se confunden; las vocales
+   se guardan en el orden del alfabeto.
+10. `CopyActions` sale de `bundle-admin.tsx` (complejidad) y suma «Empezar desde la plantilla»; el
+    título de errores en `bundle-issues.tsx` dice «antes de publicar».
+
+**Sin verificar:** Supabase real, Safari y Firefox, lectores de pantalla reales.

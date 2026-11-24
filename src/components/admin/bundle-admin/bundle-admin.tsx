@@ -1,30 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import { flushSync } from "react-dom";
 
 import {
   type BundleDiff,
   bundleFileName,
-  bundleTemplate,
   diffBundles,
   exportBundleText,
   importBundleText,
   isEmptyDiff,
   summarizeBundle,
 } from "@/lib/language-bundles/bundle-file";
+import {
+  type EntryFilter,
+  NO_FILTER,
+} from "@/lib/language-bundles/edit-bundle";
+import {
+  type EditorTab,
+  issueTarget,
+} from "@/lib/language-bundles/editor-view";
 import type {
   BundleLanguage,
   LanguageBundle,
 } from "@/lib/language-bundles/types";
-import { validateBundle } from "@/lib/language-bundles/validate";
-
-import { downloadText } from "../pack-admin/pack-api";
 import {
-  dangerButton,
-  primaryButton,
-  secondaryButton,
-} from "../pack-admin/styles";
+  type BundleIssue,
+  validateBundle,
+} from "@/lib/language-bundles/validate";
+
+import { BundleEditor } from "../bundle-editor/bundle-editor";
+import { ENTRY_PAGE } from "../bundle-editor/entries-panel";
+import { downloadText } from "../pack-admin/pack-api";
+import { dangerButton, secondaryButton } from "../pack-admin/styles";
 import { BundleHistory, type HistoryVersion } from "./bundle-history";
 import { BundleIssues } from "./bundle-issues";
 import {
@@ -35,6 +44,7 @@ import {
 } from "./bundle-parts";
 import { BundlePreview } from "./bundle-preview";
 import { BundlePublishForm } from "./bundle-publish-form";
+import { CopyActions } from "./copy-actions";
 import {
   discardBundleDraft,
   getBundleDraft,
@@ -104,7 +114,6 @@ export function BundleAdmin({
   versions,
 }: BundleAdminProps) {
   const router = useRouter();
-  const fileId = useId();
   const draft = useSyncExternalStore(
     subscribeBundleDrafts,
     () => getBundleDraft(language),
@@ -114,6 +123,9 @@ export function BundleAdmin({
   const [pending, setPending] = useState<PendingUpload | null>(null);
   const [previewing, setPreviewing] = useState(false);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [tab, setTab] = useState<EditorTab>("palabras");
+  const [filter, setFilter] = useState<EntryFilter>(NO_FILTER);
+  const [limit, setLimit] = useState(ENTRY_PAGE);
 
   const validation = useMemo(
     () =>
@@ -143,6 +155,38 @@ export function BundleAdmin({
         ? done
         : `${done} No se pudo guardar una copia en este navegador: si cierras la pestaña, se pierde.`,
     });
+  }
+
+  /** An edit from the editor: the preview stays open, the message is announced. */
+  function edit(bundle: LanguageBundle | null, message: string) {
+    if (!bundle) {
+      setNotice({ tone: "problem", text: message });
+      return;
+    }
+    const saved = setBundleDraft(language, bundle);
+    setNotice({
+      tone: saved ? "ok" : "problem",
+      text: saved
+        ? message
+        : `${message} No se pudo guardar una copia en este navegador: si cierras la pestaña, se pierde.`,
+    });
+  }
+
+  /** From the list of problems to where each one is fixed. */
+  function goTo(issue: BundleIssue) {
+    const target = issueTarget(issue);
+    if (!target) return;
+    flushSync(() => {
+      setTab(target.tab);
+      if (target.tab === "palabras") {
+        // The row has to be in the list to receive the focus.
+        setFilter(NO_FILTER);
+        setLimit(Number.MAX_SAFE_INTEGER);
+      }
+    });
+    const element = document.getElementById(target.anchor);
+    element?.scrollIntoView?.({ block: "center" });
+    element?.focus();
   }
 
   async function onFile(file: File | undefined) {
@@ -178,61 +222,13 @@ export function BundleAdmin({
       <p className="mt-1 text-sm text-[#4A4130]">
         Vive solo en este navegador hasta que la publiques.
       </p>
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <label htmlFor={fileId} className={primaryButton}>
-          Subir JSON
-        </label>
-        <input
-          id={fileId}
-          type="file"
-          accept="application/json,.json"
-          className="sr-only"
-          onChange={(event) => {
-            void onFile(event.target.files?.[0]);
-            event.target.value = "";
-          }}
-        />
-        {current && !draft ? (
-          <button
-            type="button"
-            onClick={() =>
-              keep(
-                current.bundle,
-                "Copiamos el contenido publicado para trabajar.",
-              )
-            }
-            className={secondaryButton}
-          >
-            Trabajar sobre lo publicado
-          </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={() =>
-            downloadText(
-              bundleFileName(language, "plantilla"),
-              exportBundleText(bundleTemplate(language)),
-            )
-          }
-          className={secondaryButton}
-        >
-          Descargar plantilla
-        </button>
-        {current ? (
-          <button
-            type="button"
-            onClick={() =>
-              downloadText(
-                bundleFileName(language, current.version),
-                exportBundleText(current.bundle),
-              )
-            }
-            className={secondaryButton}
-          >
-            Descargar lo publicado
-          </button>
-        ) : null}
-      </div>
+      <CopyActions
+        language={language}
+        hasDraft={Boolean(draft)}
+        current={current}
+        onFile={(file) => void onFile(file)}
+        onStart={keep}
+      />
 
       {pending ? (
         <UploadConfirm
@@ -310,11 +306,24 @@ export function BundleAdmin({
             )}
           </div>
 
-          <BundleIssues validation={validation} />
+          <BundleIssues validation={validation} onGo={goTo} />
 
           {previewing ? (
             <BundlePreview bundle={draft} name={name} isoCode={isoCode} />
           ) : null}
+
+          <BundleEditor
+            bundle={draft}
+            lang={isoCode}
+            validation={validation}
+            tab={tab}
+            onTab={setTab}
+            filter={filter}
+            onFilter={setFilter}
+            limit={limit}
+            onLimit={setLimit}
+            onChange={edit}
+          />
 
           <h2 className="mt-8 text-xl font-bold">Publicar</h2>
           <BundlePublishForm
