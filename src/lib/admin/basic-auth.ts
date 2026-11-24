@@ -2,7 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 /**
  * HTTP Basic Auth for everything under /admin and /api/admin. Shared on
- * purpose: it knows nothing about photos, so /admin/juego can reuse it as is.
+ * purpose: it knows nothing about photos, so /admin/lenguas reuses it as is.
  * `src/proxy.ts` runs it first, and every admin Route Handler runs it again,
  * so a matcher mistake never leaves an endpoint open.
  */

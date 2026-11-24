@@ -1,0 +1,256 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "language-bundle/1",
+  "title": "Paquete de lengua (language-bundle/1)",
+  "description": "Todo el contenido de diccionario y juegos de una lengua. Ver docs/gestor-lenguas/formato.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "language",
+    "translationLabel",
+    "alphabet",
+    "sources",
+    "entries",
+    "themes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Ruta a este archivo de esquema, para que el editor valide mientras escribes. El sitio la ignora."
+    },
+    "schema": {
+      "const": "language-bundle/1",
+      "description": "Versión del formato. Siempre «language-bundle/1»."
+    },
+    "language": {
+      "enum": ["ashaninka", "uro"],
+      "description": "La lengua de este paquete. Solo hay dos."
+    },
+    "translationLabel": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Nombre de la lengua de las traducciones, como se muestra: «castellano»."
+    },
+    "alphabet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["graphemes", "vowels"],
+      "description": "Manda el orden del diccionario y los juegos de letras.",
+      "properties": {
+        "graphemes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Las letras en su orden, en minúscula. Los dígrafos («ch», «ts») van como una sola letra."
+        },
+        "vowels": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Las vocales. Cada una debe estar también en «graphemes»."
+        },
+        "vowelVariants": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Formas con tilde u otra marca que cuentan como una vocal: { \"á\": \"a\" }."
+        },
+        "confusable": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "description": "Letras que se confunden, para elegir distractores en «letra inicial»: { \"ts\": [\"ch\", \"s\"] }."
+        },
+        "sourceId": {
+          "type": "string",
+          "description": "Fuente (de «sources») que fija este alfabeto: la norma oficial o la obra de donde se tomó."
+        }
+      }
+    },
+    "speech": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lang", "quality"],
+      "description": "Voz del navegador cuando una palabra no tiene grabación. Opcional.",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "description": "Idioma de la voz: «es-PE»."
+        },
+        "quality": {
+          "enum": ["approx", "off"],
+          "description": "«approx»: voz aproximada con aviso. «off»: sin voz sintética para esta lengua."
+        },
+        "replace": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "description": "Cambios de texto antes de hablar: [[\"'\", \"\"]]. Solo si lo propone un hablante o la fuente."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/source" },
+      "description": "Todas las fuentes que citan el alfabeto, las palabras o los ejemplos."
+    },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/entry" },
+      "description": "Las palabras. Es la única lista: los juegos las referencian por «id»."
+    },
+    "themes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/theme" },
+      "description": "Temas de juego de Saltapalabras."
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identificador corto, en minúscula y con guiones: «minedu-2021-vocabulario»."
+        },
+        "kind": {
+          "enum": ["publication", "speaker"],
+          "description": "«publication»: obra publicada. «speaker»: persona hablante que aportó o revisó."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Título de la obra, o cómo quiere figurar la persona hablante."
+        },
+        "publisher": { "type": "string" },
+        "year": { "type": "integer" },
+        "authors": { "type": "array", "items": { "type": "string" } },
+        "url": { "type": "string", "pattern": "^https?://" },
+        "license": {
+          "type": "string",
+          "description": "Licencia o permiso de uso, si la fuente lo declara."
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sentence", "translation"],
+      "properties": {
+        "sentence": {
+          "type": "string",
+          "minLength": 1,
+          "description": "La oración en la lengua. Alimenta el juego «completar palabras»."
+        },
+        "translation": { "type": "string", "minLength": 1 },
+        "sourceId": {
+          "type": "string",
+          "description": "Fuente del ejemplo, si no es la misma que la de la palabra."
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "word", "translations", "sourceId", "verified"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identificador estable. No cambia aunque se corrija la escritura de la palabra."
+        },
+        "word": {
+          "type": "string",
+          "minLength": 1,
+          "description": "La palabra, escrita con las letras del alfabeto."
+        },
+        "variants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Otras escrituras, también buscables."
+        },
+        "translations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Una o más traducciones. La primera es la que muestran los juegos."
+        },
+        "partOfSpeech": {
+          "enum": [
+            "noun",
+            "verb",
+            "adjective",
+            "adverb",
+            "pronoun",
+            "interjection",
+            "phrase"
+          ]
+        },
+        "examples": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/example" }
+        },
+        "notes": { "type": "string" },
+        "emoji": {
+          "type": "string",
+          "description": "Dibujo para los juegos de dibujos. Un emoji."
+        },
+        "audio": {
+          "type": "string",
+          "pattern": "^https://",
+          "description": "Grabación de una persona hablante, en el bucket de audio."
+        },
+        "sourceId": {
+          "type": "string",
+          "description": "Fuente de la palabra (de «sources»). Obligatoria."
+        },
+        "sourceRef": {
+          "type": "string",
+          "description": "Dónde en la fuente: «p. 112», «entrada abakerone»."
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Solo las verificadas aparecen en el sitio."
+        },
+        "verifiedBy": {
+          "type": "string",
+          "description": "Quién o qué la verificó: una persona hablante o la fuente oficial."
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "icon", "mode", "entryIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "icon": { "type": "string", "minLength": 1 },
+        "mode": {
+          "enum": ["pic2word", "listen", "word2pic", "first", "vowel"],
+          "description": "pic2word: dibujo → palabra · listen: escuchar → palabra · word2pic: palabra → dibujo · first: letra inicial · vowel: vocal que falta."
+        },
+        "entryIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string" },
+          "description": "Las palabras del tema, por su «id» en «entries». No se copian."
+        }
+      }
+    }
+  }
+}

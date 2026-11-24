@@ -1,8 +1,9 @@
 import { type Page, expect, test } from "@playwright/test";
 
-import dictionary from "../../src/data/dictionary/ashaninka.json";
-import type { Entry } from "../../src/lib/dictionary/types.ts";
+import bundle from "../../src/data/bundles/ashaninka.json";
 import { buildItems } from "../../src/lib/game/items.ts";
+import { bundleToDictionary } from "../../src/lib/language-bundles/adapters.ts";
+import type { LanguageBundle } from "../../src/lib/language-bundles/types.ts";
 
 // Named in English on purpose: check:language flags Spanish file names
 // outside src/app, and «palabra» is on its list of domain terms.
@@ -10,11 +11,14 @@ import { buildItems } from "../../src/lib/game/items.ts";
 const GAME = "/juegos/completar-palabras/ashaninka";
 
 /**
- * The same pool the page builds. The correct answer is deliberately absent
+ * The same pool the page builds, from the same repo bundle (the e2e server
+ * runs without a published one). The correct answer is deliberately absent
  * from the DOM until it is revealed — otherwise a player could read it out of
  * the page — so the test works it out the same way the app does.
  */
-const pool = buildItems(dictionary.entries as Entry[]);
+const pool = buildItems(
+  bundleToDictionary(bundle as LanguageBundle).dictionary.entries,
+);
 
 const ANSWER = /^[^«»]+$/;
 
@@ -327,16 +331,18 @@ test.describe("saved progress", () => {
 });
 
 test.describe("languages", () => {
-  test("explains why uro has no game, without promising a date", async ({
+  test("says uro has no content yet, and offers a playable language", async ({
     page,
   }) => {
     await page.goto("/juegos/completar-palabras/uro");
 
-    // AC-G4-14
+    // AC-G4-14, AC-L3-3
     await expect(
       page.getByRole("heading", { name: /completar palabras en uro/i }),
     ).toBeVisible();
-    await expect(page.getByText(/no tiene hablantes desde/i)).toBeVisible();
+    await expect(
+      page.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: /completar palabras en asháninka/i }),
     ).toBeVisible();

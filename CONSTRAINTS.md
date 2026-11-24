@@ -12,7 +12,7 @@ este archivo.
 | Cuándo                 | Comando           | Qué corre                                                    | Presupuesto |
 | ---------------------- | ----------------- | ------------------------------------------------------------ | ----------- |
 | Después de editar      | `pnpm check:fast` | Tipos, lint, arquitectura, piso, política de idioma          | ~20 s       |
-| Al terminar una tarea  | `pnpm check:task` | Lo anterior + datos del diccionario + unit tests + cobertura | ~60 s       |
+| Al terminar una tarea  | `pnpm check:task` | Lo anterior + datos de los paquetes + unit tests + cobertura | ~60 s       |
 | Antes de un PR / en CI | `pnpm check:full` | Lo anterior + formato + secretos + dependencias + e2e        | minutos     |
 
 Hay cuatro puntos donde esto se dispara solo:
@@ -92,7 +92,7 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 | Formato               | Prettier limpio                              | `pnpm format:check` (+ hook `PostToolUse`)         | al editar, CI    |
 | Piso                  | Cero hallazgos                               | `pnpm check:floor`                                 | cada edición, CI |
 | Idioma                | Cero hallazgos                               | `pnpm check:language`                              | cada edición, CI |
-| Datos del diccionario | Cero problemas de validación                 | `pnpm dictionary:check`                            | fin de tarea, CI |
+| Datos de los paquetes | Cero errores de validación                   | `pnpm bundles:check` y `pnpm game:check`           | fin de tarea, CI |
 | Tests unitarios       | Todos pasan                                  | `pnpm test`                                        | fin de tarea, CI |
 | Cobertura del cambio  | ≥ 80 % de las líneas instrumentables tocadas | `pnpm test:coverage && pnpm check:coverage`        | fin de tarea, CI |
 | E2E                   | Todos pasan                                  | `pnpm test:e2e`                                    | CI               |
@@ -171,6 +171,10 @@ arreglaron en bloque ni se bajó ninguna regla.
 Al activar: 23 `useEffect` en componentes, 8 funciones con complejidad > 15, 1 anidamiento > 4, y 1
 ciclo (`src/lib/word-jump/round.ts` ↔ `stats.ts`, código que el juego ya no usa).
 
+Podas: 2026-11-23 (gestor-lenguas F4), al retirar `/admin/juego` y el reductor viejo de
+`round.ts`, quedan 25 supresiones de ESLint (7 menos, de archivos borrados) y 0 violaciones de
+arquitectura (el ciclo se rompió al mover `RoundOutcome` a `stats.ts`).
+
 - **Nunca se agrega una entrada a mano** para que un cambio pase. Una violación nueva se corrige.
 - Al arreglar una violación vieja, se poda: `pnpm lint --prune-suppressions` o
   `depcruise-baseline` (dependency-cruiser) sobre el estado nuevo. ESLint falla si quedan
@@ -179,13 +183,39 @@ ciclo (`src/lib/word-jump/round.ts` ↔ `stats.ts`, código que el juego ya no u
 
 ## Excepciones
 
-Ninguna vigente hoy. Formato: una fila por excepción, con dueño y vencimiento (90 días es el
-default: alcanza para planificar el arreglo y es corto para acordarse). `scripts/check-floor.ts` y
+Formato: una fila por excepción, con dueño y vencimiento (90 días es el default: alcanza para
+planificar el arreglo y es corto para acordarse). `scripts/check-floor.ts` y
 `scripts/check-language-policy.ts` leen esta tabla; una fila vencida deja de excusar y se reporta
 como hallazgo.
 
-| ID  | Regla | Ruta | Razón | Dueño | Vence |
-| --- | ----- | ---- | ----- | ----- | ----- |
+**E1–E18 (2026-11-23, PR del gestor de lenguas, fase F4).** La fase F4 retiró `/admin/juego`, el
+formato `language-pack/1` del juego y el reducer viejo de rondas (`specs/gestor-lenguas.md` §3 y
+`tasks/gestor-lenguas/plan.md` §9). Los tests de ese código se fueron con él: no queda nada que
+prueben. Las tres filas `assertion-removed` cubren comportamientos que el PR cambia a propósito (el
+uro pasa de «sin juego» a «sin contenido publicado»; el chequeo de palabras sin verificar se movió a
+`bundle-publish.spec.ts` y `playable.test.ts`). Aprobadas por la dueña del proyecto. Vencen cuando el
+PR ya está en `main` y el merge base dejó de mostrar el borrado.
+
+| ID  | Regla             | Ruta                                              | Razón                                                                  | Dueño      | Vence      |
+| --- | ----------------- | ------------------------------------------------- | ---------------------------------------------------------------------- | ---------- | ---------- |
+| E1  | test-deleted      | tests/e2e/pack-admin.spec.ts                      | Probaba `/admin/juego`, retirado en F4                                 | @dimaqudev | 2027-02-21 |
+| E2  | test-deleted      | tests/unit/admin/game-admin-page.test.tsx         | Probaba la página de `/admin/juego`, retirada en F4                    | @dimaqudev | 2027-02-21 |
+| E3  | test-deleted      | tests/unit/admin/game-routes.test.ts              | Probaba `/api/admin/juego/**`, retirado en F4                          | @dimaqudev | 2027-02-21 |
+| E4  | test-deleted      | tests/unit/admin/pack-admin.test.tsx              | Probaba `pack-admin/`, retirado en F4                                  | @dimaqudev | 2027-02-21 |
+| E5  | test-deleted      | tests/unit/admin/pack-editor.test.tsx             | Probaba el editor de `/admin/juego`, reemplazado por `bundle-editor/`  | @dimaqudev | 2027-02-21 |
+| E6  | test-deleted      | tests/unit/language-packs/draft-storage.test.ts   | Módulo retirado en F4; su versión nueva tiene test en language-bundles | @dimaqudev | 2027-02-21 |
+| E7  | test-deleted      | tests/unit/language-packs/edit-pack.test.ts       | Módulo retirado en F4; reemplazado por `edit-bundle.ts`, con test      | @dimaqudev | 2027-02-21 |
+| E8  | test-deleted      | tests/unit/language-packs/from-dictionary.test.ts | Módulo retirado en F4 (`pack:draft` ya no existe)                      | @dimaqudev | 2027-02-21 |
+| E9  | test-deleted      | tests/unit/language-packs/library.test.ts         | Lectura de `language_packs` retirada; la nueva tiene test              | @dimaqudev | 2027-02-21 |
+| E10 | test-deleted      | tests/unit/language-packs/pack-file.test.ts       | Módulo retirado en F4; reemplazado por `bundle-file.ts`, con test      | @dimaqudev | 2027-02-21 |
+| E11 | test-deleted      | tests/unit/language-packs/publish-request.test.ts | Módulo retirado en F4; su versión nueva tiene test en language-bundles | @dimaqudev | 2027-02-21 |
+| E12 | test-deleted      | tests/unit/language-packs/publishing.test.ts      | Módulo retirado en F4; su versión nueva tiene test en language-bundles | @dimaqudev | 2027-02-21 |
+| E13 | test-deleted      | tests/unit/language-packs/schema.test.ts          | `language-pack/1` retirado; `language-bundle/1` tiene su test          | @dimaqudev | 2027-02-21 |
+| E14 | test-deleted      | tests/unit/language-packs/validate.test.ts        | `language-pack/1` retirado; `validateBundle` tiene su test             | @dimaqudev | 2027-02-21 |
+| E15 | test-deleted      | tests/unit/word-jump/availability.test.ts         | `availability.ts` (uro excluido) retirado en F4                        | @dimaqudev | 2027-02-21 |
+| E16 | assertion-removed | tests/unit/word-jump/round.test.ts                | El reducer viejo (`createRound` y siguientes) se retiró en F4          | @dimaqudev | 2027-02-21 |
+| E17 | assertion-removed | tests/unit/word-jump/pages.test.tsx               | El uro ya no se explica como «sin juego»; cambio de comportamiento     | @dimaqudev | 2027-02-21 |
+| E18 | assertion-removed | tests/e2e/word-jump.spec.ts                       | El chequeo de palabras sin verificar se movió a otros tests            | @dimaqudev | 2027-02-21 |
 
 Las columnas van en ese orden: ID (`E` seguido de un número), la regla que se excusa tal como la
 nombra el script (`kebab-case-filename`, `silenced-checker`, ...) o `*` para cualquiera, la ruta

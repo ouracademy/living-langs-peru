@@ -4,7 +4,8 @@ import { type Entry, groupByLetter } from "@/lib/dictionary";
 
 type EntryListProps = {
   entries: Entry[];
-  language: string;
+  /** Sorts and groups by these graphemes; Spanish order without them. */
+  alphabet?: readonly string[];
   selectedId?: string;
   languageCode: string;
   onSelect: (entry: Entry) => void;
@@ -14,12 +15,12 @@ const sectionId = (letter: string) => `letra-${letter.toLowerCase()}`;
 
 export function EntryList({
   entries,
-  language,
+  alphabet,
   selectedId,
   languageCode,
   onSelect,
 }: EntryListProps) {
-  const groups = groupByLetter(entries, language);
+  const groups = groupByLetter(entries, alphabet);
 
   return (
     <>

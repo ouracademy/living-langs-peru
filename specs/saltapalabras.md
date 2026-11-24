@@ -84,6 +84,21 @@ La fila «Voz del navegador» de la tabla de diferencias de arriba queda así: l
 del navegador como única voz; aquí es **provisional**, detrás de la grabación, con aviso e
 interruptor.
 
+### Cambios del 2026-11-23 (gestor-lenguas F4)
+
+Nota, no reescritura: el detalle está en [gestor-lenguas.md](./gestor-lenguas.md) §9.
+
+- Saltapalabras lee **solo el paquete de lengua** (`language_bundles`, o el del repo en
+  `src/data/bundles/`). `language_packs` y `pack_versions` dejan de leerse; `/admin/juego` se
+  retiró y el contenido se edita en `/admin/lenguas`. Copia de lo publicado y paso a solo lectura:
+  [docs/gestor-lenguas-migracion.sql](../docs/gestor-lenguas-migracion.sql).
+- Se retiraron `pnpm pack:draft`, `src/data/word-jump/ashaninka-pictures.json` (los dibujos van en
+  las entradas del paquete) y la comprobación de disponibilidad por lengua: una lengua sin paquete
+  dice «Todavía no hay contenido publicado».
+- Se retiró el reducer de §5.4 (`createRound`, `answerQuestion`, `nextQuestion`, `roundOutcomes`,
+  `MAX_REQUEUES`), que la decisión #22 ya había dejado sin uso: la ronda la juega el nivel de
+  plataformas. AC-SP2-6 y AC-SP2-7 quedan sin código que probar; `buildRound` (§5.3) sigue.
+
 ---
 
 ## 1. Objetivo

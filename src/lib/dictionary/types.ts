@@ -40,9 +40,18 @@ export type Dictionary = {
 export type Source = {
   id: string;
   title: string;
-  publisher: string;
-  year: number;
+  /** Optional since sources come from language bundles: a speaker has none. */
+  publisher?: string;
+  year?: number;
   authors?: string[];
-  url: string;
+  url?: string;
   note?: string;
 };
+
+/** «, Ministerio de Educación, 2021.» — only the parts the source has. */
+export function sourceImprint(source: Source): string {
+  const parts = [source.publisher, source.year].filter(
+    (part) => part !== undefined && part !== "",
+  );
+  return parts.length > 0 ? `, ${parts.join(", ")}.` : ".";
+}

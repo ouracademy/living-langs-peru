@@ -1,20 +1,31 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { type Page, expect, test } from "@playwright/test";
 
+import bundle from "../../src/data/bundles/ashaninka.json";
+import { ROUND_SIZE } from "../../src/lib/word-jump/constants.ts";
 import { findBundleLeaks } from "./bundle-leaks";
 
-// The same fixture the fake Supabase serves: words marked PRUEBA (spec §13).
-const pack = JSON.parse(
-  readFileSync(join(__dirname, "fixtures", "word-jump-pack.json"), "utf8"),
-) as {
-  themes: {
-    items: { word: string; translation: string; verified: boolean }[];
-  }[];
-};
-const items = pack.themes[0].items;
-const hidden = items.filter((item) => !item.verified).map((item) => item.word);
+// gestor-lenguas F4: Saltapalabras reads only the language bundle. The fake
+// Supabase publishes none, so the game plays the repo's asháninka bundle: real
+// words of the MINEDU vocabulary. Nothing here writes one down; every answer
+// is worked out from the bundle, the same way a player reads the screen.
+const byId = new Map(bundle.entries.map((entry) => [entry.id, entry]));
+const themeWords = (mode: string) =>
+  bundle.themes
+    .filter((theme) => theme.mode === mode)
+    .flatMap((theme) => theme.entryIds)
+    .flatMap((id) => {
+      const entry = byId.get(id);
+      return entry
+        ? [{ word: entry.word, translation: entry.translations[0] }]
+        : [];
+    });
+const pictures = themeWords("pic2word");
+const PICTURES = new RegExp(
+  bundle.themes.find((theme) => theme.mode === "pic2word")!.name,
+);
+const ROUND_DONE = `Acertaste a la primera ${ROUND_SIZE} de ${ROUND_SIZE}.`;
 
 /** Every request the browser makes, to prove it never talks to Supabase. */
 function recordRequests(page: Page): string[] {
@@ -39,18 +50,22 @@ test.describe("Saltapalabras", () => {
     await expect(
       page.getByRole("link", { name: "Jugar en Asháninka" }),
     ).toBeVisible();
-    await expect(page.getByText(/no tiene hablantes/)).toBeVisible();
+    // Uro works like asháninka (spec gestor-lenguas #11).
+    await expect(
+      page.getByRole("link", { name: "Jugar en Uro" }),
+    ).toBeVisible();
     await expectNoLogin(page);
   });
 
-  // AC-SP4-9
-  test("uro answers 200 and explains why there is no game", async ({
-    page,
-  }) => {
+  // AC-L3-3 (replaces AC-SP4-9): uro answers 200 and, with nothing
+  // published, says there is no content yet.
+  test("uro answers 200 and says there is no content yet", async ({ page }) => {
     const response = await page.goto("/juegos/saltapalabras/uro");
 
     expect(response?.status()).toBe(200);
-    await expect(page.getByText(/no tiene hablantes/)).toBeVisible();
+    await expect(
+      page.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeVisible();
     await expectNoLogin(page);
   });
 
@@ -62,7 +77,7 @@ test.describe("Saltapalabras", () => {
   });
 
   // AC-SP4-2, AC-SP4-3, AC-SP4-12, AC-SP4-13
-  test("a whole pic2word round, from the published pack to the summary", async ({
+  test("a whole pic2word round, from the bundle to the summary", async ({
     page,
   }) => {
     const requests = recordRequests(page);
@@ -71,31 +86,28 @@ test.describe("Saltapalabras", () => {
 
     await page.goto("/juegos/saltapalabras/ashaninka");
     await expectNoLogin(page);
-    await page.getByRole("button", { name: /Tema de prueba/ }).click();
+    await page.getByRole("button", { name: PICTURES }).click();
 
-    for (let step = 0; step < 4; step++) {
+    for (let step = 0; step < ROUND_SIZE; step++) {
       const label = await page
         .locator("main")
         .getByRole("img")
         .getAttribute("aria-label");
-      const item = items.find((each) => each.translation === label);
+      const item = pictures.find((each) => each.translation === label);
       expect(item, `no item for ${label}`).toBeTruthy();
 
       await page.getByRole("button", { name: item!.word, exact: true }).click();
       await expect(page.getByRole("status")).toContainText("¡Correcto!");
-      await expect(page.getByRole("status")).toContainText("Fuente de prueba");
-      for (const word of hidden) {
-        await expect(page.locator("main")).not.toContainText(word);
-      }
+      await expect(page.getByRole("status")).toContainText(
+        bundle.sources[0].title,
+      );
       await page.getByRole("button", { name: "Seguir" }).click();
     }
 
     await expect(
       page.getByRole("heading", { name: "¡Llegaste a la meta!" }),
     ).toBeVisible();
-    await expect(
-      page.getByText("Acertaste a la primera 4 de 4."),
-    ).toBeVisible();
+    await expect(page.getByText(ROUND_DONE)).toBeVisible();
     await expectNoLogin(page);
 
     expect(statuses).not.toContain(401);
@@ -110,13 +122,6 @@ test.describe("Saltapalabras", () => {
   });
 });
 
-/** Every item of every theme of the fixture, by word. */
-const allItems = (
-  pack as unknown as {
-    themes: { items: { word: string; translation: string }[] }[];
-  }
-).themes.flatMap((theme) => theme.items);
-
 async function play(page: Page, theme: RegExp) {
   await page.goto("/juegos/saltapalabras/ashaninka");
   await page.getByRole("button", { name: theme }).click();
@@ -128,11 +133,18 @@ async function rightKey(page: Page): Promise<string> {
     .locator("main")
     .getByRole("img")
     .getAttribute("aria-label");
-  const word = allItems.find((each) => each.translation === label)?.word;
+  const word = pictures.find((each) => each.translation === label)?.word;
   const names = await page
     .locator("main button[aria-keyshortcuts]")
     .allTextContents();
   return String(names.indexOf(word ?? "") + 1);
+}
+
+/** The word with a gap on screen, as text: «＿» marks the gap. */
+async function gappedWord(page: Page): Promise<string> {
+  const shown =
+    (await page.locator('main span[lang="cni"]').first().textContent()) ?? "";
+  return shown.replace("(hueco)", "");
 }
 
 async function expectRightAndGoOn(page: Page) {
@@ -145,17 +157,18 @@ test.describe("Saltapalabras, the modes without audio", () => {
   test("a word2pic round: the word is shown, the picture is chosen", async ({
     page,
   }) => {
-    await play(page, /Dibujos de prueba/);
+    await play(page, /Palabra → dibujo/);
     await expect(
       page.getByRole("heading", { name: "¿Qué dibujo es?" }),
     ).toBeVisible();
 
-    for (let step = 0; step < 3; step++) {
+    const words = themeWords("word2pic");
+    for (let step = 0; step < ROUND_SIZE; step++) {
       const word = await page
         .locator('main [lang="cni"]')
         .first()
         .textContent();
-      const item = allItems.find((each) => each.word === word);
+      const item = words.find((each) => each.word === word);
       expect(item, `no item for ${word}`).toBeTruthy();
       await page
         .getByRole("button", { name: item!.translation, exact: true })
@@ -163,44 +176,41 @@ test.describe("Saltapalabras, the modes without audio", () => {
       await expectRightAndGoOn(page);
     }
 
-    await expect(
-      page.getByText("Acertaste a la primera 3 de 3."),
-    ).toBeVisible();
+    await expect(page.getByText(ROUND_DONE)).toBeVisible();
   });
 
   test("a first-letter round: the initial is chosen", async ({ page }) => {
-    await play(page, /Letra inicial de prueba/);
+    await play(page, /Letra inicial/);
     await expect(
       page.getByRole("heading", { name: "¿Con qué letra empieza?" }),
     ).toBeVisible();
 
-    for (let step = 0; step < 2; step++) {
-      // Every PRUEBA word starts with «p»; «b» is its confusable grapheme.
-      await expect(
-        page.getByRole("button", { name: "b", exact: true }),
-      ).toBeVisible();
-      await page.getByRole("button", { name: "p", exact: true }).click();
+    const words = themeWords("first").map((item) => item.word.toLowerCase());
+    for (let step = 0; step < ROUND_SIZE; step++) {
+      const rest = (await gappedWord(page)).replace("＿", "").toLowerCase();
+      // The bundle has no two words that differ only in their first letter.
+      const initial = bundle.alphabet.graphemes.find((grapheme) =>
+        words.includes(grapheme + rest),
+      );
+      expect(initial, `no letter starts …${rest}`).toBeTruthy();
+      await page.getByRole("button", { name: initial!, exact: true }).click();
       await expectRightAndGoOn(page);
     }
 
-    await expect(
-      page.getByText("Acertaste a la primera 2 de 2."),
-    ).toBeVisible();
+    await expect(page.getByText(ROUND_DONE)).toBeVisible();
   });
 
   test("a vowel round: the missing vowel is chosen", async ({ page }) => {
-    await play(page, /Vocales de prueba/);
+    await play(page, /Vocal que falta/);
     await expect(
       page.getByRole("heading", { name: "¿Qué vocal falta?" }),
     ).toBeVisible();
 
-    for (let step = 0; step < 2; step++) {
-      const shown = (
-        (await page.locator('main span[lang="cni"]').first().textContent()) ??
-        ""
-      ).replace("(hueco)", "");
-      const vowel = ["a", "e", "i", "o"].find((candidate) =>
-        allItems.some(
+    const words = themeWords("vowel");
+    for (let step = 0; step < ROUND_SIZE; step++) {
+      const shown = await gappedWord(page);
+      const vowel = bundle.alphabet.vowels.find((candidate) =>
+        words.some(
           (item) =>
             item.word.toLowerCase() ===
             shown.replace("＿", candidate).toLowerCase(),
@@ -211,9 +221,7 @@ test.describe("Saltapalabras, the modes without audio", () => {
       await expectRightAndGoOn(page);
     }
 
-    await expect(
-      page.getByText("Acertaste a la primera 2 de 2."),
-    ).toBeVisible();
+    await expect(page.getByText(ROUND_DONE)).toBeVisible();
   });
 
   // AC-SP4-5, then AC-SP4-7
@@ -221,9 +229,12 @@ test.describe("Saltapalabras, the modes without audio", () => {
     page,
   }) => {
     await page.goto("/juegos/saltapalabras/ashaninka");
-    await expect(page.getByText(/Palabras vistas: 0 de 4/)).toBeVisible();
+    const theme = page.getByRole("button", { name: PICTURES });
+    await expect(theme).toContainText(
+      `Palabras vistas: 0 de ${pictures.length}`,
+    );
 
-    await page.getByRole("button", { name: /Tema de prueba/ }).focus();
+    await theme.focus();
     await page.keyboard.press("Enter");
 
     const next = page.getByRole("button", { name: "Seguir" });
@@ -249,7 +260,9 @@ test.describe("Saltapalabras, the modes without audio", () => {
     ).toBeVisible();
 
     await page.reload();
-    await expect(page.getByText(/Palabras vistas: 4 de 4/)).toBeVisible();
+    await expect(theme).toContainText(
+      `Palabras vistas: ${ROUND_SIZE} de ${pictures.length}`,
+    );
   });
 
   // AC-SP4-6
@@ -263,7 +276,7 @@ test.describe("Saltapalabras, the modes without audio", () => {
       };
     });
     const framesAfterAnswer = async () => {
-      await play(page, /Tema de prueba/);
+      await play(page, PICTURES);
       const before = await page.evaluate(
         () => (window as unknown as { frames_: number }).frames_,
       );
@@ -288,8 +301,10 @@ test.describe("Saltapalabras, the platform level", () => {
   test("Pip runs and jumps with the keyboard, and a cloud answers", async ({
     page,
   }) => {
-    await play(page, /Tema de prueba/);
-    await expect(page.getByLabel("Puntos: 0. Reto 1 de 4.")).toBeVisible();
+    await play(page, PICTURES);
+    await expect(
+      page.getByLabel(`Puntos: 0. Reto 1 de ${ROUND_SIZE}.`),
+    ).toBeVisible();
 
     await page.keyboard.down("ArrowRight");
     await page.waitForTimeout(820);
@@ -308,7 +323,7 @@ test.describe("Saltapalabras, the platform level", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 740 });
-    await play(page, /Tema de prueba/);
+    await play(page, PICTURES);
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth,
@@ -416,7 +431,7 @@ async function currentWord(page: Page): Promise<string> {
     .locator("main")
     .getByRole("img")
     .getAttribute("aria-label");
-  return allItems.find((each) => each.translation === label)?.word ?? "";
+  return pictures.find((each) => each.translation === label)?.word ?? "";
 }
 
 test.describe("Saltapalabras, the words sound", () => {
@@ -425,7 +440,7 @@ test.describe("Saltapalabras, the words sound", () => {
     page,
   }) => {
     await recordSpeech(page);
-    await play(page, /Tema de prueba/);
+    await play(page, PICTURES);
     const word = await currentWord(page);
 
     await page.waitForTimeout(600);
@@ -452,7 +467,7 @@ test.describe("Saltapalabras, the words sound", () => {
     page,
   }) => {
     await recordSpeech(page);
-    await play(page, /Tema de prueba/);
+    await play(page, PICTURES);
     const word = await currentWord(page);
     await expect(page.getByText(/Pronunciación aproximada/)).toBeVisible();
 
@@ -480,7 +495,7 @@ test.describe("Saltapalabras, the words sound", () => {
     page,
   }) => {
     await recordSpeech(page);
-    await play(page, /Tema de prueba/);
+    await play(page, PICTURES);
     await page.getByRole("button", { name: /Menú/ }).click();
     await page.getByRole("button", { name: /Voz aproximada: sí/ }).click();
     await page.getByRole("button", { name: "Seguir jugando" }).click();
@@ -493,7 +508,7 @@ test.describe("Saltapalabras, the words sound", () => {
     await page.waitForTimeout(700);
     expect(await said(page)).toEqual([]);
 
-    await play(page, /Tema de prueba/);
+    await play(page, PICTURES);
     await page.getByRole("button", { name: /Menú/ }).click();
     await expect(
       page.getByRole("button", { name: /Voz aproximada: no/ }),

@@ -601,7 +601,7 @@ export function PlatformerGame({
               : {challenge.item.translation}.
             </p>
             {challenge.item.verified ? null : (
-              // Only reachable from «Probar» in /admin/juego: the public game
+              // Only reachable from «Probar» in /admin/lenguas: the public game
               // filters unverified items out before they get here (decision #4).
               <p className="mt-1 text-sm font-bold text-[#C7431C]">
                 ⚠ Sin verificar

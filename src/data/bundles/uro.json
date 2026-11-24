@@ -1,0 +1,1528 @@
+{
+  "$schema": "../../../docs/gestor-lenguas/language-bundle.schema.json",
+  "schema": "language-bundle/1",
+  "language": "uro",
+  "translationLabel": "castellano",
+  "alphabet": {
+    "graphemes": [
+      "a",
+      "e",
+      "i",
+      "o",
+      "u",
+      "p",
+      "t",
+      "ts",
+      "č",
+      "ĉ",
+      "k",
+      "q",
+      "pʰ",
+      "tʰ",
+      "tsʰ",
+      "čʰ",
+      "ĉʰ",
+      "kʰ",
+      "qʰ",
+      "p’",
+      "t’",
+      "ts’",
+      "č’",
+      "ĉ’",
+      "k’",
+      "q’",
+      "ş",
+      "s",
+      "ŝ",
+      "χ",
+      "h",
+      "m",
+      "n",
+      "ñ",
+      "l",
+      "λ",
+      "ł",
+      "r",
+      "w",
+      "y"
+    ],
+    "vowels": ["a", "e", "i", "o", "u"],
+    "sourceId": "cerron-palomino-uro-bahia-puno"
+  },
+  "speech": {
+    "lang": "es-PE",
+    "quality": "approx"
+  },
+  "sources": [
+    {
+      "id": "cerron-palomino-2007-proto-uro",
+      "kind": "publication",
+      "title": "Reconstrucción del proto-uro: fonología",
+      "publisher": "Lexis XXXI (1 y 2): 47–104. Pontificia Universidad Católica del Perú",
+      "year": 2007,
+      "authors": ["Rodolfo Cerrón-Palomino"],
+      "note": "Tablas de cognados (§ 5) con tres columnas: uro de la Bahía de Puno (Ch'imu, notación de Lehmann), uro del Desaguadero y chipaya. Las palabras de este paquete salen de la primera columna; las formas entre paréntesis (no cognadas) no se toman. Las tildes y macrones se leyeron del escaneo: cotejar con el PDF."
+    },
+    {
+      "id": "cerron-palomino-uro-bahia-puno",
+      "kind": "publication",
+      "title": "El uro de la Bahía de Puno",
+      "publisher": "Pontificia Universidad Católica del Perú",
+      "authors": ["Rodolfo Cerrón-Palomino"],
+      "url": "https://es.scribd.com/document/520926321/Cerron-Palomino-R-CILLAVII-1",
+      "note": "Estudio del vocabulario que Walter Lehmann recogió en Ts'imu (Ch'imu, Puno) en 1929. El texto no trae año; una primera versión se leyó en el V Congreso Internacional de Lenguas y Literaturas Indoamericanas (Temuco, 2014). El alfabeto de este paquete es el inventario «restituido» de las pp. 14–15, el mismo que postula para el proto-uro en Lexis 2007 (p. 64). El texto se copió de Scribd y perdió letras con diacríticos; donde Lexis 2007 trae la misma palabra, se usa esa forma. La copia de Scribd la subió un tercero: pedir permiso al autor antes de publicar."
+    },
+    {
+      "id": "hannss-2014-chimu",
+      "kind": "publication",
+      "title": "The Uru of Ch'imu: an investigation of Walter Lehmann's material",
+      "publisher": "STUF — Language Typology and Universals 67(2): 175–211. De Gruyter Mouton",
+      "year": 2014,
+      "authors": ["Katja Hannß"],
+      "url": "https://doi.org/10.1515/stuf-2014-0013",
+      "note": "Compara el material de Ch'imu con el uro de Irohito. Concluye que Florentino Valcuña probablemente no hablaba uro con soltura (muchos préstamos y palabras inventadas en el momento) y que el valor lingüístico del manuscrito es muy limitado. Sus formas usan su propia transcripción (con «:» para la vocal larga) y citan la página del manuscrito 1929d. Con copyright: pedir permiso antes de publicar."
+    },
+    {
+      "id": "lehmann-1929-chimu",
+      "kind": "publication",
+      "title": "Sprachaufnahmen des Uro-Dialektes von Ts'imu (Tš'imu) bei Puno am Titicaca-See (1929c) y Vokabular des Uro-Dialektes von Ts'imu bei Puno, Titicaca-See (1929d)",
+      "publisher": "Ibero-Amerikanisches Institut, Berlín (manuscritos inéditos)",
+      "year": 1929,
+      "authors": ["Walter Lehmann"],
+      "note": "Fuente primaria de todas las palabras de este paquete, que se toman de las citas de Cerrón-Palomino y Hannß, no del manuscrito. Original y copia en limpio (30 de enero de 1930; introducción de 1937): 29 páginas y 324 entradas según Hannß, unos 304 ítems según Cerrón-Palomino. Informantes: Florentino Valcuña y su hijo Nicolás. Fecha de la visita: 26 de octubre de 1929 según Hannß; 29 de octubre según Cerrón-Palomino (2007)."
+    },
+    {
+      "id": "bdpi-uro",
+      "kind": "publication",
+      "title": "Pueblo Uro — Base de Datos de Pueblos Indígenas u Originarios",
+      "publisher": "Ministerio de Cultura del Perú",
+      "url": "https://bdpi.cultura.gob.pe/pueblos/uro",
+      "note": "Contexto: el pueblo Uro dejó de hablar su lengua hacia la década de 1920 y hoy habla aimara, quechua y castellano. No es fuente de palabras."
+    }
+  ],
+  "entries": [
+    {
+      "id": "tuni",
+      "word": "tū́ni",
+      "variants": ["tū́ñi", "tṓni"],
+      "translations": ["sol"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "tūnis tīki",
+          "translation": "eclipse (lit. «muerte del sol»)",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tū́ni ~ thū́ñi>, chipaya /tʰuñi/. En «El uro de la Bahía de Puno» (p. 12): <tūni ~ tōni ~ tūñi>; el ejemplo está en la p. 16.",
+      "emoji": "☀️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 74, 77",
+      "verified": false
+    },
+    {
+      "id": "machena",
+      "word": "măχéña",
+      "translations": ["día"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <măχḗñi>, chipaya /maxiñ/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "sicho",
+      "word": "sī́χo",
+      "translations": ["cielo", "arriba"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <δʒ́íko>, chipaya /tseku/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "siya",
+      "word": "sīya",
+      "translations": ["calor del sol"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <shī ~ sī>, chipaya /siya/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 78",
+      "verified": false
+    },
+    {
+      "id": "tsacuna",
+      "word": "tšacūña",
+      "translations": ["estrella"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tša(k)qṓl>, chipaya /čakwa/.",
+      "emoji": "⭐",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 70",
+      "verified": false
+    },
+    {
+      "id": "uyani",
+      "word": "ūyā́ni",
+      "translations": ["noche"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ŭīyā́ni>, chipaya /we:na/.",
+      "emoji": "🌙",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 74",
+      "verified": false
+    },
+    {
+      "id": "tsaua",
+      "word": "tšā́ŭa",
+      "translations": ["granizo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšā́ᵘă>, chipaya /tsawa/.",
+      "emoji": "🌨️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 70, 76",
+      "verified": false
+    },
+    {
+      "id": "kecho",
+      "word": "k'ēχo-k'χo",
+      "translations": ["rayo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Cognado chipaya /q’exw-q’exw-ñi/.",
+      "emoji": "⚡",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 13",
+      "verified": false
+    },
+    {
+      "id": "kuasi",
+      "word": "kŏắsi",
+      "variants": ["hŭắse", "hŭắsi"],
+      "translations": ["agua"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "hŭắsi-tšŭχ",
+          "translation": "gota (de agua)",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        },
+        {
+          "sentence": "hŭắsi-ūlắnta",
+          "translation": "fuente (lit. «salida de agua»)",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929), que vacila entre <kŏắsi> y <hŭắse>. Cognado chipaya /qʰwaş/. Ejemplos en pp. 15–16. Cerrón-Palomino (2007: 82) la da como <kŏắsi>, frente a <qhŏắsi> (Desaguadero) y /qhwaş ~ qhaş/ (chipaya).",
+      "emoji": "💧",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "pp. 13–14",
+      "verified": false
+    },
+    {
+      "id": "tsuch",
+      "word": "tšŭχ",
+      "translations": ["gota"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšṓχʰ>, chipaya /ĉʰoxi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 71",
+      "verified": false
+    },
+    {
+      "id": "ochi",
+      "word": "ṓχi",
+      "variants": ["ṓχⁱ"],
+      "translations": ["fuego"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ūχ ~ ū́χⁱ>, chipaya /ux/.",
+      "emoji": "🔥",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 73, 77",
+      "verified": false
+    },
+    {
+      "id": "huichtsi",
+      "word": "hū́ĭχtši",
+      "translations": ["fogón", "fuego"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <hŭ́ĭχti>, chipaya /wixt/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 76",
+      "verified": false
+    },
+    {
+      "id": "isketi",
+      "word": "ĭškḗti",
+      "translations": ["humo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšχæti>, chipaya /ŝqeti/.",
+      "emoji": "💨",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 78",
+      "verified": false
+    },
+    {
+      "id": "tsutsu",
+      "word": "tš'ū́tš'ū",
+      "translations": ["espuma"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tš'ū́tu>, chipaya /ĉ'utu/.",
+      "emoji": "🫧",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 71, 77",
+      "verified": false
+    },
+    {
+      "id": "pesta",
+      "word": "p!ḗsta",
+      "translations": ["pozo", "hueco"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <phḗta>, chipaya /pʰeta/. Cerrón-Palomino también la cita como 'pozo' en «El uro de la Bahía de Puno» (p. 12).",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 66, 79",
+      "verified": false
+    },
+    {
+      "id": "tuna",
+      "word": "t!ū́na",
+      "translations": ["pampa"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tū́na>, chipaya /tuna-ri/. Según Cerrón-Palomino (2007: 79–80), el signo <!> de Lehmann es una notación hiperdiferenciadora, no una consonante.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 79",
+      "verified": false
+    },
+    {
+      "id": "sontsis",
+      "word": "sṓntsīs",
+      "translations": ["peña"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <sʰṓñi>, chipaya /şuni/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 72",
+      "verified": false
+    },
+    {
+      "id": "masi",
+      "word": "mā́si",
+      "variants": ["mắχsi"],
+      "translations": ["piedra"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <măsʰi>, chipaya /maşa/.",
+      "emoji": "🪨",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 73",
+      "verified": false
+    },
+    {
+      "id": "chara",
+      "word": "χā́ra",
+      "translations": ["sementera"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšχā́la>, chipaya /şqala/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "paya",
+      "word": "p!ắya",
+      "translations": ["césped"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pắya>, chipaya /pʰaya/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 76, 79",
+      "verified": false
+    },
+    {
+      "id": "puitra",
+      "word": "pū́ĭtra",
+      "translations": ["polvo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pā́ta>, chipaya /pʰota/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 78",
+      "verified": false
+    },
+    {
+      "id": "para",
+      "word": "!pắra",
+      "translations": ["árbol", "palo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pā́ra>, chipaya /para/.",
+      "emoji": "🌳",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 75, 79",
+      "verified": false
+    },
+    {
+      "id": "chulio",
+      "word": "χū́lⁱo",
+      "translations": ["totora"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <χⁱū́ᵘa ~ χū́a>, chipaya /łuwa/. La vocal volada es, según Hannß (2014: 190, nota 31), una vocal de transición.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 75",
+      "verified": false
+    },
+    {
+      "id": "litris",
+      "word": "lī́tris",
+      "variants": ["lí:tris"],
+      "translations": ["camino"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <lī́ksʰi>, chipaya /hikş/. Cerrón-Palomino postula *łikĉi. Hannß (2014: 191) la transcribe lí:tris (Lehmann 1929d: 3).",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 84",
+      "verified": false
+    },
+    {
+      "id": "pako",
+      "word": "pắko",
+      "translations": ["perro"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pako>, chipaya /paku/.",
+      "emoji": "🐕",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 65",
+      "verified": false
+    },
+    {
+      "id": "tsata",
+      "word": "tš'ātă",
+      "translations": ["perro"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Comparar con el chipaya /ĉ’at-ş/ «morder». En Cerrón-Palomino (2007: 71) la misma forma, <tš'ā́t(ă)>, se glosa 'morder' (Desaguadero <tš'ā́t->, chipaya /ĉ'at-/); para 'perro' esa tabla trae <pắko>. Cotejar la glosa con el manuscrito.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 13",
+      "verified": false
+    },
+    {
+      "id": "losca",
+      "word": "lṓsca",
+      "variants": ["lóska"],
+      "translations": ["lechuza"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <kắska>, chipaya /quşka/. Hannß (2014: 191) la transcribe lóska (Lehmann 1929d: 10).",
+      "emoji": "🦉",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "tsusmuyu",
+      "word": "tšusmū́yu",
+      "variants": ["tšús mú:yu"],
+      "translations": ["mosca"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tsmā́ya>, chipaya /şmoya/. Hannß (2014: 189) la transcribe tšús mú:yu (Lehmann 1929d: 10).",
+      "emoji": "🪰",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 70, 73",
+      "verified": false
+    },
+    {
+      "id": "piscuna",
+      "word": "pĭscū́na",
+      "translations": ["lagartija"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pĭškū́na>, chipaya /pʰişqa/.",
+      "emoji": "🦎",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 72",
+      "verified": false
+    },
+    {
+      "id": "tsisi",
+      "word": "tšī́si",
+      "translations": ["pez"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tš'īshi>, chipaya /č'iş/.",
+      "emoji": "🐟",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 71",
+      "verified": false
+    },
+    {
+      "id": "chula",
+      "word": "χū́la",
+      "translations": ["llama"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <χṓā́la>, chipaya /xwala/.",
+      "emoji": "🦙",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 75",
+      "verified": false
+    },
+    {
+      "id": "tora",
+      "word": "tṓra",
+      "translations": ["nido"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tū́ra>, chipaya /tʰura/.",
+      "emoji": "🪺",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 75, 78",
+      "verified": false
+    },
+    {
+      "id": "sina",
+      "word": "sī́ña",
+      "translations": ["huevo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <shī́ñi>, chipaya /şiñi/.",
+      "emoji": "🥚",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 74",
+      "verified": false
+    },
+    {
+      "id": "sanish",
+      "word": "sā́ñⁱsh",
+      "translations": ["piojo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <sā́mi>, chipaya /sami/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 73",
+      "verified": false
+    },
+    {
+      "id": "tsiutsula",
+      "word": "tší:utšú:la",
+      "translations": ["paloma"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 11.",
+      "emoji": "🕊️",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 189, ej. (5c)",
+      "verified": false
+    },
+    {
+      "id": "tsokha",
+      "word": "tšó:kha",
+      "translations": ["murciélago"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 19.",
+      "emoji": "🦇",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 190, ej. (6b)",
+      "verified": false
+    },
+    {
+      "id": "yuki",
+      "word": "yū́ki",
+      "translations": ["cara", "rostro"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <yū́ki>, chipaya /yuki/. Cerrón-Palomino (2007: 95) la cuenta entre los posibles préstamos del puquina (<yuque>).",
+      "emoji": "🙂",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 76, 77",
+      "verified": false
+    },
+    {
+      "id": "ata",
+      "word": "ā́ta",
+      "translations": ["boca"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ā́ta>, chipaya /ata/.",
+      "emoji": "👄",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 78",
+      "verified": false
+    },
+    {
+      "id": "tsachnie",
+      "word": "tšū́χnia",
+      "variants": ["tš'āχniě"],
+      "translations": ["ojos"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšūk>, chipaya /ĉʰuki/. En «El uro de la Bahía de Puno» (p. 13) la copia del texto dio <tš'āχniě>: las dos lecturas no coinciden, cotejar con los PDF.",
+      "emoji": "👀",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 71",
+      "verified": false
+    },
+    {
+      "id": "tsuntsa",
+      "word": "tšū́ntša",
+      "variants": ["tšun.tša"],
+      "translations": ["cejas"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšḗmtša>, chipaya /tsemş/. Hannß (2014: 188) la explica como contracción de la forma de Irohito tšuk-tšem.tša.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 70, 73",
+      "verified": false
+    },
+    {
+      "id": "kuni",
+      "word": "k'ū́ñi",
+      "variants": ["k'ūni"],
+      "translations": ["orejas"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <!chū́ni>, chipaya /kʰuñi/.",
+      "emoji": "👂",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 67, 74",
+      "verified": false
+    },
+    {
+      "id": "sipi",
+      "word": "sī́p'i",
+      "translations": ["barba", "bigote"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <shī́pi>, chipaya /şipş/.",
+      "emoji": "🧔",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 77",
+      "verified": false
+    },
+    {
+      "id": "iske",
+      "word": "ī́skē",
+      "translations": ["diente"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ī́shki>, chipaya /işqi/.",
+      "emoji": "🦷",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 77",
+      "verified": false
+    },
+    {
+      "id": "kara",
+      "word": "k'ā́ra",
+      "translations": ["mano"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "sē k'āra",
+          "translation": "mano derecha",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        },
+        {
+          "sentence": "tš’kă k'āra",
+          "translation": "mano izquierda",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <kā́ra>, chipaya /qʰara/. Los ejemplos son de «El uro de la Bahía de Puno» (pp. 15–16).",
+      "emoji": "✋",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 67",
+      "verified": false
+    },
+    {
+      "id": "isne",
+      "word": "ī́snē",
+      "translations": ["uña", "dedo"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "hātša īsnē",
+          "translation": "pulgar (lit. «dedo grande»)",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ī́sñi ~ ī́sʰñi>, chipaya /isñi/. En «El uro de la Bahía de Puno» (p. 16) Cerrón-Palomino la glosa 'dedo' por el compuesto 'pulgar'.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 74, 77",
+      "verified": false
+    },
+    {
+      "id": "kuts",
+      "word": "kū́ts",
+      "translations": ["codo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <khū́tsī>, chipaya /kʰuts(a)/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 67",
+      "verified": false
+    },
+    {
+      "id": "kotsu",
+      "word": "kṓtšū",
+      "translations": ["pie"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <qhā́tša>, chipaya /qʰoča/.",
+      "emoji": "🦶",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 67, 70, 78",
+      "verified": false
+    },
+    {
+      "id": "thotha",
+      "word": "thṓtha",
+      "translations": ["espalda"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tṓta>, chipaya /tota/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 78",
+      "verified": false
+    },
+    {
+      "id": "uachse",
+      "word": "ŭắχsē",
+      "translations": ["sobaco", "axila"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ŭắks>, chipaya /łaks/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 75, 89",
+      "verified": false
+    },
+    {
+      "id": "pis",
+      "word": "pī́sⁱ",
+      "translations": ["seno"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pī́ˢʰ>, chipaya /piş/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 77",
+      "verified": false
+    },
+    {
+      "id": "tsiri",
+      "word": "tšī́ri",
+      "translations": ["barriga"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšḗri>, chipaya /ĉʰeri/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 71, 75, 77",
+      "verified": false
+    },
+    {
+      "id": "pachtsi",
+      "word": "pắχtši",
+      "translations": ["hígado"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pắχtši>, chipaya /pʰaxts/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 70",
+      "verified": false
+    },
+    {
+      "id": "tsursi",
+      "word": "tšŭ́rsʰī",
+      "translations": ["corazón"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tū́sʰī>, chipaya /tuşi/.",
+      "emoji": "❤️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 72",
+      "verified": false
+    },
+    {
+      "id": "siche",
+      "word": "sī́χe",
+      "variants": ["síxe"],
+      "translations": ["hueso"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tsī́χi>, chipaya /tsix/. Hannß (2014: 187) la transcribe síxe (Lehmann 1929d: 25, Florentino).",
+      "emoji": "🦴",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 70, 89",
+      "verified": false
+    },
+    {
+      "id": "kizi",
+      "word": "kī́ʒi",
+      "variants": ["kīži"],
+      "translations": ["cuero", "pellejo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tš-kī́shi>, chipaya /şqişi/. «El uro de la Bahía de Puno» (p. 13) la escribe <kīži> y la glosa 'cuero'.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "kursi",
+      "word": "kū́rsi",
+      "translations": ["cola"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <kū́rsi>, chipaya /kʰurş/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 67, 72",
+      "verified": false
+    },
+    {
+      "id": "pani",
+      "word": "pắñi",
+      "translations": ["sudor"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pắlñi>, chipaya /pʰalñi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 74",
+      "verified": false
+    },
+    {
+      "id": "hauna",
+      "word": "hā́ŭña",
+      "translations": ["diarrea"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <χā́ᵘi>, chipaya /xawi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "sachue",
+      "word": "sā́χŭe",
+      "translations": ["orina"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <sʰáχᵘⁱ>, chipaya /şaxwi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "sune",
+      "word": "sū́nē",
+      "translations": ["hombre"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <sṓñi ~ sṓni>, chipaya /ŝoñi/.",
+      "emoji": "👨",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 74",
+      "verified": false
+    },
+    {
+      "id": "luch",
+      "word": "lū́χ",
+      "translations": ["varón"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <lūkŭ(ā́ua)>, chipaya /luku/. Impresa <lū́χ(lū)>.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "ipi",
+      "word": "ī́pi",
+      "translations": ["padre"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ăpā́i ~ epi>, chipaya /ep/.",
+      "emoji": "👨‍👧",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 78, 89",
+      "verified": false
+    },
+    {
+      "id": "ato",
+      "word": "a:tò",
+      "translations": ["madre"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 10, dada por Nicolás Valcuña. Hannß la considera la palabra uro genuina (Irohito a:tà).",
+      "emoji": "👩",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "pp. 194–195, ej. (9c)",
+      "verified": false
+    },
+    {
+      "id": "kokba",
+      "word": "kōkba",
+      "translations": ["madre"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Según Cerrón-Palomino, la <b> es una notación errática de un sonido sordo. Hannß (2014: 194–195) la transcribe ko:kó:ba (Lehmann 1929d: 25, Florentino) y la trata como una creación del momento, sin etimología; la palabra uro sería a:tò.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 14",
+      "verified": false
+    },
+    {
+      "id": "achme",
+      "word": "ắχmē",
+      "translations": ["suegra"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ắχmiˢʰ>, chipaya /axmuŝ/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 72",
+      "verified": false
+    },
+    {
+      "id": "litsina",
+      "word": "lītšī́na",
+      "translations": ["borracho"],
+      "partOfSpeech": "adjective",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <lī́ktin>, chipaya /likči/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 66",
+      "verified": false
+    },
+    {
+      "id": "pakho",
+      "word": "pá:kho",
+      "translations": ["brujo", "hechicero"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 7. Hannß cree posible que sea la palabra uro genuina, reemplazada en Irohito por el aimarismo laiki.",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 195, ej. (11c)",
+      "verified": false
+    },
+    {
+      "id": "kuya",
+      "word": "kū́ya",
+      "translations": ["casa"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "kūya lŭsk'ắ",
+          "translation": "en dentro de la casa",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        },
+        {
+          "sentence": "ŭīk'ūña kūyāga",
+          "translation": "mi casa",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929). En «kūyāga» lleva el topicalizador aimara -qa. Ejemplos en pp. 15 y 17. Cerrón-Palomino (2007: 76) la escribe <kū́ya>, con Desaguadero <kū́ya> y chipaya /qʰuya/. Hannß (2014: 203) transcribe el posesivo ku:yá-ga.",
+      "emoji": "🏠",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "pp. 15–18 (y Cerrón-Palomino 2007: 76)",
+      "verified": false
+    },
+    {
+      "id": "kuisara",
+      "word": "kū́i sā́ra",
+      "translations": ["patio de casa"],
+      "partOfSpeech": "phrase",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <kū́i-sā́na>, chipaya /qhuy şana/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 74",
+      "verified": false
+    },
+    {
+      "id": "sara",
+      "word": "sára",
+      "translations": ["patio"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <sʰána>, chipaya /şana/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 72",
+      "verified": false
+    },
+    {
+      "id": "sindzis",
+      "word": "sī́nδʒ̆īs",
+      "translations": ["cama"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšī́nⁱsʰi>, chipaya /čʰinş/.",
+      "emoji": "🛏️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 71, 74",
+      "verified": false
+    },
+    {
+      "id": "kurta",
+      "word": "kū́rta",
+      "translations": ["estera"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tškū́rtak>, chipaya /kurta/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 76, 77",
+      "verified": false
+    },
+    {
+      "id": "karu",
+      "word": "kắru",
+      "translations": ["cuerda de paja"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <kắru>, chipaya /qaru/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 76",
+      "verified": false
+    },
+    {
+      "id": "khatsi",
+      "word": "khā́tsi",
+      "translations": ["bolsa"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <khā́tsi>, chipaya /qʰats(a)/.",
+      "emoji": "👜",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 67",
+      "verified": false
+    },
+    {
+      "id": "puts",
+      "word": "pū́ts",
+      "translations": ["cuchillo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <pắtsʰi>, chipaya /potsi/.",
+      "emoji": "🔪",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 65",
+      "verified": false
+    },
+    {
+      "id": "lose",
+      "word": "lṓsē",
+      "translations": ["cántaro"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <lū́sⁱ ~ lū́ᵘš>, chipaya /luyş/.",
+      "emoji": "🏺",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 75",
+      "verified": false
+    },
+    {
+      "id": "isi",
+      "word": "īsi",
+      "translations": ["capa"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ī́rsʰi>, chipaya /irş(a)/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 77, 89",
+      "verified": false
+    },
+    {
+      "id": "hipsi",
+      "word": "hī́psi",
+      "translations": ["carga"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <hæpsi>, chipaya /hepsi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 72, 77",
+      "verified": false
+    },
+    {
+      "id": "huata",
+      "word": "hŭā́ta",
+      "translations": ["pueblo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <hŭā́ta>, chipaya /watʰa/.",
+      "emoji": "🏘️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 66, 76",
+      "verified": false
+    },
+    {
+      "id": "cholka",
+      "word": "χṓlka",
+      "variants": ["xólka"],
+      "translations": ["collar"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Cognado chipaya /horkişa/. Cerrón-Palomino (2007: 73) la escribe <χṓlka> (Desaguadero <χṓrkă>). Hannß (2014: 190) la transcribe xólka (Lehmann 1929d: 4).",
+      "emoji": "📿",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 12 (y Cerrón-Palomino 2007: 73)",
+      "verified": false
+    },
+    {
+      "id": "tsutko",
+      "word": "tš'útko:",
+      "translations": ["sombrero"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d. Hannß no le encuentra explicación frente a Irohito tská:ra; Cerrón-Palomino (2007: 70) la pone entre paréntesis, como no cognada.",
+      "emoji": "👒",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 191",
+      "verified": false
+    },
+    {
+      "id": "kana",
+      "word": "ká:na",
+      "translations": ["red de pesca"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 22, Florentino. Contracción de kakuna, según Hannß.",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 188, ej. (4b)",
+      "verified": false
+    },
+    {
+      "id": "kuna",
+      "word": "kú:ña",
+      "translations": ["hebra de hilo"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 9.",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 189",
+      "verified": false
+    },
+    {
+      "id": "khula",
+      "word": "khū́la",
+      "translations": ["quinua"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Cognado chipaya /kula/. Cerrón-Palomino (2007: 66) la escribe <khū́la> (Desaguadero <kū́la>).",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 12 (y Cerrón-Palomino 2007: 66)",
+      "verified": false
+    },
+    {
+      "id": "kidzi",
+      "word": "kīdžī",
+      "translations": ["papa"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Cognado chipaya /şqişi/. La primera «ī» se reconstruyó: la extracción del texto perdió la letra bajo el macrón. Cotejar con el PDF.",
+      "emoji": "🥔",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "pp. 13–14",
+      "verified": false
+    },
+    {
+      "id": "tapa",
+      "word": "t!ā́pa",
+      "translations": ["ají"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tā́pa>, chipaya /tapa/.",
+      "emoji": "🌶️",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 65, 79",
+      "verified": false
+    },
+    {
+      "id": "hindzo",
+      "word": "hī́nδʒo",
+      "translations": ["caldo"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <hī́ña>, chipaya /hiña/.",
+      "emoji": "🍲",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "hilye",
+      "word": "hī́lyĕ",
+      "translations": ["carne"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <hī́lyi>, chipaya /hiλi/.",
+      "emoji": "🥩",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "yico",
+      "word": "yī́cō",
+      "translations": ["sal"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <yḗkū>, chipaya /yaku/.",
+      "emoji": "🧂",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 76",
+      "verified": false
+    },
+    {
+      "id": "muchtsi",
+      "word": "mū́χtsī",
+      "translations": ["tabaco"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <mū́ktsi>, chipaya /mukh-či/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 73",
+      "verified": false
+    },
+    {
+      "id": "kuruna",
+      "word": "k'u:rú:nda",
+      "translations": ["maíz"],
+      "partOfSpeech": "noun",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 26, Florentino. Hannß no puede confirmar que sea uro genuino; en Irohito se usa tara, del quechua.",
+      "emoji": "🌽",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 196, ej. (12c)",
+      "verified": false
+    },
+    {
+      "id": "tsutsuna",
+      "word": "tšutšū́ña",
+      "translations": ["bueno"],
+      "partOfSpeech": "adjective",
+      "examples": [
+        {
+          "sentence": "lāra tšutšūña",
+          "translation": "malo (lit. «no bueno»)",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšaătšū́ña>, chipaya /čʰuñi/. El ejemplo es de «El uro de la Bahía de Puno» (p. 15).",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 71",
+      "verified": false
+    },
+    {
+      "id": "tsachua",
+      "word": "tšắχŭa",
+      "translations": ["grande"],
+      "partOfSpeech": "adjective",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tšᵃ́kŭa>, chipaya /čakʷa/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 82",
+      "verified": false
+    },
+    {
+      "id": "kone",
+      "word": "k'ṓñe",
+      "translations": ["seco"],
+      "partOfSpeech": "adjective",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <khṓñi>, chipaya /qʰuñi/. Hannß (2014: 194) da para 'seco' hándžis/hiuáña (Lehmann 1929d: 13), de origen no identificado.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 67",
+      "verified": false
+    },
+    {
+      "id": "uni",
+      "word": "ū́ñi",
+      "translations": ["sordo"],
+      "partOfSpeech": "adjective",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ṓñi>, chipaya /oñi/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 74, 78",
+      "verified": false
+    },
+    {
+      "id": "tsinare",
+      "word": "tši:ñ-á:re",
+      "translations": ["mudo"],
+      "partOfSpeech": "adjective",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 11. Lit. «hablar no».",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 206, ej. (17c)",
+      "verified": false
+    },
+    {
+      "id": "askis",
+      "word": "ắskĭs",
+      "translations": ["lejos"],
+      "partOfSpeech": "adverb",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ăsk>, chipaya /aŝqa/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 72, 78",
+      "verified": false
+    },
+    {
+      "id": "are",
+      "word": "ā́re",
+      "variants": ["lā́re"],
+      "translations": ["no"],
+      "partOfSpeech": "adverb",
+      "examples": [
+        {
+          "sentence": "sú:ne á:re",
+          "translation": "enemigo (lit. «hombre no»)",
+          "sourceId": "hannss-2014-chimu"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ana>, chipaya /ana/. Hannß (2014: 205–207): a diferencia de Irohito ana, la negación (-)á:re va después de lo negado, quizá por influencia aimara. El ejemplo es de Lehmann 1929d: 7.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "pp. 74, 78",
+      "verified": false
+    },
+    {
+      "id": "thakio",
+      "word": "thā́kⁱō",
+      "translations": ["palabra"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929). Cognado chipaya /taqu/. Cotejar con el PDF: la «i» y la «o» pueden ir voladas (vocales sordas). Cerrón-Palomino (2007: 65) la escribe <thā́kⁱō>, con la i volada (Desaguadero <tā́ku>).",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 13 (y Cerrón-Palomino 2007: 65)",
+      "verified": false
+    },
+    {
+      "id": "tiki",
+      "word": "tī́ki",
+      "translations": ["muerte"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <tī́ki>, chipaya /tiki/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 65",
+      "verified": false
+    },
+    {
+      "id": "oya",
+      "word": "ṓya",
+      "translations": ["sueño"],
+      "partOfSpeech": "noun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <ū́ia>, chipaya /wiya/.",
+      "emoji": "😴",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 76",
+      "verified": false
+    },
+    {
+      "id": "luch-comer",
+      "word": "lŭχ",
+      "translations": ["comer"],
+      "partOfSpeech": "verb",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <lŭχ>, chipaya /lul-ş/.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 75",
+      "verified": false
+    },
+    {
+      "id": "tare",
+      "word": "tárē",
+      "translations": ["dar"],
+      "partOfSpeech": "verb",
+      "examples": [
+        {
+          "sentence": "ắnχăta tárē",
+          "translation": "él da",
+          "sourceId": "cerron-palomino-uro-bahia-puno"
+        }
+      ],
+      "notes": "Notación de Lehmann (1929). Raíz <tá->, cognado chipaya /thā-/; la terminación <-rē> no está identificada y la forma no cambia con la persona.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "pp. 20–21",
+      "verified": false
+    },
+    {
+      "id": "istalla",
+      "word": "is-ta-lla",
+      "translations": ["¡dame!"],
+      "partOfSpeech": "phrase",
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Lehmann 1929d: 28. La i- inicial del marcador de objeto no está en Irohito ni en chipaya (s-).",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 189, ej. (5a)",
+      "verified": false
+    },
+    {
+      "id": "uiku",
+      "word": "ŭīk'u",
+      "variants": ["uí:tra"],
+      "translations": ["yo"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929), según la versión de Nicolás Valcuna. Hannß (2014: 200, tabla 7) da uí:tra como el pronombre 'yo' de Nicolás; ŭīk'u solo aparece en 'mi casa' (ui:k'ú:ña ku:yá-ga) y Hannß no logra analizar su -k'ú:-.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 17",
+      "verified": false
+    },
+    {
+      "id": "amp",
+      "word": "āmp",
+      "variants": ["á:ma"],
+      "translations": ["tú"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929), según la versión de Nicolás Valcuna. Hannß (2014: 200, 205) da á:ma como pronombre y explica á:mp como forma reducida ante el posesivo.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 17",
+      "verified": false
+    },
+    {
+      "id": "an",
+      "word": "ăn",
+      "variants": ["anxáta"],
+      "translations": ["él", "ella"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929). Aparece también como <ănχắta>, con el enfático aimara -xata. Hannß (2014: 200–202) da anxáta y lo interpreta como resto de un sistema pronominal más antiguo.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 17",
+      "verified": false
+    },
+    {
+      "id": "utsu",
+      "word": "ūtš'ū",
+      "variants": ["ūtš'ūm", "uí:tš'ú:ña"],
+      "translations": ["nosotros"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929), impresa <ūtš'ū(m)>. Cognado chipaya /uĉum/.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 17",
+      "verified": false
+    },
+    {
+      "id": "antsocho",
+      "word": "ăntšōxo",
+      "variants": ["ántšó:ko:"],
+      "translations": ["ustedes"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929). Comparar con el chipaya /amĉuk/.",
+      "sourceId": "cerron-palomino-uro-bahia-puno",
+      "sourceRef": "p. 17",
+      "verified": false
+    },
+    {
+      "id": "niui",
+      "word": "nī́ŭi",
+      "variants": ["nī́ŭi-nā́ka", "ní:uináka"],
+      "translations": ["ellos", "ellas"],
+      "partOfSpeech": "pronoun",
+      "notes": "Notación de Lehmann (1929) según la tabla de cognados de Cerrón-Palomino (2007). Cognados: uro del Desaguadero <niwi-naka>, chipaya /ni:-naka/. Impresa <nī́ŭi-nā́ka>, con el plural aimara -naka. Hannß (2014: 201) ve en -ui- un resto del plural uro -wiči.",
+      "sourceId": "cerron-palomino-2007-proto-uro",
+      "sourceRef": "p. 74",
+      "verified": false
+    },
+    {
+      "id": "tasnu",
+      "word": "tásnu:",
+      "translations": ["cinco"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <taksnúku> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "5️⃣",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    },
+    {
+      "id": "taxso",
+      "word": "taxso:",
+      "translations": ["seis"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <tajts> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "6️⃣",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    },
+    {
+      "id": "tuku",
+      "word": "tú:ku:",
+      "translations": ["siete"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <tó:gu> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "7️⃣",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    },
+    {
+      "id": "kunku",
+      "word": "kúnku",
+      "translations": ["ocho"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <kónku> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "8️⃣",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    },
+    {
+      "id": "sanko",
+      "word": "sánko",
+      "translations": ["nueve"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <sánku> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "9️⃣",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    },
+    {
+      "id": "kharo",
+      "word": "khá:ro",
+      "translations": ["diez"],
+      "notes": "Transcripción de Hannß (2014) del manuscrito de Lehmann. Numeral uro dado por Nicolás Valcuña; Irohito <qa:lu> (Uhle 1894). Los numerales de Florentino son en su mayoría aimaras o quechuas.",
+      "emoji": "🔟",
+      "sourceId": "hannss-2014-chimu",
+      "sourceRef": "p. 197, tabla 5",
+      "verified": false
+    }
+  ],
+  "themes": [
+    {
+      "id": "dibujo-palabra",
+      "name": "Dibujo → palabra",
+      "icon": "🖼️",
+      "mode": "pic2word",
+      "entryIds": [
+        "tuni",
+        "tsacuna",
+        "uyani",
+        "tsaua",
+        "kecho",
+        "kuasi",
+        "ochi",
+        "isketi",
+        "tsutsu",
+        "masi",
+        "para",
+        "pako",
+        "losca",
+        "tsusmuyu",
+        "piscuna",
+        "tsisi",
+        "chula",
+        "tora",
+        "sina",
+        "tsiutsula",
+        "tsokha",
+        "yuki",
+        "ata",
+        "tsachnie",
+        "kuni",
+        "sipi",
+        "iske",
+        "kara",
+        "kotsu",
+        "tsursi",
+        "siche",
+        "sune",
+        "ipi",
+        "ato",
+        "kuya",
+        "sindzis",
+        "khatsi",
+        "puts",
+        "lose",
+        "huata",
+        "cholka",
+        "tsutko",
+        "kidzi",
+        "tapa",
+        "hindzo",
+        "hilye",
+        "yico",
+        "kuruna",
+        "oya"
+      ]
+    },
+    {
+      "id": "palabra-dibujo",
+      "name": "Palabra → dibujo",
+      "icon": "🔎",
+      "mode": "word2pic",
+      "entryIds": [
+        "tuni",
+        "tsacuna",
+        "uyani",
+        "tsaua",
+        "kecho",
+        "kuasi",
+        "ochi",
+        "isketi",
+        "tsutsu",
+        "masi",
+        "para",
+        "pako",
+        "losca",
+        "tsusmuyu",
+        "piscuna",
+        "tsisi",
+        "chula",
+        "tora",
+        "sina",
+        "tsiutsula",
+        "tsokha",
+        "yuki",
+        "ata",
+        "tsachnie",
+        "kuni",
+        "sipi",
+        "iske",
+        "kara",
+        "kotsu",
+        "tsursi",
+        "siche",
+        "sune",
+        "ipi",
+        "ato",
+        "kuya",
+        "sindzis",
+        "khatsi",
+        "puts",
+        "lose",
+        "huata",
+        "cholka",
+        "tsutko",
+        "kidzi",
+        "tapa",
+        "hindzo",
+        "hilye",
+        "yico",
+        "kuruna",
+        "oya"
+      ]
+    },
+    {
+      "id": "numeros",
+      "name": "Números",
+      "icon": "🔢",
+      "mode": "pic2word",
+      "entryIds": ["tasnu", "taxso", "tuku", "kunku", "sanko", "kharo"]
+    }
+  ]
+}

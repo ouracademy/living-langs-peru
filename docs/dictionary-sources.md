@@ -119,3 +119,7 @@ deja el hueco y se dice. Un dato falso en una lengua originaria es peor que la a
 Por eso la semilla actual son entradas de andamiaje marcadas con `sourceId: "placeholder"`, y
 `pnpm dictionary:check` **falla mientras quede una sola**. Ese es el candado que impide que el
 andamiaje llegue a producción.
+
+> **Nota del 2026-11-23 (gestor-lenguas F4):** `dictionary:check` se retiró con
+> `src/data/dictionary/`. El candado sigue, en otra forma: `pnpm bundles:check` (y «Publicar» en
+> `/admin/lenguas`) rechaza toda entrada que cite una fuente que el paquete de lengua no trae.

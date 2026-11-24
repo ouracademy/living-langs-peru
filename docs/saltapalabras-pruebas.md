@@ -45,6 +45,13 @@ pg_ctl -D /tmp/pg-saltapalabras stop
 Sin Supabase real: el mismo Supabase falso de los e2e sirve un paquete de **prueba**
 (`tests/e2e/fixtures/word-jump-pack.json`, palabras marcadas «PRUEBA»).
 
+> **Nota del 2026-11-23 (gestor-lenguas F4):** ese paquete de prueba ya no existe. El Supabase
+> falso empieza sin nada publicado, así que el juego muestra el paquete de lengua del repo
+> (`src/data/bundles/ashaninka.json`, palabras reales y verificadas). Para jugar con palabras
+> «PRUEBA», subir `tests/e2e/fixtures/uro-bundle-prueba.json` en `/admin/lenguas/uro` y publicarlo;
+> para eso, `pnpm start` necesita además `ADMIN_USER` y `ADMIN_PASSWORD` (los e2e usan `e2e-editor` /
+> `e2e-not-a-secret`).
+
 ```bash
 # Terminal 1: el Supabase falso
 node tests/e2e/fake-supabase.mjs            # escucha en 127.0.0.1:54329

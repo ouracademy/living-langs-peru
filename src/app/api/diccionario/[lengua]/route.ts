@@ -1,20 +1,21 @@
 import { apiError, readPaging } from "@/lib/dictionary/api";
-import { getDictionary, searchEntries } from "@/lib/dictionary";
+import { searchEntries } from "@/lib/dictionary";
+import { getDictionaryContent } from "@/lib/dictionary/content";
 
 type Context = { params: Promise<{ lengua: string }> };
 
 /**
  * Reads ?q from the request, so this route stays dynamic. That is correct
- * here and should not be forced static.
+ * here and should not be forced static. The bundle itself is cached.
  */
 export async function GET(
   request: Request,
   { params }: Context,
 ): Promise<Response> {
   const { lengua: language } = await params;
-  const dictionary = getDictionary(language);
+  const content = await getDictionaryContent(language);
 
-  if (!dictionary) {
+  if (!content) {
     return apiError(
       "language_not_found",
       `No hay diccionario para «${language}».`,
@@ -23,8 +24,9 @@ export async function GET(
 
   const url = new URL(request.url);
   const matches = searchEntries(
-    dictionary.entries,
+    content.dictionary.entries,
     url.searchParams.get("q") ?? "",
+    content.alphabet,
   );
   const paging = readPaging(url.searchParams, matches.length);
 

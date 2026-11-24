@@ -3,6 +3,7 @@
 import { Check, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { SourceCitation } from "@/components/dictionary/source-citation";
 import type { Source } from "@/lib/dictionary";
 import type { Item } from "@/lib/game/types";
 
@@ -67,11 +68,7 @@ export function FeedbackPanel({
 
       {source && (
         <p className="mt-3 text-xs text-[#4A4130]">
-          Fuente:{" "}
-          <a href={source.url} rel="noreferrer noopener" className="underline">
-            {source.title}
-          </a>
-          , {source.publisher}, {source.year}.
+          Fuente: <SourceCitation source={source} />
         </p>
       )}
 

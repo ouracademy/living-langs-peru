@@ -3,6 +3,3 @@ export const ROUND_SIZE = 10;
 
 /** Options under each question, the answer included. */
 export const OPTIONS_PER_QUESTION = 3;
-
-/** Times a missed item comes back, then the answer is shown (decision #11). */
-export const MAX_REQUEUES = 2;

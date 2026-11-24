@@ -23,10 +23,10 @@ const SECTIONS: AdminSection[] = [
     description: "Ver, agregar y corregir las fotos de la página /ashaninka.",
   },
   {
-    href: "/admin/juego",
-    title: "Paquetes de Saltapalabras",
+    href: "/admin/lenguas",
+    title: "Contenido de las lenguas",
     description:
-      "Importar, probar y publicar las palabras del juego, y ver su historial.",
+      "Subir el JSON de asháninka y uro, editarlo, probarlo y publicarlo: de ahí salen el diccionario y los juegos.",
   },
 ];
 

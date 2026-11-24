@@ -5,7 +5,7 @@
  * playable. Nothing stored identifies anybody.
  */
 import { canPersist, defaultStorage } from "../game/progress.ts";
-import type { RoundOutcome } from "./round.ts";
+import type { RoundOutcome } from "./stats.ts";
 import { type ItemStats, type LanguageProgress, recordRound } from "./stats.ts";
 
 /** Version in the key as well as in the value: a new schema writes elsewhere. */

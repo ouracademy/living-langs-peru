@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { getDictionary } from "@/lib/dictionary";
 import { buildItems } from "@/lib/game/items";
 import type { Item } from "@/lib/game/types";
+
+import { ashaninka } from "../dictionary/ashaninka-bundle";
 
 import { entry, example, fillers } from "./fixtures";
 
@@ -392,7 +393,7 @@ describe("buildItems distractors", () => {
 // AC-G1-1 — the only test that reads the shipped dictionary. It guards the
 // size of the pool, which is the one property adding words must not break.
 describe("the real Asháninka pool", () => {
-  const dictionary = getDictionary("ashaninka");
+  const dictionary = ashaninka.dictionary;
 
   it("exists", () => {
     expect(dictionary).not.toBeNull();

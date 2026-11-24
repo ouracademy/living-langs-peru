@@ -1,0 +1,66 @@
+{
+  "schema": "language-bundle/1",
+  "language": "uro",
+  "translationLabel": "castellano",
+  "alphabet": {
+    "graphemes": ["a", "b", "d", "e", "n", "o", "p", "r", "s", "t", "u"],
+    "vowels": ["a", "e", "o", "u"],
+    "sourceId": "fuente-prueba"
+  },
+  "sources": [
+    {
+      "id": "fuente-prueba",
+      "kind": "publication",
+      "title": "Fuente de PRUEBA para los e2e",
+      "url": "https://example.org/prueba"
+    }
+  ],
+  "entries": [
+    {
+      "id": "pruebauno",
+      "word": "pruebauno",
+      "translations": ["PRUEBA uno"],
+      "emoji": "🧪",
+      "examples": [
+        {
+          "sentence": "pruebauno sobre todo",
+          "translation": "PRUEBA de oración"
+        }
+      ],
+      "sourceId": "fuente-prueba",
+      "verified": true
+    },
+    {
+      "id": "pruebados",
+      "word": "pruebados",
+      "translations": ["PRUEBA dos"],
+      "emoji": "🧫",
+      "sourceId": "fuente-prueba",
+      "verified": true
+    },
+    {
+      "id": "pruebatres",
+      "word": "pruebatres",
+      "translations": ["PRUEBA tres"],
+      "emoji": "🧬",
+      "sourceId": "fuente-prueba",
+      "verified": true
+    },
+    {
+      "id": "pruebasinverificar",
+      "word": "pruebasinverificar",
+      "translations": ["PRUEBA sin verificar"],
+      "sourceId": "fuente-prueba",
+      "verified": false
+    }
+  ],
+  "themes": [
+    {
+      "id": "tema-prueba-uro",
+      "name": "Tema de PRUEBA uro",
+      "icon": "🧪",
+      "mode": "pic2word",
+      "entryIds": ["pruebauno", "pruebados", "pruebatres"]
+    }
+  ]
+}

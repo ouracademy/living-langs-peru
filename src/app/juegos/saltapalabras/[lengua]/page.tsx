@@ -4,12 +4,8 @@ import { notFound } from "next/navigation";
 
 import { GameUnavailable } from "@/components/word-jump/game-unavailable";
 import { WordJumpGame } from "@/components/word-jump/word-jump-game";
-import { getPublishedPack } from "@/lib/language-packs/library";
-import { getLanguage } from "@/lib/languages";
-import {
-  LANGUAGES_WITHOUT_PACK,
-  hasNoPack,
-} from "@/lib/word-jump/availability";
+import { getGamePack } from "@/lib/language-bundles/game-pack";
+import { getLanguage, languages } from "@/lib/languages";
 import { resolveGameState } from "@/lib/word-jump/game-state";
 
 type WordJumpPageProps = {
@@ -17,17 +13,13 @@ type WordJumpPageProps = {
   params: Promise<{ lengua: string }>;
 };
 
-// ISR (decision #8): each language is generated on its first visit and
-// regenerated at most hourly, or when a publish revalidates its tag.
+// Both languages are prerendered (spec gestor-lenguas #1) and regenerated
+// when their content is published, at most hourly otherwise. The build no
+// longer depends on Supabase: a failed read falls back to the repo bundle.
 export const revalidate = 3600;
 
-/**
- * Empty on purpose: no language is rendered at build time, so the build never
- * calls Supabase (AC-SP3-10). Returning an array — even an empty one — is what
- * keeps the route cacheable instead of dynamic.
- */
 export function generateStaticParams() {
-  return [];
+  return languages.map((language) => ({ lengua: language.slug }));
 }
 
 export async function generateMetadata({
@@ -47,37 +39,18 @@ export default async function WordJumpPage({ params }: WordJumpPageProps) {
 
   if (!name) notFound();
 
-  const back = (
-    <Link
-      href="/juegos/saltapalabras"
-      className="text-sm font-bold text-[#C7431C] underline underline-offset-2"
-    >
-      Todas las lenguas
-    </Link>
-  );
-
-  // Known without asking the database (AC-SP4-9).
-  if (hasNoPack(language)) {
-    return (
-      <main className="mx-auto w-full max-w-[720px] flex-1 px-8 py-12">
-        {back}
-        <h1 className="mt-4 text-3xl font-bold tracking-tight">
-          Saltapalabras en {name}
-        </h1>
-        <p className="mt-4 max-w-[60ch] text-[#4A4130]">
-          No hay juego en {name}. {LANGUAGES_WITHOUT_PACK[language]}
-        </p>
-      </main>
-    );
-  }
-
-  // A failed read throws here: the segment's error.tsx shows «not available»
-  // on a first visit, and a cached page keeps being served after that.
-  const state = resolveGameState(await getPublishedPack(language));
+  // A failed read in production throws here: the segment's error.tsx shows
+  // «not available» on a first visit, and a cached page keeps being served.
+  const state = resolveGameState(await getGamePack(language));
 
   return (
     <main className="mx-auto w-full max-w-[720px] flex-1 px-8 py-12">
-      {back}
+      <Link
+        href="/juegos/saltapalabras"
+        className="text-sm font-bold text-[#C7431C] underline underline-offset-2"
+      >
+        Todas las lenguas
+      </Link>
       <h1 className="mt-4 text-3xl font-bold tracking-tight">
         Saltapalabras en {name}
       </h1>
@@ -86,8 +59,7 @@ export default async function WordJumpPage({ params }: WordJumpPageProps) {
 
       {state.kind === "empty" ? (
         <p className="mt-6 max-w-[60ch] text-[#4A4130]">
-          Todavía no hay palabras verificadas para jugar en {name}. Las estamos
-          preparando con hablantes y fuentes citadas.
+          Todavía no hay contenido publicado para esta lengua.
         </p>
       ) : null}
 
@@ -117,9 +89,11 @@ export default async function WordJumpPage({ params }: WordJumpPageProps) {
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-xs text-[#4A4130]">
-              Versión {state.pack.version}
-            </p>
+            {state.pack.version > 0 ? (
+              <p className="mt-2 text-xs text-[#4A4130]">
+                Versión {state.pack.version}
+              </p>
+            ) : null}
           </section>
         </>
       ) : null}

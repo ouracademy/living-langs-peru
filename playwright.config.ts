@@ -19,7 +19,22 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL, trace: "on-first-retry" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: /bundle-publish\.spec\.ts/,
+    },
+    // Publishing a uro bundle changes what /diccionario/uro and both uro games
+    // show, which other specs check while uro has no content. So it runs
+    // after them all, never in parallel (gestor-lenguas plan, F2).
+    {
+      name: "chromium-publish",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: /bundle-publish\.spec\.ts/,
+      dependencies: ["chromium"],
+    },
+  ],
   webServer: [
     {
       command: "node tests/e2e/fake-supabase.mjs",
@@ -32,7 +47,11 @@ export default defineConfig({
       // Runs against the production build rather than `next dev`. The
       // dictionary route is prerendered and reads ?palabra client-side via
       // useSearchParams; dev does not reproduce that split identically.
-      command: "pnpm build && pnpm start",
+      // The data cache survives `next build` locally: a bundle published by a
+      // previous run (bundle-publish.spec.ts) would come back without the fake
+      // Supabase. Cleared first, so every run starts from an empty Supabase.
+      command:
+        "node -e \"require('fs').rmSync('.next/cache/fetch-cache',{recursive:true,force:true})\" && pnpm build && pnpm start",
       // Test-only values: /admin answers 401 (not 503) without credentials,
       // and the gallery and the game pack are read from the fake Supabase
       // above. None of them is a secret; set here, they win over a local

@@ -3,6 +3,7 @@
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
 
+import { SourceCitation } from "@/components/dictionary/source-citation";
 import type { Entry, Source } from "@/lib/dictionary";
 
 const PART_OF_SPEECH_LABELS: Record<string, string> = {
@@ -107,11 +108,7 @@ export function EntryDetail({
 
       {source && (
         <p className="mt-6 border-t border-gray-200 pt-3 text-xs text-[#4A4130]">
-          Fuente:{" "}
-          <a href={source.url} className="underline" rel="noreferrer noopener">
-            {source.title}
-          </a>
-          , {source.publisher}, {source.year}.
+          Fuente: <SourceCitation source={source} />
         </p>
       )}
 

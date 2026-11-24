@@ -1,0 +1,49 @@
+{
+  "$schema": "./language-bundle.schema.json",
+  "schema": "language-bundle/1",
+  "language": "uro",
+  "translationLabel": "castellano",
+  "alphabet": {
+    "graphemes": ["COMPLETAR"],
+    "vowels": ["COMPLETAR"],
+    "sourceId": "fuente-del-alfabeto"
+  },
+  "speech": { "lang": "es-PE", "quality": "approx" },
+  "sources": [
+    {
+      "id": "fuente-del-alfabeto",
+      "kind": "publication",
+      "title": "COMPLETAR: obra o norma de donde sale el alfabeto",
+      "year": 1934,
+      "url": "https://COMPLETAR",
+      "note": "COMPLETAR: por qué se usa esta fuente y su licencia o permiso."
+    }
+  ],
+  "entries": [
+    {
+      "id": "prueba-uno",
+      "word": "PRUEBA uno",
+      "translations": ["traducción de PRUEBA"],
+      "partOfSpeech": "noun",
+      "examples": [
+        {
+          "sentence": "Oración de PRUEBA uno",
+          "translation": "Traducción de la oración de PRUEBA"
+        }
+      ],
+      "emoji": "🧪",
+      "sourceId": "fuente-del-alfabeto",
+      "sourceRef": "p. COMPLETAR",
+      "verified": false
+    }
+  ],
+  "themes": [
+    {
+      "id": "dibujo-palabra",
+      "name": "Dibujo → palabra",
+      "icon": "🖼️",
+      "mode": "pic2word",
+      "entryIds": ["prueba-uno"]
+    }
+  ]
+}

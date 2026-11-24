@@ -18,10 +18,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "dictionary:check": "node --experimental-strip-types scripts/validate-dictionary.ts",
+    "bundles:check": "node --experimental-strip-types scripts/validate-bundles.ts",
     "game:check": "node --experimental-strip-types scripts/validate-game-items.ts",
     "peoples:check": "node --experimental-strip-types scripts/validate-peoples.ts",
-    "pack:draft": "node --experimental-strip-types scripts/draft-pack-from-dictionary.ts",
     "check:floor": "node --experimental-strip-types scripts/check-floor.ts",
     "check:language": "node --experimental-strip-types scripts/check-language-policy.ts",
     "check:coverage": "node --experimental-strip-types scripts/check-changed-coverage.ts --min 80",
@@ -29,7 +28,7 @@
     "check:deps": "scripts/check-deps.sh",
     "check:arch": "bash scripts/check-arch.sh",
     "check:fast": "pnpm typecheck && pnpm lint && pnpm check:arch && pnpm check:floor && pnpm check:language",
-    "check:task": "pnpm check:fast && pnpm dictionary:check && pnpm game:check && pnpm peoples:check && pnpm test:coverage && pnpm check:coverage",
+    "check:task": "pnpm check:fast && pnpm bundles:check && pnpm game:check && pnpm peoples:check && pnpm test:coverage && pnpm check:coverage",
     "check:full": "pnpm check:task && pnpm format:check && pnpm check:secrets && pnpm check:deps && pnpm test:e2e"
   },
   "dependencies": {

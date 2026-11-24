@@ -3,7 +3,7 @@
  * `src/lib/game/progress-store.ts`: the server renders an empty progress and
  * the client its own, without an effect that sets state after mount.
  */
-import type { RoundOutcome } from "./round.ts";
+import type { RoundOutcome } from "./stats.ts";
 import {
   STORAGE_KEY,
   type ToggleSetting,

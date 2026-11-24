@@ -1,4 +1,10 @@
 import json, re, unicodedata, pathlib
+# Historical (gestor-lenguas F4, 2026-11-23): this script built the fixed
+# src/data/dictionary/ashaninka.json, which no longer exists. Its words now
+# live in the language bundle src/data/bundles/ashaninka.json, edited at
+# /admin/lenguas and checked with `pnpm bundles:check`. Kept as the record of
+# how the MINEDU vocabulary was read; running it again would need its output
+# turned into a bundle by hand.
 from collections import Counter
 
 # Run from the repo root:

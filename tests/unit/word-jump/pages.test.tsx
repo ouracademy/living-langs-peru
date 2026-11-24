@@ -5,8 +5,8 @@ import type { PackReadResult } from "@/lib/language-packs/types";
 
 import { testItem, testPack, testTheme } from "../language-packs/fixtures";
 
-const getPublishedPack = vi.fn<(language: string) => Promise<PackReadResult>>();
-vi.mock("@/lib/language-packs/library", () => ({ getPublishedPack }));
+const getGamePack = vi.fn<(language: string) => Promise<PackReadResult>>();
+vi.mock("@/lib/language-bundles/game-pack", () => ({ getGamePack }));
 
 class NotFound extends Error {}
 vi.mock("next/navigation", () => ({
@@ -31,7 +31,7 @@ function params(lengua: string) {
 }
 
 beforeEach(() => {
-  getPublishedPack.mockReset();
+  getGamePack.mockReset();
   // jsdom has no canvas; the game must not need one.
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
   vi.spyOn(console, "error").mockImplementation(() => {});
@@ -43,9 +43,12 @@ afterEach(() => {
 });
 
 describe("/juegos/saltapalabras/[lengua] route config", () => {
-  // AC-SP3-10, AC-SP4-1: nothing at build time, cached once visited.
-  it("renders no language at build time and revalidates hourly", () => {
-    expect(generateStaticParams()).toEqual([]);
+  // AC-L3-3: both languages are prerendered, and revalidated hourly.
+  it("prerenders both languages and revalidates hourly", () => {
+    expect(generateStaticParams()).toEqual([
+      { lengua: "ashaninka" },
+      { lengua: "uro" },
+    ]);
     expect(revalidate).toBe(3600);
   });
 
@@ -63,20 +66,24 @@ describe("/juegos/saltapalabras/[lengua]", () => {
   // AC-SP4-10
   it("is a 404 for a language the site does not know", async () => {
     await expect(WordJumpPage(params("klingon"))).rejects.toThrow(NotFound);
-    expect(getPublishedPack).not.toHaveBeenCalled();
+    expect(getGamePack).not.toHaveBeenCalled();
   });
 
-  // AC-SP4-9
-  it("explains uro without asking the database", async () => {
+  // AC-L3-3: uro works like asháninka; with nothing published it says so.
+  it("says there is no content yet for a language with nothing published", async () => {
+    getGamePack.mockResolvedValue({ status: "none" });
+
     render(await WordJumpPage(params("uro")));
 
-    expect(screen.getByText(/no tiene hablantes/)).toBeTruthy();
-    expect(getPublishedPack).not.toHaveBeenCalled();
+    expect(getGamePack).toHaveBeenCalledWith("uro");
+    expect(
+      screen.getByText("Todavía no hay contenido publicado para esta lengua."),
+    ).toBeTruthy();
   });
 
   // AC-SP4-8
   it("says the game is not available without configuration", async () => {
-    getPublishedPack.mockResolvedValue({ status: "unconfigured" });
+    getGamePack.mockResolvedValue({ status: "unconfigured" });
 
     render(await WordJumpPage(params("ashaninka")));
 
@@ -87,20 +94,10 @@ describe("/juegos/saltapalabras/[lengua]", () => {
     );
   });
 
-  it("says nothing is ready yet when no pack is published", async () => {
-    getPublishedPack.mockResolvedValue({ status: "none" });
-
-    render(await WordJumpPage(params("ashaninka")));
-
-    expect(
-      screen.getByText(/Todavía no hay palabras verificadas/),
-    ).toBeTruthy();
-  });
-
   // AC-SP4-3
   it("offers the playable themes, without unverified items", async () => {
     const base = testTheme();
-    getPublishedPack.mockResolvedValue({
+    getGamePack.mockResolvedValue({
       status: "ok",
       pack: testPack({
         themes: [
@@ -128,9 +125,22 @@ describe("/juegos/saltapalabras/[lengua]", () => {
     expect(container.textContent).not.toContain("PRUEBA oculta");
   });
 
+  it("shows no version for the repo's content, which has none", async () => {
+    getGamePack.mockResolvedValue({
+      status: "ok",
+      pack: testPack(),
+      version: 0,
+      publishedAt: "",
+    });
+
+    const { container } = render(await WordJumpPage(params("ashaninka")));
+
+    expect(container.textContent).not.toContain("Versión");
+  });
+
   // AC-SP4-12: no way in from the game.
   it("never links to /admin nor shows a sign-in", async () => {
-    getPublishedPack.mockResolvedValue({
+    getGamePack.mockResolvedValue({
       status: "ok",
       pack: testPack(),
       version: 1,
@@ -145,18 +155,19 @@ describe("/juegos/saltapalabras/[lengua]", () => {
 });
 
 describe("/juegos/saltapalabras", () => {
-  it("lists every language from code, with uro explained and not linked", () => {
-    const { container } = render(<WordJumpLibraryPage />);
+  it("links every language from code, uro included (spec gestor-lenguas #11)", () => {
+    render(<WordJumpLibraryPage />);
 
-    expect(
-      screen
-        .getByRole("link", { name: "Jugar en Asháninka" })
-        .getAttribute("href"),
-    ).toBe("/juegos/saltapalabras/ashaninka");
-    expect(screen.getByText(/Sin juego/)).toBeTruthy();
-    expect(
-      container.querySelector('a[href="/juegos/saltapalabras/uro"]'),
-    ).toBeNull();
+    for (const [name, slug] of [
+      ["Asháninka", "ashaninka"],
+      ["Uro", "uro"],
+    ]) {
+      expect(
+        screen
+          .getByRole("link", { name: `Jugar en ${name}` })
+          .getAttribute("href"),
+      ).toBe(`/juegos/saltapalabras/${slug}`);
+    }
   });
 });
 

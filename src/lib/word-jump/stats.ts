@@ -1,4 +1,10 @@
-import type { RoundOutcome } from "./round.ts";
+/** What a finished round leaves behind for one item (spec §5.5). */
+export type RoundOutcome = {
+  itemId: string;
+  misses: number;
+  correctFirstTry: boolean;
+  revealed: boolean;
+};
 
 /** What the browser remembers about one item (spec §5.5). Never leaves it. */
 export type ItemStats = {

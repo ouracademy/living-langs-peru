@@ -26,6 +26,8 @@ type DictionaryProps = {
   languageCode: string;
   availableLanguages: string[];
   sources: Source[];
+  /** The language bundle's graphemes, in order (spec gestor-lenguas #10). */
+  alphabet?: readonly string[];
 };
 
 export function Dictionary({
@@ -35,6 +37,7 @@ export function Dictionary({
   languageCode,
   availableLanguages,
   sources,
+  alphabet,
 }: DictionaryProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -45,8 +48,8 @@ export function Dictionary({
   const [input, setInput] = useState("");
   const query = useDebounced(input, 150);
   const visible = useMemo(
-    () => searchEntries(entries, query, language),
-    [entries, query, language],
+    () => searchEntries(entries, query, alphabet),
+    [entries, query, alphabet],
   );
 
   const requested = searchParams.get(WORD_PARAM);
@@ -112,7 +115,7 @@ export function Dictionary({
         <div className="mt-4" />
         <EntryList
           entries={visible}
-          language={language}
+          alphabet={alphabet}
           selectedId={selected?.id}
           languageCode={languageCode}
           onSelect={select}

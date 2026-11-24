@@ -1,49 +1,22 @@
 import { normalize } from "./text.ts";
 
 /**
- * The official Asháninka alphabet: 19 letters, 4 vowels and 15 consonants,
- * approved by Resolución Directoral 0606-2008-ED and Resolución Ministerial
- * 303-2015-MINEDU.
- *
- * ch, sh, ts and ty are letters in their own right, not sequences, so they
- * both sort and group as single units. Note there is no c, d, f, g, l, q, u,
- * v, w, x or z.
+ * The alphabet to sort by: a language bundle's own list of graphemes, in its
+ * order (spec gestor-lenguas #10). No alphabet is written in code: an empty or
+ * missing list falls back to Spanish collation.
  */
-export const ASHANINKA_ALPHABET = [
-  "a",
-  "b",
-  "ch",
-  "e",
-  "i",
-  "j",
-  "k",
-  "m",
-  "n",
-  "ñ",
-  "o",
-  "p",
-  "r",
-  "s",
-  "sh",
-  "t",
-  "ts",
-  "ty",
-  "y",
-] as const;
+export type AlphabetRef = readonly string[];
 
-const ALPHABETS: Record<string, readonly string[]> = {
-  ashaninka: ASHANINKA_ALPHABET,
-};
-
-/** Letters outside the alphabet sort after every official letter. */
-const UNKNOWN_RANK = ASHANINKA_ALPHABET.length + 1;
+function resolveAlphabet(ref?: AlphabetRef): readonly string[] | undefined {
+  return ref && ref.length > 0 ? ref : undefined;
+}
 
 /**
  * Splits a word into alphabet letters, matching the longest first so "ts"
  * never comes back as "t" followed by "s".
  */
-export function tokenizeWord(word: string, language?: string): string[] {
-  const alphabet = language ? ALPHABETS[language] : undefined;
+export function tokenizeWord(word: string, language?: AlphabetRef): string[] {
+  const alphabet = resolveAlphabet(language);
   const text = normalize(word);
 
   if (!alphabet) return [...text];
@@ -65,28 +38,29 @@ export function tokenizeWord(word: string, language?: string): string[] {
 
 const spanish = new Intl.Collator("es", { sensitivity: "base" });
 
+/** Letters outside the alphabet sort after every letter of it. */
 function rank(letter: string, alphabet: readonly string[]): number {
   const index = alphabet.indexOf(letter);
 
-  return index === -1 ? UNKNOWN_RANK : index;
+  return index === -1 ? alphabet.length + 1 : index;
 }
 
 /**
- * Returns the comparator for a language's own alphabet, falling back to
- * Spanish collation for languages with no table of their own.
+ * Returns the comparator for an alphabet, falling back to Spanish collation
+ * when there is none.
  */
 export function getComparator(
-  language?: string,
+  language?: AlphabetRef,
 ): (a: string, b: string) => number {
-  const alphabet = language ? ALPHABETS[language] : undefined;
+  const alphabet = resolveAlphabet(language);
 
   if (!alphabet) {
     return (a, b) => spanish.compare(a, b);
   }
 
   return (a, b) => {
-    const left = tokenizeWord(a, language);
-    const right = tokenizeWord(b, language);
+    const left = tokenizeWord(a, alphabet);
+    const right = tokenizeWord(b, alphabet);
 
     for (let at = 0; at < Math.min(left.length, right.length); at += 1) {
       const difference =
@@ -106,7 +80,10 @@ export function getComparator(
  * "chakopibenki" lands under "Ch" and not under "C". Returns null when the
  * word does not start with a letter.
  */
-export function getInitial(word: string, language?: string): string | null {
+export function getInitial(
+  word: string,
+  language?: AlphabetRef,
+): string | null {
   const [first] = tokenizeWord(word, language);
 
   if (!first || !/^\p{Letter}+$/u.test(first)) return null;
