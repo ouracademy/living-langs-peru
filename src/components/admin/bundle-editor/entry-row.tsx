@@ -14,7 +14,7 @@ import {
   checkboxLabel,
   dangerButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { EntryForm } from "./entry-form";
 import type { EditorChange } from "./types";
 

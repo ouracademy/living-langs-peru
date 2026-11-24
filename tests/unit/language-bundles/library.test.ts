@@ -1,8 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { PackReadResult } from "@/lib/language-packs/types";
-
 import { testBundle } from "./fixtures";
 
 vi.mock("server-only", () => ({}));
@@ -23,9 +21,6 @@ let client: SupabaseClient | null = null;
 vi.mock("@/lib/supabase-optional", () => ({
   getOptionalSupabase: () => client,
 }));
-
-const getPublishedPack = vi.fn<(language: string) => Promise<PackReadResult>>();
-vi.mock("@/lib/language-packs/library", () => ({ getPublishedPack }));
 
 const { bundleTag, getLanguageBundle, readPublishedBundle } =
   await import("@/lib/language-bundles/library");
@@ -71,8 +66,6 @@ const row = (bundle: unknown = testBundle(), version = 3) => ({
 beforeEach(() => {
   cacheCalls.length = 0;
   client = null;
-  getPublishedPack.mockReset();
-  getPublishedPack.mockResolvedValue({ status: "none" });
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
@@ -160,25 +153,15 @@ describe("getLanguageBundle", () => {
 });
 
 describe("getGamePack", () => {
-  it("prefers a published bundle", async () => {
-    client = clientAnswering(row()).client;
+  it("plays a published bundle, read from language_bundles only", async () => {
+    const answering = clientAnswering(row());
+    client = answering.client;
 
     const result = await getGamePack("uro", "production");
 
     expect(result).toMatchObject({ status: "ok", version: 3 });
-    expect(getPublishedPack).not.toHaveBeenCalled();
-  });
-
-  it("then the pack still published from /admin/juego", async () => {
-    const legacy: PackReadResult = {
-      status: "ok",
-      pack: { language: { slug: "ashaninka" } } as never,
-      version: 7,
-      publishedAt: "x",
-    };
-    getPublishedPack.mockResolvedValue(legacy);
-
-    expect(await getGamePack("ashaninka", "production")).toBe(legacy);
+    // gestor-lenguas F4: the retired language_packs table is never read.
+    expect(answering.asked.table).toBe("language_bundles");
   });
 
   it("then the repo's bundle, and none for a language with nothing", async () => {
@@ -191,15 +174,16 @@ describe("getGamePack", () => {
     expect(await getGamePack("uro", "production")).toEqual({ status: "none" });
   });
 
-  it("skips a failing pack read while building, but not in production", async () => {
-    getPublishedPack.mockRejectedValue(new Error("boom"));
+  it("falls back to the repo on a failed read while building, but throws in production", async () => {
+    client = clientAnswering({
+      data: null,
+      error: { code: "PGRST205" },
+    }).client;
 
     expect(await getGamePack("ashaninka", "build")).toMatchObject({
       version: 0,
     });
-    await expect(getGamePack("ashaninka", "production")).rejects.toThrow(
-      "boom",
-    );
+    await expect(getGamePack("ashaninka", "production")).rejects.toThrow();
   });
 });
 

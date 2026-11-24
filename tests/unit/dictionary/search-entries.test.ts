@@ -4,6 +4,8 @@ import { searchEntries } from "@/lib/dictionary";
 
 import { entry } from "./fixtures";
 
+import { ASHANINKA_ALPHABET } from "./ashaninka-bundle";
+
 /**
  * Built so the query "cas" hits each ranking level exactly once, which is the
  * only way to tell the levels apart rather than just "it matched something".
@@ -122,7 +124,7 @@ describe("searchEntries for Asháninka", () => {
 
     // Plain s before sh, which Spanish collation would reverse.
     expect(
-      searchEntries(entries, "", "ashaninka").map((item) => item.id),
+      searchEntries(entries, "", ASHANINKA_ALPHABET).map((item) => item.id),
     ).toEqual(["s", "sh"]);
   });
 });

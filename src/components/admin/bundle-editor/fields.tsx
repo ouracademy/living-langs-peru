@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from "react";
 
-import { input } from "../pack-admin/styles";
+import { input } from "../bundle-admin/styles";
 
 type FieldShellProps = {
   label: string;

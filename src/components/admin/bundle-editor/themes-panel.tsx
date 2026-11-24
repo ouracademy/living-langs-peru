@@ -20,7 +20,7 @@ import {
   dangerButton,
   primaryButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { EntryPicker } from "./entry-picker";
 import { SelectField, TextField } from "./fields";
 import { MODE_LABELS } from "./labels";

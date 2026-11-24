@@ -15,7 +15,7 @@ import {
   checkboxLabel,
   primaryButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { SelectField, TextField } from "./fields";
 import { PART_OF_SPEECH_LABELS } from "./labels";
 

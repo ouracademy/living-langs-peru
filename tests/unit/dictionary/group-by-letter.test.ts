@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { groupByLetter } from "@/lib/dictionary";
 
+import { ASHANINKA_ALPHABET } from "./ashaninka-bundle";
 import { entry } from "./fixtures";
 
 const letters = (words: string[]) =>
@@ -66,7 +67,7 @@ describe("groupByLetter for Asháninka", () => {
   const letters = (words: string[]) =>
     groupByLetter(
       words.map((word) => entry({ word })),
-      "ashaninka",
+      ASHANINKA_ALPHABET,
     ).map((group) => group.letter);
 
   it("gives each digraph its own section", () => {
@@ -101,7 +102,7 @@ describe("groupByLetter for Asháninka", () => {
   it("puts a plain s word in S and an sh word in Sh", () => {
     const groups = groupByLetter(
       [entry({ word: "seri" }), entry({ word: "sheri" })],
-      "ashaninka",
+      ASHANINKA_ALPHABET,
     );
 
     expect(groups[0].entries.map((item) => item.word)).toEqual(["seri"]);

@@ -1,15 +1,22 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import {
-  getDictionary,
-  getSource,
-  groupByLetter,
-  isProvisional,
-  resolveWord,
-} from "@/lib/dictionary";
+import { groupByLetter, isProvisional, resolveWord } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionary/types";
 
-describe("getDictionary", () => {
+// gestor-lenguas F4: the dictionary is served from the language bundles; with
+// Supabase off, from the repo's (src/data/bundles).
+vi.mock("server-only", () => ({}));
+vi.mock("@/lib/supabase-optional", () => ({ getOptionalSupabase: () => null }));
+
+const { getDictionaryContent } = await import("@/lib/dictionary/content");
+
+const content = await getDictionaryContent("ashaninka");
+const getDictionary = (language: string) =>
+  language === "ashaninka" ? (content?.dictionary ?? null) : null;
+const getSource = (id: string | undefined) =>
+  content?.sources.find((source) => source.id === id);
+
+describe("getDictionaryContent", () => {
   it("returns the Asháninka dictionary", () => {
     const dictionary = getDictionary("ashaninka");
 
@@ -18,13 +25,13 @@ describe("getDictionary", () => {
     expect(dictionary?.entries.length).toBeGreaterThanOrEqual(3);
   });
 
-  // A language may exist in languages.ts without having a dictionary yet.
-  it("returns null for a language that has no dictionary file", () => {
-    expect(getDictionary("uro")).toBeNull();
+  // A language may exist in languages.ts without having a bundle yet.
+  it("returns null for a language that has no bundle", async () => {
+    expect(await getDictionaryContent("uro")).toBeNull();
   });
 
-  it("returns null for an unknown language", () => {
-    expect(getDictionary("klingon")).toBeNull();
+  it("returns null for an unknown language", async () => {
+    expect(await getDictionaryContent("klingon")).toBeNull();
   });
 
   it("gives every entry an id, a word and at least one translation", () => {
@@ -96,10 +103,11 @@ describe("shipped Asháninka data", () => {
     }
   });
 
+  // A bundle example without its own source is cited by its entry's.
   it("cites a source on every usage example", () => {
     for (const entry of entries) {
       for (const example of entry.examples) {
-        expect(getSource(example.sourceId)).toBeDefined();
+        expect(getSource(example.sourceId ?? entry.sourceId)).toBeDefined();
       }
     }
   });
@@ -115,7 +123,9 @@ describe("shipped Asháninka data", () => {
   });
 
   it("has entries under the digraph letters of the official alphabet", () => {
-    const letters = groupByLetter(entries, "ashaninka").map((g) => g.letter);
+    const letters = groupByLetter(entries, content?.alphabet).map(
+      (g) => g.letter,
+    );
 
     expect(letters).toContain("Sh");
     expect(letters).toContain("Ts");

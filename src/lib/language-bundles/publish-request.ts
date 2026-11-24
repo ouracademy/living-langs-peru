@@ -108,3 +108,29 @@ export function readBundlePublishRequest(
     note,
   };
 }
+
+const restoreSchema = z.object({
+  version: z.number().int().min(1),
+  expectedVersion: z.number().int().min(0).nullable(),
+});
+
+export type RestoreRequest =
+  | { ok: true; version: number; expectedVersion: number | null }
+  | { ok: false; error: "invalid_request"; message: string };
+
+/** «Restaurar» publishes an old version as a new one; history is never rewritten. */
+export function readRestoreRequest(body: unknown): RestoreRequest {
+  const shape = restoreSchema.safeParse(body);
+  return shape.success
+    ? { ok: true, ...shape.data }
+    : {
+        ok: false,
+        error: "invalid_request",
+        message: "La solicitud no tiene la forma esperada.",
+      };
+}
+
+/** The note a restore leaves in the history. */
+export function restoreNote(version: number): string {
+  return `Restaurada desde la versión ${version}.`;
+}

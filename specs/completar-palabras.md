@@ -4,6 +4,10 @@
 > Pendiente humano: revisión del pool por un hablante antes de difundir (§14, pregunta 1).
 > Rama base: `main` · Plan: [tasks/completar-palabras/](../tasks/completar-palabras/) · Índice:
 > [specs/README.md](./README.md)
+> **Nota del 2026-11-23 (gestor-lenguas F4):** las oraciones salen de los ejemplos de las entradas
+> verificadas del paquete de lengua, no de `src/data/dictionary/ashaninka.json` (retirado).
+> `pnpm game:check` valida el pool desde `src/data/bundles/`. Ver
+> [gestor-lenguas.md](./gestor-lenguas.md) §9.
 > Depende de: [specs/diccionario.md](./diccionario.md) (implementado) como **única** fuente de
 > contenido. El pool está cerrado ahí: decisión #12.
 

@@ -1,7 +1,7 @@
 import type { BundleSummary } from "@/lib/language-bundles/bundle-file";
 
-import { formatPublishedAt } from "../pack-admin/format";
-import { panel } from "../pack-admin/styles";
+import { formatPublishedAt } from "./format";
+import { panel } from "./styles";
 
 export type Notice = {
   tone: "ok" | "problem";

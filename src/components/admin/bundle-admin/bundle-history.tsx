@@ -7,9 +7,9 @@ import {
   exportBundleText,
 } from "@/lib/language-bundles/bundle-file";
 
-import { formatPublishedAt } from "../pack-admin/format";
-import { downloadText } from "../pack-admin/pack-api";
-import { primaryButton, secondaryButton } from "../pack-admin/styles";
+import { formatPublishedAt } from "./format";
+import { downloadText } from "./download";
+import { primaryButton, secondaryButton } from "./styles";
 import { fetchBundleVersion, restoreBundleVersion } from "./bundle-api";
 
 export type HistoryVersion = {

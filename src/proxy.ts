@@ -7,7 +7,7 @@ import { adminAuthResponse } from "@/lib/admin/basic-auth";
  * `_next/*` and `public/` never pay for it. Every admin Route Handler checks
  * the credentials again, so this is the first barrier, not the only one.
  *
- * Next allows a single proxy file. Anything /admin/juego needs goes in a
+ * Next allows a single proxy file. Anything another admin page needs goes in a
  * module imported from here, not in a second proxy.
  */
 export function proxy(request: NextRequest): Response | undefined {

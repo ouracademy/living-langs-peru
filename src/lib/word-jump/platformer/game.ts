@@ -7,7 +7,8 @@ import { hash } from "../../game/hash.ts";
 import { mulberry32 } from "../../game/random.ts";
 import type { PackItem } from "../../language-packs/types.ts";
 import { type Question, buildQuestion } from "../questions.ts";
-import type { RoundContext, RoundOutcome } from "../round.ts";
+import type { RoundContext } from "../round.ts";
+import type { RoundOutcome } from "../stats.ts";
 
 export const SCORE_FIRST_TRY = 10;
 export const SCORE_AFTER_MISS = 5;

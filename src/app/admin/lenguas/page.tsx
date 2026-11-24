@@ -9,7 +9,7 @@ import { BUNDLE_LANGUAGES } from "@/lib/language-bundles/types";
 import { getLanguage } from "@/lib/languages";
 import { getOptionalSupabase } from "@/lib/supabase-optional";
 
-import { formatPublishedAt } from "@/components/admin/pack-admin/format";
+import { formatPublishedAt } from "@/components/admin/bundle-admin/format";
 
 export const metadata: Metadata = {
   title: "Contenido de las lenguas",

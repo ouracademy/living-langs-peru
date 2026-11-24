@@ -4,47 +4,25 @@
 // captured request, T0.5). No production code knows about this server: the
 // Next server under test only gets SUPABASE_URL pointing here.
 //
-// /admin/juego (F2) also publishes, lists and reads versions; the state lives
-// in memory and starts with the fixture published as version 1.
+// /admin/lenguas publishes language bundles and lists and reads their
+// versions; the state lives in memory and starts empty, so the site shows the
+// repo's bundles. The retired language_packs tables are not faked: nothing
+// reads them any more (gestor-lenguas F4).
 //
 // The photo gallery (tasks/edicion-fotos F5) reads and saves `galleries` and
 // uploads, serves and deletes files of the `gallery` bucket. It starts with no
 // row, so /ashaninka shows the repo's photos (the fallback).
 //
-// Pack fixtures use words marked PRUEBA, never real language (spec §13).
+// Bundle fixtures use words marked PRUEBA, never real language (spec §13).
 
-import { readFileSync } from "node:fs";
 import http from "node:http";
 
 const port = Number(process.env.FAKE_SUPABASE_PORT ?? 54329);
 
-const fixture = JSON.parse(
-  readFileSync(
-    new URL("./fixtures/word-jump-pack.json", import.meta.url),
-    "utf8",
-  ),
-);
-
-const FIRST_PUBLISHED_AT = "2026-11-18T00:00:00+00:00";
-
-/** language → the published row. */
-const current = new Map([
-  [
-    "ashaninka",
-    {
-      version: 1,
-      pack: fixture,
-      note: "Paquete de PRUEBA",
-      published_at: FIRST_PUBLISHED_AT,
-    },
-  ],
-]);
 /** slug → the published language bundle row; empty until F2 publishes. */
 const bundles = new Map();
 /** slug → every published bundle version, oldest first. */
 const bundleHistory = new Map();
-/** language → every version, oldest first. */
-const history = new Map([["ashaninka", [current.get("ashaninka")]]]);
 
 function json(response, status, body) {
   response.writeHead(status, { "content-type": "application/json" });
@@ -128,46 +106,12 @@ function publishBundle({ p_slug, p_bundle, p_expected_version, p_note }) {
   return { status: 200, body: row.version };
 }
 
-/** Same checks and errors as publish_language_pack (docs/saltapalabras-schema.sql). */
-function publish({ p_language, p_pack, p_expected_version, p_note }) {
-  if (p_pack?.language?.slug !== p_language) {
-    return {
-      status: 400,
-      body: { code: "22023", message: "language mismatch" },
-    };
-  }
-  const found = current.get(p_language)?.version ?? 0;
-  if (p_expected_version !== null && p_expected_version !== found) {
-    return {
-      status: 409,
-      body: { code: "40001", message: "version conflict" },
-    };
-  }
-  const row = {
-    version: found + 1,
-    pack: p_pack,
-    note: p_note,
-    published_at: new Date().toISOString(),
-  };
-  current.set(p_language, row);
-  history.set(p_language, [...(history.get(p_language) ?? []), row]);
-  return { status: 200, body: row.version };
-}
-
 http
   .createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", `http://127.0.0.1:${port}`);
 
     // Readiness check for Playwright's webServer.
     if (url.pathname === "/") return json(response, 200, { ok: true });
-
-    if (
-      request.method === "GET" &&
-      url.pathname === "/rest/v1/language_packs"
-    ) {
-      const row = current.get(equals(url, "language"));
-      return json(response, 200, row ? [project(url, row)] : []);
-    }
 
     // Language bundles (gestor-lenguas F1): none published, so the site
     // shows the repo's bundle, as it does before anyone publishes one.
@@ -201,28 +145,6 @@ http
       url.pathname === "/rest/v1/rpc/publish_language_bundle"
     ) {
       const answer = publishBundle(JSON.parse(await readBody(request)));
-      return json(response, answer.status, answer.body);
-    }
-
-    if (request.method === "GET" && url.pathname === "/rest/v1/pack_versions") {
-      const rows = history.get(equals(url, "language")) ?? [];
-      const version = equals(url, "version");
-      const chosen =
-        version === null
-          ? [...rows].reverse()
-          : rows.filter((row) => row.version === Number(version));
-      return json(
-        response,
-        200,
-        chosen.map((row) => project(url, row)),
-      );
-    }
-
-    if (
-      request.method === "POST" &&
-      url.pathname === "/rest/v1/rpc/publish_language_pack"
-    ) {
-      const answer = publish(JSON.parse(await readBody(request)));
       return json(response, answer.status, answer.body);
     }
 

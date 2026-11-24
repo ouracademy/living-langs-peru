@@ -32,8 +32,8 @@ import {
 
 import { BundleEditor } from "../bundle-editor/bundle-editor";
 import { ENTRY_PAGE } from "../bundle-editor/entries-panel";
-import { downloadText } from "../pack-admin/pack-api";
-import { dangerButton, secondaryButton } from "../pack-admin/styles";
+import { downloadText } from "./download";
+import { dangerButton, secondaryButton } from "./styles";
 import { BundleHistory, type HistoryVersion } from "./bundle-history";
 import { BundleIssues } from "./bundle-issues";
 import {

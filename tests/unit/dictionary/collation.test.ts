@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  ASHANINKA_ALPHABET,
   getComparator,
   getInitial,
   tokenizeWord,
 } from "@/lib/dictionary/collation";
 
-describe("ASHANINKA_ALPHABET", () => {
+import { ASHANINKA_ALPHABET } from "./ashaninka-bundle";
+
+// The alphabet now comes with the content (gestor-lenguas F4): this checks the
+// one the asháninka bundle carries.
+describe("the asháninka bundle's alphabet", () => {
   // RD 0606-2008-ED / RM 303-2015-MINEDU: 19 letters, 4 vowels + 15 consonants.
   it("has the 19 official letters in order", () => {
     expect(ASHANINKA_ALPHABET).toEqual([
@@ -36,7 +39,7 @@ describe("ASHANINKA_ALPHABET", () => {
 
 describe("tokenizeWord", () => {
   it("reads digraphs as single letters, longest first", () => {
-    expect(tokenizeWord("ashaninka", "ashaninka")).toEqual([
+    expect(tokenizeWord("ashaninka", ASHANINKA_ALPHABET)).toEqual([
       "a",
       "sh",
       "a",
@@ -46,7 +49,7 @@ describe("tokenizeWord", () => {
       "k",
       "a",
     ]);
-    expect(tokenizeWord("chakopibenki", "ashaninka")).toEqual([
+    expect(tokenizeWord("chakopibenki", ASHANINKA_ALPHABET)).toEqual([
       "ch",
       "a",
       "k",
@@ -59,7 +62,7 @@ describe("tokenizeWord", () => {
       "k",
       "i",
     ]);
-    expect(tokenizeWord("tsaparipaye", "ashaninka")).toEqual([
+    expect(tokenizeWord("tsaparipaye", ASHANINKA_ALPHABET)).toEqual([
       "ts",
       "a",
       "p",
@@ -74,7 +77,7 @@ describe("tokenizeWord", () => {
   });
 
   it("does not split ty into t and y", () => {
-    expect(tokenizeWord("tyapapanko", "ashaninka")).toEqual([
+    expect(tokenizeWord("tyapapanko", ASHANINKA_ALPHABET)).toEqual([
       "ty",
       "a",
       "p",
@@ -88,12 +91,12 @@ describe("tokenizeWord", () => {
   });
 
   it("keeps a letter that is not in the alphabet as its own token", () => {
-    expect(tokenizeWord("la", "ashaninka")).toEqual(["l", "a"]);
+    expect(tokenizeWord("la", ASHANINKA_ALPHABET)).toEqual(["l", "a"]);
   });
 });
 
-describe("getComparator('ashaninka')", () => {
-  const compare = getComparator("ashaninka");
+describe("getComparator with the asháninka alphabet", () => {
+  const compare = getComparator(ASHANINKA_ALPHABET);
 
   // The behaviour that differs from Spanish: sh is a letter after s, so every
   // plain-s word sorts before every sh word. Spanish would put "sha" first,
@@ -174,21 +177,21 @@ describe("getComparator() without a language", () => {
 
 describe("getInitial", () => {
   it("returns a digraph as the section letter, capitalised", () => {
-    expect(getInitial("chakopibenki", "ashaninka")).toBe("Ch");
-    expect(getInitial("sheri", "ashaninka")).toBe("Sh");
-    expect(getInitial("tsaparipaye", "ashaninka")).toBe("Ts");
-    expect(getInitial("tyapapanko", "ashaninka")).toBe("Ty");
+    expect(getInitial("chakopibenki", ASHANINKA_ALPHABET)).toBe("Ch");
+    expect(getInitial("sheri", ASHANINKA_ALPHABET)).toBe("Sh");
+    expect(getInitial("tsaparipaye", ASHANINKA_ALPHABET)).toBe("Ts");
+    expect(getInitial("tyapapanko", ASHANINKA_ALPHABET)).toBe("Ty");
   });
 
   it("returns a single letter uppercased", () => {
-    expect(getInitial("ashaninka", "ashaninka")).toBe("A");
-    expect(getInitial("ñaa", "ashaninka")).toBe("Ñ");
+    expect(getInitial("ashaninka", ASHANINKA_ALPHABET)).toBe("A");
+    expect(getInitial("ñaa", ASHANINKA_ALPHABET)).toBe("Ñ");
   });
 
   it("returns null when the word does not start with a letter", () => {
-    expect(getInitial("1uno", "ashaninka")).toBeNull();
-    expect(getInitial("-guion", "ashaninka")).toBeNull();
-    expect(getInitial("", "ashaninka")).toBeNull();
+    expect(getInitial("1uno", ASHANINKA_ALPHABET)).toBeNull();
+    expect(getInitial("-guion", ASHANINKA_ALPHABET)).toBeNull();
+    expect(getInitial("", ASHANINKA_ALPHABET)).toBeNull();
   });
 
   it("does not invent a digraph for a language with no alphabet table", () => {

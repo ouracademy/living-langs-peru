@@ -24,7 +24,7 @@ import {
   dangerButton,
   primaryButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { SelectField, TextField } from "./fields";
 import type { EditorChange } from "./types";
 

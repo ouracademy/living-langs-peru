@@ -15,7 +15,7 @@ import {
 import {
   readRestoreRequest,
   restoreNote,
-} from "@/lib/language-packs/publish-request";
+} from "@/lib/language-bundles/publish-request";
 
 type Context = { params: Promise<{ lengua: string }> };
 

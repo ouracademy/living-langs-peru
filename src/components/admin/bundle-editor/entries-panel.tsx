@@ -14,7 +14,7 @@ import {
   input,
   primaryButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { EntryForm } from "./entry-form";
 import { EntryRow } from "./entry-row";
 import { TextField } from "./fields";

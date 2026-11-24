@@ -68,8 +68,8 @@ jobs:
       - name: formato
         run: pnpm format:check
 
-      - name: datos del diccionario
-        run: pnpm dictionary:check
+      - name: paquetes de lengua
+        run: pnpm bundles:check
 
       - name: tests unitarios con cobertura
         run: pnpm test:coverage

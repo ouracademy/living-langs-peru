@@ -3,6 +3,11 @@
 > Estado: **implementado** (M1-M5). Contenido real citado, 169 entradas.
 > Fecha: 2026-09-11 · Rama base: `main` · Rama de trabajo: `feat/diccionario`
 > Plan: [tasks/diccionario/](../tasks/diccionario/) · Índice: [specs/README.md](./README.md)
+> **Nota del 2026-11-23 (gestor-lenguas F4):** el contenido ya no está en
+> `src/data/dictionary/*.json` ni el alfabeto en `collation.ts`: salen del paquete de lengua
+> (`src/data/bundles/<lengua>.json` o el publicado desde `/admin/lenguas`), validado con
+> `pnpm bundles:check` (reemplaza a `dictionary:check`). La regla «id = slugify(word)» se retiró:
+> los ids de un paquete son estables. Ver [gestor-lenguas.md](./gestor-lenguas.md) §9.
 
 ---
 

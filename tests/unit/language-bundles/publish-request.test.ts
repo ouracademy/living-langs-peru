@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { MAX_NOTE_LENGTH } from "@/lib/language-bundles/bundle-file";
-import { readBundlePublishRequest } from "@/lib/language-bundles/publish-request";
+import {
+  readBundlePublishRequest,
+  readRestoreRequest,
+  restoreNote,
+} from "@/lib/language-bundles/publish-request";
 
 import { testBundle, testEntry } from "./fixtures";
 
@@ -74,5 +78,27 @@ describe("readBundlePublishRequest", () => {
     const read = readBundlePublishRequest(body(), "ashaninka");
     expect(!read.ok && read.error).toBe("bundle_has_errors");
     expect(!read.ok && read.issues?.[0].code).toBe("language_mismatch");
+  });
+});
+
+// Moved from the retired /admin/juego with the restore route (gestor-lenguas F4).
+describe("readRestoreRequest", () => {
+  it("accepts a version and the expected one", () => {
+    expect(readRestoreRequest({ version: 1, expectedVersion: 3 })).toEqual({
+      ok: true,
+      version: 1,
+      expectedVersion: 3,
+    });
+  });
+
+  it("refuses version 0 and a missing body", () => {
+    expect(readRestoreRequest({ version: 0, expectedVersion: 3 }).ok).toBe(
+      false,
+    );
+    expect(readRestoreRequest(undefined).ok).toBe(false);
+  });
+
+  it("leaves a note that says where the version came from", () => {
+    expect(restoreNote(2)).toBe("Restaurada desde la versión 2.");
   });
 });

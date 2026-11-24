@@ -48,8 +48,8 @@ export function Dictionary({
   const [input, setInput] = useState("");
   const query = useDebounced(input, 150);
   const visible = useMemo(
-    () => searchEntries(entries, query, alphabet ?? language),
-    [entries, query, alphabet, language],
+    () => searchEntries(entries, query, alphabet),
+    [entries, query, alphabet],
   );
 
   const requested = searchParams.get(WORD_PARAM);
@@ -115,7 +115,6 @@ export function Dictionary({
         <div className="mt-4" />
         <EntryList
           entries={visible}
-          language={language}
           alphabet={alphabet}
           selectedId={selected?.id}
           languageCode={languageCode}

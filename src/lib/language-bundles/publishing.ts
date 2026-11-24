@@ -2,11 +2,6 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import {
-  type AdminRead,
-  type PublishError,
-  publishErrorFor,
-} from "../language-packs/publishing.ts";
 import { parseBundle } from "./schema.ts";
 import type { LanguageBundle } from "./types.ts";
 
@@ -27,7 +22,18 @@ export type BundleVersionEntry = {
 
 export type BundleVersionSummary = Omit<BundleVersionEntry, "bundle">;
 
-export type { AdminRead, PublishError };
+export type PublishError =
+  "version_conflict" | "language_mismatch" | "unavailable";
+
+export type AdminRead<T> =
+  { ok: true; value: T } | { ok: false; error: "unavailable" };
+
+/** Postgres codes raised by `publish_language_bundle` (spec §6.1). */
+export function publishErrorFor(code: string | undefined): PublishError {
+  if (code === "40001") return "version_conflict";
+  if (code === "22023") return "language_mismatch";
+  return "unavailable";
+}
 
 function codeOf(error: unknown): string {
   return (error as { code?: string } | null)?.code ?? "unknown";

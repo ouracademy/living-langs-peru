@@ -110,7 +110,7 @@ export function playableThemes(pack: LanguagePack): Theme[] {
 }
 
 /**
- * «Probar» in /admin/juego (spec §9.1, AC-SP6-10): the same themes, but with
+ * «Probar» in /admin/lenguas (spec §9.1, AC-SP6-10): the same themes, but with
  * the unverified and unsourced items too, so they can be reviewed before
  * publishing. Only the admin page uses it; the public page never does.
  */

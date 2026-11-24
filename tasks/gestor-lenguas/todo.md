@@ -2,7 +2,7 @@
 
 > Plan: [plan.md](./plan.md) · Spec: [specs/gestor-lenguas.md](../../specs/gestor-lenguas.md)
 > Estado: **F1 hecha (2026-11-21)**, **F2 y F3 hechas (2026-11-22)** en la rama
-> `feat/gestor-lenguas`. F4, sin empezar.
+> `feat/gestor-lenguas`. **F4 hecha (2026-11-23).** Quedan las tareas humanas.
 
 Cada tarea cierra con `pnpm check:fast`; cada fase, con `pnpm check:task` y e2e completos.
 
@@ -74,11 +74,22 @@ tocan las líneas base ni los umbrales.
 
 ## F4 — Retirar lo duplicado (L5)
 
-- [ ] **T4.1** Migrar `language_packs` a `language_bundles`; retirar `/admin/juego`
-- [ ] **T4.2** Retirar el alfabeto fijo y `src/data/dictionary/*` como fuente `[AC-L5-1]`
+- [x] **T4.1** Migrar `language_packs` a `language_bundles`; retirar `/admin/juego` —
+      `docs/gestor-lenguas-migracion.sql` convierte y deja las tablas viejas en solo lectura; la
+      copia entra por «Subir JSON», no por `INSERT` (plan §9, desvíos 1 y 2). Saltapalabras ya no
+      consulta `language_packs`.
+- [x] **T4.2** Retirar el alfabeto fijo y `src/data/dictionary/*` como fuente `[AC-L5-1]` —
+      también `ashaninka-pictures.json`, el reducer viejo de `round.ts`, `dictionary:check` (ahora
+      `bundles:check`) y `pack:draft`. Líneas base: 32 → 25 supresiones, 1 → 0 ciclos.
 
 ## Humanas
 
 - [ ] **H1** Correr `docs/gestor-lenguas-schema.sql` en Supabase
 - [ ] **H2** Preparar `uro.json` con `docs/gestor-lenguas/plantilla-uro.json` (fuentes, alfabeto,
       palabras verificadas)
+- [ ] **H3** Cuando nada dependa de ellas: borrar `language_packs`, `pack_versions`, la vista
+      `pack_words` y la función `publish_language_pack` (exportar antes el historial si se quiere
+      conservar). Ningún código las usa desde F4.
+- [ ] **H4** En Supabase, con F4 desplegado: correr `docs/gestor-lenguas-migracion.sql` (bloques
+      1-3), subir y publicar en `/admin/lenguas` lo que haya que conservar, y después el bloque 4
+      (solo lectura).

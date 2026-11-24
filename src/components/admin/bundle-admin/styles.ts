@@ -1,4 +1,4 @@
-/** Shared classes of /admin/juego: 44 px targets and a visible focus ring. */
+/** Shared classes of /admin/lenguas: 44 px targets and a visible focus ring. */
 const base =
   "inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#241D14] disabled:cursor-not-allowed disabled:opacity-50";
 

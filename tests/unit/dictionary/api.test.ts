@@ -9,7 +9,9 @@ vi.mock("server-only", () => ({}));
 import { GET as getEntry } from "@/app/api/diccionario/[lengua]/[id]/route";
 import { GET as getLanguageEntries } from "@/app/api/diccionario/[lengua]/route";
 import { GET as getLanguages } from "@/app/api/diccionario/route";
-import { ASHANINKA_ALPHABET, getComparator } from "@/lib/dictionary/collation";
+import { getComparator } from "@/lib/dictionary/collation";
+
+import { ASHANINKA_ALPHABET } from "./ashaninka-bundle";
 
 const request = (url: string) => new Request(`http://localhost${url}`);
 const params = <T extends object>(value: T) => ({

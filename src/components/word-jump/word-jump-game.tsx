@@ -29,7 +29,7 @@ type WordJumpGameProps = {
   /** Already filtered by `playableThemes` on the server. */
   pack: PublicPack;
   /**
-   * «Probar» in /admin/juego (AC-SP6-10): the pack may hold unverified items,
+   * «Probar» in /admin/lenguas (AC-SP6-10): the pack may hold unverified items,
    * a warning is shown, and nothing is read from or written to the progress.
    */
   preview?: boolean;

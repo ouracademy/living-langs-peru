@@ -12,7 +12,7 @@ este archivo.
 | Cuándo                 | Comando           | Qué corre                                                    | Presupuesto |
 | ---------------------- | ----------------- | ------------------------------------------------------------ | ----------- |
 | Después de editar      | `pnpm check:fast` | Tipos, lint, arquitectura, piso, política de idioma          | ~20 s       |
-| Al terminar una tarea  | `pnpm check:task` | Lo anterior + datos del diccionario + unit tests + cobertura | ~60 s       |
+| Al terminar una tarea  | `pnpm check:task` | Lo anterior + datos de los paquetes + unit tests + cobertura | ~60 s       |
 | Antes de un PR / en CI | `pnpm check:full` | Lo anterior + formato + secretos + dependencias + e2e        | minutos     |
 
 Hay cuatro puntos donde esto se dispara solo:
@@ -92,7 +92,7 @@ Commits](https://www.conventionalcommits.org/) (`commit-msg` con commitlint).
 | Formato               | Prettier limpio                              | `pnpm format:check` (+ hook `PostToolUse`)         | al editar, CI    |
 | Piso                  | Cero hallazgos                               | `pnpm check:floor`                                 | cada edición, CI |
 | Idioma                | Cero hallazgos                               | `pnpm check:language`                              | cada edición, CI |
-| Datos del diccionario | Cero problemas de validación                 | `pnpm dictionary:check`                            | fin de tarea, CI |
+| Datos de los paquetes | Cero errores de validación                   | `pnpm bundles:check` y `pnpm game:check`           | fin de tarea, CI |
 | Tests unitarios       | Todos pasan                                  | `pnpm test`                                        | fin de tarea, CI |
 | Cobertura del cambio  | ≥ 80 % de las líneas instrumentables tocadas | `pnpm test:coverage && pnpm check:coverage`        | fin de tarea, CI |
 | E2E                   | Todos pasan                                  | `pnpm test:e2e`                                    | CI               |
@@ -170,6 +170,10 @@ arreglaron en bloque ni se bajó ninguna regla.
 
 Al activar: 23 `useEffect` en componentes, 8 funciones con complejidad > 15, 1 anidamiento > 4, y 1
 ciclo (`src/lib/word-jump/round.ts` ↔ `stats.ts`, código que el juego ya no usa).
+
+Podas: 2026-11-23 (gestor-lenguas F4), al retirar `/admin/juego` y el reductor viejo de
+`round.ts`, quedan 25 supresiones de ESLint (7 menos, de archivos borrados) y 0 violaciones de
+arquitectura (el ciclo se rompió al mover `RoundOutcome` a `stats.ts`).
 
 - **Nunca se agrega una entrada a mano** para que un cambio pase. Una violación nueva se corrige.
 - Al arreglar una violación vieja, se poda: `pnpm lint --prune-suppressions` o

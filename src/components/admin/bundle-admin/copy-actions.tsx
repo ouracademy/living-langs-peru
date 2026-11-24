@@ -10,8 +10,8 @@ import type {
   LanguageBundle,
 } from "@/lib/language-bundles/types";
 
-import { downloadText } from "../pack-admin/pack-api";
-import { primaryButton, secondaryButton } from "../pack-admin/styles";
+import { downloadText } from "./download";
+import { primaryButton, secondaryButton } from "./styles";
 
 type CopyActionsProps = {
   language: BundleLanguage;

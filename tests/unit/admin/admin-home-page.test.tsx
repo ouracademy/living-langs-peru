@@ -64,15 +64,21 @@ describe("/admin", () => {
     expect(link.getAttribute("href")).toBe("/admin/fotos");
   });
 
-  it("links to the Saltapalabras packs with valid credentials", async () => {
+  // gestor-lenguas F4: /admin/juego was retired; the game's words live in the
+  // language bundles.
+  it("no longer links to the retired game admin", async () => {
     withAuthorization(credentials);
 
     render(await AdminHomePage());
 
-    const link = screen.getByRole("link", {
-      name: /Paquetes de Saltapalabras/,
-    });
-    expect(link.getAttribute("href")).toBe("/admin/juego");
+    expect(
+      screen.queryByRole("link", { name: /Paquetes de Saltapalabras/ }),
+    ).toBeNull();
+    expect(
+      screen
+        .getAllByRole("link")
+        .some((link) => link.getAttribute("href") === "/admin/juego"),
+    ).toBe(false);
   });
 
   // gestor-lenguas T2.3

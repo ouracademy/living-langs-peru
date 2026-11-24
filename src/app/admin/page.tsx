@@ -26,13 +26,7 @@ const SECTIONS: AdminSection[] = [
     href: "/admin/lenguas",
     title: "Contenido de las lenguas",
     description:
-      "Subir el JSON de asháninka y uro, probarlo y publicarlo: de ahí salen el diccionario y los juegos.",
-  },
-  {
-    href: "/admin/juego",
-    title: "Paquetes de Saltapalabras",
-    description:
-      "Importar, probar y publicar las palabras del juego, y ver su historial.",
+      "Subir el JSON de asháninka y uro, editarlo, probarlo y publicarlo: de ahí salen el diccionario y los juegos.",
   },
 ];
 

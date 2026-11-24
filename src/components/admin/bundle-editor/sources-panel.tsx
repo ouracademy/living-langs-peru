@@ -22,7 +22,7 @@ import {
   dangerButton,
   primaryButton,
   secondaryButton,
-} from "../pack-admin/styles";
+} from "../bundle-admin/styles";
 import { SelectField, TextField } from "./fields";
 import { SOURCE_KIND_LABELS } from "./labels";
 import type { EditorChange } from "./types";

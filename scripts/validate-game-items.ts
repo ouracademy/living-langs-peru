@@ -1,22 +1,35 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { basename, join } from "node:path";
+
 import { buildItems } from "../src/lib/game/items.ts";
 import { describePool, validatePool } from "../src/lib/game/validate.ts";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { bundleToDictionary } from "../src/lib/language-bundles/adapters.ts";
+import { parseBundle } from "../src/lib/language-bundles/schema.ts";
 
-import type { Dictionary } from "../src/lib/dictionary/types.ts";
-
-// Read from disk rather than through src/lib/dictionary, whose static JSON
-// imports need a bundler. The data files are the same ones.
-const DATA_DIR = join(process.cwd(), "src/data/dictionary");
-const LANGUAGES = ["ashaninka"];
+// «Completar palabras» plays the verified entries with examples of each
+// language bundle (spec gestor-lenguas §6.2). Read from disk rather than
+// through the cached library, which needs Next.
+const DATA_DIR = join(process.cwd(), "src/data/bundles");
 
 function main(): void {
   const dump = process.argv.includes("--dump");
   let failed = false;
 
-  for (const language of LANGUAGES) {
-    const path = join(DATA_DIR, `${language}.json`);
-    const dictionary = JSON.parse(readFileSync(path, "utf8")) as Dictionary;
+  const files = readdirSync(DATA_DIR).filter((name) => name.endsWith(".json"));
+  for (const file of files) {
+    const language = basename(file, ".json");
+    const parsed = parseBundle(
+      JSON.parse(readFileSync(join(DATA_DIR, file), "utf8")),
+    );
+    if (!parsed.ok) {
+      failed = true;
+      console.error(
+        `✗ ${language} — no es un paquete válido (ver bundles:check)`,
+      );
+      continue;
+    }
+
+    const { dictionary } = bundleToDictionary(parsed.bundle);
     const items = buildItems(dictionary.entries);
     const problems = validatePool(items, language);
 

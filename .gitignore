@@ -37,8 +37,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# Saltapalabras pack drafts (pnpm pack:draft): reviewed and published at
-# /admin/juego, the database keeps the history, never the repo.
+# Saltapalabras pack drafts of the retired pnpm pack:draft (gestor-lenguas F4).
+# Old copies may still lie around; the words now live in src/data/bundles.
 paquete-*-borrador.json
 paquete-*-verificado.json
 

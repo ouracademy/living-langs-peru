@@ -11,7 +11,7 @@ import {
   listBundleVersions,
   readCurrentBundle,
 } from "@/lib/language-bundles/publishing";
-import { audioBaseUrlFrom } from "@/lib/language-packs/publishing";
+import { audioBaseUrlFrom } from "@/lib/language-bundles/audio";
 import { getLanguage } from "@/lib/languages";
 import { getOptionalSupabase } from "@/lib/supabase-optional";
 

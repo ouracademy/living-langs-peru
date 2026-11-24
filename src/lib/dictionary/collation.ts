@@ -1,51 +1,14 @@
 import { normalize } from "./text.ts";
 
 /**
- * The official Asháninka alphabet: 19 letters, 4 vowels and 15 consonants,
- * approved by Resolución Directoral 0606-2008-ED and Resolución Ministerial
- * 303-2015-MINEDU.
- *
- * ch, sh, ts and ty are letters in their own right, not sequences, so they
- * both sort and group as single units. Note there is no c, d, f, g, l, q, u,
- * v, w, x or z.
+ * The alphabet to sort by: a language bundle's own list of graphemes, in its
+ * order (spec gestor-lenguas #10). No alphabet is written in code: an empty or
+ * missing list falls back to Spanish collation.
  */
-export const ASHANINKA_ALPHABET = [
-  "a",
-  "b",
-  "ch",
-  "e",
-  "i",
-  "j",
-  "k",
-  "m",
-  "n",
-  "ñ",
-  "o",
-  "p",
-  "r",
-  "s",
-  "sh",
-  "t",
-  "ts",
-  "ty",
-  "y",
-] as const;
-
-const ALPHABETS: Record<string, readonly string[]> = {
-  ashaninka: ASHANINKA_ALPHABET,
-};
-
-/**
- * The alphabet to sort by: a language bundle's own list of graphemes (spec
- * gestor-lenguas #10), or a language slug with a table here. The slug form
- * stays until the fixed alphabet is retired (gestor-lenguas F4).
- */
-export type AlphabetRef = string | readonly string[];
+export type AlphabetRef = readonly string[];
 
 function resolveAlphabet(ref?: AlphabetRef): readonly string[] | undefined {
-  if (ref === undefined) return undefined;
-  if (typeof ref !== "string") return ref.length > 0 ? ref : undefined;
-  return ALPHABETS[ref];
+  return ref && ref.length > 0 ? ref : undefined;
 }
 
 /**
@@ -83,8 +46,8 @@ function rank(letter: string, alphabet: readonly string[]): number {
 }
 
 /**
- * Returns the comparator for a language's own alphabet, falling back to
- * Spanish collation for languages with no table of their own.
+ * Returns the comparator for an alphabet, falling back to Spanish collation
+ * when there is none.
  */
 export function getComparator(
   language?: AlphabetRef,

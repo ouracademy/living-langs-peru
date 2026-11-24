@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { MIN_POOL_SIZE } from "@/lib/game/constants";
 import { buildItems } from "@/lib/game/items";
-import { getDictionary } from "@/lib/dictionary";
 import { describePool, validatePool } from "@/lib/game/validate";
 import type { Item } from "@/lib/game/types";
+
+import { ashaninka } from "../dictionary/ashaninka-bundle";
 
 function item(overrides: Partial<Item> = {}): Item {
   return {
@@ -32,7 +33,7 @@ function pool(overrides: Partial<Item> = {}): Item[] {
 describe("validatePool", () => {
   // AC-G1-11 — the real pool must pass.
   it("passes the shipped Asháninka pool", () => {
-    const items = buildItems(getDictionary("ashaninka")!.entries);
+    const items = buildItems(ashaninka.dictionary.entries);
 
     expect(validatePool(items, "ashaninka")).toEqual([]);
   });

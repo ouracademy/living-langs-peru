@@ -97,7 +97,7 @@ export function resolveGameState(result: PackReadResult): GameState {
 }
 
 /**
- * The pack «Probar» plays in /admin/juego (AC-SP6-10): unverified items
+ * The pack «Probar» plays in /admin/lenguas (AC-SP6-10): unverified items
  * included, so they can be reviewed. `null` when no theme reaches its minimum.
  * Version 0: it is not published.
  */

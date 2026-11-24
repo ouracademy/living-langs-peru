@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import oldDictionary from "@/data/dictionary/ashaninka.json";
-import oldSources from "@/data/dictionary/sources.json";
-import { ASHANINKA_ALPHABET } from "@/lib/dictionary/collation";
 import {
   bundleToDictionary,
   bundleToPack,
@@ -14,32 +11,58 @@ import { playableThemes } from "@/lib/language-packs/playable";
 import { testBundle, testEntry } from "./fixtures";
 
 describe("bundleToDictionary", () => {
-  // AC-L3-1: the asháninka bundle gives back exactly the dictionary it came from.
-  it("turns the repo's asháninka bundle into the same dictionary as before", () => {
+  // AC-L3-1. The fixed dictionary JSON it was exported from was retired in F4;
+  // what stays checkable is that every verified entry comes through intact.
+  it("turns the repo's asháninka bundle into the dictionary it carries", () => {
     const bundle = repoBundle("ashaninka");
     expect(bundle).not.toBeNull();
     const content = bundleToDictionary(bundle!);
 
-    const strip = (entry: object) => JSON.parse(JSON.stringify(entry));
-    const before = oldDictionary.entries.map((entry) => ({
-      ...strip(entry),
-      // An example citing its own entry's source is the same either way.
-      examples: entry.examples.map(({ sentence, translation }) => ({
-        sentence,
-        translation,
+    const verified = bundle!.entries.filter((entry) => entry.verified);
+    expect(content.dictionary.language).toBe("ashaninka");
+    expect(
+      content.dictionary.entries.map(
+        ({ id, word, translations, sourceId }) => ({
+          id,
+          word,
+          translations,
+          sourceId,
+        }),
+      ),
+    ).toEqual(
+      verified.map(({ id, word, translations, sourceId }) => ({
+        id,
+        word,
+        translations,
+        sourceId,
       })),
-    }));
-    const after = content.dictionary.entries.map((entry) => ({
-      ...strip(entry),
-      examples: entry.examples.map(({ sentence, translation }) => ({
-        sentence,
-        translation,
-      })),
-    }));
-
-    expect(after).toEqual(before);
-    expect(content.sources).toEqual(oldSources.sources);
-    expect(content.alphabet).toEqual([...ASHANINKA_ALPHABET]);
+    );
+    expect(content.sources.map((source) => source.id)).toEqual([
+      "minedu-2021-vocabulario-pedagogico",
+    ]);
+    // The official alphabet, as src/lib/dictionary/collation.ts carried it
+    // until F4.
+    expect(content.alphabet).toEqual([
+      "a",
+      "b",
+      "ch",
+      "e",
+      "i",
+      "j",
+      "k",
+      "m",
+      "n",
+      "ñ",
+      "o",
+      "p",
+      "r",
+      "s",
+      "sh",
+      "t",
+      "ts",
+      "ty",
+      "y",
+    ]);
   });
 
   // AC-L3-2

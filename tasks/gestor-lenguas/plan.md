@@ -64,6 +64,9 @@ F4 retirar lo duplicado: collation.ts como fuente, src/data/dictionary/*, /admin
 Mientras dure, `src/data/bundles/ashaninka.json` se regenera con
 `node --experimental-strip-types scripts/export-ashaninka-bundle.ts` si cambia el diccionario.
 
+**2026-11-23: las cuatro se retiraron en F4** (ver §9). El paquete del repo es ya la única fuente y
+el script de exportación se borró.
+
 ## 4. Riesgos
 
 | Riesgo                                                   | Mitigación                                                                                                                                                   |
@@ -185,3 +188,87 @@ px).
     título de errores en `bundle-issues.tsx` dice «antes de publicar».
 
 **Sin verificar:** Supabase real, Safari y Firefox, lectores de pantalla reales.
+
+## 9. Resultado de F4 (2026-11-23)
+
+Hecho: T4.1 y T4.2. Asháninka y uro salen solo de su paquete de lengua.
+
+**Qué se retiró**
+
+- `/admin/juego`, `/api/admin/juego/**`, `src/components/admin/pack-admin/` y la tarjeta en `/admin`.
+- De `src/lib/language-packs/`, lo que solo usaba ese admin: `admin-route`, `publishing`,
+  `publish-request`, `pack-file`, `draft-storage`, `edit-pack`, `library`, `schema`, `validate`,
+  `from-dictionary`. Quedan `types`, `clean`, `graphemes` y `playable`: son el modelo interno del
+  juego al que traduce `bundleToPack`.
+- `src/data/dictionary/{ashaninka,sources}.json`, `src/lib/dictionary/{registry,validate}.ts`, la
+  constante `ASHANINKA_ALPHABET` y el mapa por nombre de lengua de `collation.ts` (el alfabeto llega
+  siempre como dato; sin él, orden del castellano).
+- `src/data/word-jump/ashaninka-pictures.json` y `src/lib/word-jump/availability.ts`.
+- Scripts `validate-dictionary`, `draft-pack-from-dictionary` y `export-ashaninka-bundle`; comandos
+  `dictionary:check` y `pack:draft`.
+- El reducer viejo de `round.ts` (`createRound`, `answerQuestion`, `nextQuestion`, `roundOutcomes`)
+  y `MAX_REQUEUES`; se conservan `buildRound` y `RoundContext`.
+- Del Supabase falso de los e2e, las rutas de `language_packs`, `pack_versions` y
+  `publish_language_pack`, y su fixture `word-jump-pack.json`.
+
+**Qué se movió (no se borró)**
+
+- A `src/lib/language-bundles/`: `publishErrorFor`, `PublishError`, `AdminRead` (`publishing.ts`),
+  `readRestoreRequest` y `restoreNote` (`publish-request.ts`), `adminJson`, `adminError`,
+  `readJsonBody` y `NO_STORE` (`admin-route.ts`), y `audioBaseUrlFrom` (`audio.ts`). Sus tests
+  vinieron con ellos (`publish-codes.test.ts`, `publish-request.test.ts`).
+- A `src/components/admin/bundle-admin/`: `styles.ts` y `format.ts` (`git mv`) y `downloadText`
+  (`download.ts`).
+- `RoundOutcome` a `stats.ts`, que lo consume: así se rompe el ciclo `round.ts` ↔ `stats.ts`.
+
+**Herramientas:** `pnpm bundles:check` (`scripts/validate-bundles.ts`: `parseBundle` +
+`validateBundle` sobre `src/data/bundles/*.json`) reemplaza a `dictionary:check` en `check:task` y
+en CI (paso «paquetes de lengua»). `game:check` sigue, leyendo los paquetes.
+
+**Líneas base:** supresiones de ESLint 32 → 25 (`eslint . --prune-suppressions`; eran de archivos
+borrados); violaciones de arquitectura 1 → 0 (`depcruise-baseline`). Nada se agregó.
+
+**Cómo se comprobó**
+
+- **AC-L5-1:** `src/data/dictionary/` ya no existe; `grep` no encuentra `ASHANINKA_ALPHABET` ni
+  `data/dictionary` en `src/`; un barrido de `src/lib/` (76 archivos) no encuentra ninguna de las
+  palabras del paquete asháninka ni la lista del alfabeto. El uro no tiene contenido en el repo.
+- **Saltapalabras solo lee el paquete:** un test de `library.test.ts` comprueba que la única tabla
+  consultada es `language_bundles`; el e2e juega una ronda completa de cada modo con el paquete del
+  repo, calculando cada respuesta desde el JSON (no se escribió ninguna palabra en el test).
+- `pnpm check:task`: 92 archivos, 988 tests, cobertura del cambio 97,8 %. E2E completos: 145 de 145
+  (150 de F3 menos los 5 de `pack-admin.spec.ts`). `next build` sin variables de Supabase: las dos
+  lenguas prerenderizadas en las tres rutas; ya no aparece `/admin/juego`.
+- `docs/gestor-lenguas-migracion.sql` se probó en un Postgres 18 local de usar y tirar con los dos
+  esquemas: el paquete de PRUEBA convertido pasa `parseBundle` y `validateBundle` sin errores; un
+  paquete con un tema vacío, un `nameNative`, una palabra sin fuente, un id repetido con datos
+  distintos y `praise` da esos cinco avisos en el bloque 3 y un solo error del validador (la palabra
+  sin fuente). Tras el bloque 4, `service_role` lee pero no escribe ni publica.
+
+**Desvíos**
+
+1. **La copia no es un `INSERT` en las tablas nuevas.** Una fila de `language_bundles` que no pasa
+   `parseBundle` rompe la página en producción, y el JSON del juego no trae todo lo que el paquete
+   exige (por ejemplo, la fuente de cada palabra). El SQL convierte; el JSON entra por «Subir JSON» en
+   `/admin/lenguas`, que valida, muestra diferencias y publica con `publish_language_bundle`.
+2. **`pack_versions` no se copia a `bundle_versions`:** otro formato y otra numeración. Queda legible
+   y de solo lectura hasta que se borre (H3).
+3. **`tests/unit/dictionary/validate.test.ts` no se borró: se portó.** Prueba los mismos casos contra
+   `parseBundle` + `validateBundle` (AC-M1-10 incluido), con las mismas 10 aserciones. La regla «id =
+   slugify(word)» se invirtió (ahora un id distinto se acepta: spec #3) y «placeholder» pasó a ser
+   «fuente que el paquete no trae».
+4. **Los tests del diccionario leen el paquete** con `tests/unit/dictionary/ashaninka-bundle.ts`. La
+   prueba de AC-L3-1 ya no compara contra el JSON viejo (borrado), sino entrada por entrada contra las
+   verificadas del paquete, y fija el alfabeto oficial que tenía `collation.ts`.
+5. **Los ejemplos del paquete no traen fuente propia:** heredan la de su entrada. El test «cada
+   ejemplo cita una fuente» lo dice así.
+6. **El e2e de Saltapalabras dejó de comprobar palabras sin verificar** en la ronda: el paquete real
+   no tiene ninguna. Lo cubren `playable.test.ts` y `bundle-publish.spec.ts` (la palabra sin
+   verificar del uro no aparece).
+7. **`.gitignore` conserva `paquete-*-borrador.json` y `paquete-*-verificado.json`:** hay copias
+   viejas en la raíz del repo local, y quitarlas del ignore las dejaría listas para un commit por
+   error.
+8. **`scripts/import-minedu-vocabulary.py` se conserva como histórico**, con una nota: escribía el
+   JSON retirado.
+
+**Sin verificar:** Supabase real (la copia y el paso a solo lectura los corre una persona: H3, H4).

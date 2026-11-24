@@ -2,7 +2,7 @@
 
 import type { BundleDiff } from "@/lib/language-bundles/bundle-file";
 
-import { dangerButton, panel, secondaryButton } from "../pack-admin/styles";
+import { dangerButton, panel, secondaryButton } from "./styles";
 
 type UploadConfirmProps = {
   fileName: string;

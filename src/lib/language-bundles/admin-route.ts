@@ -5,16 +5,36 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getOptionalSupabase } from "@/lib/supabase-optional";
 
 import { adminAuthResponse } from "../admin/basic-auth.ts";
-import { adminError } from "../language-packs/admin-route.ts";
-import { audioBaseUrlFrom } from "../language-packs/publishing.ts";
+import { audioBaseUrlFrom } from "./audio.ts";
 import { BUNDLE_LANGUAGES, type BundleLanguage } from "./types.ts";
 
-export {
-  adminError,
-  adminJson,
-  readJsonBody,
-  UNAVAILABLE_MESSAGE,
-} from "../language-packs/admin-route.ts";
+/** Every /api/admin/lenguas answer: admin data is never cached. */
+const NO_STORE = { "Cache-Control": "no-store" };
+
+export function adminJson(body: unknown, status = 200): Response {
+  return Response.json(body, { status, headers: NO_STORE });
+}
+
+export function adminError(
+  status: number,
+  error: string,
+  message: string,
+  extra: Record<string, unknown> = {},
+): Response {
+  return adminJson({ error, message, ...extra }, status);
+}
+
+export const UNAVAILABLE_MESSAGE =
+  "No pudimos hablar con la base de datos. Si el proyecto de Supabase está pausado, reactívalo desde su panel y vuelve a intentar.";
+
+/** A JSON body, or `undefined` when it is not JSON at all. */
+export async function readJsonBody(request: Request): Promise<unknown> {
+  try {
+    return await request.json();
+  } catch {
+    return undefined;
+  }
+}
 
 export type BundleAdminContext = {
   language: BundleLanguage;

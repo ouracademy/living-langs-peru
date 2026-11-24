@@ -3,7 +3,7 @@ import { useId, useState } from "react";
 import { filterEntries, NO_FILTER } from "@/lib/language-bundles/edit-bundle";
 import type { LanguageBundle } from "@/lib/language-bundles/types";
 
-import { checkboxLabel, input, secondaryButton } from "../pack-admin/styles";
+import { checkboxLabel, input, secondaryButton } from "../bundle-admin/styles";
 
 const PAGE = 30;
 

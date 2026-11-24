@@ -11,7 +11,7 @@ import {
 import type { LanguageBundle } from "@/lib/language-bundles/types";
 import { previewPack } from "@/lib/word-jump/game-state";
 
-import { panel } from "../pack-admin/styles";
+import { panel } from "./styles";
 
 type BundlePreviewProps = {
   bundle: LanguageBundle;
